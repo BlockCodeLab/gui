@@ -1,0 +1,11 @@
+{
+  "name": "blockcode",
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}
