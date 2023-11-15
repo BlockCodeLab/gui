@@ -1,0 +1,27 @@
+{
+  "name": "blockcode-web",
+  "version": "0.1.0",
+  "dependencies": {
+    "classnames": "^2.3.2",
+    "preact": "^10.18.1"
+  },
+  "scripts": {
+    "build": "bun-build",
+    "dev": "HOT_SERVER=enable bun-build --watch ./src"
+  },
+  "devDependencies": {
+    "bun-types": "latest",
+    "bun-build": "link:bun-build",
+    "bun-loader-css": "link:bun-loader-css",
+    "bun-loader-yaml": "link:bun-loader-yaml",
+    "bun-plugin-copy": "link:bun-plugin-copy",
+    "bun-index-page": "link:bun-index-page",
+    "bun-hot-server": "link:bun-hot-server"
+  },
+  "optionalDependencies": {
+    "@blockcode/core": "workspace:*",
+    "@blockcode/ui": "workspace:*",
+    "@blockcode/code-editor": "workspace:*",
+    "@blockcode/extension-micropython": "workspace:*"
+  }
+}

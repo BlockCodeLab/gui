@@ -1,0 +1,58 @@
+import classNames from 'classnames';
+import { cloneElement } from 'preact';
+import { flatChildren } from '@blockcode/core';
+import { injectStyle } from '../../lib/inject-style';
+
+/* components */
+import TabLabel from './tab-label';
+import TabPanel from './tab-panel';
+
+/* styles */
+import styles from './tabs.module.css';
+
+const defaultID = styles.tabsWrapper.split('_')[0];
+
+export { TabLabel, TabPanel };
+
+export default function Tabs({ id, className, children }) {
+  const tabs = flatChildren(children)
+    .filter((child) => child)
+    .map((child) =>
+      cloneElement(child, {
+        id: id || defaultID,
+      })
+    );
+
+  injectStyle({
+    [`.${styles.tab}:checked+.${styles.tabLabel}`]: {
+      zIndex: `${tabs.length + 1}`,
+    },
+  });
+
+  return (
+    <div className={classNames(styles.tabsWrapper, className)}>
+      {tabs
+        .filter((child) => child.type === TabLabel)
+        .map((child, i, labels) => {
+          injectStyle({
+            [`.${styles.tabLabel}:nth-of-type(${i + 1})`]: {
+              zIndex: `${labels.length - i}`,
+            },
+          });
+          return child;
+        })}
+      {tabs
+        .filter((child) => child.type === TabPanel)
+        .map((child) => {
+          const tabId = `${id || defaultID}-tab-${child.props.name}`;
+          const panelId = `${id || defaultID}-panel-${child.props.name}`;
+          injectStyle({
+            [`#${tabId}:checked~#${panelId}`]: {
+              display: 'flex',
+            },
+          });
+          return child;
+        })}
+    </div>
+  );
+}
