@@ -1,0 +1,11 @@
+.terminal-wrapper {
+  flex: 1;
+  display: flex;
+  position: relative;
+  padding: 2px;
+  border-radius: inherit;
+}
+
+.terminal-wrapper :global(.xterm) {
+  position: absolute;
+}

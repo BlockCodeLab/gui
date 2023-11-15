@@ -1,0 +1,33 @@
+micropython.menu.file: File
+micropython.menu.newProject: New
+micropython.menu.edit: Edit
+
+micropython.runCode: Run
+micropython.stopAll: Stop
+micropython.syncDevice: Sync
+
+micropython.codeTab: Code
+micropython.replTab: REPL
+
+micropython.deviceManager.connect: Connect Hardware...
+micropython.deviceManager.notReady: Not ready
+micropython.deviceManager.ready: Ready
+
+micropython.packageList.title: Modules
+micropython.packageList.addPackage: Add
+
+micropython.fileInfo.title: File Info
+micropython.fileInfo.name: File
+micropython.fileInfo.type: Type
+micropython.fileInfo.size: Size
+micropython.fileInfo.modified: Modified
+
+micropython.actionButton.newCode: Create new Code
+micropython.actionButton.newJSON: Create new JSON
+micropython.actionButton.upload: Upload File
+
+micropython.contextMenu.duplicate: duplicate
+micropython.contextMenu.export: export
+micropython.contextMenu.delete: delete
+
+micropython.recordPane.title: Record

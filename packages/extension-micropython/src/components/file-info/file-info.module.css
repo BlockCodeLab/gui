@@ -1,0 +1,31 @@
+.file-info-wrapper {
+  padding: 0.75rem;
+  background: var(--ui-white);
+  color: var(--text-primary);
+  border-top-left-radius: var(--space);
+  border-top-right-radius: var(--space);
+  border-bottom: 1px solid var(--ui-black-transparent);
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.row-primary {
+  margin-bottom: 0.5rem;
+}
+
+.group {
+  display: inline-flex;
+  flex-direction: row; /* makes columns, for each label/form group */
+  align-items: center;
+}
+
+.filename-input {
+  flex: 1;
+}
+
+.filesize-input {
+  width: 4rem;
+}

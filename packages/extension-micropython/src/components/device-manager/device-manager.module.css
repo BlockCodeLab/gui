@@ -1,0 +1,8 @@
+.status-icon {
+  height: 1.25rem;
+  cursor: pointer;
+}
+
+.status-text {
+  flex: 1;
+}

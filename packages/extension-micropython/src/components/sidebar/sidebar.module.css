@@ -1,0 +1,12 @@
+.sidebar-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 20rem;
+}
+
+.list-wrapper {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
