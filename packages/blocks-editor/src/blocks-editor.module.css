@@ -1,0 +1,61 @@
+.editor-workspace {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-radius: inherit;
+}
+
+.editor-workspace :global(.injectionDiv) {
+  border-radius: inherit;
+}
+
+.editor-workspace :global(.blocklyMainBackground) {
+  stroke-width: 0 !important;
+}
+
+.editor-workspace :global(.blocklyFlyout) {
+  border-left: 1px solid var(--ui-black-transparent) !important;
+  border-right: 1px solid var(--ui-black-transparent) !important;
+}
+
+:global(.blocklyContextMenu) {
+  position: absolute !important;
+  border: 1px solid var(--ui-black-transparent) !important;
+  border-radius: calc(var(--space) / 2) !important;
+  background: var(--ui-white) !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: 260px !important;
+  overflow: hidden !important;
+  box-shadow: 0 var(--space) var(--space) 0 var(--ui-black-transparent) !important;
+  min-width: 130px !important;
+  box-shadow: 0 0 0.5rem hsla(0, 0%, 0%, 0.25) !important;
+}
+
+:global(.blocklyContextMenu .goog-menuitem) {
+  display: flex !important;
+  line-height: 34px !important;
+  white-space: nowrap !important;
+  padding: 0 calc(var(--space) + 2px) !important;
+  font-size: var(--standard-font-size) !important;
+  margin: 0 !important;
+  justify-content: space-between !important;
+  color: var(--text-primary) !important;
+}
+
+:global(.blocklyContextMenu .goog-menuitem-content) {
+  display: flex !important;
+  flex: 1 !important;
+}
+
+:global(.blocklyContextMenu .goog-menuitem-highlight) {
+  background: var(--motion-primary) !important;
+  color: var(--ui-white) !important;
+  border: 0 !important;
+}
+
+:global(.blocklyContextMenu .goog-menuitem:not(.goog-menuitem-disabled)) {
+  cursor: pointer !important;
+}

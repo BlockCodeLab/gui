@@ -1,0 +1,21 @@
+{
+  "name": "@blockcode/blocks-editor",
+  "module": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "bun-build",
+    "dev": "bun-build --watch ./src"
+  },
+  "dependencies": {
+    "preact": "^10.18.1",
+    "scratch-blocks": "^0.2.0-prerelease.20231013132110"
+  },
+  "devDependencies": {
+    "bun-types": "latest",
+    "bun-loader-css": "link:bun-loader-css"
+  },
+  "optionalDependencies": {
+    "@blockcode/core": "workspace:*",
+    "@blockcode/ui": "workspace:*"
+  }
+}
