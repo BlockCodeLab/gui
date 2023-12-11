@@ -10,7 +10,7 @@ export function ComingSoon({ className, placement, offset, children }) {
       className={classNames(styles.comingSoon, className)}
       content={
         <Text
-          id="comingSoon"
+          id="gui.comingSoon"
           defaultMessage="Coming Soon!"
         />
       }

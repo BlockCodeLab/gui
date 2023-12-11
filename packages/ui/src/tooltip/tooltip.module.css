@@ -6,7 +6,7 @@
   opacity: 0;
   z-index: -1;
   color: var(--ui-white);
-  font-size: var(--standard-font-size);
+  font-size: 0.8rem;
   padding: var(--space) calc(var(--space) * 2.5);
   pointer-events: none;
   transition: opacity 0.2s ease-out;

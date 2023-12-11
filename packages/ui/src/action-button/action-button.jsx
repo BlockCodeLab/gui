@@ -70,7 +70,7 @@ export function ActionButton({
                   content={tooltip}
                   key={index}
                   placement={tooltipPlacement || 'left'}
-                  offset={[0, 16]}
+                  offset={[0, 12]}
                 >
                   <button
                     className={classNames(styles.button, styles.moreButton)}
@@ -101,7 +101,7 @@ export function ActionButton({
         className={styles.tooltip}
         content={mainTooltip}
         placement={tooltipPlacement || 'left'}
-        offset={[0, 16]}
+        offset={[0, 14]}
       >
         <button className={classNames(styles.button, styles.mainButton)}>
           <img
