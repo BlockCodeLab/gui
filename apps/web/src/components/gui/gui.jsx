@@ -11,13 +11,13 @@ import PaneView from '../pane-view/pane-view';
 import styles from './gui.module.css';
 
 export default function GUI() {
-  const { sidebars, pane, menus, tabs, selectedTab, selectTab, setLayout } = useLayout();
+  const { menus, tabs, sidebars, pane, tutorials, canEditProjectName, selectedTab, selectTab, setLayout } = useLayout();
   const { addLocaleData } = useLocale();
   const { openProject } = useEdit();
 
   if (selectedTab === -1) {
     (async () => {
-      const { default: createWorkspace } = await import('@blockcode/extension-micropython');
+      const { default: createWorkspace } = await import('@blockcode/extension-popsicle-blocks-workspace');
       createWorkspace({ addLocaleData, setLayout, openProject });
       selectTab(0);
     })();
@@ -45,6 +45,8 @@ export default function GUI() {
       <MenuBar
         className={styles.menuBarPosition}
         menus={menus}
+        tutorials={tutorials}
+        canEditProjectName={canEditProjectName}
       />
 
       <div className={styles.bodyWrapper}>
@@ -56,7 +58,10 @@ export default function GUI() {
           )}
 
           <div className={styles.editorWrapper}>
-            <Tabs className={styles.tabsWrapper}>
+            <Tabs
+              id={styles.tabsWrapper}
+              className={styles.tabsWrapper}
+            >
               {tabs.map(({ Content: TabContent, ...tab }, index) => (
                 <>
                   <TabLabel
@@ -81,10 +86,11 @@ export default function GUI() {
 
             {PaneContent && (
               <PaneView
+                id={styles.paneWrapper}
                 className={styles.paneWrapper}
                 title={pane.label}
                 right={!RightSidebarContent}
-                lefe={!LeftSidebarContent}
+                left={!LeftSidebarContent}
               >
                 <PaneContent />
               </PaneView>

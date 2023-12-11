@@ -1,1 +1,6 @@
-comingSoon: Coming Soon!
+gui.comingSoon: Coming Soon!
+
+gui.menuBar.tutorials: Tutorials
+gui.menuBar.projectTitlePlaceholder: Project title here
+
+gui.defaultProject.name: BlockCode Project

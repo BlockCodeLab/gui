@@ -1,1 +1,6 @@
-comingSoon: 敬请期待！
+gui.comingSoon: 敬请期待！
+
+gui.menuBar.tutorials: 教程
+gui.menuBar.projectTitlePlaceholder: 在此填写作品标题
+
+gui.defaultProject.name: BlockCode 作品

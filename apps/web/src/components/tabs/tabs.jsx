@@ -10,18 +10,12 @@ import TabPanel from './tab-panel';
 /* styles */
 import styles from './tabs.module.css';
 
-const defaultID = styles.tabsWrapper.split('_')[0];
-
 export { TabLabel, TabPanel };
 
 export default function Tabs({ id, className, children }) {
   const tabs = flatChildren(children)
     .filter((child) => child)
-    .map((child) =>
-      cloneElement(child, {
-        id: id || defaultID,
-      })
-    );
+    .map((child) => cloneElement(child, { id }));
 
   injectStyle({
     [`.${styles.tab}:checked+.${styles.tabLabel}`]: {
@@ -44,8 +38,8 @@ export default function Tabs({ id, className, children }) {
       {tabs
         .filter((child) => child.type === TabPanel)
         .map((child) => {
-          const tabId = `${id || defaultID}-tab-${child.props.name}`;
-          const panelId = `${id || defaultID}-panel-${child.props.name}`;
+          const tabId = `${id}-tab-${child.props.name}`;
+          const panelId = `${id}-panel-${child.props.name}`;
           injectStyle({
             [`#${tabId}:checked~#${panelId}`]: {
               display: 'flex',

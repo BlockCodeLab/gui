@@ -9,6 +9,8 @@ const initialState = {
   tabs: [],
   sidebars: [],
   pane: false,
+  tutorials: false,
+  canEditProjectName: false,
   selectedTab: -1,
 };
 
