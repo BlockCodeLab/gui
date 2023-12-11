@@ -1,5 +1,4 @@
-import { useLocale, useEdit } from '@blockcode/core';
-import { MicroPythonBoard } from '../../lib/pyboard';
+import { useLocale, useEdit, MicroPythonBoard } from '@blockcode/core';
 
 import filters from './filters.yaml';
 

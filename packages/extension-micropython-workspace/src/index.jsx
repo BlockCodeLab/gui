@@ -1,18 +1,21 @@
-import { Keys } from '@blockcode/core';
 import { Text } from '@blockcode/ui';
-import CodeEditor from './components/code-editor/code-editor';
 
+import getMenus from './lib/menus';
+
+/* components */
+import CodeEditor from './components/code-editor/code-editor';
 import TerminalView from './components/terminal-view/terminal-view';
 import Sidebar from './components/sidebar/sidebar';
 import Pane from './components/pane/pane';
 
-import en from './l10n/en.yaml';
-import zhHans from './l10n/zh-hans.yaml';
-
 /* assets */
 import defaultProject from './lib/default-project';
-import codeIcon from './icon-code.svg';
-import replIcon from './icon-repl.svg';
+import codeIcon from './assets/icon-code.svg';
+import replIcon from './assets/icon-repl.svg';
+
+/* languages */
+import en from './l10n/en.yaml';
+import zhHans from './l10n/zh-hans.yaml';
 
 export default function MicroPython({ addLocaleData, setLayout, openProject, changeFile }) {
   addLocaleData({
@@ -30,39 +33,7 @@ export default function MicroPython({ addLocaleData, setLayout, openProject, cha
   );
 
   setLayout({
-    menus: [
-      {
-        label: (
-          <Text
-            id="micropython.menu.file"
-            defaultMessage="File"
-          />
-        ),
-        menuItems: [
-          {
-            label: (
-              <Text
-                id="micropython.menu.newProject"
-                defaultMessage="New"
-              />
-            ),
-            hotkey: [Keys.COMMAND, Keys.CONTROL, Keys.N],
-            async onClick() {
-              console.log('new');
-            },
-          },
-        ],
-      },
-      {
-        label: (
-          <Text
-            id="micropython.menu.edit"
-            defaultMessage="Edit"
-          />
-        ),
-        menuItems: [],
-      },
-    ],
+    menus: getMenus(),
 
     tabs: [
       {
@@ -103,5 +74,9 @@ export default function MicroPython({ addLocaleData, setLayout, openProject, cha
       ),
       Content: Pane,
     },
+
+    tutorials: true,
+
+    canEditProjectName: true,
   });
 }

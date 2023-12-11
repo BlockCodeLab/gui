@@ -1,5 +1,5 @@
 {
-  "name": "@blockcode/extension-micropython",
+  "name": "@blockcode/extension-micropython-workspace",
   "module": "dist/index.js",
   "type": "module",
   "scripts": {
@@ -19,8 +19,8 @@
     "bun-loader-css": "link:bun-loader-css"
   },
   "optionalDependencies": {
-    "@blockcode/code-editor": "workspace:*",
     "@blockcode/core": "workspace:*",
-    "@blockcode/ui": "workspace:*"
+    "@blockcode/ui": "workspace:*",
+    "@blockcode/code-editor": "workspace:*"
   }
 }

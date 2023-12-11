@@ -1,6 +1,12 @@
 micropython.menu.file: File
 micropython.menu.newProject: New
+micropython.menu.openProject: Open
+micropython.menu.saveProject: Save
+micropython.menu.uploadProject: Load from your computer
+micropython.menu.downloadProject: Save to your computer
 micropython.menu.edit: Edit
+micropython.menu.undo: Undo
+micropython.menu.redo: Redo
 
 micropython.runCode: Run
 micropython.stopAll: Stop
@@ -14,7 +20,7 @@ micropython.deviceManager.notReady: Not ready
 micropython.deviceManager.ready: Ready
 
 micropython.packageList.title: Modules
-micropython.packageList.addPackage: Add
+micropython.packageList.addPackage: Add Package
 
 micropython.fileInfo.title: File Info
 micropython.fileInfo.name: File

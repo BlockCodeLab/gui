@@ -22,7 +22,7 @@ export default {
     'preact/hooks',
     `preact/jsx-${isRelease ? '' : 'dev-'}runtime`,
     '@blockcode/core',
-    '@blockcode/code-editor',
     '@blockcode/ui',
+    '@blockcode/code-editor',
   ],
 };

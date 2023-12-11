@@ -1,5 +1,5 @@
 import Toolbar from './toolbar';
-import FileSelector from '..//file-selector/file-selector';
+import FileSelector from '../file-selector/file-selector';
 
 import styles from './sidebar.module.css';
 

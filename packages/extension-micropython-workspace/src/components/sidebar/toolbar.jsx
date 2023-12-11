@@ -7,7 +7,6 @@ import DeviceManager from '../device-manager/device-manager';
 import styles from './toolbar.module.css';
 import iconRunCode from './icon-run-code.svg';
 import iconStopAll from './icon-stop-all.svg';
-import iconSyncDevice from './icon-sync-device.svg';
 
 export default function Toolbar() {
   const { getText } = useLocale();

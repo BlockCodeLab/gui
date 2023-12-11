@@ -1,6 +1,12 @@
 micropython.menu.file: 文件
 micropython.menu.newProject: 新作品
+micropython.menu.openProject: 打开
+micropython.menu.saveProject: 保存
+micropython.menu.uploadProject: 从电脑中打开
+micropython.menu.downloadProject: 保存到电脑
 micropython.menu.edit: 编辑
+micropython.menu.undo: 撤销
+micropython.menu.redo: 恢复
 
 micropython.runCode: 运行
 micropython.stopAll: 停止
@@ -13,8 +19,8 @@ micropython.deviceManager.connect: 连接硬件...
 micropython.deviceManager.notReady: 未连接
 micropython.deviceManager.ready: 已连接
 
-micropython.packageList.title: 模块
-micropython.packageList.addPackage: 添加模块
+micropython.packageList.title: 扩展包
+micropython.packageList.addPackage: 添加扩展包
 
 micropython.fileInfo.title: 文件信息
 micropython.fileInfo.name: 文件

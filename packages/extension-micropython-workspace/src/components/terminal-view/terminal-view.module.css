@@ -4,6 +4,7 @@
   position: relative;
   padding: 2px;
   border-radius: inherit;
+  overflow: hidden;
 }
 
 .terminal-wrapper :global(.xterm) {
