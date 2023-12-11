@@ -17,17 +17,25 @@ const imports = Object.fromEntries(
     'preact',
     'preact/hooks',
     `preact/jsx-${isRelease ? '' : 'dev-'}runtime`,
-    '@blockcode/code-editor',
     '@blockcode/core',
-    '@blockcode/extension-micropython',
     '@blockcode/ui',
+    '@blockcode/code-editor',
+    '@blockcode/extension-micropython-workspace',
+    '@blockcode/blocks-editor',
+    '@blockcode/extension-blocks-workspace',
+    '@blockcode/extension-popsicle-blocks-workspace',
   ].map((moduleId) => [
     moduleId,
     `/${moduleId.includes('/') ? '' : `${moduleId}/`}${moduleId}${extname(import.meta.resolveSync(moduleId))}`,
   ])
 );
 
-const assets = ['@blockcode/ui', '@blockcode/extension-micropython'];
+const assets = [
+  '@blockcode/ui',
+  '@blockcode/extension-micropython-workspace',
+  '@blockcode/extension-blocks-workspace',
+  '@blockcode/extension-popsicle-blocks-workspace',
+];
 
 export default {
   entrypoints: [resolve(SRC_DIR, 'index.jsx')],
