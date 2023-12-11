@@ -1,0 +1,24 @@
+{
+  "name": "@blockcode/extension-popsicle-blocks-workspace",
+  "module": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "bun-build",
+    "dev": "bun-build --watch ./src"
+  },
+  "dependencies": {
+    "classnames": "^2.3.2",
+    "preact": "^10.18.1"
+  },
+  "devDependencies": {
+    "bun-types": "latest",
+    "bun-loader-yaml": "link:bun-loader-yaml",
+    "bun-loader-css": "link:bun-loader-css"
+  },
+  "optionalDependencies": {
+    "@blockcode/core": "workspace:*",
+    "@blockcode/ui": "workspace:*",
+    "@blockcode/blocks-editor": "workspace:*",
+    "@blockcode/extension-blocks-workspace": "workspace:*"
+  }
+}
