@@ -22,9 +22,9 @@
     "@blockcode/core": "workspace:*",
     "@blockcode/ui": "workspace:*",
     "@blockcode/code-editor": "workspace:*",
-    "@blockcode/extension-micropython-workspace": "workspace:*",
+    "@blockcode/workspace-micropython": "workspace:*",
     "@blockcode/blocks-editor": "workspace:*",
-    "@blockcode/extension-blocks-workspace": "workspace:*",
-    "@blockcode/extension-popsicle-blocks-workspace": "workspace:*"
+    "@blockcode/workspace-blocks": "workspace:*",
+    "@blockcode/workspace-popsicle-blocks": "workspace:*"
   }
 }
