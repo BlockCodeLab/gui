@@ -9,4 +9,6 @@ export { IconSelector } from './icon-selector/icon-selector';
 export { Input } from './forms/input';
 export { Label } from './forms/label';
 export { Menu, MenuItem, MenuSection } from './menu/menu';
+export { Modal } from './modal/modal';
+export { Spinner } from './spinner/spinner';
 export { Tooltip } from './tooltip/tooltip';
