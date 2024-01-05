@@ -1,16 +1,16 @@
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import { useRef, useEffect, useState } from 'preact/hooks';
-import { useEdit } from '@blockcode/core';
+import { useEditor } from '@blockcode/core';
 import createEditor from './create-monaco';
 
 import styles from './code-editor.module.css';
-import { monaco } from '.';
 
 const extname = (filename) => filename.split('.').at(-1);
 
-const setModel = (editor, changeContent, file = { content: '', name: '' }) => {
+const setModel = (editor, modifyFile, file = { content: '', name: '' }) => {
   const model = monaco.editor.createModel(file.content, undefined, monaco.Uri.file(file.name));
   const oldModel = editor.getModel();
-  model.onDidChangeContent(() => changeContent(model.getValue()));
+  model.onDidChangeContent(() => modifyFile({ content: model.getValue() }));
   editor.setModel(model);
   oldModel.dispose();
 };
@@ -22,13 +22,13 @@ export function CodeEditor() {
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [currentExtname, setCurrentExtname] = useState('');
 
-  const { fileList, selectedIndex, changeContent } = useEdit();
+  const { fileList, selectedIndex, modifyFile } = useEditor();
   const file = selectedIndex >= 0 && fileList[selectedIndex];
 
   if (ref.editor && file) {
     if (extname(file.name) !== currentExtname) {
       setCurrentExtname(extname(file.name));
-      setModel(ref.editor, changeContent, file);
+      setModel(ref.editor, modifyFile, file);
     }
 
     if (currentIndex !== selectedIndex || fileList.length !== filesCount) {
@@ -48,7 +48,7 @@ export function CodeEditor() {
         setCurrentExtname(extname(file.name));
         ref.editor.updateOptions({ readOnly: file.readOnly });
       }
-      setModel(ref.editor, changeContent, file);
+      setModel(ref.editor, modifyFile, file);
     }
     return () => {
       if (ref.editor) {
