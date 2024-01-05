@@ -1,0 +1,63 @@
+blocks.dataPrompt.forAllTargets: For all sprites
+blocks.dataPrompt.forThisTarget: For this sprite only
+blocks.dataPrompt.availableToAllTargets: This variable will be available to all sprites.
+blocks.dataPrompt.listAvailableToAllTargets: This list will be available to all sprites.
+
+popsicle.blocks.greenFlag: Go
+popsicle.blocks.stopAll: Stop
+popsicle.blocks.smallStage: Switch to small stage
+popsicle.blocks.largeStage: Switch to large stage
+
+popsicle.blocks.contextMenu.duplicate: duplicate
+popsicle.blocks.contextMenu.export: export
+popsicle.blocks.contextMenu.delete: delete
+popsicle.blocks.actionButton.uploadSprite: Upload Sprite
+popsicle.blocks.actionButton.uploadBackdrop: Upload Backdrop
+popsicle.blocks.actionButton.surprise: Surprise
+popsicle.blocks.actionButton.paint: Paint
+popsicle.blocks.actionButton.sprite: Choose a Sprite
+popsicle.blocks.actionButton.backdrop: Choose a Backdrop
+
+popsicle.blocks.stageSelector.title: Stage
+popsicle.blocks.stageSelector.backdrops: Backdrops
+
+popsicle.blocks.spriteInfo.sprite: Sprite
+popsicle.blocks.spriteInfo.name: Name
+popsicle.blocks.spriteInfo.x: X
+popsicle.blocks.spriteInfo.y: Y
+popsicle.blocks.spriteInfo.show: Show
+popsicle.blocks.spriteInfo.hide: Hide
+popsicle.blocks.spriteInfo.size: Size
+popsicle.blocks.spriteInfo.direction: Direction
+
+popsicle.blocks.defaultProject.stageName: Stage
+popsicle.blocks.defaultProject.spriteName: Sprite1
+popsicle.blocks.defaultProject.backdropName: backdrop1
+popsicle.blocks.defaultProject.costumeName1: costume1
+popsicle.blocks.defaultProject.costumeName2: costume2
+
+popsicle.blocks.keyCenter: center
+popsicle.blocks.stopOther: other scripts in sprite
+popsicle.blocks.sensingOfDistanceto.center: center
+popsicle.blocks.soundEffects.tempo: tempo
+popsicle.blocks.musicMenu.dadadadum: dadadadum
+popsicle.blocks.musicMenu.entertainer: entertainer
+popsicle.blocks.musicMenu.prelude: prelude
+popsicle.blocks.musicMenu.ode: ode
+popsicle.blocks.musicMenu.nyan: nyan
+popsicle.blocks.musicMenu.ringtone: ringtone
+popsicle.blocks.musicMenu.funk: funk
+popsicle.blocks.musicMenu.blues: blues
+popsicle.blocks.musicMenu.birthday: birthday
+popsicle.blocks.musicMenu.wedding: wedding
+popsicle.blocks.musicMenu.funeral: funeral
+popsicle.blocks.musicMenu.punchline: punchline
+popsicle.blocks.musicMenu.python: python
+popsicle.blocks.musicMenu.baddy: baddy
+popsicle.blocks.musicMenu.chase: chase
+popsicle.blocks.musicMenu.baDing: ba ding
+popsicle.blocks.musicMenu.wawawawaa: wawawawaa
+popsicle.blocks.musicMenu.jumpUp: jump up
+popsicle.blocks.musicMenu.jumpDown: jump down
+popsicle.blocks.musicMenu.powerUp: power up
+popsicle.blocks.musicMenu.powerDown: power down

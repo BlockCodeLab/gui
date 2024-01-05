@@ -1,0 +1,63 @@
+popsicle.blocks.greenFlag: 运行
+popsicle.blocks.stopAll: 停止
+popsicle.blocks.smallStage: 缩小舞台
+popsicle.blocks.largeStage: 放大舞台
+
+popsicle.blocks.contextMenu.duplicate: 复制
+popsicle.blocks.contextMenu.export: 导出
+popsicle.blocks.contextMenu.delete: 删除
+popsicle.blocks.actionButton.uploadSprite: 上传角色
+popsicle.blocks.actionButton.uploadBackdrop: 上传背景
+popsicle.blocks.actionButton.surprise: 随机
+popsicle.blocks.actionButton.paint: 绘制
+popsicle.blocks.actionButton.sprite: 选择一个角色
+popsicle.blocks.actionButton.backdrop: 选择一个背景
+
+popsicle.blocks.stageSelector.title: 舞台
+popsicle.blocks.stageSelector.backdrops: 背景
+
+blocks.dataPrompt.forAllTargets: 适用于所有角色
+blocks.dataPrompt.forThisTarget: 仅适用于当前角色
+blocks.dataPrompt.availableToAllTargets: 所有角色都可使用该变量。
+blocks.dataPrompt.listAvailableToAllTargets: 所有角色都可使用该列表。
+
+popsicle.blocks.spriteInfo.sprite: 角色
+popsicle.blocks.spriteInfo.name: 名字
+popsicle.blocks.spriteInfo.x: x
+popsicle.blocks.spriteInfo.y: y
+popsicle.blocks.spriteInfo.show: 显示
+popsicle.blocks.spriteInfo.hide: 隐藏
+popsicle.blocks.spriteInfo.size: 大小
+popsicle.blocks.spriteInfo.direction: 方向
+
+popsicle.blocks.defaultProject.stageName: 舞台
+popsicle.blocks.defaultProject.spriteName: 角色1
+popsicle.blocks.defaultProject.backdropName: 背景1
+popsicle.blocks.defaultProject.costumeName1: 造型1
+popsicle.blocks.defaultProject.costumeName2: 造型2
+
+popsicle.blocks.keyCenter: 中键
+popsicle.blocks.stopOther: 该角色的其他脚本
+popsicle.blocks.sensingOfDistanceto.center: 中心
+popsicle.blocks.soundEffects.tempo: 速度
+popsicle.blocks.musicMenu.dadadadum: 开场
+popsicle.blocks.musicMenu.entertainer: 娱乐
+popsicle.blocks.musicMenu.prelude: 前奏
+popsicle.blocks.musicMenu.ode: 颂歌
+popsicle.blocks.musicMenu.nyan: 初音
+popsicle.blocks.musicMenu.ringtone: 铃声
+popsicle.blocks.musicMenu.funk: 恐慌
+popsicle.blocks.musicMenu.blues: 蓝调
+popsicle.blocks.musicMenu.birthday: 生日
+popsicle.blocks.musicMenu.wedding: 婚礼
+popsicle.blocks.musicMenu.funeral: 葬礼
+popsicle.blocks.musicMenu.punchline: 笑点
+popsicle.blocks.musicMenu.python: 贪吃蛇
+popsicle.blocks.musicMenu.baddy: 坏人
+popsicle.blocks.musicMenu.chase: 追逐
+popsicle.blocks.musicMenu.baDing: 奖励
+popsicle.blocks.musicMenu.wawawawaa: 退场
+popsicle.blocks.musicMenu.jumpUp: 跳起来
+popsicle.blocks.musicMenu.jumpDown: 跳下去
+popsicle.blocks.musicMenu.powerUp: 打开电源
+popsicle.blocks.musicMenu.powerDown: 关闭电源
