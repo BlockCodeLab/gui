@@ -1,7 +1,6 @@
 /* inspired by https://github.com/arduino/micropython.js/blob/main/micropython.js */
 
-import { sleep } from '../lib/sleep';
-import { Serial } from '../lib/serial';
+import { Serial, sleep } from '@blockcode/core';
 
 const navigator = globalThis.navigator;
 
@@ -16,7 +15,7 @@ const CHUNK_SIZE = 128;
 
 function fixLineBreak(str) {
   // https://stackoverflow.com/questions/4025760/python-file-write-creating-extra-carriage-return
-  return str.replace(/\r\n/g, '\n');
+  return str.replaceAll('\r\n', '\n');
 }
 
 function extract(str) {
@@ -27,11 +26,12 @@ function extract(str) {
   return str.slice(2, -3);
 }
 
-export class MicroPythonBoard {
+export default class MicroPythonBoard {
   constructor() {
     this.serial = null;
     this._connected = false;
-    this._decoder = new TextDecoder();
+    this._encoder = new globalThis.TextEncoder();
+    this._decoder = new globalThis.TextDecoder();
   }
 
   requestPort(filters = []) {
@@ -133,7 +133,7 @@ export class MicroPythonBoard {
     if (fileContent) {
       await this.enterRawRepl();
       const out = await this.execRaw(fileContent, dataConsumer);
-      await this.exiRawRepl();
+      await this.exitRawRepl();
       return out;
     }
     return Promise.reject();
@@ -284,8 +284,17 @@ export class MicroPythonBoard {
   async put(content, dest, dataConsumer) {
     dataConsumer = dataConsumer || function () {};
     if (content && dest) {
-      const contentString = fixLineBreak(content);
-      const hexArray = contentString.split('').map((c) => c.charCodeAt(0).toString(16).padStart(2, '0'));
+      let contentUint8;
+      if (typeof content === 'string') {
+        contentUint8 = this._encoder.encode(fixLineBreak(content));
+      } else if (content instanceof ArrayBuffer) {
+        contentUint8 = new Uint8Array(content);
+      } else if (content instanceof Uint8Array) {
+        contentUint8 = content;
+      } else {
+        Promise.reject(new Error(`${content} must string, Uint8Array or ArrayBuffer`));
+      }
+      const hexArray = Array.from(contentUint8).map((c) => c.toString(16).padStart(2, '0'));
       let out = '';
       out += await this.enterRawRepl();
       out += await this.execRaw(`f=open('${dest}','w')\nw=f.write`);
@@ -299,6 +308,7 @@ export class MicroPythonBoard {
       }
       out += await this.execRaw(`f.close()`);
       out += await this.exitRawRepl();
+      dataConsumer(100);
       return out;
     }
     return Promise.reject(new Error(`Must specify content and destination path`));
