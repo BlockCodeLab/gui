@@ -11,8 +11,9 @@ const mapMenuItems = (menuItems) =>
       <MenuSection key={index}>{mapMenuItems(menu)}</MenuSection>
     ) : (
       <MenuItem
-        className={menu.className}
         key={index}
+        disabled={menu.disabled}
+        className={menu.className}
         onClick={menu.onClick}
       >
         {menu.label}

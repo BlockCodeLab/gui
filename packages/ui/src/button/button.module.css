@@ -6,15 +6,15 @@
   font-weight: bold;
   padding: var(--space) calc(var(--space) * 1.5);
   user-select: none;
+  color: var(--text-primary);
+  font-size: var(--standard-font-size);
 }
 
 .content {
   white-space: nowrap;
-  color: var(--text-primary);
   width: 100%;
   display: flex;
   align-items: center;
-  font-size: var(--standard-font-size);
 }
 
 .disabled {

@@ -22,13 +22,28 @@
   justify-content: space-between;
 }
 
+.menu-item.disabled {
+  filter: opacity(0.5);
+}
+
+.menu-item.disabled:hover {
+  background: transparent;
+}
+
 .content {
   display: flex;
   flex: 1;
 }
 
+.hotkey {
+  font-weight: normal;
+}
+
 .menu-item:hover {
   background: var(--motion-primary);
+}
+
+.menu-item:hover:not(.disabled) {
   color: var(--ui-white);
 }
 

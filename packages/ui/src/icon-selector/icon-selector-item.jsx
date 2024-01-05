@@ -43,10 +43,12 @@ export function IconSelectorItem({
           <div className={styles.iconTitle}>{title}</div>
           {details && <div className={styles.iconDetails}>{details}</div>}
         </div>
-        <DeleteButton
-          className={styles.deleteButton}
-          onClick={onDelete}
-        />
+        {onDelete && (
+          <DeleteButton
+            className={styles.deleteButton}
+            onClick={onDelete}
+          />
+        )}
       </label>
     </ContextMenu>
   );

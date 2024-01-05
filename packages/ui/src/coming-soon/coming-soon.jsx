@@ -1,6 +1,6 @@
 import classNames from 'classnames';
-import { Tooltip } from '../tooltip/tooltip';
 import { Text } from '@blockcode/core';
+import { Tooltip } from '../tooltip/tooltip';
 
 import styles from './coming-soon.module.css';
 

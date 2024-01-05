@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import { cloneElement } from 'preact';
-import { flatChildren, setHotkey } from '@blockcode/core';
+import { useState } from 'preact/hooks';
+import { flatChildren, setHotkey, showHotkey, useLocale, useEditor } from '@blockcode/core';
 
 import styles from './menu.module.css';
 
@@ -19,16 +20,53 @@ export function Menu({ id, className, children, name }) {
 
 const notMobile = /Win|Mac|Linux/i.test(globalThis.navigator.platform || globalThis.navigator.userAgent);
 
-export function MenuItem({ children, className, href, hotkey, onClick }) {
+export function MenuItem({ children, className, disabled: isDisabled, href, hotkey, onLabel, onDisable, onClick }) {
+  const [disabled, setDisable] = useState(isDisabled);
+  const [label, setLabel] = useState();
+  const locale = useLocale();
+  const context = useEditor();
+
   const navigateToHref = () => href && window.open(href, '_blank');
-  const handleClick = onClick ? onClick : navigateToHref;
+  const handleClick =
+    !disabled &&
+    ((e) => {
+      if (onClick) {
+        e.locale = locale;
+        e.context = context;
+        onClick(e);
+        return;
+      }
+      navigateToHref();
+    });
+  if (notMobile && hotkey) setHotkey(hotkey, handleClick);
+
+  if (onDisable) {
+    const result = onDisable({ locale, context, setDisable });
+    if (typeof result !== 'undefined' && result !== disabled) {
+      setDisable(result);
+    }
+  }
+  if (onLabel) {
+    const result = onLabel({ locale, context, setLabel });
+    if (typeof result !== 'undefined' && result !== label) {
+      setLabel(result);
+    }
+  }
+
   return (
     <li
-      className={classNames(styles.menuItem, styles.hoverable, className)}
-      onMouseDown={handleClick}
+      className={classNames(
+        styles.menuItem,
+        {
+          [styles.hoverable]: !disabled,
+          [styles.disabled]: disabled,
+        },
+        className
+      )}
+      onClick={handleClick}
     >
-      <div className={styles.content}>{children}</div>
-      {notMobile && hotkey && <div className={styles.hotkey}>{setHotkey(hotkey, handleClick)}</div>}
+      <div className={styles.content}>{label || children}</div>
+      {notMobile && hotkey && <div className={styles.hotkey}>{showHotkey(hotkey)}</div>}
     </li>
   );
 }
