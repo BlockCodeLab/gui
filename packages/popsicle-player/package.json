@@ -1,0 +1,21 @@
+{
+  "name": "@blockcode/popsicle-player",
+  "module": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "bun-build",
+    "dev": "bun-build --watch ./src"
+  },
+  "dependencies": {
+    "paper": "^0.12.17",
+    "preact": "^10.18.1"
+  },
+  "devDependencies": {
+    "bun-types": "latest",
+    "bun-loader-css": "link:bun-loader-css"
+  },
+  "optionalDependencies": {
+    "@blockcode/core": "workspace:*",
+    "@blockcode/blocks-editor": "workspace:*"
+  }
+}
