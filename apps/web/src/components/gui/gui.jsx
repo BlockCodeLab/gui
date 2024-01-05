@@ -1,8 +1,10 @@
 import classNames from 'classnames';
-import { useLocale, useEdit } from '@blockcode/core';
+import { useLocale, useEditor } from '@blockcode/core';
 import { useLayout } from '../../hooks/use-layout';
+import { useAlert } from '../../hooks/use-alert';
 
 /* components */
+import Alerts from '../alerts/alerts';
 import MenuBar from '../menu-bar/menu-bar';
 import Tabs, { TabLabel, TabPanel } from '../tabs/tabs';
 import PaneView from '../pane-view/pane-view';
@@ -12,13 +14,14 @@ import styles from './gui.module.css';
 
 export default function GUI() {
   const { menus, tabs, sidebars, pane, tutorials, canEditProjectName, selectedTab, selectTab, setLayout } = useLayout();
-  const { addLocaleData } = useLocale();
-  const { openProject } = useEdit();
+  const { alerts, setAlert, removeAlert } = useAlert();
+  const { addLocaleData, getText } = useLocale();
+  const { openProject } = useEditor();
 
   if (selectedTab === -1) {
     (async () => {
-      const { default: createWorkspace } = await import('@blockcode/extension-popsicle-blocks-workspace');
-      createWorkspace({ addLocaleData, setLayout, openProject });
+      const { default: createWorkspace } = await import('@blockcode/workspace-popsicle-blocks');
+      createWorkspace({ addLocaleData, getText, setLayout, setAlert, removeAlert, openProject });
       selectTab(0);
     })();
   }
@@ -42,6 +45,8 @@ export default function GUI() {
 
   return (
     <>
+      <Alerts items={alerts} />
+
       <MenuBar
         className={styles.menuBarPosition}
         menus={menus}
