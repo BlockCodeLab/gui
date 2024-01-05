@@ -13,7 +13,7 @@ pythonGenerator['math_number'] = (block) => {
     code = '-float("inf")';
     order = pythonGenerator.ORDER_UNARY_SIGN;
   } else if (Number.isNaN(code)) {
-    code = '-float("inf")';
+    code = 'float("nan")';
     order = pythonGenerator.ORDER_UNARY_SIGN;
   } else {
     order = code < 0 ? pythonGenerator.ORDER_UNARY_SIGN : pythonGenerator.ORDER_ATOMIC;
@@ -39,7 +39,7 @@ pythonGenerator['math_positive_number'] = (block) => {
     code = 'float("inf")';
     order = pythonGenerator.ORDER_FUNCTION_CALL;
   } else if (code === -Infinity) {
-    code = 'float("inf")';
+    code = '-float("inf")';
     order = pythonGenerator.ORDER_FUNCTION_CALL;
   } else if (Number.isNaN(code)) {
     code = 'float("nan")';

@@ -1,10 +1,31 @@
+import ScratchBlocks from '../../scratch-blocks';
 import { pythonGenerator } from './generator';
 
-pythonGenerator['data_variable'] = (block) => {};
+pythonGenerator['data_variable'] = (block) => {
+  const variableName = pythonGenerator.variableDB_.getName(
+    block.getFieldValue('VARIABLE'),
+    ScratchBlocks.Variables.NAME_TYPE
+  );
+  return [`${variableName}.value`, pythonGenerator.ORDER_ATOMIC];
+};
 
-pythonGenerator['data_setvariableto'] = (block) => {};
+pythonGenerator['data_setvariableto'] = (block) => {
+  const variableName = pythonGenerator.variableDB_.getName(
+    block.getFieldValue('VARIABLE'),
+    ScratchBlocks.Variables.NAME_TYPE
+  );
+  const variableValue = pythonGenerator.valueToCode(block, 'VALUE', pythonGenerator.ORDER_NONE) || '0';
+  return `${variableName}.set(${variableValue})\n`;
+};
 
-pythonGenerator['data_changevariableby'] = (block) => {};
+pythonGenerator['data_changevariableby'] = (block) => {
+  const variableName = pythonGenerator.variableDB_.getName(
+    block.getFieldValue('VARIABLE'),
+    ScratchBlocks.Variables.NAME_TYPE
+  );
+  const variableValue = pythonGenerator.valueToCode(block, 'VALUE', pythonGenerator.ORDER_NONE) || '0';
+  return `${variableName}.inc(${variableValue})\n`;
+};
 
 pythonGenerator['data_listcontents'] = (block) => {};
 

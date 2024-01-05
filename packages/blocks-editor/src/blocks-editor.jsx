@@ -1,16 +1,11 @@
-import { useRef, useEffect } from 'preact/hooks';
+import { useState, useRef, useEffect } from 'preact/hooks';
 import { useLocale } from '@blockcode/core';
 import ScratchBlocks from './scratch-blocks';
-import pythonGenerator from './generators/python';
-
-import unifyLocale from './lib/unify-locale';
 import makeToolboxXML from './lib/make-toolbox-xml';
-
+import unifyLocale from './lib/unify-locale';
 import styles from './blocks-editor.module.css';
 
 const BLOCKS_DEFAULT_SCALE = 0.7;
-
-const BLOCKS_DEFAULT_TOOLBOX = makeToolboxXML();
 
 const BLOCKS_DEFAULT_OPTIONS = {
   zoom: {
@@ -45,26 +40,93 @@ const supportedEvents = new Set([
   ScratchBlocks.Events.BLOCK_CREATE,
   ScratchBlocks.Events.BLOCK_DELETE,
   ScratchBlocks.Events.BLOCK_MOVE,
+  ScratchBlocks.Events.COMMENT_CHANGE,
+  ScratchBlocks.Events.COMMENT_CREATE,
+  ScratchBlocks.Events.COMMENT_DELETE,
+  ScratchBlocks.Events.COMMENT_MOVE,
+  ScratchBlocks.Events.VAR_CREATE,
+  ScratchBlocks.Events.VAR_DELETE,
+  ScratchBlocks.Events.VAR_RENAME,
 ]);
 
-const ResizeObserver = globalThis.ResizeObserver;
-
-export function BlocksEditor({ toolbox, media }) {
+export function BlocksEditor({ toolbox, media, xml, variables, forceUpdate, onWorkspaceCreated, onChange }) {
   const ref = useRef(null);
   const { language } = useLocale();
+  const [currentXml, setCurrentXml] = useState();
+  const [currentToolbox, setCurrentToolbox] = useState();
 
-  ScratchBlocks.ScratchMsgs.setLocale(unifyLocale(language));
-
-  toolbox = toolbox || BLOCKS_DEFAULT_TOOLBOX;
+  toolbox = toolbox || makeToolboxXML();
   if (typeof toolbox === 'function') {
     toolbox = toolbox();
   }
 
-  if (ref.workspace) {
+  const loadXmlToWorkspace = (force) => {
+    if (xml === currentXml && !force) return;
+    setCurrentXml(xml);
+
+    let xmlDom = xml || '';
+    if (typeof xmlDom === 'string') {
+      xmlDom = ScratchBlocks.Xml.textToDom(xmlDom);
+    }
+    ScratchBlocks.Xml.clearWorkspaceAndLoadFromXml(xmlDom, ref.workspace);
+
+    // include global variables
+    if (variables) {
+      const varDom = ScratchBlocks.Xml.variablesToDom(variables);
+      ScratchBlocks.Xml.domToVariables(varDom, ref.workspace);
+    }
+
+    if (!force) {
+      ref.workspace.clearUndo();
+    }
+  };
+
+  const updateToolbox = () => {
+    if (toolbox === currentToolbox) return;
+    setCurrentToolbox(toolbox);
+
+    const categoryId = ref.workspace.toolbox_.getSelectedCategoryId();
+    const offset = ref.workspace.toolbox_.getCategoryScrollOffset();
     ref.workspace.getFlyout().setRecyclingEnabled(false);
-    ref.workspace.updateToolbox(toolbox);
-    ref.workspace.getFlyout().setRecyclingEnabled(true);
+    ScratchBlocks.DropDownDiv.hideWithoutAnimation();
+
+    setTimeout(() => {
+      ref.workspace.updateToolbox(toolbox);
+      loadXmlToWorkspace(true);
+
+      const currentCategoryPos = ref.workspace.toolbox_.getCategoryPositionById(categoryId);
+      const currentCategoryLen = ref.workspace.toolbox_.getCategoryLengthById(categoryId);
+      if (offset < currentCategoryLen) {
+        ref.workspace.toolbox_.setFlyoutScrollPos(currentCategoryPos + offset);
+      } else {
+        ref.workspace.toolbox_.setFlyoutScrollPos(currentCategoryPos);
+      }
+      ref.workspace.getFlyout().setRecyclingEnabled(true);
+    });
+  };
+
+  const handleChange = () => {
+    if (ref.workspace && onChange) {
+      const xmlDom = ScratchBlocks.Xml.workspaceToDom(ref.workspace);
+      // exclude broadcast messages variables
+      const xml = ScratchBlocks.Xml.domToText(xmlDom).replace(
+        /<variable type="broadcast_msg"[^>]+>[^<]+<\/variable>/gi,
+        ''
+      );
+      if (forceUpdate || xml !== currentXml) {
+        onChange(xml, ref.workspace);
+        setCurrentXml(xml);
+      }
+    }
+  };
+
+  if (ref.workspace) {
+    loadXmlToWorkspace();
+    updateToolbox();
+    if (!xml) handleChange();
   }
+
+  ScratchBlocks.ScratchMsgs.setLocale(unifyLocale(language));
 
   useEffect(() => {
     if (ref.current) {
@@ -75,17 +137,23 @@ export function BlocksEditor({ toolbox, media }) {
           media,
         })
       );
+      if (onWorkspaceCreated) {
+        onWorkspaceCreated(ref.workspace);
+      }
       ref.workspace.addChangeListener((e) => {
         if (ref.workspace.isDragging()) return; // Don't update while changes are happening.
         if (!supportedEvents.has(e.type)) return;
-
-        const code = pythonGenerator.workspaceToCode(ref.workspace);
-        console.log(code);
+        handleChange();
       });
       ref.resizeObserver = new ResizeObserver(() => ScratchBlocks.svgResize(ref.workspace));
       ref.resizeObserver.observe(ref.current);
+      if (!xml) handleChange();
     }
-    return () => {};
+    return () => {
+      if (ref.workspace) {
+        ref.workspace.dispose();
+      }
+    };
   }, [ref]);
 
   return (

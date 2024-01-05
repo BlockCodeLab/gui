@@ -1,14 +1,12 @@
 import ScratchBlocks from '../scratch-blocks';
-
 import '../blocks/data';
 
 export const blockSeparator = '<sep gap="36"/>';
 
 export const categorySeparator = '<sep gap="36"/>';
 
-const events = (extensionXML) => `
+const events = () => `
   <category name="%{BKY_CATEGORY_EVENTS}" id="events" colour="#FFD500" secondaryColour="#CC9900">
-    ${extensionXML ? extensionXML : ''}
     <block type="event_whenbroadcastreceived" />
     <block type="event_broadcast">
       <value name="BROADCAST_INPUT">
@@ -24,7 +22,7 @@ const events = (extensionXML) => `
   </category>
 `;
 
-const control = (extensionXML) => `
+const control = () => `
   <category name="%{BKY_CATEGORY_CONTROL}" id="control" colour="#FFAB19" secondaryColour="#CF8B17">
     <block type="control_wait">
       <value name="DURATION">
@@ -50,25 +48,19 @@ const control = (extensionXML) => `
     <block type="control_while"/>
     ${blockSeparator}
     <block type="control_stop"/>
-    ${extensionXML ? extensionXML : ''}
     ${categorySeparator}
   </category>
 `;
 
-const sensing = (extensionXML) => `
+const sensing = () => `
   <category name="%{BKY_CATEGORY_SENSING}" id="sensing" colour="#4CBFE6" secondaryColour="#2E8EB8">
-    ${extensionXML ? extensionXML : ''}
     <block id="timer" type="sensing_timer"/>
     <block type="sensing_resettimer"/>
     ${categorySeparator}
   </category>
 `;
 
-const operators = (extensionXML) => {
-  const apple = ScratchBlocks.ScratchMsgs.translate('OPERATORS_JOIN_APPLE', 'apple');
-  const banana = ScratchBlocks.ScratchMsgs.translate('OPERATORS_JOIN_BANANA', 'banana');
-  const letter = ScratchBlocks.ScratchMsgs.translate('OPERATORS_LETTEROF_APPLE', 'a');
-  return `
+const operators = () => `
   <category name="%{BKY_CATEGORY_OPERATORS}" id="operators" colour="#40BF4A" secondaryColour="#389438">
     <block type="operator_add">
       <value name="NUM1">
@@ -176,12 +168,12 @@ const operators = (extensionXML) => {
     <block type="operator_join">
       <value name="STRING1">
         <shadow type="text">
-          <field name="TEXT">${apple}</field>
+          <field name="TEXT">${ScratchBlocks.Msg.OPERATORS_JOIN_APPLE}</field>
         </shadow>
       </value>
       <value name="STRING2">
         <shadow type="text">
-          <field name="TEXT">${banana}</field>
+          <field name="TEXT">${ScratchBlocks.Msg.OPERATORS_JOIN_BANANA}</field>
         </shadow>
       </value>
     </block>
@@ -193,26 +185,26 @@ const operators = (extensionXML) => {
       </value>
       <value name="STRING">
       <shadow type="text">
-          <field name="TEXT">${apple}</field>
+          <field name="TEXT">${ScratchBlocks.Msg.OPERATORS_JOIN_APPLE}</field>
       </shadow>
       </value>
     </block>
     <block type="operator_length">
       <value name="STRING">
         <shadow type="text">
-          <field name="TEXT">${apple}</field>
+          <field name="TEXT">${ScratchBlocks.Msg.OPERATORS_JOIN_APPLE}</field>
         </shadow>
       </value>
     </block>
     <block id="operator_contains" type="operator_contains">
       <value name="STRING1">
         <shadow type="text">
-          <field name="TEXT">${apple}</field>
+          <field name="TEXT">${ScratchBlocks.Msg.OPERATORS_JOIN_APPLE}</field>
         </shadow>
       </value>
       <value name="STRING2">
         <shadow type="text">
-          <field name="TEXT">${letter}</field>
+          <field name="TEXT">${ScratchBlocks.Msg.OPERATORS_LETTEROF_APPLE}</field>
         </shadow>
       </value>
     </block>
@@ -244,11 +236,9 @@ const operators = (extensionXML) => {
         </shadow>
       </value>
     </block>
-    ${extensionXML ? extensionXML : ''}
     ${categorySeparator}
   </category>
-  `;
-};
+`;
 
 const variables = () => `
   <category
@@ -273,34 +263,44 @@ const myBlocks = () => `
 const xmlOpen = '<xml style="display: none">';
 const xmlClose = '</xml>';
 
-export default function makeToolboxXML(categoriesXML = [], makeCategoriesXML = null) {
-  const concatCategory = (categoryId, defaultXML) => {
+export default function makeToolboxXML(categoriesXML = []) {
+  categoriesXML = categoriesXML.slice();
+  const moveCategory = (categoryId) => {
     const index = categoriesXML.findIndex((categoryInfo) => categoryInfo.id === categoryId);
     if (index >= 0) {
       // remove the category from categoriesXML and return its XML
       const [categoryInfo] = categoriesXML.splice(index, 1);
-      return defaultXML(categoryInfo.xml);
+      return categoryInfo.xml;
     }
-    return defaultXML();
+    // return `undefined`
   };
-  const eventsXML = concatCategory('events', events);
-  const controlXML = concatCategory('control', control);
-  const sensingXML = concatCategory('sensing', sensing);
-  const operatorsXML = concatCategory('operators', operators);
-  const variablesXML = variables();
-  const myBlocksXML = myBlocks();
+  const motionXML = moveCategory('motion') || '';
+  const looksXML = moveCategory('looks') || '';
+  const soundXML = moveCategory('sound') || '';
+  const eventsXML = moveCategory('events') || events();
+  const controlXML = moveCategory('control') || control();
+  const sensingXML = moveCategory('sensing') || sensing();
+  const operatorsXML = moveCategory('operators') || operators();
+  const variablesXML = moveCategory('data') || variables();
+  const myBlocksXML = moveCategory('procedures') || myBlocks();
 
-  let everything = [eventsXML, controlXML, sensingXML, operatorsXML, variablesXML, myBlocksXML];
-
-  if (typeof makeCategoriesXML === 'function') {
-    everything = makeCategoriesXML(everything);
-  }
+  const everything = [
+    xmlOpen,
+    motionXML,
+    looksXML,
+    soundXML,
+    eventsXML,
+    controlXML,
+    sensingXML,
+    operatorsXML,
+    variablesXML,
+    myBlocksXML,
+  ];
 
   for (const extensionCategory of categoriesXML) {
     everything.push(extensionCategory.xml);
   }
 
-  everything.unshift(xmlOpen);
   everything.push(xmlClose);
   return everything.join(`\n`);
 }

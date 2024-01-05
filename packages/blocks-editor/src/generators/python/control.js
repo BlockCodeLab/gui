@@ -1,15 +1,16 @@
 import { pythonGenerator } from './generator';
 
 pythonGenerator['control_wait'] = (block) => {
-  // sleep
-  pythonGenerator.definitions_['import_time'] = 'import time';
-
+  // wait for
   let code = '';
+
   if (pythonGenerator.STATEMENT_PREFIX) {
     // Automatic prefix insertion is switched off for this block.  Add manually.
     code += pythonGenerator.injectId(pythonGenerator.STATEMENT_PREFIX, block);
   }
-  code += `time.sleep(${pythonGenerator.valueToCode(block, 'DURATION', pythonGenerator.ORDER_NONE)})\n`;
+
+  const durationCode = pythonGenerator.valueToCode(block, 'DURATION', pythonGenerator.ORDER_NONE);
+  code += `await wait_for(${durationCode})\n`;
   return code;
 };
 
@@ -32,7 +33,7 @@ pythonGenerator['control_repeat'] = (block) => {
         pythonGenerator.INDENT
       ) + branchCode;
   }
-  code += `for _ in range(${timesCode}):\n${branchCode}`;
+  code += `for _ in range(${timesCode}):\n${branchCode}  await sleep_fps()\n`;
   return code;
 };
 
@@ -54,7 +55,7 @@ pythonGenerator['control_forever'] = (block) => {
         pythonGenerator.INDENT
       ) + branchCode;
   }
-  code += `while True:\n${branchCode}`;
+  code += `while True:\n${branchCode}  await sleep_fps()\n`;
   return code;
 };
 
@@ -96,7 +97,19 @@ pythonGenerator['control_if'] = (block) => {
 
 pythonGenerator['control_if_else'] = pythonGenerator['control_if'];
 
-pythonGenerator['control_wait_until'] = false;
+pythonGenerator['control_wait_until'] = (block) => {
+  // wait until
+  let code = '';
+
+  if (pythonGenerator.STATEMENT_PREFIX) {
+    // Automatic prefix insertion is switched off for this block.  Add manually.
+    code += pythonGenerator.injectId(pythonGenerator.STATEMENT_PREFIX, block);
+  }
+
+  const conditionCode = pythonGenerator.valueToCode(block, 'CONDITION', pythonGenerator.ORDER_NONE) || 'False';
+  code += `while not ${conditionCode}: await sleep_fps()\n`;
+  return code;
+};
 
 pythonGenerator['control_repeat_until'] = (block) => {
   // while not
@@ -117,7 +130,7 @@ pythonGenerator['control_repeat_until'] = (block) => {
         pythonGenerator.INDENT
       ) + branchCode;
   }
-  code += `while not ${conditionCode}:\n${branchCode}`;
+  code += `while not ${conditionCode}:\n${branchCode}  await sleep_fps()\n`;
   return code;
 };
 
@@ -140,11 +153,30 @@ pythonGenerator['control_while'] = (block) => {
         pythonGenerator.INDENT
       ) + branchCode;
   }
-  code += `while ${conditionCode}:\n${branchCode}`;
+  code += `while ${conditionCode}:\n${branchCode}  await sleep_fps()\n`;
   return code;
 };
 
-const ALL_SCRIPTS = 'all';
-const THIS_SCRIPT = 'this script';
-const OTHER_SCRIPTS = 'other scripts in sprite';
-pythonGenerator['control_stop'] = false;
+pythonGenerator['control_stop'] = (block) => {
+  let code = '';
+
+  if (pythonGenerator.STATEMENT_PREFIX) {
+    // Automatic prefix insertion is switched off for this block.  Add manually.
+    code += pythonGenerator.injectId(pythonGenerator.STATEMENT_PREFIX, block);
+  }
+
+  const stopOption = block.getFieldValue('STOP_OPTION');
+  switch (stopOption) {
+    case 'all':
+      pythonGenerator.definitions_['import_sys'] = 'import sys';
+      code += 'sys.exit()\n';
+      break;
+    case 'this script':
+      code += 'return\n';
+      break;
+    case 'other scripts in sprite':
+      code += 'pass\n'; // TODO
+      break;
+  }
+  return code;
+};

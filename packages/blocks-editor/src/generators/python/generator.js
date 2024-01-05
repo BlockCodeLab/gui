@@ -109,11 +109,11 @@ pythonGenerator.ORDER_OVERRIDES = [
  * Initialise the database of variable names.
  * @param {!ScratchBlocks.Workspace} workspace Workspace to generate code from.
  */
-pythonGenerator.init = function (workspace) {
+pythonGenerator.init = (workspace) => {
   /**
    * Empty loops or conditionals are not allowed in Python.
    */
-  pythonGenerator.PASS = this.INDENT + 'pass\n';
+  pythonGenerator.PASS = pythonGenerator.INDENT + 'pass\n';
   // Create a dictionary of definitions to be printed before the code.
   pythonGenerator.definitions_ = Object.create(null);
   // Create a dictionary mapping desired function names in definitions_
@@ -128,21 +128,28 @@ pythonGenerator.init = function (workspace) {
 
   pythonGenerator.variableDB_.setVariableMap(workspace.getVariableMap());
 
-  var defvars = [];
-  var variables = workspace.getAllVariables();
-  for (var i = 0; i < variables.length; i++) {
-    defvars[i] =
-      pythonGenerator.variableDB_.getName(variables[i].getId(), ScratchBlocks.Variables.NAME_TYPE) + ' = None';
+  const defvars = [];
+  const variables = workspace.getAllVariables();
+  for (let i = 0; i < variables.length; i++) {
+    if (variables[i].type === ScratchBlocks.BROADCAST_MESSAGE_VARIABLE_TYPE) {
+      continue;
+    }
+    defvars.push(
+      pythonGenerator.variableDB_.getName(variables[i].getId(), ScratchBlocks.Variables.NAME_TYPE) + '=None'
+    );
   }
 
   // Add developer variables (not created or named by the user).
-  var devVarList = ScratchBlocks.Variables.allDeveloperVariables(workspace);
-  for (var i = 0; i < devVarList.length; i++) {
+  const devVarList = ScratchBlocks.Variables.allDeveloperVariables(workspace);
+  for (let i = 0; i < devVarList.length; i++) {
     defvars.push(
-      pythonGenerator.variableDB_.getName(devVarList[i], ScratchBlocks.Names.DEVELOPER_VARIABLE_TYPE) + ' = None'
+      pythonGenerator.variableDB_.getName(devVarList[i], ScratchBlocks.Names.DEVELOPER_VARIABLE_TYPE) + '=None'
     );
   }
   pythonGenerator.definitions_['variables'] = defvars.join('\n');
+
+  // import scratch for micropython library
+  pythonGenerator.definitions_['import_popsicle_scratch'] = 'from popsicle.scratch import *';
 };
 
 /**
@@ -152,10 +159,10 @@ pythonGenerator.init = function (workspace) {
  */
 pythonGenerator.finish = (code) => {
   // Convert the definitions dictionary into a list.
-  var imports = [];
-  var definitions = [];
-  for (var name in pythonGenerator.definitions_) {
-    var def = pythonGenerator.definitions_[name];
+  const imports = [];
+  const definitions = [];
+  for (let name in pythonGenerator.definitions_) {
+    const def = pythonGenerator.definitions_[name];
     if (def.match(/^(from\s+\S+\s+)?import\s+\S+/)) {
       imports.push(def);
     } else {
@@ -166,7 +173,7 @@ pythonGenerator.finish = (code) => {
   delete pythonGenerator.definitions_;
   delete pythonGenerator.functionNames_;
   pythonGenerator.variableDB_.reset();
-  var allDefs = imports.join('\n') + '\n\n' + definitions.join('\n\n');
+  const allDefs = imports.join('\n') + '\n\n' + definitions.join('\n\n');
   return allDefs.replace(/\n\n+/g, '\n\n').replace(/\n*$/, '\n\n\n') + code;
 };
 
@@ -191,7 +198,7 @@ pythonGenerator.quote_ = (string) => {
   string = string.replace(/\\/g, '\\\\').replace(/\n/g, '\\\n').replace(/\%/g, '\\%');
 
   // Follow the CPython behaviour of repr() for a non-byte string.
-  var quote = "'";
+  let quote = "'";
   if (string.indexOf("'") !== -1) {
     if (string.indexOf('"') === -1) {
       quote = '"';
@@ -212,11 +219,11 @@ pythonGenerator.quote_ = (string) => {
  * @private
  */
 pythonGenerator.scrub_ = (block, code) => {
-  var commentCode = '';
+  let commentCode = '';
   // Only collect comments for blocks that aren't inline.
   if (!block.outputConnection || !block.outputConnection.targetConnection) {
     // Collect comment for this block.
-    var comment = block.getCommentText();
+    let comment = block.getCommentText();
     comment = ScratchBlocks.utils.wrap(comment, pythonGenerator.COMMENT_WRAP - 3);
     if (comment) {
       if (block.getProcedureDef) {
@@ -228,11 +235,11 @@ pythonGenerator.scrub_ = (block, code) => {
     }
     // Collect comments for all value arguments.
     // Don't collect comments for nested statements.
-    for (var i = 0; i < block.inputList.length; i++) {
+    for (let i = 0; i < block.inputList.length; i++) {
       if (block.inputList[i].type == ScratchBlocks.INPUT_VALUE) {
-        var childBlock = block.inputList[i].connection.targetBlock();
+        const childBlock = block.inputList[i].connection.targetBlock();
         if (childBlock) {
-          var comment = pythonGenerator.allNestedComments(childBlock);
+          const comment = pythonGenerator.allNestedComments(childBlock);
           if (comment) {
             commentCode += pythonGenerator.prefixLines(comment, '# ');
           }
@@ -240,12 +247,22 @@ pythonGenerator.scrub_ = (block, code) => {
       }
     }
   }
-  if (!block.parentBlock_ && !block.startHat_) {
-    code = `#${code.replaceAll('\n', '\n#')}`;
+
+  if (block.startHat_) {
+    const nextBlock = block.nextConnection && block.nextConnection.targetBlock();
+    let nextCode = pythonGenerator.blockToCode(nextBlock);
+    if (nextCode) {
+      nextCode = pythonGenerator.prefixLines(nextCode, pythonGenerator.INDENT);
+      code = code.replace(`:\n${pythonGenerator.PASS}`, `:\n${nextCode}`);
+    }
+    return commentCode + code;
   }
-  var nextBlock = block.nextConnection && block.nextConnection.targetBlock();
-  var nextCode = pythonGenerator.blockToCode(nextBlock);
-  return commentCode + code + nextCode;
+
+  if (block.parentBlock_) {
+    const nextBlock = block.nextConnection && block.nextConnection.targetBlock();
+    const nextCode = pythonGenerator.blockToCode(nextBlock);
+    return commentCode + code + nextCode;
+  }
 };
 
 /**
@@ -258,13 +275,13 @@ pythonGenerator.scrub_ = (block, code) => {
  * @return {string|number}
  */
 pythonGenerator.getAdjustedInt = (block, atId, opt_delta, opt_negate) => {
-  var delta = opt_delta || 0;
+  let delta = opt_delta || 0;
   if (block.workspace.options.oneBasedIndex) {
     delta--;
   }
-  var defaultAtIndex = block.workspace.options.oneBasedIndex ? '1' : '0';
-  var atOrder = delta ? pythonGenerator.ORDER_ADDITIVE : pythonGenerator.ORDER_NONE;
-  var at = pythonGenerator.valueToCode(block, atId, atOrder) || defaultAtIndex;
+  const defaultAtIndex = block.workspace.options.oneBasedIndex ? '1' : '0';
+  const atOrder = delta ? pythonGenerator.ORDER_ADDITIVE : pythonGenerator.ORDER_NONE;
+  let at = pythonGenerator.valueToCode(block, atId, atOrder) || defaultAtIndex;
 
   if (ScratchBlocks.isNumber(at)) {
     // If the index is a naked number, adjust it right now.
@@ -286,4 +303,14 @@ pythonGenerator.getAdjustedInt = (block, atId, opt_delta, opt_negate) => {
     }
   }
   return at;
+};
+
+pythonGenerator.functionToCode = (name = '', ...args) => {
+  if (!pythonGenerator.functionNames_[name]) {
+    pythonGenerator.functionNames_[name] = 0;
+  }
+  pythonGenerator.functionNames_[name] += 1;
+  name = `${name}_${pythonGenerator.functionNames_[name]}`;
+  const code = `async def ${name}(${args.join(',')}):\n${pythonGenerator.PASS}`;
+  return [name, code];
 };
