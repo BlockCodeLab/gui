@@ -139,12 +139,13 @@ const KeysOrder = {
   [Keys.COMMAND]: 3,
 };
 
-const Hotkeys = new Set();
+const Hotkeys = new Map();
 
 export function setHotkey(hotkey, handler) {
-  hotkey = [].concat(hotkey);
-  Hotkeys.add({ hotkey, handler });
+  Hotkeys.set(hotkey, handler);
+}
 
+export function showHotkey(hotkey) {
   const keysName = [];
   hotkey.forEach((key) => {
     if (KeysOrder.hasOwnProperty(key)) {
@@ -157,7 +158,7 @@ export function setHotkey(hotkey, handler) {
 }
 
 globalThis.addEventListener('keydown', (e) => {
-  Hotkeys.forEach(({ hotkey, handler }) => {
+  Hotkeys.forEach((handler, hotkey) => {
     const testKey = (key) => {
       if (key === Keys.CONTROL && e.ctrlKey) {
         return true;
@@ -176,7 +177,7 @@ globalThis.addEventListener('keydown', (e) => {
       }
       return false;
     };
-    if (hotkey.every(testKey)) {
+    if (hotkey.every(testKey) && typeof handler === 'function') {
       handler();
     }
   });

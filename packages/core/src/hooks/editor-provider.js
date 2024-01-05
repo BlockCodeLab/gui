@@ -1,16 +1,29 @@
+import localForage from 'localforage';
 import { createContext } from 'preact';
 import { useContext, useReducer } from 'preact/hooks';
 
+const CONFIG_EDITOR = 'CONFIG_EDITOR';
 const OPEN_PROJECT = 'OPEN_PROJECT';
+const SET_PROJECT_NAME = 'SET_PROJECT_NAME';
 const ADD_FILE = 'ADD_FILE';
 const OPEN_FILE = 'OPEN_FILE';
 const DELETE_FILE = 'DELETE_FILE';
 const RENAME_FILE = 'RENAME_FILE';
-const CHANGE_CONTENT = 'CHANGE_CONTENT';
+const MODIFY_FILE = 'MODIFY_FILE';
 const ADD_ASSET = 'ADD_ASSET';
+const DELETE_ASSET = 'DELETE_ASSET';
+const MODIFY_ASSET = 'MODIFY_ASSET';
 const CONNECT_DEVICE = 'CONNECT_DEVICE';
+const SAVE_KEY = 'SAVE_KEY';
+
+localForage.config({
+  name: 'blockcode-store',
+});
 
 const initialState = {
+  key: null,
+  name: '',
+  editor: {},
   assetList: [],
   fileList: [],
   selectedIndex: -1,
@@ -26,6 +39,11 @@ const reducer = (state, action) => {
   switch (action.type) {
     case OPEN_PROJECT:
       return Object.assign({}, initialState, action.payload);
+    case SET_PROJECT_NAME:
+      return {
+        ...state,
+        name: action.payload,
+      };
     case ADD_FILE:
       return {
         ...state,
@@ -40,11 +58,8 @@ const reducer = (state, action) => {
     case DELETE_FILE:
       return {
         ...state,
-        fileList: state.fileList.filter((file, i) => i !== action.payload),
-        selectedIndex:
-          state.selectedIndex === action.payload && state.selectedIndex === state.fileList.length - 1
-            ? state.selectedIndex - 1
-            : state.selectedIndex,
+        fileList: state.fileList.filter((_, i) => i !== action.payload),
+        selectedIndex: action.payload === state.fileList.length - 1 ? action.payload - 1 : action.payload,
       };
     case RENAME_FILE:
       return {
@@ -59,14 +74,14 @@ const reducer = (state, action) => {
           return file;
         }),
       };
-    case CHANGE_CONTENT:
+    case MODIFY_FILE:
       return {
         ...state,
         fileList: state.fileList.map((file, i) => {
-          if (i === state.selectedIndex) {
+          if (action.payload.id ? file.id === action.payload.id : i === state.selectedIndex) {
             return {
               ...file,
-              content: action.payload,
+              ...action.payload,
             };
           }
           return file;
@@ -77,24 +92,67 @@ const reducer = (state, action) => {
         ...state,
         assetList: state.assetList.concat(action.payload),
       };
+    case DELETE_ASSET:
+      return {
+        ...state,
+        assetList: state.assetList.filter((asset) => !action.payload.includes(asset.id)),
+      };
+    case MODIFY_ASSET:
+      return {
+        ...state,
+        assetList: state.assetList.map((asset, i) => {
+          if (asset.id === action.payload.id) {
+            return {
+              ...asset,
+              ...action.payload,
+            };
+          }
+          return asset;
+        }),
+      };
     case CONNECT_DEVICE:
       return {
         ...state,
         device: action.payload,
+      };
+    case CONFIG_EDITOR:
+      return {
+        ...state,
+        editor: {
+          ...action.payload,
+          name: state.editor.name,
+          package: state.editor.package,
+        },
+      };
+    case SAVE_KEY:
+      return {
+        ...state,
+        key: state.key ? state.key : action.payload,
       };
     default:
       return state;
   }
 };
 
-export function useEdit() {
+export function useEditor() {
   const { state, dispatch } = useContext(EditorContext);
 
   return {
     ...state,
 
-    openProject(project) {
-      dispatch({ type: OPEN_PROJECT, payload: project });
+    async openProject(project) {
+      if (typeof project === 'stirng') {
+        project = await localForage.getItem(key);
+      }
+      if (project) {
+        dispatch({ type: OPEN_PROJECT, payload: project });
+      } else {
+        Promise.reject(new Error(`${key} does not exist.`));
+      }
+    },
+
+    setProjectName(name) {
+      dispatch({ type: SET_PROJECT_NAME, payload: name });
     },
 
     addFile(newFile) {
@@ -125,16 +183,52 @@ export function useEdit() {
       dispatch({ type: RENAME_FILE, payload: name });
     },
 
-    changeContent(content) {
-      dispatch({ type: CHANGE_CONTENT, payload: content });
+    modifyFile(content) {
+      dispatch({ type: MODIFY_FILE, payload: content });
     },
 
-    addAsset(asset) {
-      dispatch({ type: ADD_ASSET, payload: asset });
+    addAsset(newAsset) {
+      if (state.assetList.find((asset) => asset.id === newAsset.id)) {
+        throw Error('Asset already exists');
+      }
+      dispatch({ type: ADD_ASSET, payload: newAsset });
+    },
+
+    deleteAsset(...assetIds) {
+      if (Array.isArray(assetIds[0])) {
+        assetIds = assetIds[0];
+      }
+      dispatch({ type: DELETE_ASSET, payload: assetIds });
+    },
+
+    modifyAsset(data) {
+      dispatch({ type: MODIFY_ASSET, payload: data });
     },
 
     connectDevice(device) {
       dispatch({ type: CONNECT_DEVICE, payload: device });
+    },
+
+    setEditor(config) {
+      dispatch({ type: CONFIG_EDITOR, payload: config });
+    },
+
+    saveNow() {
+      let key = state.key;
+      if (!key) {
+        key = Date.now().toString(36);
+        dispatch({ type: SAVE_KEY, payload: key });
+      }
+      const { name, editor, assetList, fileList, selectedIndex } = state;
+      return localForage.setItem(key, { name, editor, assetList, fileList, selectedIndex });
+    },
+
+    listProjects() {
+      return localForage.iterate((value, key) => [key, value]);
+    },
+
+    getProject(key) {
+      return localForage.getItem(key);
     },
   };
 }
