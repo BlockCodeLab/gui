@@ -22,8 +22,10 @@ const mapMenuItems = (menuItems) =>
     ) : (
       <MenuItem
         key={index}
-        hotkey={menu.hotkey}
         className={styles.menuItem}
+        hotkey={menu.hotkey}
+        onDisable={menu.onDisable}
+        onLabel={menu.onLabel}
         onClick={menu.onClick}
       >
         {menu.label}

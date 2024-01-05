@@ -1,10 +1,10 @@
-import { useLocale, useEdit } from '@blockcode/core';
+import { useLocale, useEditor } from '@blockcode/core';
 import { BufferedInput } from '@blockcode/ui';
 
 import styles from './menu-bar.module.css';
 
 export default function ProjectTitleInput({ placeholder, defaultValue }) {
-  const { name, setProjectName } = useEdit();
+  const { name, setProjectName } = useEditor();
 
   const handleChange = (value) => {
     if (value !== name) {

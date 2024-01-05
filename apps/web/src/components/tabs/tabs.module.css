@@ -4,8 +4,8 @@
 }
 
 .tab-label {
-  --line-height: calc(var(--tool-menu-height) * 0.8 - 2px);
-  --margin-top: calc(var(--tool-menu-height) * 0.2 + 1px);
+  --line-height: calc(var(--tool-bar-height) * 0.8 - 2px);
+  --margin-top: calc(var(--tool-bar-height) * 0.2 + 1px);
 
   font-weight: 500;
   font-size: var(--standard-font-size);
@@ -64,11 +64,12 @@
 .tab-panel {
   display: none;
   position: absolute;
-  top: var(--tool-menu-height);
+  top: var(--tool-bar-height);
   bottom: 0;
+  flex-direction: column;
 
   width: 100%;
-  height: calc(100% - var(--tool-menu-height));
+  height: calc(100% - var(--tool-bar-height));
 
   border: 1px solid var(--ui-black-transparent);
   border-radius: 0 var(--space) var(--space) var(--space);

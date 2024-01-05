@@ -6,9 +6,6 @@ import { injectStyle } from '../../lib/inject-style';
 /* components */
 import MenuLabel from './menu-label';
 
-/* styles */
-import styles from './menu-bar.module.css';
-
 export default function MainMenu({ id, children }) {
   const menus = flatChildren(children).map((child) => child && cloneElement(child, { id }));
   return (
