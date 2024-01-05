@@ -20,6 +20,18 @@
   border-right: 1px solid var(--ui-black-transparent) !important;
 }
 
+.editor-workspace :global(.blocklyFlyout .blocklyFlyoutBackground) {
+  clip-path: url(#blocklyBlockMenuClipPath);
+}
+
+.editor-workspace :global(.blocklyFlyout .blocklyWorkspace) {
+  clip-path: none;
+}
+
+.editor-workspace :global(.blocklyFlyout:hover) {
+  overflow: unset;
+}
+
 :global(.blocklyContextMenu) {
   position: absolute !important;
   border: 1px solid var(--ui-black-transparent) !important;
