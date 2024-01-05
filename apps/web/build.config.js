@@ -19,11 +19,12 @@ const imports = Object.fromEntries(
     `preact/jsx-${isRelease ? '' : 'dev-'}runtime`,
     '@blockcode/core',
     '@blockcode/ui',
+    '@blockcode/device-pyboard',
     '@blockcode/code-editor',
-    '@blockcode/extension-micropython-workspace',
+    '@blockcode/workspace-micropython',
     '@blockcode/blocks-editor',
-    '@blockcode/extension-blocks-workspace',
-    '@blockcode/extension-popsicle-blocks-workspace',
+    '@blockcode/workspace-blocks',
+    '@blockcode/workspace-popsicle-blocks',
   ].map((moduleId) => [
     moduleId,
     `/${moduleId.includes('/') ? '' : `${moduleId}/`}${moduleId}${extname(import.meta.resolveSync(moduleId))}`,
@@ -32,9 +33,9 @@ const imports = Object.fromEntries(
 
 const assets = [
   '@blockcode/ui',
-  '@blockcode/extension-micropython-workspace',
-  '@blockcode/extension-blocks-workspace',
-  '@blockcode/extension-popsicle-blocks-workspace',
+  '@blockcode/workspace-micropython',
+  '@blockcode/workspace-blocks',
+  '@blockcode/workspace-popsicle-blocks',
 ];
 
 export default {
