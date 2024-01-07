@@ -1,9 +1,14 @@
 {
   "name": "blockcode",
+  "author": {
+    "name": "Yeqin Gong",
+    "email": "gon@gyeq.in",
+    "url": "http://gon.gyeq.in/"
+  },
   "devDependencies": {
     "bun-types": "latest"
   },
-  },
+  "scripts": {},
   "workspaces": [
     "apps/*",
     "packages/*"
