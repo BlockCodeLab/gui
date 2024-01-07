@@ -1,10 +1,8 @@
 import paperCore from 'paper/dist/paper-core';
 import { EventEmitter } from 'node:events';
-import { ScratchBlocks } from '@blockcode/blocks-editor';
 import { generate } from './generate';
 import RotationStyle from '../lib/rotation-style';
-
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+import sleep from '../lib/sleep';
 
 export default class Runtime extends EventEmitter {
   static VIEW_WIDTH = 280;

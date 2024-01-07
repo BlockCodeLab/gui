@@ -2,11 +2,10 @@ import paperCore from 'paper/dist/paper-core';
 import { useRef, useEffect, useState } from 'preact/hooks';
 import { useEditor } from '@blockcode/core';
 import { ScratchBlocks } from '@blockcode/blocks-editor';
-import javascriptGenerator from './generators/javascript';
 
+import javascriptGenerator from './generators/javascript';
 import Runtime from './runtime/runtime';
 import createUtil from './runtime/target-util';
-import RotationStyle from './lib/rotation-style';
 
 const supportedEvents = new Set([
   ScratchBlocks.Events.BLOCK_CHANGE,
@@ -32,30 +31,40 @@ export function PopsiclePlayer({ stageSize, playing, onRequestStop }) {
   const zoomRatio = stageSize === 'small' ? 1 : 1.5;
   const viewSize = new paperCore.Size(Runtime.VIEW_WIDTH * zoomRatio, Runtime.VIEW_HEIGHT * zoomRatio);
 
-  const setMouseUpHandler = (raster, index) => (e) => {
+  const updateTargetFromRaster = (raster, isStage = false) => {
+    if (!raster || !raster.util) return;
+    modifyFile(
+      Object.assign(
+        {
+          id: raster.name,
+        },
+        isStage
+          ? {
+              backdrop: raster.util.backdrop,
+            }
+          : {
+              costume: raster.util.costume,
+              x: raster.util.x,
+              y: raster.util.y,
+              size: raster.util.size,
+              direction: raster.util.direction,
+              rotationStyle: raster.data.rotationStyle,
+              hidden: !raster.visible,
+            }
+      )
+    );
+  };
+
+  const setMouseUpHandler = (raster, index) => async (e) => {
     if (!raster.dragging) return;
-
-    if (
-      Math.abs(e.point.x - paperCore.view.center.x) <= Runtime.VIEW_WIDTH / 2 &&
-      Math.abs(e.point.y - paperCore.view.center.y) <= Runtime.VIEW_HEIGHT / 2
-    ) {
-      modifyFile({
-        id: raster.name,
-        x: raster.position.x - paperCore.view.center.x,
-        y: paperCore.view.center.y - raster.position.y,
-      });
-    } else {
-      raster.position = new paperCore.Point(
-        paperCore.view.center.x + raster.data.x,
-        paperCore.view.center.y - raster.data.y
-      );
-    }
-    raster.shadowColor = null;
-
     clearTimeout(raster.dragging);
     delete raster.dragging;
 
+    raster.shadowColor = null;
     openFile(index);
+
+    raster.util.goto(raster.position.x - paperCore.view.center.x, paperCore.view.center.y - raster.position.y);
+    updateTargetFromRaster(raster);
   };
 
   const setSelected = (raster) => {
@@ -70,40 +79,6 @@ export function PopsiclePlayer({ stageSize, playing, onRequestStop }) {
     });
   };
 
-  const updateTargetFromRaster = (raster, isStage) => {
-    if (raster) {
-      modifyFile(
-        Object.assign(
-          {
-            id: raster.name,
-            [raster.util.assetName]: raster.data.assetIndex,
-          },
-          isStage
-            ? {}
-            : {
-                x: raster.data.x,
-                y: raster.data.y,
-                size: raster.data.size,
-                direction: raster.data.direction,
-                rotationStyle: raster.data.rotationStyle,
-                hidden: !raster.visible,
-              }
-        )
-      );
-    }
-  };
-
-  const updateAllTargets = () => {
-    const stageLayer = paperCore.project.layers['stage'];
-    const spriteLayer = paperCore.project.layers['sprite'];
-    fileList.forEach((target, index) => {
-      const isStage = index === 0;
-      const layer = isStage ? stageLayer : spriteLayer;
-      const raster = layer.children[target.id];
-      updateTargetFromRaster(raster, isStage);
-    });
-  };
-
   if (ref.current) {
     paperCore.view.viewSize = viewSize;
     paperCore.view.zoom = zoomRatio;
@@ -113,16 +88,13 @@ export function PopsiclePlayer({ stageSize, playing, onRequestStop }) {
       spriteLayer.onMouseDown = false;
       if (!currentRuntime) {
         // start
-        const runtime = new Runtime(fileList, onRequestStop);
-        runtime.on('frame', updateAllTargets);
-        setCurrentRuntime(runtime);
+        setCurrentRuntime(new Runtime(fileList, onRequestStop));
       }
     } else {
       if (currentRuntime) {
         // stop
         currentRuntime.stop();
         setCurrentRuntime(false);
-        updateAllTargets();
       } else {
         const stageLayer = paperCore.project.layers['stage'];
         const spriteLayer = paperCore.project.layers['sprite'];
@@ -154,28 +126,34 @@ export function PopsiclePlayer({ stageSize, playing, onRequestStop }) {
           if (!raster) {
             raster = new paperCore.Raster();
             raster.name = target.id;
+            raster.data = { assets };
+            raster.util = createUtil(raster, isStage);
+            raster.util.on('update', () => updateTargetFromRaster(raster, isStage));
             layer.addChild(raster);
           }
-          raster.data = { assets };
+          raster.data.assets = assets;
 
-          raster.util = createUtil(raster, isStage);
           if (isStage) {
             raster.util.backdrop = target.backdrop;
           } else {
             raster.onMouseUp = setMouseUpHandler(raster, index);
-            raster.data.x = target.x;
-            raster.data.y = target.y;
-            raster.data.size = target.size;
-            raster.data.hidden = target.hidden;
-            raster.data.direction = target.direction;
-            raster.data.rotationStyle = target.rotationStyle;
             raster.util.costume = target.costume;
+            raster.util.x = target.x;
+            raster.util.y = target.y;
+            raster.util.size = target.size;
+            raster.util.hidden = target.hidden;
+            raster.util.direction = target.direction;
+            raster.data.rotationStyle = target.rotationStyle;
           }
         });
 
         // remove deleted sprties
         spriteLayer.children.forEach((child) => {
+          if (child instanceof paperCore.Path) return;
           if (fileList.find((file) => file.id === child.name)) return;
+          if (child.util.contour) {
+            child.util.contour.remove();
+          }
           child.remove();
         });
       }
@@ -190,43 +168,6 @@ export function PopsiclePlayer({ stageSize, playing, onRequestStop }) {
       const spriteLayer = new paperCore.Layer();
       stageLayer.name = 'stage';
       spriteLayer.name = 'sprite';
-
-      const redraw = async (raster, isStage = false) => {
-        if (isStage) {
-          raster.position = paperCore.view.center;
-          return;
-        }
-
-        raster.visible = !raster.data.hidden;
-        if (raster.data.hidden) {
-          return;
-        }
-
-        const position = raster.position;
-        raster.transform(raster.matrix.reset());
-        raster.scale(raster.util.size / 100);
-
-        if (raster.data.rotationStyle === RotationStyle.ALL_AROUND) {
-          raster.rotate(raster.util.direction - Runtime.DEFAULT_DIRECTION);
-        } else if (raster.data.rotationStyle === RotationStyle.HORIZONTAL_FLIP) {
-          if (raster.util.direction > 180 && raster.util.direction < 360) {
-            raster.scale(-1, 1);
-          }
-        }
-
-        if (raster.dragging) {
-          raster.position = position;
-        } else {
-          raster.position = new paperCore.Point(
-            paperCore.view.center.x + raster.data.x,
-            paperCore.view.center.y - raster.data.y
-          );
-        }
-      };
-      paperCore.view.onFrame = () => {
-        stageLayer.children.forEach((raster) => redraw(raster, true));
-        spriteLayer.children.forEach((raster) => redraw(raster));
-      };
 
       let workspace;
       const checkWorkspace = () => {
