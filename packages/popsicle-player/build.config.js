@@ -17,6 +17,7 @@ export default {
     'preact',
     'preact/hooks',
     `preact/jsx-${isRelease ? '' : 'dev-'}runtime`,
+    'paper/dist/paper-core',
     '@blockcode/core',
     '@blockcode/blocks-editor',
   ],
