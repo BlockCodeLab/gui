@@ -1,39 +1,37 @@
 import paperCore from 'paper/dist/paper-core';
 import { EventEmitter } from 'node:events';
+
+import sleep from '../lib/sleep';
 import loadImage from '../lib/load-image';
+import RotationStyle from '../lib/rotation-style';
+import { degToRad, radToDeg } from '../lib/deg-rad';
+
+import createContour from './create-contour';
 import Runtime from './runtime';
 
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-const degToRad = (deg) => (deg * Math.PI) / 180;
-const radToDeg = (rad) => (rad * 180) / Math.PI;
+const POSITION_PADDING = 8;
 
 class Util extends EventEmitter {
   constructor(raster) {
     super();
     this._raster = raster;
+    this._contour = null;
   }
 
   get raster() {
     return this._raster;
   }
 
+  get running() {
+    return !this.raster.layer.onMouseDown;
+  }
+
   get data() {
     return this.raster.data;
   }
 
-  get bounds() {
-    return this.raster.bounds;
-  }
-
   get assets() {
     return this.data.assets;
-  }
-
-  async setImage(assetIndex) {
-    const asset = this.assets[assetIndex];
-    const image = await loadImage(asset);
-    this.raster.image = image;
-    this.raster.pivot = new paperCore.Point(image.width / 2 - asset.centerX, image.height / 2 - asset.centerY);
   }
 
   get stageBounds() {
@@ -45,73 +43,205 @@ class Util extends EventEmitter {
     );
   }
 
+  get contour() {
+    return this._contour;
+  }
+
+  async setImage(assetIndex, calcContour = true) {
+    const asset = this.assets[assetIndex];
+    if (!asset) return;
+
+    const image = await loadImage(asset);
+    this.raster.image = image;
+    this.raster.pivot = new paperCore.Point(asset.centerX - asset.width / 2, asset.centerY - asset.height / 2);
+
+    this.data.assetIndex = assetIndex;
+    if (this.running) {
+      this.emit('update');
+    }
+
+    if (calcContour) {
+      this.createContour();
+    }
+  }
+
+  createContour() {
+    if (this._contour) {
+      this._contour.remove();
+      this._contour = null;
+    }
+    this._contour = createContour(this.raster);
+  }
+
   received(...args) {
     this.on(...args);
   }
 }
 
 class StageUtil extends Util {
-  get assetName() {
-    return 'backdrop';
-  }
-
   get backdrop() {
     return this.data.assetIndex;
   }
 
   set backdrop(value) {
-    this.data.assetIndex = value % this.assets.length;
-    this.setImage(this.data.assetIndex);
+    const assetIndex = value % this.assets.length;
+    if (assetIndex !== this.data.assetIndex) {
+      this.setImage(assetIndex, false);
+    }
   }
 }
 
 class SpriteUtil extends Util {
-  get assetName() {
-    return 'costume';
-  }
-
   get costume() {
     return this.data.assetIndex;
   }
 
   set costume(value) {
-    this.data.assetIndex = value % this.assets.length;
-    this.setImage(this.data.assetIndex);
+    const assetIndex = value % this.assets.length;
+    if (assetIndex !== this.data.assetIndex) {
+      this.setImage(assetIndex);
+    }
   }
 
   get x() {
     return this.data.x;
   }
 
-  set x(value) {
-    this.data.x = value;
+  set x(x) {
+    if (x !== this.data.x) {
+      if (this.contour) {
+        const dx = x - this.data.x;
+        const left = this.contour.bounds.right - POSITION_PADDING + dx;
+        const right = this.contour.bounds.left + POSITION_PADDING + dx;
+        if (left < this.stageBounds.left) {
+          x += this.stageBounds.left - left;
+        }
+        if (right > this.stageBounds.right) {
+          x += this.stageBounds.right - right;
+        }
+      }
+      this.data.x = x;
+      if (this.running) {
+        this.emit('update');
+      }
+
+      this.raster.position.x = paperCore.view.center.x + x;
+      if (this.contour) {
+        this.contour.position.x = this.raster.position.x;
+      }
+    }
   }
 
   get y() {
     return this.data.y;
   }
 
-  set y(value) {
-    this.data.y = value;
+  set y(y) {
+    if (y !== this.data.y) {
+      if (this.contour) {
+        const dy = y - this.data.y;
+        const top = this.contour.bounds.bottom - POSITION_PADDING - dy;
+        const bottom = this.contour.bounds.top + POSITION_PADDING - dy;
+        if (top < this.stageBounds.top) {
+          y -= this.stageBounds.top - top;
+        }
+        if (bottom > this.stageBounds.bottom) {
+          y -= this.stageBounds.bottom - bottom;
+        }
+      }
+      this.data.y = y;
+      if (this.running) {
+        this.emit('update');
+      }
+
+      this.raster.position.y = paperCore.view.center.y - y;
+      if (this.contour) {
+        this.contour.position.y = this.raster.position.y;
+      }
+    }
   }
 
-  get size() {
-    const size = this.data.size < 5 ? 5 : this.data.size;
+  _size(value) {
+    let size = value < 5 ? 5 : value;
+    const width = (this.raster.image.width * size) / 100;
+    const height = (this.raster.image.height * size) / 100;
+    const maxWidth = paperCore.view.viewSize.width * 2;
+    const maxHeight = paperCore.view.viewSize.height * 2;
+    if (width > maxWidth || height > maxHeight) {
+      size = Math.floor(Math.min(maxWidth / this.raster.image.width, maxHeight / this.raster.image.height) * 100);
+    }
     return size;
   }
 
-  set size(value) {
-    this.data.size = value < 5 ? 5 : value;
+  get size() {
+    return this._size(this.data.size);
   }
 
-  get direction() {
-    let direction = this.data.direction % 360;
-    direction = direction < 0 ? direction + 360 : direction;
+  set size(value) {
+    const size = this._size(value);
+    if (size !== this.data.size) {
+      this.data.size = size;
+      if (this.running) {
+        this.emit('update');
+      }
+
+      const scaling = size / 100;
+      this.raster.scaling.x = scaling;
+      this.raster.scaling.y = scaling;
+      if (this.contour) {
+        this.contour.scaling = this.raster.scaling;
+      }
+    }
+  }
+
+  get hidden() {
+    return !this.raster.visible;
+  }
+
+  set hidden(value) {
+    if (value === this.raster.visible) {
+      this.raster.visible = !value;
+      if (this.running) {
+        this.emit('update');
+      }
+    }
+  }
+
+  _direction(value) {
+    let direction = value % 360;
+    if (direction <= -180) {
+      direction += 360;
+    } else if (direction > 180) {
+      direction -= 360;
+    }
     return direction;
   }
 
+  get direction() {
+    return this._direction(this.data.direction);
+  }
+
   set direction(value) {
-    this.data.direction = value % 360;
+    const direction = this._direction(value);
+    if (direction !== this.data.direction) {
+      this.data.direction = direction;
+      if (this.running) {
+        this.emit('update');
+      }
+
+      if (this.data.rotationStyle === RotationStyle.ALL_AROUND) {
+        this.raster.rotation = direction - Runtime.DEFAULT_DIRECTION;
+      } else if (this.data.rotationStyle === RotationStyle.HORIZONTAL_FLIP) {
+        this.raster.rotation = 0;
+        this.raster.scaling.x = this.direction < 0 ? -this.raster.scaling.x : this.raster.scaling.x;
+        if (this.contour) {
+          this.contour.scaling.x = this.raster.scaling.x;
+        }
+      }
+      if (this.contour) {
+        this.contour.rotation = this.raster.rotation;
+      }
+    }
   }
 
   move(steps) {
@@ -175,18 +305,20 @@ class SpriteUtil extends Util {
   }
 
   async edgeBounce() {
+    if (!this.contour) return;
+
     // Find the nearest edge.
     let nearestEdge;
-    if (this.bounds.top < this.stageBounds.top) {
+    if (this.contour.bounds.top < this.stageBounds.top) {
       nearestEdge = 'top';
     }
-    if (this.bounds.left < this.stageBounds.left) {
+    if (this.contour.bounds.left < this.stageBounds.left) {
       nearestEdge = 'left';
     }
-    if (this.bounds.right > this.stageBounds.right) {
+    if (this.contour.bounds.right > this.stageBounds.right) {
       nearestEdge = 'right';
     }
-    if (this.bounds.bottom > this.stageBounds.bottom) {
+    if (this.contour.bounds.bottom > this.stageBounds.bottom) {
       nearestEdge = 'bottom';
     }
     if (!nearestEdge) return; // Not touching any edge.
@@ -209,20 +341,20 @@ class SpriteUtil extends Util {
     // Keep within the stage.
     dx = 0;
     dy = 0;
-    if (this.bounds.top < this.stageBounds.top) {
-      dy += this.stageBounds.top - this.bounds.top;
+    if (this.contour.bounds.top < this.stageBounds.top) {
+      dy += this.stageBounds.top - this.contour.bounds.top;
     }
-    if (this.bounds.left < this.stageBounds.left) {
-      dx += this.stageBounds.left - this.bounds.left;
+    if (this.contour.bounds.left < this.stageBounds.left) {
+      dx += this.stageBounds.left - this.contour.bounds.left;
     }
-    if (this.bounds.right > this.stageBounds.right) {
-      dx += this.stageBounds.right - this.bounds.right;
+    if (this.contour.bounds.right > this.stageBounds.right) {
+      dx += this.stageBounds.right - this.contour.bounds.right;
     }
-    if (this.bounds.bottom > this.stageBounds.bottom) {
-      dy += this.stageBounds.bottom - this.bounds.bottom;
+    if (this.contour.bounds.bottom > this.stageBounds.bottom) {
+      dy += this.stageBounds.bottom - this.contour.bounds.bottom;
     }
-    console.log(dx, dy);
-    this.goto(this.x + dx, this.y - dy);
+    this.x += dx;
+    this.y -= dy;
   }
 }
 
