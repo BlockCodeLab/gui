@@ -24,8 +24,10 @@ export default function StageSelector() {
   const stage = fileList[0];
   if (stage) {
     const asset = assetList.find((asset) => asset.id === stage.assets[stage.backdrop]);
-    thumb = `data:${asset.type};base64,${asset.data}`;
-    count = stage.assets.length;
+    if (asset) {
+      thumb = `data:${asset.type};base64,${asset.data}`;
+      count = stage.assets.length;
+    }
   }
 
   const handleFileChange = async ({ target }) => {

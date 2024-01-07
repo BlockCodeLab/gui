@@ -83,8 +83,10 @@ export default function SpriteSelector({ stageSize }) {
   };
 
   const getFileIcon = (id) => {
-    const { type, data } = assetList.find((asset) => asset.id === id);
-    return `data:${type};base64,${data}`;
+    const asset = assetList.find((asset) => asset.id === id);
+    if (asset) {
+      return `data:${asset.type};base64,${asset.data}`;
+    }
   };
 
   return (
