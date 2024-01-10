@@ -1,6 +1,13 @@
 import ScratchBlocks from '../../scratch-blocks';
 import { pythonGenerator } from './generator';
 
+pythonGenerator['event_whenflagclicked'] = (block) => {
+  let code = '';
+  const [functionName, functionCode] = pythonGenerator.functionToCode('start');
+  code += `${functionCode}when_start(${functionName})\n`;
+  return code;
+};
+
 pythonGenerator['event_whenbroadcastreceived'] = (block) => {
   let code = '';
 
