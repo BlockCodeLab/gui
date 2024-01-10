@@ -96,6 +96,29 @@ export default function (assetList, fileList, selectedIndex, getText) {
     },
   };
 
+  ScratchBlocks.Blocks['looks_backdrops'] = {
+    init() {
+      this.jsonInit({
+        message0: '%1',
+        args0: [
+          {
+            type: 'field_dropdown',
+            name: 'BACKDROP',
+            options: stage.assets.map((assetId, i) => {
+              const asset = assetList.find(({ id }) => assetId === id);
+              return [asset.name, assetId];
+            }),
+          },
+        ],
+        colour: ScratchBlocks.Colours.looks.secondary,
+        colourSecondary: ScratchBlocks.Colours.looks.secondary,
+        colourTertiary: ScratchBlocks.Colours.looks.tertiary,
+        colourQuaternary: ScratchBlocks.Colours.looks.quaternary,
+        extensions: ['output_string'],
+      });
+    },
+  };
+
   ScratchBlocks.Blocks['control_create_clone_of_menu'] = {
     init() {
       this.jsonInit({
