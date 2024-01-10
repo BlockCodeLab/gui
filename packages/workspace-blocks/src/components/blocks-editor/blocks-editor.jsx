@@ -8,14 +8,17 @@ import DataPrompt from '../data-prompt/data-prompt';
 import styles from './blocks-editor.module.css';
 import iconAddExtension from './icon-add-extension.svg';
 
-export default function BlocksEditor({ toolbox, xml, enableMultiTargets, enableLocalVariable, onChange }) {
+export default function BlocksEditor({ toolbox, messages, xml, enableMultiTargets, enableLocalVariable, onChange }) {
   const { getText } = useLocale();
   const { fileList, selectedIndex, modifyFile } = useEditor();
   const [workspace, setWorkspace] = useState();
   const [prompt, setPrompt] = useState(false);
 
-  ScratchBlocks.Msg.EVENT_WHENPROGRAMSTART = getText('blocks.event.programStart', 'when program start');
-  ScratchBlocks.Msg.CONTROL_STOP_OTHER = getText('blocks.control.stopOther', 'other scripts');
+  messages = {
+    EVENT_WHENPROGRAMSTART: getText('blocks.event.programStart', 'when program start'),
+    CONTROL_STOP_OTHER: getText('blocks.control.stopOther', 'other scripts'),
+    ...messages,
+  };
 
   ScratchBlocks.prompt = (message, defaultValue, callback, optTitle, optVarType) => {
     const prompt = { callback, message, defaultValue };
@@ -30,7 +33,7 @@ export default function BlocksEditor({ toolbox, xml, enableMultiTargets, enableL
     setPrompt(prompt);
   };
 
-  toolbox = toolbox || makeToolboxXml();
+  toolbox = toolbox || makeToolboxXML();
   if (!xml && selectedIndex !== -1) {
     const file = fileList[selectedIndex];
     xml = file && file.xml;
@@ -75,6 +78,7 @@ export default function BlocksEditor({ toolbox, xml, enableMultiTargets, enableL
     <div className={styles.editorWrapper}>
       <Editor
         toolbox={toolbox}
+        messages={messages}
         media="/assets/blocks-media/"
         xml={xml}
         variables={variables}

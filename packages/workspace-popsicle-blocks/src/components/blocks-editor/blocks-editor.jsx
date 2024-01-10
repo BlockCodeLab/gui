@@ -14,31 +14,33 @@ export default function BlocksEditor() {
   const { assetList, fileList, selectedIndex } = useEditor();
   const isStage = selectedIndex === 0;
 
-  ScratchBlocks.Msg.EVENT_WHENKEYPRESSED_CENTER = getText('popsicle.blocks.keyCenter', 'center');
-  ScratchBlocks.Msg.CONTROL_STOP_OTHER = getText('popsicle.blocks.stopOther', 'other scripts in sprite');
-  ScratchBlocks.Msg.SENSING_OF_DISTANCETO_CENTER = getText('popsicle.blocks.sensingOfDistanceto.center', 'center');
-  ScratchBlocks.Msg.SOUND_EFFECTS_TEMPO = getText('popsicle.blocks.soundEffects.tempo', 'tempo');
-  ScratchBlocks.Msg.SOUND_MENU_DADADADUM = getText('popsicle.blocks.musicMenu.dadadadum', 'dadadadum');
-  ScratchBlocks.Msg.SOUND_MENU_ENTERTAINER = getText('popsicle.blocks.musicMenu.entertainer', 'entertainer');
-  ScratchBlocks.Msg.SOUND_MENU_PRELUDE = getText('popsicle.blocks.musicMenu.prelude', 'prelude');
-  ScratchBlocks.Msg.SOUND_MENU_ODE = getText('popsicle.blocks.musicMenu.ode', 'ode');
-  ScratchBlocks.Msg.SOUND_MENU_NYAN = getText('popsicle.blocks.musicMenu.nyan', 'nyan');
-  ScratchBlocks.Msg.SOUND_MENU_RINGTONE = getText('popsicle.blocks.musicMenu.ringtone', 'ringtone');
-  ScratchBlocks.Msg.SOUND_MENU_FUNK = getText('popsicle.blocks.musicMenu.funk', 'funk');
-  ScratchBlocks.Msg.SOUND_MENU_BLUES = getText('popsicle.blocks.musicMenu.blues', 'blues');
-  ScratchBlocks.Msg.SOUND_MENU_BIRTHDAY = getText('popsicle.blocks.musicMenu.birthday', 'birthday');
-  ScratchBlocks.Msg.SOUND_MENU_WEDDING = getText('popsicle.blocks.musicMenu.wedding', 'wedding');
-  ScratchBlocks.Msg.SOUND_MENU_FUNERAL = getText('popsicle.blocks.musicMenu.funeral', 'funeral');
-  ScratchBlocks.Msg.SOUND_MENU_PUNCHLINE = getText('popsicle.blocks.musicMenu.punchline', 'punchline');
-  ScratchBlocks.Msg.SOUND_MENU_PYTHON = getText('popsicle.blocks.musicMenu.python', 'python');
-  ScratchBlocks.Msg.SOUND_MENU_BADDY = getText('popsicle.blocks.musicMenu.baddy', 'baddy');
-  ScratchBlocks.Msg.SOUND_MENU_CHASE = getText('popsicle.blocks.musicMenu.chase', 'chase');
-  ScratchBlocks.Msg.SOUND_MENU_BA_DING = getText('popsicle.blocks.musicMenu.baDing', 'ba ding');
-  ScratchBlocks.Msg.SOUND_MENU_WAWAWAWAA = getText('popsicle.blocks.musicMenu.wawawawaa', 'wawawawaa');
-  ScratchBlocks.Msg.SOUND_MENU_JUMP_UP = getText('popsicle.blocks.musicMenu.jumpUp', 'jump up');
-  ScratchBlocks.Msg.SOUND_MENU_JUMP_DOWN = getText('popsicle.blocks.musicMenu.jumpDown', 'jump down');
-  ScratchBlocks.Msg.SOUND_MENU_POWER_UP = getText('popsicle.blocks.musicMenu.powerUp', 'power up');
-  ScratchBlocks.Msg.SOUND_MENU_POWER_DOWN = getText('popsicle.blocks.musicMenu.powerDown', 'power down');
+  const messages = {
+    EVENT_WHENKEYPRESSED_CENTER: getText('popsicle.blocks.keyCenter', 'center'),
+    CONTROL_STOP_OTHER: getText('popsicle.blocks.stopOther', 'other scripts in sprite'),
+    SENSING_OF_DISTANCETO_CENTER: getText('popsicle.blocks.sensingOfDistanceto.center', 'center'),
+    SOUND_EFFECTS_TEMPO: getText('popsicle.blocks.soundEffects.tempo', 'tempo'),
+    SOUND_MENU_DADADADUM: getText('popsicle.blocks.musicMenu.dadadadum', 'dadadadum'),
+    SOUND_MENU_ENTERTAINER: getText('popsicle.blocks.musicMenu.entertainer', 'entertainer'),
+    SOUND_MENU_PRELUDE: getText('popsicle.blocks.musicMenu.prelude', 'prelude'),
+    SOUND_MENU_ODE: getText('popsicle.blocks.musicMenu.ode', 'ode'),
+    SOUND_MENU_NYAN: getText('popsicle.blocks.musicMenu.nyan', 'nyan'),
+    SOUND_MENU_RINGTONE: getText('popsicle.blocks.musicMenu.ringtone', 'ringtone'),
+    SOUND_MENU_FUNK: getText('popsicle.blocks.musicMenu.funk', 'funk'),
+    SOUND_MENU_BLUES: getText('popsicle.blocks.musicMenu.blues', 'blues'),
+    SOUND_MENU_BIRTHDAY: getText('popsicle.blocks.musicMenu.birthday', 'birthday'),
+    SOUND_MENU_WEDDING: getText('popsicle.blocks.musicMenu.wedding', 'wedding'),
+    SOUND_MENU_FUNERAL: getText('popsicle.blocks.musicMenu.funeral', 'funeral'),
+    SOUND_MENU_PUNCHLINE: getText('popsicle.blocks.musicMenu.punchline', 'punchline'),
+    SOUND_MENU_PYTHON: getText('popsicle.blocks.musicMenu.python', 'python'),
+    SOUND_MENU_BADDY: getText('popsicle.blocks.musicMenu.baddy', 'baddy'),
+    SOUND_MENU_CHASE: getText('popsicle.blocks.musicMenu.chase', 'chase'),
+    SOUND_MENU_BA_DING: getText('popsicle.blocks.musicMenu.baDing', 'ba ding'),
+    SOUND_MENU_WAWAWAWAA: getText('popsicle.blocks.musicMenu.wawawawaa', 'wawawawaa'),
+    SOUND_MENU_JUMP_UP: getText('popsicle.blocks.musicMenu.jumpUp', 'jump up'),
+    SOUND_MENU_JUMP_DOWN: getText('popsicle.blocks.musicMenu.jumpDown', 'jump down'),
+    SOUND_MENU_POWER_UP: getText('popsicle.blocks.musicMenu.powerUp', 'power up'),
+    SOUND_MENU_POWER_DOWN: getText('popsicle.blocks.musicMenu.powerDown', 'power down'),
+  };
 
   buildBlocks(assetList, fileList, selectedIndex, getText);
 
@@ -104,6 +106,7 @@ export default function BlocksEditor() {
       enableMultiTargets
       enableLocalVariable={!isStage}
       toolbox={toolbox}
+      messages={messages}
       xml={xml}
     />
   );

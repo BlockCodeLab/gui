@@ -49,7 +49,7 @@ const supportedEvents = new Set([
   ScratchBlocks.Events.VAR_RENAME,
 ]);
 
-export function BlocksEditor({ toolbox, media, xml, variables, forceUpdate, onWorkspaceCreated, onChange }) {
+export function BlocksEditor({ toolbox, messages, media, xml, variables, forceUpdate, onWorkspaceCreated, onChange }) {
   const ref = useRef(null);
   const { language } = useLocale();
   const [currentXml, setCurrentXml] = useState();
@@ -127,6 +127,7 @@ export function BlocksEditor({ toolbox, media, xml, variables, forceUpdate, onWo
   }
 
   ScratchBlocks.ScratchMsgs.setLocale(unifyLocale(language));
+  Object.entries(messages).forEach(([key, value]) => (ScratchBlocks.Msg[key] = value));
 
   useEffect(() => {
     if (ref.current) {
