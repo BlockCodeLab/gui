@@ -1,4 +1,4 @@
-import paperCore from 'paper/dist/paper-core';
+import { paperCore } from '@blockcode/blocks-player';
 
 export default function (raster) {
   const image = raster.image;

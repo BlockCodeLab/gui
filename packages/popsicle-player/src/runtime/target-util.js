@@ -1,4 +1,4 @@
-import paperCore from 'paper/dist/paper-core';
+import { paperCore } from '@blockcode/blocks-player';
 import { EventEmitter } from 'node:events';
 
 import sleep from '../lib/sleep';
@@ -84,6 +84,9 @@ class StageUtil extends Util {
   }
 
   set backdrop(value) {
+    if (typeof value === 'string') {
+      value = isNaN(+value) ? this.assets.findIndex((asset) => asset.id === value) : +value;
+    }
     const assetIndex = value % this.assets.length;
     if (assetIndex !== this.data.assetIndex) {
       this.setImage(assetIndex, false);
@@ -97,6 +100,9 @@ class SpriteUtil extends Util {
   }
 
   set costume(value) {
+    if (typeof value === 'string') {
+      value = isNaN(+value) ? this.assets.findIndex((asset) => asset.id === value) : +value;
+    }
     const assetIndex = value % this.assets.length;
     if (assetIndex !== this.data.assetIndex) {
       this.setImage(assetIndex);
@@ -108,7 +114,7 @@ class SpriteUtil extends Util {
   }
 
   set x(x) {
-    if (x !== this.data.x) {
+    if (x !== this.data.x || paperCore.view.zoom !== this.data.zoomRatio) {
       if (this.contour) {
         const dx = x - this.data.x;
         const left = this.contour.bounds.right - POSITION_PADDING + dx;
@@ -137,7 +143,7 @@ class SpriteUtil extends Util {
   }
 
   set y(y) {
-    if (y !== this.data.y) {
+    if (y !== this.data.y || paperCore.view.zoom !== this.data.zoomRatio) {
       if (this.contour) {
         const dy = y - this.data.y;
         const top = this.contour.bounds.bottom - POSITION_PADDING - dy;
@@ -233,9 +239,14 @@ class SpriteUtil extends Util {
         this.raster.rotation = direction - Runtime.DEFAULT_DIRECTION;
       } else if (this.data.rotationStyle === RotationStyle.HORIZONTAL_FLIP) {
         this.raster.rotation = 0;
-        this.raster.scaling.x = this.direction < 0 ? -this.raster.scaling.x : this.raster.scaling.x;
+
+        const scalingX = Math.abs(this.raster.scaling.x);
+        const scalingY = Math.abs(this.raster.scaling.y);
+        this.raster.scaling.x = this.direction < 0 ? -scalingX : scalingX;
+        this.raster.scaling.y = scalingY;
         if (this.contour) {
           this.contour.scaling.x = this.raster.scaling.x;
+          this.contour.scaling.y = this.raster.scaling.y;
         }
       }
       if (this.contour) {
@@ -243,6 +254,8 @@ class SpriteUtil extends Util {
       }
     }
   }
+
+  get layer() {}
 
   move(steps) {
     const radian = degToRad(this.direction - Runtime.DEFAULT_DIRECTION);

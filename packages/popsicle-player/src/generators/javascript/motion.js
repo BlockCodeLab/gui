@@ -1,4 +1,4 @@
-import { javascriptGenerator } from './generator';
+import { javascriptGenerator } from '@blockcode/blocks-player';
 
 javascriptGenerator['motion_movesteps'] = (block) => {
   let code = '';
@@ -196,16 +196,16 @@ javascriptGenerator['motion_setrotationstyle'] = (block) => {
 };
 
 javascriptGenerator['motion_xposition'] = (block) => {
-  const code = 'sprite.data.x';
+  const code = 'sprite.util.x';
   return [code, javascriptGenerator.ORDER_NONE];
 };
 
 javascriptGenerator['motion_yposition'] = (block) => {
-  const code = 'sprite.data.y';
+  const code = 'sprite.util.y';
   return [code, javascriptGenerator.ORDER_NONE];
 };
 
 javascriptGenerator['motion_direction'] = (block) => {
-  const code = 'sprite.data.direction';
+  const code = 'sprite.util.direction';
   return [code, javascriptGenerator.ORDER_NONE];
 };

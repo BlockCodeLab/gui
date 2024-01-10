@@ -1,8 +1,5 @@
 import { javascriptGenerator } from './generator';
 
-// If any new block imports any library, add that library name here.
-javascriptGenerator.addReservedWords('math,random,Number');
-
 javascriptGenerator['math_number'] = (block) => {
   let code = parseFloat(block.getFieldValue('NUM'));
   let order;

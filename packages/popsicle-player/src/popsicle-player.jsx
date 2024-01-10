@@ -1,30 +1,14 @@
-import paperCore from 'paper/dist/paper-core';
-import { useRef, useEffect, useState } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 import { useEditor } from '@blockcode/core';
 import { ScratchBlocks } from '@blockcode/blocks-editor';
+import { BlocksPlayer, paperCore } from '@blockcode/blocks-player';
 
-import javascriptGenerator from './generators/javascript';
 import Runtime from './runtime/runtime';
+import generate from './runtime/generate';
 import createUtil from './runtime/target-util';
 
-const supportedEvents = new Set([
-  ScratchBlocks.Events.BLOCK_CHANGE,
-  ScratchBlocks.Events.BLOCK_CREATE,
-  ScratchBlocks.Events.BLOCK_DELETE,
-  ScratchBlocks.Events.BLOCK_MOVE,
-  ScratchBlocks.Events.COMMENT_CHANGE,
-  ScratchBlocks.Events.COMMENT_CREATE,
-  ScratchBlocks.Events.COMMENT_DELETE,
-  ScratchBlocks.Events.COMMENT_MOVE,
-  ScratchBlocks.Events.VAR_CREATE,
-  ScratchBlocks.Events.VAR_DELETE,
-  ScratchBlocks.Events.VAR_RENAME,
-]);
-
 export function PopsiclePlayer({ stageSize, playing, onRequestStop }) {
-  const ref = useRef(null);
-  const [currentXml, setCurrentXml] = useState();
-  const [currentIndex, setCurrentIndex] = useState();
+  const [canvas, setCanvas] = useState(null);
   const [currentRuntime, setCurrentRuntime] = useState(false);
   const { fileList, assetList, selectedIndex, openFile, modifyFile } = useEditor();
 
@@ -61,10 +45,13 @@ export function PopsiclePlayer({ stageSize, playing, onRequestStop }) {
     delete raster.dragging;
 
     raster.shadowColor = null;
-    openFile(index);
 
     raster.util.goto(raster.position.x - paperCore.view.center.x, paperCore.view.center.y - raster.position.y);
     updateTargetFromRaster(raster);
+
+    if (index !== selectedIndex) {
+      openFile(index);
+    }
   };
 
   const setSelected = (raster) => {
@@ -79,7 +66,7 @@ export function PopsiclePlayer({ stageSize, playing, onRequestStop }) {
     });
   };
 
-  if (ref.current) {
+  if (canvas) {
     paperCore.view.viewSize = viewSize;
     paperCore.view.zoom = zoomRatio;
 
@@ -88,7 +75,8 @@ export function PopsiclePlayer({ stageSize, playing, onRequestStop }) {
       spriteLayer.onMouseDown = false;
       if (!currentRuntime) {
         // start
-        setCurrentRuntime(new Runtime(fileList, onRequestStop));
+        const code = generate(fileList);
+        setCurrentRuntime(new Runtime(code, onRequestStop));
       }
     } else {
       if (currentRuntime) {
@@ -126,7 +114,7 @@ export function PopsiclePlayer({ stageSize, playing, onRequestStop }) {
           if (!raster) {
             raster = new paperCore.Raster();
             raster.name = target.id;
-            raster.data = { assets };
+            raster.data = { assets, zoomRatio };
             raster.util = createUtil(raster, isStage);
             raster.util.on('update', () => updateTargetFromRaster(raster, isStage));
             layer.addChild(raster);
@@ -144,6 +132,7 @@ export function PopsiclePlayer({ stageSize, playing, onRequestStop }) {
             raster.util.hidden = target.hidden;
             raster.util.direction = target.direction;
             raster.data.rotationStyle = target.rotationStyle;
+            raster.data.zoomRatio = zoomRatio;
           }
         });
 
@@ -160,61 +149,19 @@ export function PopsiclePlayer({ stageSize, playing, onRequestStop }) {
     }
   }
 
-  useEffect(() => {
-    if (ref.current) {
-      paperCore.setup(ref.current);
-
-      const stageLayer = new paperCore.Layer();
-      const spriteLayer = new paperCore.Layer();
-      stageLayer.name = 'stage';
-      spriteLayer.name = 'sprite';
-
-      let workspace;
-      const checkWorkspace = () => {
-        workspace = ScratchBlocks.getMainWorkspace();
-        if (workspace) {
-          workspace.addChangeListener((e) => {
-            if (workspace.isDragging()) return; // Don't update while changes are happening.
-            if (!supportedEvents.has(e.type)) return;
-
-            const xmlDom = ScratchBlocks.Xml.workspaceToDom(workspace);
-            // exclude broadcast messages variables
-            const xml = ScratchBlocks.Xml.domToText(xmlDom).replace(
-              /<variable type="broadcast_msg"[^>]+>[^<]+<\/variable>/gi,
-              ''
-            );
-            if (xml !== currentXml || selectedIndex !== currentIndex) {
-              modifyFile({
-                script: javascriptGenerator.workspaceToCode(workspace),
-              });
-              if (xml !== currentXml) {
-                setCurrentXml(xml);
-              }
-              if (selectedIndex !== currentIndex) {
-                setCurrentIndex(selectedIndex);
-              }
-            }
-          });
-          return;
-        }
-        setTimeout(checkWorkspace);
-      };
-      checkWorkspace();
-    }
-    return () => {
-      paperCore.project.clear();
-      paperCore.project.remove();
-    };
-  }, [ref]);
+  const handleSetup = (canvas) => {
+    setCanvas(canvas);
+    const stageLayer = new paperCore.Layer();
+    const spriteLayer = new paperCore.Layer();
+    stageLayer.name = 'stage';
+    spriteLayer.name = 'sprite';
+  };
 
   return (
-    <canvas
-      ref={ref}
-      style={{
-        width: `${viewSize.width}px`,
-        height: `${viewSize.height}px`,
-        imageRendering: 'pixelated',
-      }}
+    <BlocksPlayer
+      width={`${viewSize.width}px`}
+      height={`${viewSize.height}px`}
+      onSetup={handleSetup}
       onClick={() => globalThis.document.querySelectorAll('input:focus').forEach((e) => e.blur())}
     />
   );

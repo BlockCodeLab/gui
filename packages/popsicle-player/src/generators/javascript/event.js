@@ -1,9 +1,5 @@
 import { ScratchBlocks } from '@blockcode/blocks-editor';
-import { javascriptGenerator } from './generator';
-
-javascriptGenerator['event_whenflagclicked'] = (block) => {
-  return `runtime.on('start', async () => {/* nextCode */});\n`;
-};
+import { javascriptGenerator } from '@blockcode/blocks-player';
 
 javascriptGenerator['event_whenkeypressed'] = (block) => {
   let code = '';
@@ -27,26 +23,6 @@ javascriptGenerator['event_whenbroadcastreceived'] = (block) => {
     block.getFieldValue('BROADCAST_OPTION'),
     ScratchBlocks.Variables.NAME_TYPE
   );
-  code += `sprite.util.received('${messageName}', async (sprite) => {/* nextCode */});\n`;
+  code += `runtime.received('${messageName}', async (sprite) => {/* nextCode */});\n`;
   return code;
-};
-
-javascriptGenerator['event_broadcast_menu'] = (block) => {
-  const messageName = javascriptGenerator.variableDB_.getName(
-    block.getFieldValue('BROADCAST_OPTION'),
-    ScratchBlocks.Variables.NAME_TYPE
-  );
-  return [messageName, javascriptGenerator.ORDER_ATOMIC];
-};
-
-javascriptGenerator['event_broadcast'] = (block) => {
-  const messageName =
-    javascriptGenerator.valueToCode(block, 'BROADCAST_INPUT', javascriptGenerator.ORDER_NONE) || 'None';
-  return `runtime.broadcast('${messageName}')\n`;
-};
-
-javascriptGenerator['event_broadcastandwait'] = (block) => {
-  const messageName =
-    javascriptGenerator.valueToCode(block, 'BROADCAST_INPUT', javascriptGenerator.ORDER_NONE) || 'None';
-  return `await runtime.broadcast('${messageName}')\n`;
 };

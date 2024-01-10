@@ -19,6 +19,5 @@ export default {
     `preact/jsx-${isRelease ? '' : 'dev-'}runtime`,
     '@blockcode/core',
     '@blockcode/blocks-editor',
-    '@blockcode/blocks-player',
   ],
 };

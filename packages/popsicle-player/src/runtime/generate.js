@@ -8,7 +8,7 @@ counter--;
 })();
 `;
 
-export const generate = (targets) => `
+export default (targets) => `
 let counter = 0;
 ${targets.map(targetCode).join('')}
 runtime.on('frame', () => {

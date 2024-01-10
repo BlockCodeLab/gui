@@ -1,4 +1,4 @@
-import { javascriptGenerator } from './generator';
+import { javascriptGenerator } from '@blockcode/blocks-player';
 
 javascriptGenerator['sound_sounds_menu'] = (block) => {
   const soundName = block.getFieldValue('SOUND_MENU');
