@@ -47,7 +47,13 @@ export default function BlocksEditor() {
     target = fileList[selectedIndex];
     xml = target && target.xml;
   }
-  const toolbox = makeToolboxXML(isStage, [], target.id, '', '', DEFAULT_SOUND_NAME);
+  const toolbox = makeToolboxXML(
+    isStage,
+    target.id,
+    target.assets[target.costume],
+    fileList[0].assets[fileList[0].backdrop],
+    DEFAULT_SOUND_NAME
+  );
 
   const workspace = ScratchBlocks.getMainWorkspace();
   const updateToolboxBlockValue = (id, value) => {

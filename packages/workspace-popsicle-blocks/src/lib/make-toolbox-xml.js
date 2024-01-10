@@ -2,7 +2,7 @@ import { ScratchBlocks, makeToolboxXML, blockSeparator, categorySeparator } from
 
 import '../generators/python';
 
-const xmlEscape = function (unsafe) {
+const xmlEscape = (unsafe) => {
   return unsafe.replace(/[<>&'"]/g, (c) => {
     switch (c) {
       case '<':
@@ -449,7 +449,7 @@ const sensing = (isStage) => `
   </category>
 `;
 
-export default function (isStage, targetId, categoriesXML = [], costumeName = '', backdropName = '', soundName = '') {
+export default function (isStage, targetId, costumeName = '', backdropName = '', soundName = '') {
   costumeName = xmlEscape(costumeName);
   backdropName = xmlEscape(backdropName);
   soundName = xmlEscape(soundName);
@@ -478,6 +478,5 @@ export default function (isStage, targetId, categoriesXML = [], costumeName = ''
       id: 'sensing',
       xml: sensing(isStage),
     },
-    ...categoriesXML,
   ]);
 }
