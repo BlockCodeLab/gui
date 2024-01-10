@@ -17,15 +17,19 @@ const imports = Object.fromEntries(
     'preact',
     'preact/hooks',
     `preact/jsx-${isRelease ? '' : 'dev-'}runtime`,
-    'paper/dist/paper-core',
     '@blockcode/core',
     '@blockcode/ui',
     '@blockcode/device-pyboard',
+    // codes
     '@blockcode/code-editor',
     '@blockcode/workspace-micropython',
+    // blocks
     '@blockcode/blocks-editor',
+    '@blockcode/blocks-player',
+    '@blockcode/popsicle-player',
     '@blockcode/workspace-blocks',
     '@blockcode/workspace-popsicle-blocks',
+    '@blockcode/workspace-picoed-blocks',
   ].map((moduleId) => [
     moduleId,
     `/${moduleId.includes('/') ? '' : `${moduleId}/`}${moduleId}${extname(import.meta.resolveSync(moduleId))}`,
@@ -37,6 +41,7 @@ const assets = [
   '@blockcode/workspace-micropython',
   '@blockcode/workspace-blocks',
   '@blockcode/workspace-popsicle-blocks',
+  '@blockcode/workspace-picoed-blocks',
 ];
 
 export default {

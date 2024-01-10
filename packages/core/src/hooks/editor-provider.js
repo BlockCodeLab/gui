@@ -156,7 +156,7 @@ export function useEditor() {
     },
 
     addFile(newFile) {
-      if (state.fileList.find((file) => file.name === newFile.name)) {
+      if (state.fileList.find((file) => file.id === newFile.id)) {
         throw Error('File already exists');
       }
       dispatch({ type: ADD_FILE, payload: newFile });

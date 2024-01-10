@@ -17,16 +17,5 @@
     "bun-plugin-copy": "link:bun-plugin-copy",
     "bun-index-page": "link:bun-index-page",
     "bun-hot-server": "link:bun-hot-server"
-  },
-  "optionalDependencies": {
-    "@blockcode/blocks-editor": "workspace:*",
-    "@blockcode/code-editor": "workspace:*",
-    "@blockcode/core": "workspace:*",
-    "@blockcode/device-pyboard": "workspace:*",
-    "@blockcode/popsicle-player": "workspace:*",
-    "@blockcode/ui": "workspace:*",
-    "@blockcode/workspace-blocks": "workspace:*",
-    "@blockcode/workspace-micropython": "workspace:*",
-    "@blockcode/workspace-popsicle-blocks": "workspace:*"
   }
 }

@@ -42,10 +42,11 @@ export default function SpriteSelector({ stageSize }) {
   const handleFileChange = async ({ target }) => {
     for (const file of target.files) {
       const fileId = uid();
+      const assetId = uid();
       const imageName = file.name.slice(0, file.name.lastIndexOf('.'));
       const image = await loadImage(file);
       addAsset({
-        id: imageName,
+        id: assetId,
         type: file.type,
         name: imageName,
         data: image.src.slice(`data:${file.type};base64,`.length),
@@ -58,7 +59,7 @@ export default function SpriteSelector({ stageSize }) {
         id: fileId,
         type: 'text/x-python',
         name: imageName,
-        assets: [imageName],
+        assets: [assetId],
         costume: 0,
         x: 0,
         y: 0,
@@ -68,6 +69,7 @@ export default function SpriteSelector({ stageSize }) {
       });
       generateMainFile(fileId);
     }
+    target.value = '';
   };
 
   const handleDelete = (index) => {
