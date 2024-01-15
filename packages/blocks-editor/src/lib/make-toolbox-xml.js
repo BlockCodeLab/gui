@@ -1,6 +1,6 @@
 import ScratchBlocks from '../scratch-blocks';
 import '../blocks/data';
-import '../blocks/event';
+import '../blocks/events';
 
 export const blockSeparator = '<sep gap="36"/>';
 
@@ -10,18 +10,26 @@ const events = () => `
   <category name="%{BKY_CATEGORY_EVENTS}" id="events" colour="#FFD500" secondaryColour="#CC9900">
   <block type="event_whenflagclicked"/>
   ${blockSeparator}
-    <block type="event_whenbroadcastreceived" />
-    <block type="event_broadcast">
-      <value name="BROADCAST_INPUT">
-        <shadow type="event_broadcast_menu"></shadow>
-      </value>
-    </block>
-    <block type="event_broadcastandwait">
-      <value name="BROADCAST_INPUT">
-        <shadow type="event_broadcast_menu"></shadow>
-      </value>
-    </block>
-    ${categorySeparator}
+  <block type="event_whengreaterthan">
+    <value name="VALUE">
+      <shadow type="math_number">
+        <field name="NUM">10</field>
+      </shadow>
+    </value>
+  </block>
+  ${blockSeparator}
+  <block type="event_whenbroadcastreceived" />
+  <block type="event_broadcast">
+    <value name="BROADCAST_INPUT">
+      <shadow type="event_broadcast_menu"></shadow>
+    </value>
+  </block>
+  <block type="event_broadcastandwait">
+    <value name="BROADCAST_INPUT">
+      <shadow type="event_broadcast_menu"></shadow>
+    </value>
+  </block>
+  ${categorySeparator}
   </category>
 `;
 
@@ -285,7 +293,7 @@ export default function makeToolboxXML(categoriesXML = []) {
   const sensingXML = moveCategory('sensing') || sensing();
   const operatorsXML = moveCategory('operators') || operators();
   const variablesXML = moveCategory('data') || variables();
-  const myBlocksXML = moveCategory('procedures') || myBlocks();
+  // const myBlocksXML = moveCategory('procedures') || myBlocks();
 
   const everything = [
     xmlOpen,
@@ -297,7 +305,7 @@ export default function makeToolboxXML(categoriesXML = []) {
     sensingXML,
     operatorsXML,
     variablesXML,
-    myBlocksXML,
+    // myBlocksXML,
   ];
 
   for (const extensionCategory of categoriesXML) {
