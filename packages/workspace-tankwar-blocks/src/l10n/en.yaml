@@ -1,0 +1,27 @@
+tankwar.player.greenFlag: Go
+tankwar.player.stopAll: Stop
+
+tankwar.stageInfo.player: Player
+tankwar.stageInfo.nickname: Nickname
+tankwar.stageInfo.enemies: Enemies
+tankwar.stageInfo.health: Health
+tankwar.stageInfo.enemy.red: Red
+tankwar.stageInfo.enemy.yellow: Yellow
+tankwar.stageInfo.enemy.green: Green
+tankwar.stageInfo.ai: AI
+tankwar.stageInfo.ai.simple: Simple
+tankwar.stageInfo.ai.medium: Medium
+tankwar.stageInfo.ai.senior: Senior
+
+tankwar.blocks.motion_attack: 朝向 %1 方向 %2 步距离发射炮弹
+tankwar.blocks.motion_move: 以 %2 % 速度面向 %1 方向前进
+tankwar.blocks.motion_setspeed: 将速度设为 %1 %
+tankwar.blocks.motion_stop: 停止前进
+tankwar.blocks.motion_x: x 坐标
+tankwar.blocks.motion_y: y 坐标
+tankwar.blocks.motion_speed: 速度
+tankwar.blocks.motion_direction: 方向
+tankwar.blocks.sensing_scanwidth: 将雷达扫描宽度设为 %1
+tankwar.blocks.sensing_scan: 雷达扫描 %1 方向有敌人？
+tankwar.blocks.sensing_distance: 雷达测量 %1 方向敌人的距离
+tankwar.blocks.sensing_health: 生命值
