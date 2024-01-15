@@ -1,6 +1,6 @@
 import { Text } from '@blockcode/ui';
 
-import buildMenus from './lib/menus';
+import makeMenus from './lib/make-menus';
 import defaultProject from './lib/default-project';
 
 /* generator */
@@ -59,7 +59,7 @@ export default function BlocksWorkspace({ addLocaleData, setLayout, setAlert, re
   newProject();
 
   setLayout({
-    menus: buildMenus({ newProject, setAlert, removeAlert }),
+    menus: makeMenus({ newProject, setAlert, removeAlert }),
 
     tabs: [CodeTab],
 
@@ -73,4 +73,4 @@ export default function BlocksWorkspace({ addLocaleData, setLayout, setAlert, re
   });
 }
 
-export { locales, buildMenus, CodeTab, BackpackPane };
+export { locales, makeMenus, CodeTab, BackpackPane };

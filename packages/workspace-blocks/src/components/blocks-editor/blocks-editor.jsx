@@ -9,7 +9,16 @@ import DataPrompt from '../data-prompt/data-prompt';
 import styles from './blocks-editor.module.css';
 import iconAddExtension from './icon-add-extension.svg';
 
-export default function BlocksEditor({ toolbox, messages, xml, enableMultiTargets, enableLocalVariable, onChange }) {
+export default function BlocksEditor({
+  toolbox,
+  messages,
+  xml,
+  enableMultiTargets,
+  enableLocalVariable,
+  disableGenerator,
+  disableExtension,
+  onChange,
+}) {
   const { getText } = useLocale();
   const { fileList, selectedIndex, modifyFile } = useEditor();
   const [workspace, setWorkspace] = useState();
@@ -18,7 +27,7 @@ export default function BlocksEditor({ toolbox, messages, xml, enableMultiTarget
   messages = {
     EVENT_WHENPROGRAMSTART: getText('blocks.event.programStart', 'when program start'),
     CONTROL_STOP_OTHER: getText('blocks.control.stopOther', 'other scripts'),
-    ...messages,
+    ...(messages || []),
   };
 
   ScratchBlocks.prompt = (message, defaultValue, callback, optTitle, optVarType) => {
@@ -64,8 +73,11 @@ export default function BlocksEditor({ toolbox, messages, xml, enableMultiTarget
   const handleChange =
     onChange ||
     ((xml, workspace) => {
-      const content = pythonGenerator.workspaceToCode(workspace);
-      modifyFile({ content, xml });
+      const modifies = { xml };
+      if (!disableGenerator) {
+        modifies.content = pythonGenerator.workspaceToCode(workspace);
+      }
+      modifyFile(modifies);
     });
 
   const handlePromptSubmit = (input, options) => {
@@ -84,19 +96,21 @@ export default function BlocksEditor({ toolbox, messages, xml, enableMultiTarget
         xml={xml}
         variables={variables}
         onWorkspaceCreated={setWorkspace}
-        onChange={selectedIndex !== -1 && handleChange}
+        onChange={selectedIndex !== -1 ? handleChange : null}
       />
-      <div className={classNames('scratchCategoryMenu', styles.extensionButton)}>
-        <button
-          className={styles.addButton}
-          title={getText('blocks.extensions.addExtension', 'Add Extension')}
-        >
-          <img
-            src={iconAddExtension}
-            title="Add Extension"
-          />
-        </button>
-      </div>
+      {disableExtension ? null : (
+        <div className={classNames('scratchCategoryMenu', styles.extensionButton)}>
+          <button
+            className={styles.addButton}
+            title={getText('blocks.extensions.addExtension', 'Add Extension')}
+          >
+            <img
+              src={iconAddExtension}
+              title="Add Extension"
+            />
+          </button>
+        </div>
+      )}
       {prompt && (
         <DataPrompt
           title={prompt.title}
