@@ -313,22 +313,6 @@ const sound = (soundName) => `
       </value>
     </block>
     <block type="sound_stopallsounds"/>
-    ${blockSeparator}
-    <block type="sound_changeeffectby">
-      <value name="VALUE">
-        <shadow type="math_number">
-          <field name="NUM">10</field>
-        </shadow>
-      </value>
-    </block>
-    <block type="sound_seteffectto">
-      <value name="VALUE">
-        <shadow type="math_number">
-          <field name="NUM">100</field>
-        </shadow>
-      </value>
-    </block>
-    <block type="sound_cleareffects"/>
     ${categorySeparator}
   </category>
 `;

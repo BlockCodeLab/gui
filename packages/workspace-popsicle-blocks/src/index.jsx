@@ -1,4 +1,4 @@
-import { locales as blocksLocales, buildMenus, CodeTab, BackpackPane } from '@blockcode/workspace-blocks';
+import { locales as blocksLocales, makeMenus, CodeTab, BackpackPane } from '@blockcode/workspace-blocks';
 
 /* components */
 import BlocksEditor from './components/blocks-editor/blocks-editor';
@@ -36,7 +36,7 @@ export default function PopsicleBlocksWorkspace({
   newProject();
 
   setLayout({
-    menus: buildMenus({ newProject, setAlert, removeAlert }),
+    menus: makeMenus({ newProject, setAlert, removeAlert }),
 
     tabs: [
       {

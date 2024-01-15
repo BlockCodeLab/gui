@@ -1,4 +1,4 @@
-import { pythonGenerator } from '@blockcode/blocks-editor';
+import { pythonGenerator } from '@blockcode/workspace-blocks';
 
 pythonGenerator['control_start_as_clone'] = (block) => {};
 

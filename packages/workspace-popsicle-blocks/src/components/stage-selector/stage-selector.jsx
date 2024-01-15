@@ -1,9 +1,7 @@
 import classNames from 'classnames';
 import { useLocale, useEditor } from '@blockcode/core';
 import { Text, ActionButton } from '@blockcode/ui';
-import { ScratchBlocks, pythonGenerator } from '@blockcode/blocks-editor';
 
-import uid from '../../lib/uid';
 import loadImage from '../../lib/load-image';
 
 import styles from './stage-selector.module.css';

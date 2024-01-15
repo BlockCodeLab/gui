@@ -1,4 +1,4 @@
-import { pythonGenerator } from '@blockcode/blocks-editor';
+import { pythonGenerator } from '@blockcode/workspace-blocks';
 
 pythonGenerator['sound_sounds_menu'] = (block) => {
   const soundName = block.getFieldValue('SOUND_MENU');
@@ -37,20 +37,5 @@ pythonGenerator['sound_stopallsounds'] = (block) => {
   }
 
   code += `await sound.stop()\n`;
-  return code;
-};
-
-pythonGenerator['sound_seteffectto'] = (block) => {};
-
-pythonGenerator['sound_changeeffectby'] = (block) => {};
-
-pythonGenerator['sound_cleareffects'] = (block) => {
-  let code = '';
-
-  if (pythonGenerator.STATEMENT_PREFIX) {
-    code += pythonGenerator.injectId(pythonGenerator.STATEMENT_PREFIX, block);
-  }
-
-  code += 'sound.reset()\n';
   return code;
 };

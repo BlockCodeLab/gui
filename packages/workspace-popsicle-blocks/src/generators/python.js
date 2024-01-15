@@ -1,4 +1,5 @@
-import { ScratchBlocks, pythonGenerator } from '@blockcode/blocks-editor';
+import { ScratchBlocks } from '@blockcode/blocks-editor';
+import { pythonGenerator } from '@blockcode/workspace-blocks';
 
 import './python/colour';
 import './python/control';
@@ -35,7 +36,7 @@ pythonGenerator.init = function (workspace) {
   const devVarList = ScratchBlocks.Variables.allDeveloperVariables(workspace);
   for (let i = 0; i < devVarList.length; i++) {
     defvars.push(
-      pythonGenerator.variableDB_.getName(devVarList[i], ScratchBlocks.Names.DEVELOPER_VARIABLE_TYPE) + '=None'
+      pythonGenerator.variableDB_.getName(devVarList[i], ScratchBlocks.Names.DEVELOPER_VARIABLE_TYPE) + ' = None'
     );
   }
 
@@ -48,6 +49,9 @@ pythonGenerator.init = function (workspace) {
       }
     });
   }
-  pythonGenerator.definitions_['variables'] = defvars.join('\n');
+
+  if (defvars.length) {
+    pythonGenerator.definitions_['variables'] = defvars.join('\n');
+  }
 };
 pythonGenerator.init.original_ = originalInit;

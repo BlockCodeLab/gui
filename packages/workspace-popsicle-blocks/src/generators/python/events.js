@@ -1,4 +1,4 @@
-import { pythonGenerator } from '@blockcode/blocks-editor';
+import { pythonGenerator } from '@blockcode/workspace-blocks';
 
 pythonGenerator['event_whenkeypressed'] = (block) => {
   // key pressed
@@ -21,5 +21,3 @@ pythonGenerator['event_whenbackdropswitchesto'] = (block) => {
   code += `${functionCode}when_backdrop_switches_to("${backdropCode}",${functionName})\n`;
   return code;
 };
-
-pythonGenerator['event_whengreaterthan'] = (block) => {};

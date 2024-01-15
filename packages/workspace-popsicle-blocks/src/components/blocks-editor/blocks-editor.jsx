@@ -1,6 +1,6 @@
 import { useLocale, useEditor, exportFile } from '@blockcode/core';
-import { CodeTab } from '@blockcode/workspace-blocks';
-import { ScratchBlocks, pythonGenerator } from '@blockcode/blocks-editor';
+import { ScratchBlocks } from '@blockcode/blocks-editor';
+import { CodeTab, pythonGenerator } from '@blockcode/workspace-blocks';
 
 import makeToolboxXML from '../../lib/make-toolbox-xml';
 import buildBlocks from './blocks';

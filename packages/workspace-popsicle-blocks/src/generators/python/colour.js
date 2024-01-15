@@ -1,4 +1,4 @@
-import { pythonGenerator } from '@blockcode/blocks-editor';
+import { pythonGenerator } from '@blockcode/workspace-blocks';
 
 const hexToRgb = (hex) => {
   const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;

@@ -6,5 +6,3 @@ javascriptGenerator['event_whenkeypressed'] = (block) => {
   code += `runtime.on('keypressed_${keyCode}', async () => {/* nextCode */});\n`;
   return code;
 };
-
-javascriptGenerator['event_whengreaterthan'] = (block) => {};
