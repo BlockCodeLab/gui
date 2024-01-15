@@ -4,7 +4,6 @@ javascriptGenerator['control_wait'] = (block) => {
   // wait for
   let code = '';
   if (javascriptGenerator.STATEMENT_PREFIX) {
-    // Automatic prefix insertion is switched off for this block.  Add manually.
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const durationCode = javascriptGenerator.valueToCode(block, 'DURATION', javascriptGenerator.ORDER_NONE);
@@ -18,7 +17,6 @@ javascriptGenerator['control_repeat'] = (block) => {
   let timesCode, branchCode;
 
   if (javascriptGenerator.STATEMENT_PREFIX) {
-    // Automatic prefix insertion is switched off for this block.  Add manually.
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
 
@@ -41,7 +39,6 @@ javascriptGenerator['control_forever'] = (block) => {
   let branchCode;
 
   if (javascriptGenerator.STATEMENT_PREFIX) {
-    // Automatic prefix insertion is switched off for this block.  Add manually.
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
 
@@ -63,7 +60,6 @@ javascriptGenerator['control_if'] = (block) => {
   let branchCode, conditionCode;
 
   if (javascriptGenerator.STATEMENT_PREFIX) {
-    // Automatic prefix insertion is switched off for this block.  Add manually.
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
 
@@ -99,7 +95,6 @@ javascriptGenerator['control_wait_until'] = (block) => {
   // wait until
   let code = '';
   if (javascriptGenerator.STATEMENT_PREFIX) {
-    // Automatic prefix insertion is switched off for this block.  Add manually.
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const conditionCode = javascriptGenerator.valueToCode(block, 'CONDITION', javascriptGenerator.ORDER_NONE) || 'False';
@@ -113,7 +108,6 @@ javascriptGenerator['control_repeat_until'] = (block) => {
   let branchCode, conditionCode;
 
   if (javascriptGenerator.STATEMENT_PREFIX) {
-    // Automatic prefix insertion is switched off for this block.  Add manually.
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
 
@@ -136,7 +130,6 @@ javascriptGenerator['control_while'] = (block) => {
   let branchCode, conditionCode;
 
   if (javascriptGenerator.STATEMENT_PREFIX) {
-    // Automatic prefix insertion is switched off for this block.  Add manually.
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
 
@@ -157,7 +150,6 @@ javascriptGenerator['control_stop'] = (block) => {
   let code = '';
 
   if (javascriptGenerator.STATEMENT_PREFIX) {
-    // Automatic prefix insertion is switched off for this block.  Add manually.
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
 

@@ -110,21 +110,34 @@ javascriptGenerator.init = function (workspace) {
   javascriptGenerator.variableDB_.setVariableMap(workspace.getVariableMap());
 
   var defvars = [];
-  // Add developer variables (not created or named by the user).
-  var devVarList = ScratchBlocks.Variables.allDeveloperVariables(workspace);
-  for (var i = 0; i < devVarList.length; i++) {
-    defvars.push(javascriptGenerator.variableDB_.getName(devVarList[i], ScratchBlocks.Names.DEVELOPER_VARIABLE_TYPE));
-  }
-
   // Add user variables.
   var variables = workspace.getAllVariables();
   for (var i = 0; i < variables.length; i++) {
-    defvars.push(javascriptGenerator.variableDB_.getName(variables[i].getId(), ScratchBlocks.Variables.NAME_TYPE));
+    if (variables[i].type === ScratchBlocks.BROADCAST_MESSAGE_VARIABLE_TYPE) {
+      continue;
+    }
+    const varName = javascriptGenerator.variableDB_.getName(variables[i].getId(), ScratchBlocks.Variables.NAME_TYPE);
+    if (variables[i].type === ScratchBlocks.LIST_VARIABLE_TYPE) {
+      defvars.push(`let ${varName}${ScratchBlocks.LIST_VARIABLE_TYPE} = [];`);
+    } else {
+      defvars.push(`let ${varName} = 0;`);
+    }
+  }
+
+  // Add developer variables (not created or named by the user).
+  var devVarList = ScratchBlocks.Variables.allDeveloperVariables(workspace);
+  for (var i = 0; i < devVarList.length; i++) {
+    const varName = javascriptGenerator.variableDB_.getName(devVarList[i], ScratchBlocks.Names.DEVELOPER_VARIABLE_TYPE);
+    if (variables[i].type === ScratchBlocks.LIST_VARIABLE_TYPE) {
+      defvars.push(`let ${varName}List = [];`);
+    } else {
+      defvars.push(`let ${varName} = 0;`);
+    }
   }
 
   // Declare all of the variables.
   if (defvars.length) {
-    javascriptGenerator.definitions_['variables'] = 'var ' + defvars.join(', ') + ';';
+    javascriptGenerator.definitions_['variables'] = defvars.join('\n');
   }
 };
 
@@ -213,7 +226,7 @@ javascriptGenerator.scrub_ = function (block, code) {
     const nextBlock = block.nextConnection && block.nextConnection.targetBlock();
     let nextCode = javascriptGenerator.blockToCode(nextBlock);
     if (nextCode) {
-      nextCode = javascriptGenerator.prefixLines(`counter++;\n${nextCode}counter--;\n`, javascriptGenerator.INDENT);
+      nextCode = javascriptGenerator.prefixLines(nextCode, javascriptGenerator.INDENT);
       code = code.replace(`/* nextCode */`, `\n${nextCode}`);
     }
     return commentCode + code;

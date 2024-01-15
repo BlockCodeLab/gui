@@ -35,6 +35,7 @@ export default class Runtime extends EventEmitter {
 
   start() {
     this._running = true;
+    this.emit('beforeStart');
     this.on('start', async () => {
       while (this.running) {
         this.emit('frame');
@@ -60,8 +61,8 @@ export default class Runtime extends EventEmitter {
   }
 
   random(min = 1, max = 10) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
+    min = Math.ceil(Math.min(min, max));
+    max = Math.floor(Math.max(min, max));
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 

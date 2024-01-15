@@ -5,13 +5,14 @@ javascriptGenerator['event_whenflagclicked'] = (block) => {
   return `runtime.on('start', async () => {/* nextCode */});\n`;
 };
 
+javascriptGenerator['event_whengreaterthan'] = (block) => {};
+
 javascriptGenerator['event_whenbroadcastreceived'] = (block) => {
-  let code = '';
   const messageName = javascriptGenerator.variableDB_.getName(
     block.getFieldValue('BROADCAST_OPTION'),
     ScratchBlocks.Variables.NAME_TYPE
   );
-  code += `runtime.on('${messageName}', async (done) => {/* nextCode */done()\n});\n`;
+  const code = `runtime.on('${messageName}', async (done) => {/* nextCode */done()\n});\n`;
   return code;
 };
 
