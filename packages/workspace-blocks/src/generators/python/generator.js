@@ -1,4 +1,4 @@
-import ScratchBlocks from '../../scratch-blocks';
+import { ScratchBlocks } from '@blockcode/blocks-editor';
 
 export const pythonGenerator = new ScratchBlocks.Generator('Python');
 
@@ -134,19 +134,28 @@ pythonGenerator.init = (workspace) => {
     if (variables[i].type === ScratchBlocks.BROADCAST_MESSAGE_VARIABLE_TYPE) {
       continue;
     }
-    defvars.push(
-      pythonGenerator.variableDB_.getName(variables[i].getId(), ScratchBlocks.Variables.NAME_TYPE) + '=None'
-    );
+    const varName = pythonGenerator.variableDB_.getName(variables[i].getId(), ScratchBlocks.Variables.NAME_TYPE);
+    if (variables[i].type === ScratchBlocks.LIST_VARIABLE_TYPE) {
+      defvars.push(`${varName}_${ScratchBlocks.LIST_VARIABLE_TYPE} = []`);
+    } else {
+      defvars.push(`${varName} = None`);
+    }
   }
 
   // Add developer variables (not created or named by the user).
   const devVarList = ScratchBlocks.Variables.allDeveloperVariables(workspace);
   for (let i = 0; i < devVarList.length; i++) {
-    defvars.push(
-      pythonGenerator.variableDB_.getName(devVarList[i], ScratchBlocks.Names.DEVELOPER_VARIABLE_TYPE) + '=None'
-    );
+    const varName = pythonGenerator.variableDB_.getName(devVarList[i], ScratchBlocks.Names.DEVELOPER_VARIABLE_TYPE);
+    if (variables[i].type === ScratchBlocks.LIST_VARIABLE_TYPE) {
+      defvars.push(`${varName}_${ScratchBlocks.LIST_VARIABLE_TYPE} = []`);
+    } else {
+      defvars.push(`${varName} = None`);
+    }
   }
-  pythonGenerator.definitions_['variables'] = defvars.join('\n');
+
+  if (defvars.length) {
+    pythonGenerator.definitions_['variables'] = defvars.join('\n');
+  }
 
   // import scratch for micropython library
   pythonGenerator.definitions_['import_popsicle_scratch'] = 'from popsicle.scratch import *';

@@ -3,6 +3,9 @@ import { Text } from '@blockcode/ui';
 import buildMenus from './lib/menus';
 import defaultProject from './lib/default-project';
 
+/* generator */
+export { pythonGenerator } from './generators/python';
+
 /* components */
 import BlocksEditor from './components/blocks-editor/blocks-editor';
 import Pane from './components/pane/pane';

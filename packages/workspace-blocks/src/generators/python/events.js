@@ -1,4 +1,4 @@
-import ScratchBlocks from '../../scratch-blocks';
+import { ScratchBlocks } from '@blockcode/blocks-editor';
 import { pythonGenerator } from './generator';
 
 pythonGenerator['event_whenflagclicked'] = (block) => {
@@ -7,6 +7,8 @@ pythonGenerator['event_whenflagclicked'] = (block) => {
   code += `${functionCode}when_start(${functionName})\n`;
   return code;
 };
+
+pythonGenerator['event_whengreaterthan'] = (block) => {};
 
 pythonGenerator['event_whenbroadcastreceived'] = (block) => {
   let code = '';

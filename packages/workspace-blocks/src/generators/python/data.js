@@ -1,4 +1,4 @@
-import ScratchBlocks from '../../scratch-blocks';
+import { ScratchBlocks } from '@blockcode/blocks-editor';
 import { pythonGenerator } from './generator';
 
 pythonGenerator['data_variable'] = (block) => {
@@ -29,13 +29,15 @@ pythonGenerator['data_changevariableby'] = (block) => {
 
 pythonGenerator['data_listcontents'] = (block) => {};
 
-pythonGenerator['data_listindexall'] = (block) => {};
+// pythonGenerator['data_listindexall'] = (block) => {};
 
-pythonGenerator['data_listindexrandom'] = (block) => {};
+// pythonGenerator['data_listindexrandom'] = (block) => {};
 
 pythonGenerator['data_addtolist'] = (block) => {};
 
 pythonGenerator['data_deleteoflist'] = (block) => {};
+
+pythonGenerator['data_deletealloflist'] = (block) => {};
 
 pythonGenerator['data_insertatlist'] = (block) => {};
 

@@ -1,7 +1,8 @@
 import classNames from 'classnames';
 import { useState } from 'preact/hooks';
 import { useLocale, useEditor } from '@blockcode/core';
-import { BlocksEditor as Editor, ScratchBlocks, pythonGenerator, makeToolboxXML } from '@blockcode/blocks-editor';
+import { BlocksEditor as Editor, ScratchBlocks, makeToolboxXML } from '@blockcode/blocks-editor';
+import { pythonGenerator } from '../../generators/python';
 
 import DataPrompt from '../data-prompt/data-prompt';
 

@@ -1,8 +1,8 @@
-export { pythonGenerator as default } from './python/generator';
+export { pythonGenerator } from './python/generator';
 
 import './python/control';
 import './python/data';
-import './python/event';
+import './python/events';
 import './python/math';
 import './python/operators';
 import './python/procedures';
