@@ -1,0 +1,12 @@
+{
+  "name": "@blockcode/tone-player",
+  "module": "dist/index.js",
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "scripts": {
+    "build": "bun-build",
+    "dev": "bun-build --watch ./src"
+  },
+  "type": "module"
+}
