@@ -1,13 +1,25 @@
-import { paperCore, Runtime } from '@blockcode/blocks-player';
+import { paperCore, Runtime as BaseRuntime } from '@blockcode/blocks-player';
+import { Tone, Music } from '@blockcode/tone-player';
 import RotationStyle from '../lib/rotation-style';
 
 import '../generators/javascript';
 
-export default class PlayerRuntime extends Runtime {
+export default class Runtime extends BaseRuntime {
   static VIEW_WIDTH = 280;
   static VIEW_HEIGHT = 240;
 
   static DEFAULT_DIRECTION = 90;
+
+  get tone() {
+    if (!this._tone) {
+      this._tone = new Tone({ type: 'square' });
+    }
+    return this._tone;
+  }
+
+  get Music() {
+    return Music;
+  }
 
   get RotationStyle() {
     return RotationStyle;
@@ -43,5 +55,10 @@ export default class PlayerRuntime extends Runtime {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  stop() {
+    this.tone.stop();
+    super.stop();
   }
 }
