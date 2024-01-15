@@ -16,7 +16,7 @@ javascriptGenerator['motion_turnright'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const degreesCode = javascriptGenerator.valueToCode(block, 'DEGREES', javascriptGenerator.ORDER_NONE);
-  code += `sprite.util.direction = sprite.util.direction + ${degreesCode};\n`;
+  code += `sprite.util.direction += ${degreesCode};\n`;
   return code;
 };
 
@@ -26,7 +26,7 @@ javascriptGenerator['motion_turnleft'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const degreesCode = javascriptGenerator.valueToCode(block, 'DEGREES', javascriptGenerator.ORDER_NONE);
-  code += `sprite.util.direction = sprite.util.direction - ${degreesCode};\n`;
+  code += `sprite.util.direction -= ${degreesCode};\n`;
   return code;
 };
 

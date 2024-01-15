@@ -210,6 +210,9 @@ class SpriteUtil extends Util {
       if (this.running) {
         this.emit('update');
       }
+      if (this.contour) {
+        this.contour.visible = this.raster.visible;
+      }
     }
   }
 
