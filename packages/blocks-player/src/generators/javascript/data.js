@@ -6,7 +6,8 @@ javascriptGenerator['data_variable'] = (block) => {
     block.getFieldValue('VARIABLE'),
     ScratchBlocks.Variables.NAME_TYPE
   );
-  return [variableName, javascriptGenerator.ORDER_ATOMIC];
+  const code = `${variableName}`;
+  return [code, javascriptGenerator.ORDER_CONDITIONAL];
 };
 
 javascriptGenerator['data_setvariableto'] = (block) => {
@@ -33,7 +34,7 @@ javascriptGenerator['data_changevariableby'] = (block) => {
     ScratchBlocks.Variables.NAME_TYPE
   );
   const variableValue = javascriptGenerator.valueToCode(block, 'VALUE', javascriptGenerator.ORDER_NONE) || 0;
-  code += `${variableName} += isNaN(${variableValue}) ? 0 : +(${variableValue});\n`;
+  code += `${variableName} = (isNaN(${variableName}) ? 0 : +${variableName}) + +(${variableValue});\n`;
   return code;
 };
 

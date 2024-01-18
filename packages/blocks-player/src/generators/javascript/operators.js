@@ -129,7 +129,7 @@ javascriptGenerator['operator_mathop'] = (block) => {
   } else if (operatorValue === '10 ^') {
     code += `Math.pow(10, ${numValue})`;
   } else {
-    code += `${operatorValue}(${numValue})`;
+    code += `Math.${operatorValue}(${numValue})`;
   }
   return [code, javascriptGenerator.ORDER_FUNCTION_CALL];
 };

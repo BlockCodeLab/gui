@@ -13,6 +13,10 @@ export default class Runtime extends EventEmitter {
     this._requestStop = requestStop;
     this._timer = 0;
 
+    this._idCounter = 0;
+    this._eventsGroups = {};
+    this.openEventsGroup('global');
+
     const launch = new Function('runtime', code);
     launch(this);
 
@@ -27,10 +31,56 @@ export default class Runtime extends EventEmitter {
     return Date.now() - this._timer;
   }
 
+  openEventsGroup(groupName) {
+    this._currentGroupName = groupName;
+    this._eventsGroups[groupName] = this._eventsGroups[groupName] || [];
+  }
+
+  closeEventsGroup() {
+    this._currentGroupName = 'global';
+  }
+
+  abort(id) {
+    const groupName = id.split(':')[0];
+    const newGroup = [];
+    this._eventsGroups[groupName].forEach((listener) => {
+      if (listener.id === id) {
+        newGroup.push(listener);
+      } else {
+        listener._aborted = true;
+      }
+    });
+    this._eventsGroups[groupName] = newGroup;
+  }
+
+  on(eventName, listener) {
+    const groupName = this._currentGroupName;
+    Object.defineProperties(listener, {
+      id: {
+        get: () => listener._id,
+      },
+      aborted: {
+        get: () => listener._aborted || !this.running,
+      },
+    });
+    super.on(eventName, (...args) => {
+      listener._id = `${groupName}:${++this._idCounter}`;
+      listener._aborted = false;
+      this._eventsGroups[groupName].push(listener);
+      listener(...args);
+    });
+  }
+
   emit(...args) {
     if (this.running) {
       super.emit(...args);
     }
+  }
+
+  broadcast(message) {
+    return new Promise((resolve) => {
+      this.emit(message, resolve);
+    });
   }
 
   start() {

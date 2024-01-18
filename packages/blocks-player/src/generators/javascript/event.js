@@ -2,7 +2,7 @@ import { ScratchBlocks } from '@blockcode/blocks-editor';
 import { javascriptGenerator } from './generator';
 
 javascriptGenerator['event_whenflagclicked'] = (block) => {
-  return `runtime.on('start', async () => {/* nextCode */});\n`;
+  return `runtime.on('start', async function anonymous() {/* nextCode */});\n`;
 };
 
 javascriptGenerator['event_whengreaterthan'] = (block) => {};
@@ -12,7 +12,7 @@ javascriptGenerator['event_whenbroadcastreceived'] = (block) => {
     block.getFieldValue('BROADCAST_OPTION'),
     ScratchBlocks.Variables.NAME_TYPE
   );
-  const code = `runtime.on('${messageName}', async (done) => {/* nextCode */done()\n});\n`;
+  const code = `runtime.on('${messageName}', async function anonymous(done) {/* nextCode */  done()\n});\n`;
   return code;
 };
 
