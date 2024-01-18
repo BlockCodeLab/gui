@@ -9,7 +9,7 @@ const PROJECT_ROOT = import.meta.dir;
 const SRC_DIR = resolve(PROJECT_ROOT, 'src');
 const DIST_DIR = resolve(PROJECT_ROOT, 'dist');
 
-const isRelease = Bun.env.ENV === 'production';
+const isRelease = Bun.env.BUN_ENV === 'production';
 const isHotServer = !!Bun.env.HOT_SERVER;
 
 const imports = Object.fromEntries(
@@ -32,7 +32,7 @@ const imports = Object.fromEntries(
     '@blockcode/workspace-picoed-blocks',
   ].map((moduleId) => [
     moduleId,
-    `/${moduleId.includes('/') ? '' : `${moduleId}/`}${moduleId}${extname(import.meta.resolveSync(moduleId))}`,
+    `./${moduleId.includes('/') ? '' : `${moduleId}/`}${moduleId}${extname(import.meta.resolveSync(moduleId))}`,
   ])
 );
 
@@ -58,7 +58,7 @@ export default {
     CSSLoader(),
     YamlLoader(),
     IndexPage({
-      entry: 'index.js',
+      entry: './index.js',
       template: resolve(SRC_DIR, 'template/index.hbs'),
       title: 'BlockCode GUI',
       importmap: JSON.stringify({ imports }),
@@ -79,7 +79,7 @@ export default {
     Object.entries(imports).map(([moduleId, importPath]) =>
       CopyPlugin({
         from: import.meta.resolveSync(moduleId),
-        to: `.${importPath}`,
+        to: importPath,
         singleFile: true,
         watch: isHotServer,
       })

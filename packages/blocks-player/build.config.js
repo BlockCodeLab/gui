@@ -1,7 +1,7 @@
 import { resolve } from 'node:path';
 import CSSLoader from 'bun-loader-css';
 
-const isRelease = Bun.env.ENV === 'production';
+const isRelease = Bun.env.BUN_ENV === 'production';
 
 const PROJECT_ROOT = import.meta.dir;
 const SRC_DIR = resolve(PROJECT_ROOT, 'src');
