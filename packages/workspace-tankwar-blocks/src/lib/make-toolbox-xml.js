@@ -16,11 +16,10 @@ const motion = () => `
       </value>
       <value name="DISTANCE">
         <shadow type="math_number">
-          <field name="NUM">10</field>
+          <field name="NUM">200</field>
         </shadow>
       </value>
     </block>
-    ${blockSeparator}
     <block type="motion_move">
       <value name="DIRECTION">
         <shadow type="math_angle">
@@ -33,6 +32,7 @@ const motion = () => `
         </shadow>
       </value>
     </block>
+    ${blockSeparator}
     <block type="motion_turnright">
       <value name="DEGREES">
         <shadow type="math_number">
@@ -47,6 +47,14 @@ const motion = () => `
         </shadow>
       </value>
     </block>
+    <block type="motion_pointindirection">
+      <value name="DIRECTION">
+        <shadow type="math_angle">
+          <field name="NUM">90</field>
+        </shadow>
+      </value>
+    </block>
+    ${blockSeparator}
     <block type="motion_setspeed">
       <value name="SPEED">
         <shadow type="math_number">
@@ -56,8 +64,8 @@ const motion = () => `
     </block>
     <block type="motion_stop"/>
     ${blockSeparator}
-    <block type="motion_x"/>
-    <block type="motion_y"/>
+    <block type="motion_xposition"/>
+    <block type="motion_yposition"/>
     <block type="motion_speed"/>
     <block type="motion_direction"/>
     ${categorySeparator}
@@ -80,8 +88,8 @@ const sensing = () => `
         </shadow>
       </value>
     </block>
-    <block type="sensing_distance">
-      <value name="DISTANCE">
+    <block type="sensing_scandistance">
+      <value name="DIRECTION">
         <shadow type="math_angle">
           <field name="NUM">90</field>
         </shadow>

@@ -61,12 +61,12 @@ javascriptGenerator['motion_stop'] = (block) => {
   return code;
 };
 
-javascriptGenerator['motion_x'] = (block) => {
-  return ['tank.util.worldX', javascriptGenerator.ORDER_ATOMIC];
+javascriptGenerator['motion_xposition'] = (block) => {
+  return ['tank.util.x', javascriptGenerator.ORDER_ATOMIC];
 };
 
-javascriptGenerator['motion_y'] = (block) => {
-  return ['tank.util.worldY', javascriptGenerator.ORDER_ATOMIC];
+javascriptGenerator['motion_yposition'] = (block) => {
+  return ['tank.util.y', javascriptGenerator.ORDER_ATOMIC];
 };
 
 javascriptGenerator['motion_speed'] = (block) => {
