@@ -13,18 +13,15 @@ export default function BlocksEditor() {
   const player = fileList[0];
 
   const messages = {
-    MOTION_ATTACK: getText('tankwar.blocks.motion_attack', '朝向 %1 方向 %2 步距离发射炮弹'),
-    MOTION_MOVE: getText('tankwar.blocks.motion_move', '以 %2 % 速度面向 %1 方向前进'),
-    MOTION_SETSPEED: getText('tankwar.blocks.motion_setspeed', '将速度设为 %1 %'),
-    MOTION_STOP: getText('tankwar.blocks.motion_stop', '停止前进'),
-    MOTION_X: getText('tankwar.blocks.motion_x', 'x 坐标'),
-    MOTION_Y: getText('tankwar.blocks.motion_y', 'y 坐标'),
-    MOTION_SPEED: getText('tankwar.blocks.motion_speed', '速度'),
-    MOTION_DIRECTION: getText('tankwar.blocks.motion_direction', '方向'),
-    SENSING_SCANWIDTH: getText('tankwar.blocks.sensing_scanwidth', '将雷达扫描宽度设为 %1'),
-    SENSING_SCAN: getText('tankwar.blocks.sensing_scan', '雷达扫描 %1 方向有敌人？'),
-    SENSING_DISTANCE: getText('tankwar.blocks.sensing_distance', '雷达测量 %1 方向敌人的距离'),
-    SENSING_HEALTH: getText('tankwar.blocks.sensing_health', '生命值'),
+    MOTION_ATTACK: getText('tankwar.blocks.motion_attack', 'fire in direction %1 at %2 steps'),
+    MOTION_MOVE: getText('tankwar.blocks.motion_move', 'forward in direction %1 at %2 % speed'),
+    MOTION_SETSPEED: getText('tankwar.blocks.motion_setspeed', 'set speed to %1 %'),
+    MOTION_STOP: getText('tankwar.blocks.motion_stop', 'stop'),
+    MOTION_SPEED: getText('tankwar.blocks.motion_speed', 'speed'),
+    SENSING_SCANWIDTH: getText('tankwar.blocks.sensing_scanwidth', 'set scan width to %1'),
+    SENSING_SCAN: getText('tankwar.blocks.sensing_scan', 'scan for enemy in direction %1?'),
+    SENSING_DISTANCE: getText('tankwar.blocks.sensing_distance', 'measure distance of enemy in direction %1'),
+    SENSING_HEALTH: getText('tankwar.blocks.sensing_health', 'health'),
   };
   const toolbox = makeToolboxXML();
 
