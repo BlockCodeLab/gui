@@ -7,7 +7,7 @@ javascriptGenerator['motion_attack'] = (block) => {
   }
   const directionValue = javascriptGenerator.valueToCode(block, 'DIRECTION', javascriptGenerator.ORDER_NONE) || 0;
   const distanceValue = javascriptGenerator.valueToCode(block, 'DISTANCE', javascriptGenerator.ORDER_NONE) || 100;
-  code += `tank.util.attack(${directionValue}, ${distanceValue});\n`;
+  code += `await tank.util.attack(${directionValue}, ${distanceValue});\n`;
   return code;
 };
 
@@ -28,7 +28,7 @@ javascriptGenerator['motion_turnright'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const degreesCode = javascriptGenerator.valueToCode(block, 'DEGREES', javascriptGenerator.ORDER_NONE);
-  code += `tank.util.direction += ${degreesCode};\n`;
+  code += `await tank.util.turnRight(${degreesCode});\n`;
   return code;
 };
 
@@ -38,7 +38,17 @@ javascriptGenerator['motion_turnleft'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const degreesCode = javascriptGenerator.valueToCode(block, 'DEGREES', javascriptGenerator.ORDER_NONE);
-  code += `tank.util.direction -= ${degreesCode};\n`;
+  code += `await tank.util.turnLeft(${degreesCode});\n`;
+  return code;
+};
+
+javascriptGenerator['motion_pointindirection'] = (block) => {
+  let code = '';
+  if (javascriptGenerator.STATEMENT_PREFIX) {
+    code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
+  }
+  const degreesCode = javascriptGenerator.valueToCode(block, 'DEGREES', javascriptGenerator.ORDER_NONE);
+  code += `await tank.util.setDirection(+${degreesCode});\n`;
   return code;
 };
 
