@@ -1,6 +1,5 @@
-import classNames from 'classnames';
 import { useLocale, useEditor } from '@blockcode/core';
-import { Text, ActionButton } from '@blockcode/ui';
+import { classNames, Text, ActionButton } from '@blockcode/ui';
 
 import loadImage from '../../lib/load-image';
 

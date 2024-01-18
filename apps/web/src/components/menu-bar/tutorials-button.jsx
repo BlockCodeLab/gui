@@ -1,5 +1,4 @@
-import classNames from 'classnames';
-import { Text } from '@blockcode/ui';
+import { classNames, Text } from '@blockcode/ui';
 
 import styles from './menu-bar.module.css';
 import tutorialsIcon from './icon-tutorials.svg';

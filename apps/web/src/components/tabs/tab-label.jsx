@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import { classNames } from '@blockcode/ui';
 import styles from './tabs.module.css';
 
 export default function TabLabel({ id, className, checked, children, name, onSelect }) {

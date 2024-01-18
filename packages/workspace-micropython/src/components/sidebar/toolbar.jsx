@@ -1,6 +1,5 @@
-import classNames from 'classnames';
 import { useLocale, useEditor } from '@blockcode/core';
-import { Button } from '@blockcode/ui';
+import { classNames } from '@blockcode/ui';
 
 import DeviceManager from '../device-manager/device-manager';
 

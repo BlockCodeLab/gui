@@ -1,5 +1,5 @@
-import classNames from 'classnames';
 import { useState } from 'preact/hooks';
+import { classNames } from '@blockcode/ui';
 import { PicoedPlayer } from '../picoed-player/picoed-player';
 import Toolbar from './toolbar';
 import styles from './stage.module.css';

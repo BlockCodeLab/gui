@@ -3,7 +3,7 @@
   height: 2rem;
   padding: 0 0.75rem;
 
-  font-size: var(--small-font-size);
+  font-size: var(--standard-font-size);
   font-weight: bold;
   color: var(--text-primary);
 

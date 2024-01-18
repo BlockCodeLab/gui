@@ -1,7 +1,6 @@
-import classNames from 'classnames';
 import { useState } from 'preact/hooks';
+import { classNames } from '@blockcode/ui';
 import { PopsiclePlayer } from '@blockcode/popsicle-player';
-import { useEditor } from '@blockcode/core';
 import Toolbar from './toolbar';
 import styles from './stage.module.css';
 

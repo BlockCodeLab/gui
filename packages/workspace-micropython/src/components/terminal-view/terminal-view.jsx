@@ -1,6 +1,6 @@
-import classNames from 'classnames';
 import { useRef, useEffect } from 'preact/hooks';
 import { useEditor } from '@blockcode/core';
+import { classNames } from '@blockcode/ui';
 import createTerminal from './create-terminal';
 
 import styles from './terminal-view.module.css';

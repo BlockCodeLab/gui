@@ -1,12 +1,9 @@
-import classNames from 'classnames';
 import { useLocale } from '@blockcode/core';
-import { Button } from '@blockcode/ui';
+import { classNames } from '@blockcode/ui';
 
 import styles from './toolbar.module.css';
 import iconGreenFlag from './icon-green-flag.svg';
 import iconStopAll from './icon-stop-all.svg';
-import iconSmallStage from './icon-small-stage.svg';
-import iconLargeStage from './icon-large-stage.svg';
 
 export default function Toolbar({ playing, onPlay, onStop }) {
   const { getText } = useLocale();

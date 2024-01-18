@@ -1,6 +1,6 @@
-import classNames from 'classnames';
 import { useState } from 'preact/hooks';
 import { useLocale, useEditor } from '@blockcode/core';
+import { classNames } from '@blockcode/ui';
 import { BlocksEditor as Editor, ScratchBlocks, makeToolboxXML } from '@blockcode/blocks-editor';
 import { pythonGenerator } from '../../generators/python';
 

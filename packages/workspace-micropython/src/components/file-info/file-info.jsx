@@ -1,6 +1,5 @@
-import classNames from 'classnames';
 import { useLocale, useEditor } from '@blockcode/core';
-import { Label, BufferedInput, Input } from '@blockcode/ui';
+import { classNames, Label, BufferedInput, Input } from '@blockcode/ui';
 
 import styles from './file-info.module.css';
 

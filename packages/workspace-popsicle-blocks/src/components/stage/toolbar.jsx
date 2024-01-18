@@ -1,6 +1,5 @@
-import classNames from 'classnames';
 import { useLocale } from '@blockcode/core';
-import { Button } from '@blockcode/ui';
+import { classNames, Button } from '@blockcode/ui';
 
 import styles from './toolbar.module.css';
 import iconGreenFlag from './icon-green-flag.svg';

@@ -114,6 +114,7 @@ export default function ({ newProject, setAlert, removeAlert, extendsMenu, filte
               defaultMessage="Load from your computer"
             />
           ),
+          disabled: true,
           async onClick() {
             console.log('upload');
           },
@@ -125,6 +126,7 @@ export default function ({ newProject, setAlert, removeAlert, extendsMenu, filte
               defaultMessage="save to your computer"
             />
           ),
+          disabled: true,
           async onClick() {
             console.log('download');
           },

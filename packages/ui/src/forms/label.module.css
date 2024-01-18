@@ -16,7 +16,7 @@
 
 .input-label,
 .input-label-secondary {
-  font-size: var(--small-font-size);
+  font-size: var(--standard-font-size);
   user-select: none;
   cursor: default;
 

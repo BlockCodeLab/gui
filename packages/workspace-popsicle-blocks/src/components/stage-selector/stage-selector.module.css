@@ -41,7 +41,7 @@
 }
 
 .header-title {
-  font-size: var(--small-font-size);
+  font-size: var(--standard-font-size);
   font-weight: bold;
   color: var(--text-primary);
 

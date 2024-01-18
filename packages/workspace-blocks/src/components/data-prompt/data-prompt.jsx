@@ -1,6 +1,5 @@
-import classNames from 'classnames';
-import { useState } from 'preact/hooks';
-import { Text, Button, Modal, BufferedInput } from '@blockcode/ui';
+import { useRef, useEffect, useState } from 'preact/hooks';
+import { classNames, Text, Button, Modal, BufferedInput } from '@blockcode/ui';
 
 import styles from './data-prompt.module.css';
 

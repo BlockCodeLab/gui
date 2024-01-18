@@ -11,7 +11,7 @@ import BlocksEditor from './components/blocks-editor/blocks-editor';
 import Pane from './components/pane/pane';
 
 /* assets */
-import blocksIcon from './assets/icon-blocks.svg';
+import blocksIcon from './icon-blocks.svg';
 
 /* languages */
 import en from './l10n/en.yaml';

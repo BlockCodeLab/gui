@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import { classNames } from '@blockcode/ui';
 import styles from './pane-view.module.css';
 
 export default function PaneView({ className, id, title, left, right, children }) {

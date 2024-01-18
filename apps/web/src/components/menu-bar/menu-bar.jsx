@@ -1,6 +1,5 @@
-import classNames from 'classnames';
 import { useLocale, supportLanguages } from '@blockcode/core';
-import { Menu, MenuItem, MenuSection, ComingSoon } from '@blockcode/ui';
+import { classNames, Menu, MenuItem, MenuSection, ComingSoon } from '@blockcode/ui';
 
 /* components */
 import MainMenu from './main-menu';

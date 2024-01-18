@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import { classNames } from '@blockcode/ui';
 import { injectStyle } from '../../lib/inject-style';
 import styles from './menu-bar.module.css';
 

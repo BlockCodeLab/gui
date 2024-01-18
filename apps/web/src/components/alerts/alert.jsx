@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import { classNames } from '@blockcode/ui';
 import styles from './alerts.module.css';
 
 export default function Alert({ warn: isWarn, icon, message, onOk, onCancel, onClose }) {

@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import Alert from './alert';
 import styles from './alerts.module.css';
 

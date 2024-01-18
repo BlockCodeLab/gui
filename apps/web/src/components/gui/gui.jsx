@@ -1,5 +1,5 @@
-import classNames from 'classnames';
 import { useLocale, useEditor } from '@blockcode/core';
+import { classNames } from '@blockcode/ui';
 import { useLayout } from '../../hooks/use-layout';
 import { useAlert } from '../../hooks/use-alert';
 

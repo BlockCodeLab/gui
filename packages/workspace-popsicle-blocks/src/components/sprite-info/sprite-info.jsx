@@ -1,6 +1,5 @@
-import classNames from 'classnames';
 import { useLocale, useEditor } from '@blockcode/core';
-import { Button, Label, BufferedInput } from '@blockcode/ui';
+import { classNames, Button, Label, BufferedInput } from '@blockcode/ui';
 import { ScratchBlocks } from '@blockcode/blocks-editor';
 import { pythonGenerator } from '@blockcode/workspace-blocks';
 

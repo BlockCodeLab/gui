@@ -1,6 +1,6 @@
-import classNames from 'classnames';
 import { cloneElement } from 'preact';
 import { flatChildren } from '@blockcode/core';
+import { classNames } from '@blockcode/ui';
 import { injectStyle } from '../../lib/inject-style';
 
 /* components */
