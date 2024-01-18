@@ -14,6 +14,7 @@ export default function DataPrompt({
   onClose,
   onSubmit,
 }) {
+  const ref = useRef(null);
   const [value, setValue] = useState(defaultValue);
   const [options, setOptions] = useState({
     scope: 'global',
@@ -23,6 +24,23 @@ export default function DataPrompt({
   const handleSubmit = () => {
     onSubmit(value, options);
   };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Escape') onClose();
+    if (e.key === 'Enter') {
+      onSubmit(ref.current.base.value, options);
+    }
+  };
+
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.base.focus();
+      globalThis.addEventListener('keydown', handleKeyDown);
+    }
+    return () => {
+      globalThis.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [ref]);
 
   return (
     <Modal
@@ -34,6 +52,8 @@ export default function DataPrompt({
         <div className={styles.label}>{label}</div>
         <BufferedInput
           autoFocus
+          forceFocus
+          ref={ref}
           className={styles.variableNameTextInput}
           defaultValue={value}
           name={label}
