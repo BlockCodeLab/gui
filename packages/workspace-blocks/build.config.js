@@ -1,9 +1,8 @@
-import { resolve, dirname } from 'node:path';
+import { resolve } from 'node:path';
 import CSSLoader from 'bun-loader-css';
 import YamlLoader from 'bun-loader-yaml';
-import CopyPlugin from 'bun-plugin-copy';
 
-const isRelease = Bun.env.ENV === 'production';
+const isRelease = Bun.env.BUN_ENV === 'production';
 
 const PROJECT_ROOT = import.meta.dir;
 const SRC_DIR = resolve(PROJECT_ROOT, 'src');
@@ -17,14 +16,7 @@ export default {
   naming: {
     asset: 'assets/[name]-[hash].[ext]',
   },
-  plugins: [
-    CSSLoader(),
-    YamlLoader(),
-    CopyPlugin({
-      from: resolve(dirname(import.meta.resolveSync('scratch-blocks/dist/vertical')), '../media'),
-      to: 'assets/blocks-media/',
-    }),
-  ],
+  plugins: [CSSLoader(), YamlLoader()],
   external: [
     'preact',
     'preact/hooks',

@@ -38,6 +38,7 @@ const imports = Object.fromEntries(
 
 const assets = [
   '@blockcode/ui',
+  '@blockcode/blocks-editor',
   '@blockcode/workspace-micropython',
   '@blockcode/workspace-blocks',
   '@blockcode/workspace-popsicle-blocks',

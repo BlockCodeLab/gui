@@ -92,7 +92,6 @@ export default function BlocksEditor({
       <Editor
         toolbox={toolbox}
         messages={messages}
-        media="/assets/blocks-media/"
         xml={xml}
         variables={variables}
         onWorkspaceCreated={setWorkspace}

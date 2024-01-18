@@ -49,11 +49,22 @@ const supportedEvents = new Set([
   ScratchBlocks.Events.VAR_RENAME,
 ]);
 
-export function BlocksEditor({ toolbox, messages, media, xml, variables, forceUpdate, onWorkspaceCreated, onChange }) {
+export function BlocksEditor({ toolbox, messages, xml, variables, onWorkspaceCreated, onChange }) {
   const ref = useRef(null);
   const { language } = useLocale();
   const [currentXml, setCurrentXml] = useState();
   const [currentToolbox, setCurrentToolbox] = useState();
+
+  const locale = unifyLocale(language);
+  if (ScratchBlocks.ScratchMsgs.currentLocale_ !== locale) {
+    ScratchBlocks.ScratchMsgs.setLocale(locale);
+  }
+
+  let needUpdateToolbox = false;
+  Object.entries(messages).forEach(([key, value]) => {
+    needUpdateToolbox = needUpdateToolbox || ScratchBlocks.Msg[key] !== value;
+    ScratchBlocks.Msg[key] = value;
+  });
 
   toolbox = toolbox || makeToolboxXML();
   if (typeof toolbox === 'function') {
@@ -81,8 +92,8 @@ export function BlocksEditor({ toolbox, messages, media, xml, variables, forceUp
     }
   };
 
-  const updateToolbox = () => {
-    if (toolbox === currentToolbox) return;
+  const updateToolbox = (force) => {
+    if (toolbox === currentToolbox && !force) return;
     setCurrentToolbox(toolbox);
 
     const categoryId = ref.workspace.toolbox_.getSelectedCategoryId();
@@ -113,7 +124,7 @@ export function BlocksEditor({ toolbox, messages, media, xml, variables, forceUp
         /<variable type="broadcast_msg"[^>]+>[^<]+<\/variable>/gi,
         ''
       );
-      if (forceUpdate || xml !== currentXml) {
+      if (xml !== currentXml) {
         onChange(xml, ref.workspace);
         setCurrentXml(xml);
       }
@@ -122,12 +133,9 @@ export function BlocksEditor({ toolbox, messages, media, xml, variables, forceUp
 
   if (ref.workspace) {
     loadXmlToWorkspace();
-    updateToolbox();
+    updateToolbox(needUpdateToolbox);
     if (!xml) handleChange();
   }
-
-  ScratchBlocks.ScratchMsgs.setLocale(unifyLocale(language));
-  Object.entries(messages).forEach(([key, value]) => (ScratchBlocks.Msg[key] = value));
 
   useEffect(() => {
     if (ref.current) {
@@ -135,7 +143,7 @@ export function BlocksEditor({ toolbox, messages, media, xml, variables, forceUp
         ref.current,
         Object.assign({}, BLOCKS_DEFAULT_OPTIONS, {
           toolbox,
-          media,
+          media: './assets/blocks-media/',
         })
       );
       if (onWorkspaceCreated) {
