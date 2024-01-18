@@ -32,14 +32,14 @@ ScratchBlocks.Blocks['sensing_scan'] = {
   },
 };
 
-ScratchBlocks.Blocks['sensing_distance'] = {
+ScratchBlocks.Blocks['sensing_scandistance'] = {
   init() {
     this.jsonInit({
       message0: ScratchBlocks.Msg.SENSING_DISTANCE,
       args0: [
         {
           type: 'input_value',
-          name: 'DISTANCE',
+          name: 'DIRECTION',
         },
       ],
       category: ScratchBlocks.Categories.sensing,

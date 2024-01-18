@@ -66,43 +66,10 @@ ScratchBlocks.Blocks['motion_stop'] = {
   },
 };
 
-ScratchBlocks.Blocks['motion_x'] = {
-  init() {
-    this.jsonInit({
-      message0: ScratchBlocks.Msg.MOTION_X,
-      category: ScratchBlocks.Categories.motion,
-      checkboxInFlyout: true,
-      extensions: ['colours_motion', 'output_number'],
-    });
-  },
-};
-
-ScratchBlocks.Blocks['motion_y'] = {
-  init() {
-    this.jsonInit({
-      message0: ScratchBlocks.Msg.MOTION_Y,
-      category: ScratchBlocks.Categories.motion,
-      checkboxInFlyout: true,
-      extensions: ['colours_motion', 'output_number'],
-    });
-  },
-};
-
 ScratchBlocks.Blocks['motion_speed'] = {
   init() {
     this.jsonInit({
       message0: ScratchBlocks.Msg.MOTION_SPEED,
-      category: ScratchBlocks.Categories.motion,
-      checkboxInFlyout: true,
-      extensions: ['colours_motion', 'output_number'],
-    });
-  },
-};
-
-ScratchBlocks.Blocks['motion_direction'] = {
-  init() {
-    this.jsonInit({
-      message0: ScratchBlocks.Msg.MOTION_DIRECTION,
       category: ScratchBlocks.Categories.motion,
       checkboxInFlyout: true,
       extensions: ['colours_motion', 'output_number'],
