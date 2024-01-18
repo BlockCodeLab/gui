@@ -1,6 +1,5 @@
-import classNames from 'classnames';
 import { useLocale, useEditor } from '@blockcode/core';
-import { Text, Button, Label, BufferedInput } from '@blockcode/ui';
+import { classNames, Text, Button, Label, BufferedInput } from '@blockcode/ui';
 
 import styles from './stage-info.module.css';
 import imageTank2 from './tank-2.png';
@@ -9,7 +8,7 @@ import imageTank4 from './tank-4.png';
 
 const tankImages = [imageTank2, imageTank3, imageTank4];
 
-export default function StageInfo({ enemies, enemiesAI, health, onChangeEnemies, onChangeEnemyAI }) {
+export default function StageInfo({ playing, enemies, enemiesAI, health, onChangeEnemies, onChangeEnemyAI }) {
   const { getText } = useLocale();
   const { fileList, modifyFile } = useEditor();
 
@@ -24,6 +23,7 @@ export default function StageInfo({ enemies, enemiesAI, health, onChangeEnemies,
       <div className={classNames(styles.row, styles.rowPrimary)}>
         <Label text={getText('tankwar.stageInfo.player', 'Player')}>
           <BufferedInput
+            disabled={playing}
             className={styles.nameInput}
             placeholder={getText('tankwar.stageInfo.nickname', 'Nickname')}
             onSubmit={(value) => handleChangeInfo('name', value)}
@@ -48,6 +48,7 @@ export default function StageInfo({ enemies, enemiesAI, health, onChangeEnemies,
           text={getText('tankwar.stageInfo.enemies', 'Enemies')}
         >
           <Button
+            disabled={playing}
             className={classNames(styles.button, styles.groupButtonFirst, {
               [styles.groupButtonToggledOn]: enemies === 1,
             })}
@@ -56,6 +57,7 @@ export default function StageInfo({ enemies, enemiesAI, health, onChangeEnemies,
             <div className={styles.buttonText}>1</div>
           </Button>
           <Button
+            disabled={playing}
             className={classNames(styles.button, styles.groupButton, {
               [styles.groupButtonToggledOn]: enemies === 2,
             })}
@@ -64,12 +66,43 @@ export default function StageInfo({ enemies, enemiesAI, health, onChangeEnemies,
             <div className={styles.buttonText}>2</div>
           </Button>
           <Button
+            disabled={playing}
             className={classNames(styles.button, styles.groupButtonLast, {
               [styles.groupButtonToggledOn]: enemies === 3,
             })}
             onClick={() => onChangeEnemies(3)}
           >
             <div className={styles.buttonText}>3</div>
+          </Button>
+        </Label>
+
+        <Label secondary>
+          <Button
+            disabled={playing}
+            className={classNames(styles.button, styles.groupButtonFirst, {
+              [styles.groupButtonToggledOn]: true,
+            })}
+            onClick={() => onChangeEnemies(1)}
+          >
+            <div className={styles.buttonText}>
+              <Text
+                id="tankwar.stageInfo.mode.local"
+                defaultMessage="Local AI"
+              />
+            </div>
+          </Button>
+          <Button
+            disabled={true}
+            className={classNames(styles.button, styles.groupButtonLast, {
+              [styles.groupButtonToggledOn]: false,
+            })}
+          >
+            <div className={styles.buttonText}>
+              <Text
+                id="tankwar.stageInfo.mode.remote"
+                defaultMessage="Remote Players"
+              />
+            </div>
           </Button>
         </Label>
       </div>
@@ -98,6 +131,7 @@ export default function StageInfo({ enemies, enemiesAI, health, onChangeEnemies,
             text={getText('tankwar.stageInfo.ai', 'AI')}
           >
             <Button
+              disabled={playing}
               className={classNames(styles.button, styles.groupButtonFirst, {
                 [styles.groupButtonToggledOn]: enemiesAI[tank] === 'simple',
               })}
@@ -111,6 +145,7 @@ export default function StageInfo({ enemies, enemiesAI, health, onChangeEnemies,
               </div>
             </Button>
             <Button
+              disabled={playing}
               className={classNames(styles.button, styles.groupButton, {
                 [styles.groupButtonToggledOn]: enemiesAI[tank] === 'medium',
               })}
@@ -124,6 +159,7 @@ export default function StageInfo({ enemies, enemiesAI, health, onChangeEnemies,
               </div>
             </Button>
             <Button
+              disabled={playing}
               className={classNames(styles.button, styles.groupButtonLast, {
                 [styles.groupButtonToggledOn]: enemiesAI[tank] === 'senior',
               })}

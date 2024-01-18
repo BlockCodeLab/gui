@@ -1,14 +1,11 @@
-import classNames from 'classnames';
-import { useState } from 'preact/hooks';
+import { classNames } from '@blockcode/ui';
 import { TankwarPlayer } from '../tankwar-player/tankwar-player';
 import Toolbar from './toolbar';
 import styles from './stage.module.css';
 
-export default function Stage({ enemies }) {
-  const [playing, setPlaying] = useState(false);
-
-  const handlePlay = () => setPlaying(true);
-  const handleStop = () => setPlaying(false);
+export default function Stage({ playing, enemies, enemiesAI, onChangePlaying, onChangeHealth }) {
+  const handlePlay = () => onChangePlaying(true);
+  const handleStop = () => onChangePlaying(false);
 
   return (
     <div className={styles.stageWrapper}>
@@ -20,9 +17,11 @@ export default function Stage({ enemies }) {
 
       <div className={classNames(styles.stage)}>
         <TankwarPlayer
-          enemies={enemies}
           playing={playing}
+          enemies={enemies}
+          enemiesAI={enemiesAI}
           onRequestStop={handleStop}
+          onChangeHealth={onChangeHealth}
         />
       </div>
     </div>

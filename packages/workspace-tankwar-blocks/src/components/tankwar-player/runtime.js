@@ -1,24 +1,36 @@
 import { Runtime as BaseRuntime, paperCore } from '@blockcode/blocks-player';
-import { base64ToUint8Array } from '../../lib/base64-util';
+import Tank from './tank';
 
 export default class Runtime extends BaseRuntime {
-  get tanks() {
-    return paperCore.project.activeLayer.children;
-  }
-
   get player() {
-    return this.tanks['player'];
+    return paperCore.project.activeLayer.children.player;
   }
 
   get redTank() {
-    return this.tanks['red'];
+    return paperCore.project.activeLayer.children.red;
   }
 
   get yellowTank() {
-    return this.tanks['yellow'];
+    return paperCore.project.activeLayer.children.yellow;
   }
 
   get greenTank() {
-    return this.tanks['green'];
+    return paperCore.project.activeLayer.children.green;
+  }
+
+  start() {
+    this.player.util.running = true;
+    this.redTank.util.running = true;
+    this.yellowTank.util.running = true;
+    this.greenTank.util.running = true;
+    super.start();
+  }
+
+  stop() {
+    super.stop();
+    this.player.util.running = false;
+    this.redTank.util.running = false;
+    this.yellowTank.util.running = false;
+    this.greenTank.util.running = false;
   }
 }

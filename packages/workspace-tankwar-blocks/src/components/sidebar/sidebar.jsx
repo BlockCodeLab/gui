@@ -6,7 +6,8 @@ import StageInfo from '../stage-info/stage-info';
 import styles from './sidebar.module.css';
 
 export default function Sidebar() {
-  const [enemies, setEnemies] = useState(1);
+  const [playing, setPlaying] = useState(false);
+  const [enemies, setEnemies] = useState(2);
   const [enemiesAI, setEnemiesAI] = useState({
     red: 'simple',
     yellow: 'medium',
@@ -19,18 +20,18 @@ export default function Sidebar() {
     green: 100,
   });
 
-  const handleStageSizeToggle = (size) => setStageSize(size);
-
   return (
     <div className={styles.sidebarWrapper}>
       <Stage
         className={styles.stageWrapper}
+        playing={playing}
         enemies={enemies}
         enemiesAI={enemiesAI}
-        health={health}
-        onSizeToggle={handleStageSizeToggle}
+        onChangePlaying={setPlaying}
+        onChangeHealth={setHealth}
       />
       <StageInfo
+        playing={playing}
         enemies={enemies}
         enemiesAI={enemiesAI}
         health={health}
@@ -38,12 +39,6 @@ export default function Sidebar() {
         onChangeEnemyAI={(tank, ai) =>
           setEnemiesAI({
             ...enemiesAI,
-            [tank]: ai,
-          })
-        }
-        onChangeHealth={(tank, ai) =>
-          setHealth({
-            ...health,
             [tank]: ai,
           })
         }
