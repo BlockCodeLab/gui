@@ -2,16 +2,17 @@
 import { useState } from 'preact/hooks';
 import { Input } from './input';
 
-export function BufferedInput({ value, onSubmit, ...props }) {
+export function BufferedInput({ value, forceFocus, onSubmit, ...props }) {
   const [bufferedValue, setBufferedValue] = useState(null);
 
-  const handleFlush = () => {
+  const handleFlush = (e) => {
     const isNumeric = typeof value === 'number';
     const validatesNumeric = isNumeric ? !isNaN(bufferedValue) : true;
     if (bufferedValue !== null && validatesNumeric) {
-      onSubmit(isNumeric ? Number(bufferedValue) : bufferedValue);
+      onSubmit && onSubmit(isNumeric ? Number(bufferedValue) : bufferedValue);
     }
     setBufferedValue(null);
+    if (e && forceFocus) e.target.focus();
   };
 
   const handleKeyPress = (e) => {
