@@ -1,3 +1,5 @@
+export { default as classNames } from 'classnames';
+
 export { Text, DateTime, Numeric } from '@blockcode/core';
 
 export { ActionButton } from './action-button/action-button';

@@ -1,10 +1,6 @@
 {
   "name": "blockcode-web",
   "version": "0.1.0",
-  "dependencies": {
-    "classnames": "^2.3.2",
-    "preact": "^10.18.1"
-  },
   "scripts": {
     "build": "bun-build",
     "dev": "HOT_SERVER=enable bun-build --watch ./src"
@@ -17,5 +13,10 @@
     "bun-plugin-copy": "link:bun-plugin-copy",
     "bun-index-page": "link:bun-index-page",
     "bun-hot-server": "link:bun-hot-server"
+  },
+  "dependencies": {
+    "preact": "^10.18.1",
+    "@blockcode/core": "workspace:*",
+    "@blockcode/ui": "workspace:*"
   }
 }
