@@ -4,3 +4,7 @@ gui.menuBar.tutorials: Tutorials
 gui.menuBar.projectTitlePlaceholder: Project title here
 
 gui.defaultProject.name: BlockCode Project
+
+gui.prompt.close: Close
+gui.prompt.cancel: Cancel
+gui.prompt.ok: OK

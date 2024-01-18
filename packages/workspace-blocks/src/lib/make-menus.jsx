@@ -6,7 +6,7 @@ import defaultFilters from './filters.yaml';
 
 const isMac = /Mac/i.test(globalThis.navigator.platform || globalThis.navigator.userAgent);
 
-export default function ({ newProject, setAlert, removeAlert, extendsMenu, filters } = {}) {
+export default function ({ newProject, setPrompt, setAlert, removeAlert, extendsMenu, filters } = {}) {
   let setDisableUndo = () => {};
   let setDisableRedo = () => {};
 
@@ -69,8 +69,24 @@ export default function ({ newProject, setAlert, removeAlert, extendsMenu, filte
             />
           ),
           hotkey: [isMac ? Keys.COMMAND : Keys.CONTROL, Keys.N],
-          onClick() {
-            if (newProject) {
+          onClick({ context }) {
+            if (context.modified) {
+              setPrompt({
+                title: (
+                  <Text
+                    id="blocks.menu.file.notSaved"
+                    defaultMessage="Not saved"
+                  />
+                ),
+                label: (
+                  <Text
+                    id="blocks.menu.file.replaceProject"
+                    defaultMessage="Replace contents of the current project?"
+                  />
+                ),
+                onSubmit: newProject,
+              });
+            } else {
               newProject();
             }
           },

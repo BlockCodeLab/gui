@@ -73,7 +73,7 @@ export default function DataPrompt({
                   />
                   <Text
                     id="blocks.dataPrompt.forAllTargets"
-                    defaultValue="For all targets"
+                    defaultMessage="For all targets"
                   />
                 </label>
                 <label>
@@ -86,7 +86,7 @@ export default function DataPrompt({
                   />
                   <Text
                     id="blocks.dataPrompt.forThisTarget"
-                    defaultValue="For this target only"
+                    defaultMessage="For this target only"
                   />
                 </label>
               </div>
@@ -95,12 +95,12 @@ export default function DataPrompt({
                 {showListMessage ? (
                   <Text
                     id={'blocks.dataPrompt.listAvailableToAllTargets'}
-                    defaultValue="This list will be available to all targets."
+                    defaultMessage="This list will be available to all targets."
                   />
                 ) : (
                   <Text
                     id={'blocks.dataPrompt.availableToAllTargets'}
-                    defaultValue="This variable will be available to all targets."
+                    defaultMessage="This variable will be available to all targets."
                   />
                 )}
               </div>
@@ -115,7 +115,7 @@ export default function DataPrompt({
           >
             <Text
               id="blocks.dataPrompt.cancel"
-              defaultValue="Cancel"
+              defaultMessage="Cancel"
             />
           </Button>
           <Button
@@ -124,7 +124,7 @@ export default function DataPrompt({
           >
             <Text
               id="blocks.dataPrompt.ok"
-              defaultValue="OK"
+              defaultMessage="OK"
             />
           </Button>
         </div>

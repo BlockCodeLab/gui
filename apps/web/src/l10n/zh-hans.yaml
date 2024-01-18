@@ -4,3 +4,7 @@ gui.menuBar.tutorials: 教程
 gui.menuBar.projectTitlePlaceholder: 在此填写作品标题
 
 gui.defaultProject.name: BlockCode 作品
+
+gui.prompt.close: 关闭
+gui.prompt.cancel: 取消
+gui.prompt.ok: 确认

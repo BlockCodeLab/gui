@@ -26,10 +26,12 @@ const imports = Object.fromEntries(
     // blocks
     '@blockcode/blocks-editor',
     '@blockcode/blocks-player',
+    '@blockcode/tone-player',
     '@blockcode/popsicle-player',
     '@blockcode/workspace-blocks',
     '@blockcode/workspace-popsicle-blocks',
     '@blockcode/workspace-picoed-blocks',
+    '@blockcode/workspace-tankwar-blocks',
   ].map((moduleId) => [
     moduleId,
     `./${moduleId.includes('/') ? '' : `${moduleId}/`}${moduleId}${extname(import.meta.resolveSync(moduleId))}`,
@@ -43,6 +45,7 @@ const assets = [
   '@blockcode/workspace-blocks',
   '@blockcode/workspace-popsicle-blocks',
   '@blockcode/workspace-picoed-blocks',
+  '@blockcode/workspace-tankwar-blocks',
 ];
 
 export default {

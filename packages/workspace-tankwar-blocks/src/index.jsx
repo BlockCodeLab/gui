@@ -15,6 +15,7 @@ export default function PopsicleBlocksWorkspace({
   addLocaleData,
   getText,
   setLayout,
+  setPrompt,
   setAlert,
   removeAlert,
   openProject,
@@ -43,7 +44,7 @@ export default function PopsicleBlocksWorkspace({
   ];
 
   setLayout({
-    menus: makeMenus({ newProject, setAlert, removeAlert, extendsMenu }),
+    menus: makeMenus({ newProject, setPrompt, setAlert, removeAlert, extendsMenu }),
 
     tabs: [
       {

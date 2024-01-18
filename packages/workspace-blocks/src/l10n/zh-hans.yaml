@@ -1,5 +1,7 @@
 blocks.menu.file: 文件
 blocks.menu.file.newProject: 新作品
+blocks.menu.file.notSaved: 未保存作品
+blocks.menu.file.replaceProject: 要创建新作品替换当前作品吗？
 blocks.menu.file.openProject: 打开
 blocks.menu.file.saveProject: 保存
 blocks.menu.file.uploadProject: 从电脑中打开

@@ -28,6 +28,7 @@ const initialState = {
   fileList: [],
   selectedIndex: -1,
   device: null,
+  modified: false,
 };
 
 export const EditorContext = createContext({
@@ -38,17 +39,19 @@ export const EditorContext = createContext({
 const reducer = (state, action) => {
   switch (action.type) {
     case OPEN_PROJECT:
-      return Object.assign({}, initialState, action.payload);
+      return Object.assign({ modified: false }, initialState, action.payload);
     case SET_PROJECT_NAME:
       return {
         ...state,
         name: action.payload,
+        modified: true,
       };
     case ADD_FILE:
       return {
         ...state,
         fileList: state.fileList.concat(action.payload),
         selectedIndex: state.fileList.length,
+        modified: true,
       };
     case OPEN_FILE:
       return {
@@ -60,6 +63,7 @@ const reducer = (state, action) => {
         ...state,
         fileList: state.fileList.filter((_, i) => i !== action.payload),
         selectedIndex: action.payload === state.fileList.length - 1 ? action.payload - 1 : action.payload,
+        modified: true,
       };
     case RENAME_FILE:
       return {
@@ -73,6 +77,7 @@ const reducer = (state, action) => {
           }
           return file;
         }),
+        modified: true,
       };
     case MODIFY_FILE:
       return {
@@ -86,16 +91,19 @@ const reducer = (state, action) => {
           }
           return file;
         }),
+        modified: true,
       };
     case ADD_ASSET:
       return {
         ...state,
         assetList: state.assetList.concat(action.payload),
+        modified: true,
       };
     case DELETE_ASSET:
       return {
         ...state,
         assetList: state.assetList.filter((asset) => !action.payload.includes(asset.id)),
+        modified: true,
       };
     case MODIFY_ASSET:
       return {
@@ -109,6 +117,7 @@ const reducer = (state, action) => {
           }
           return asset;
         }),
+        modified: true,
       };
     case CONNECT_DEVICE:
       return {
@@ -123,11 +132,12 @@ const reducer = (state, action) => {
           name: state.editor.name,
           package: state.editor.package,
         },
+        modified: true,
       };
     case SAVE_KEY:
       return {
         ...state,
-        key: state.key ? state.key : action.payload,
+        ...action.payload,
       };
     default:
       return state;
@@ -214,11 +224,8 @@ export function useEditor() {
     },
 
     saveNow() {
-      let key = state.key;
-      if (!key) {
-        key = Date.now().toString(36);
-        dispatch({ type: SAVE_KEY, payload: key });
-      }
+      let key = state.key || Date.now().toString(36);
+      dispatch({ type: SAVE_KEY, payload: { key, modified: false } });
       const { name, editor, assetList, fileList, selectedIndex } = state;
       return localForage.setItem(key, { name, editor, assetList, fileList, selectedIndex });
     },

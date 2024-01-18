@@ -1,3 +1,4 @@
+import { useState } from 'preact/hooks';
 import { useLocale, useEditor } from '@blockcode/core';
 import { classNames } from '@blockcode/ui';
 import { useLayout } from '../../hooks/use-layout';
@@ -8,11 +9,13 @@ import Alerts from '../alerts/alerts';
 import MenuBar from '../menu-bar/menu-bar';
 import Tabs, { TabLabel, TabPanel } from '../tabs/tabs';
 import PaneView from '../pane-view/pane-view';
+import Prompt from '../prompt/prompt';
 
 /* styles and assets */
 import styles from './gui.module.css';
 
 export default function GUI() {
+  const [prompt, setPrompt] = useState(null);
   const { menus, tabs, sidebars, pane, tutorials, canEditProjectName, selectedTab, selectTab, setLayout } = useLayout();
   const { alerts, setAlert, removeAlert } = useAlert();
   const { addLocaleData, getText } = useLocale();
@@ -20,8 +23,8 @@ export default function GUI() {
 
   if (selectedTab === -1) {
     (async () => {
-      const { default: createWorkspace } = await import('@blockcode/workspace-popsicle-blocks');
-      createWorkspace({ addLocaleData, getText, setLayout, setAlert, removeAlert, openProject });
+      const { default: createWorkspace } = await import('@blockcode/workspace-tankwar-blocks');
+      createWorkspace({ addLocaleData, getText, setLayout, setPrompt, setAlert, removeAlert, openProject });
       selectTab(0);
     })();
   }
@@ -42,6 +45,16 @@ export default function GUI() {
     [styles.tabPanelRight]: !RightSidebarContent,
     [styles.tabPanelBottom]: !PaneContent,
   });
+
+  const handlePromptSubmit = () => {
+    prompt.onSubmit && prompt.onSubmit();
+    setPrompt(null);
+  };
+
+  const handlePromptClose = () => {
+    prompt.onClose && prompt.onClose();
+    setPrompt(null);
+  };
 
   return (
     <>
@@ -109,6 +122,15 @@ export default function GUI() {
           )}
         </div>
       </div>
+
+      {prompt && (
+        <Prompt
+          title={prompt.title}
+          label={prompt.label}
+          onClose={handlePromptClose}
+          onSubmit={prompt.onSubmit ? handlePromptSubmit : false}
+        />
+      )}
     </>
   );
 }
