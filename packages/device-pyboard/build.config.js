@@ -14,5 +14,5 @@ export default {
   naming: {
     asset: 'assets/[name]-[hash].[ext]',
   },
-  external: ['preact', 'preact/hooks', `preact/jsx-${isRelease ? '' : 'dev-'}runtime`],
+  external: ['preact', 'preact/hooks', `preact/jsx-${isRelease ? '' : 'dev-'}runtime`, '@blockcode/core'],
 };
