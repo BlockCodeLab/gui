@@ -1,4 +1,5 @@
 import { render } from 'preact';
+import { useEffect } from 'preact/hooks';
 import { LocalesProvider, EditorProvider, useLocale } from '@blockcode/core';
 import GUI from './components/gui/gui';
 
@@ -6,11 +7,12 @@ import en from './l10n/en.yaml';
 import zhHans from './l10n/zh-hans.yaml';
 
 function App() {
-  const { addLocaleData } = useLocale();
+  const { addLocaleData, language } = useLocale();
   addLocaleData({
     en,
     'zh-Hans': zhHans,
   });
+  globalThis.document.querySelector('html').lang = language;
 
   return (
     <LocalesProvider>

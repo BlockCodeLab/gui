@@ -14,3 +14,4 @@ export { Menu, MenuItem, MenuSection } from './menu/menu';
 export { Modal } from './modal/modal';
 export { Spinner } from './spinner/spinner';
 export { Tooltip } from './tooltip/tooltip';
+export { Library } from './library/library';
