@@ -10,21 +10,36 @@ import MenuBar from '../menu-bar/menu-bar';
 import Tabs, { TabLabel, TabPanel } from '../tabs/tabs';
 import PaneView from '../pane-view/pane-view';
 import Prompt from '../prompt/prompt';
+import StoreLibrary from '../store-library/store-library';
 
 /* styles and assets */
 import styles from './gui.module.css';
 
 export default function GUI() {
   const [prompt, setPrompt] = useState(null);
+  const [libraryOpened, setLibraryOpened] = useState(false);
   const { menus, tabs, sidebars, pane, tutorials, canEditProjectName, selectedTab, selectTab, setLayout } = useLayout();
   const { alerts, setAlert, removeAlert } = useAlert();
   const { addLocaleData, getText } = useLocale();
   const { openProject } = useEditor();
 
+  const openStoreLibrary = () => setLibraryOpened(true);
+  const closeStoreLibrary = () => setLibraryOpened(false);
+
   if (selectedTab === -1) {
     (async () => {
       const { default: createWorkspace } = await import('@blockcode/workspace-tankwar-blocks');
-      createWorkspace({ addLocaleData, getText, setLayout, setPrompt, setAlert, removeAlert, openProject });
+      createWorkspace({
+        addLocaleData,
+        getText,
+        setLayout,
+        openStoreLibrary,
+        closeStoreLibrary,
+        setPrompt,
+        setAlert,
+        removeAlert,
+        openProject,
+      });
       selectTab(0);
     })();
   }
@@ -122,6 +137,8 @@ export default function GUI() {
           )}
         </div>
       </div>
+
+      {libraryOpened && <StoreLibrary onClose={() => setLibraryOpened(false)} />}
 
       {prompt && (
         <Prompt

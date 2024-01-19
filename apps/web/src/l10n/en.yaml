@@ -1,9 +1,19 @@
 gui.comingSoon: Coming Soon!
 
+gui.modal.back: Back
+
+gui.library.comingSoon: Coming Soon
+gui.library.preview: Preview
+gui.library.requires: Requires
+gui.library.collaboration: Collaboration
+
 gui.menuBar.tutorials: Tutorials
 gui.menuBar.projectTitlePlaceholder: Project title here
 
 gui.defaultProject.name: BlockCode Project
+gui.defaultProject.shortname: Project
+
+gui.projects.empty: No project!
 
 gui.prompt.close: Close
 gui.prompt.cancel: Cancel

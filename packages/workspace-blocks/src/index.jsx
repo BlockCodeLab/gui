@@ -43,7 +43,16 @@ const BackpackPane = {
   Content: Pane,
 };
 
-export default function BlocksWorkspace({ addLocaleData, setLayout, setPrompt, setAlert, removeAlert, openProject }) {
+export default function BlocksWorkspace({
+  addLocaleData,
+  setLayout,
+  openStoreLibrary,
+  closeStoreLibrary,
+  setPrompt,
+  setAlert,
+  removeAlert,
+  openProject,
+}) {
   addLocaleData(locales);
 
   const newProject = () => {
@@ -59,7 +68,14 @@ export default function BlocksWorkspace({ addLocaleData, setLayout, setPrompt, s
   newProject();
 
   setLayout({
-    menus: makeMenus({ newProject, setPrompt, setAlert, removeAlert }),
+    menus: makeMenus({
+      openStoreLibrary,
+      closeStoreLibrary,
+      newProject,
+      setPrompt,
+      setAlert,
+      removeAlert,
+    }),
 
     tabs: [CodeTab],
 

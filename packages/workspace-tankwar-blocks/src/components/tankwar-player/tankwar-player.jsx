@@ -10,7 +10,7 @@ import * as AIs from './ai';
 export function TankwarPlayer({ playing, enemies, enemiesAI, onRequestStop, onChangeHealth }) {
   const [canvas, setCanvas] = useState(null);
   const [currentRuntime, setCurrentRuntime] = useState(false);
-  const { fileList } = useEditor();
+  const { fileList, thumb, setThumb } = useEditor();
   const player = fileList[0];
 
   if (canvas) {
@@ -73,6 +73,10 @@ export function TankwarPlayer({ playing, enemies, enemiesAI, onRequestStop, onCh
         } else {
           tanks.player.util.place = Tank.PLACE.LEFT;
           tanks.green.util.hidden = true;
+        }
+        const newThumb = canvas.toDataURL();
+        if (thumb !== newThumb) {
+          setThumb(newThumb);
         }
       }
     }

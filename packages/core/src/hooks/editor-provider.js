@@ -5,6 +5,7 @@ import { useContext, useReducer } from 'preact/hooks';
 const CONFIG_EDITOR = 'CONFIG_EDITOR';
 const OPEN_PROJECT = 'OPEN_PROJECT';
 const SET_PROJECT_NAME = 'SET_PROJECT_NAME';
+const SET_PROJECT_THUMB = 'SET_PROJECT_THUMB';
 const ADD_FILE = 'ADD_FILE';
 const OPEN_FILE = 'OPEN_FILE';
 const DELETE_FILE = 'DELETE_FILE';
@@ -22,6 +23,7 @@ localForage.config({
 
 const initialState = {
   key: null,
+  thumb: '',
   name: '',
   editor: {},
   assetList: [],
@@ -39,11 +41,17 @@ export const EditorContext = createContext({
 const reducer = (state, action) => {
   switch (action.type) {
     case OPEN_PROJECT:
-      return Object.assign({ modified: false }, initialState, action.payload);
+      return Object.assign(initialState, action.payload);
     case SET_PROJECT_NAME:
       return {
         ...state,
         name: action.payload,
+        modified: true,
+      };
+    case SET_PROJECT_THUMB:
+      return {
+        ...state,
+        thumb: action.payload,
         modified: true,
       };
     case ADD_FILE:
@@ -223,15 +231,28 @@ export function useEditor() {
       dispatch({ type: CONFIG_EDITOR, payload: config });
     },
 
-    saveNow() {
-      let key = state.key || Date.now().toString(36);
-      dispatch({ type: SAVE_KEY, payload: { key, modified: false } });
-      const { name, editor, assetList, fileList, selectedIndex } = state;
-      return localForage.setItem(key, { name, editor, assetList, fileList, selectedIndex });
+    setThumb(thumb) {
+      dispatch({ type: SET_PROJECT_THUMB, payload: thumb });
     },
 
-    listProjects() {
-      return localForage.iterate((value, key) => [key, value]);
+    async saveNow() {
+      let key = state.key || Date.now().toString(36);
+      const { name, thumb, editor, assetList, fileList, selectedIndex } = state;
+      const result = await localForage.setItem(key, { key, name, thumb, editor, assetList, fileList, selectedIndex });
+      dispatch({ type: SAVE_KEY, payload: { key, modified: false } });
+      return result;
+    },
+
+    async listProjects() {
+      const result = [];
+      await localForage.iterate((value, key) => {
+        result.push({
+          key,
+          name: value.name,
+          image: value.thumb,
+        });
+      });
+      return result;
     },
 
     getProject(key) {

@@ -6,7 +6,15 @@ import defaultFilters from './filters.yaml';
 
 const isMac = /Mac/i.test(globalThis.navigator.platform || globalThis.navigator.userAgent);
 
-export default function ({ newProject, setPrompt, setAlert, removeAlert, extendsMenu, filters } = {}) {
+export default function ({
+  newProject,
+  openStoreLibrary,
+  setPrompt,
+  setAlert,
+  removeAlert,
+  extendsMenu,
+  filters,
+} = {}) {
   let setDisableUndo = () => {};
   let setDisableRedo = () => {};
 
@@ -101,8 +109,26 @@ export default function ({ newProject, setPrompt, setAlert, removeAlert, extends
             />
           ),
           hotkey: [isMac ? Keys.COMMAND : Keys.CONTROL, Keys.O],
-          async onClick() {
-            console.log('open');
+          onClick({ context }) {
+            if (context.modified) {
+              setPrompt({
+                title: (
+                  <Text
+                    id="blocks.menu.file.notSaved"
+                    defaultMessage="Not saved"
+                  />
+                ),
+                label: (
+                  <Text
+                    id="blocks.menu.file.replaceProject"
+                    defaultMessage="Replace contents of the current project?"
+                  />
+                ),
+                onSubmit: openStoreLibrary,
+              });
+            } else {
+              openStoreLibrary();
+            }
           },
         },
         {

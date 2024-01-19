@@ -1,9 +1,19 @@
 gui.comingSoon: 敬请期待！
 
+gui.modal.back: 返回
+
+gui.library.comingSoon: 敬请期待
+gui.library.preview: 预览版
+gui.library.requires: 系统需求
+gui.library.collaboration: 合作者
+
 gui.menuBar.tutorials: 教程
 gui.menuBar.projectTitlePlaceholder: 在此填写作品标题
 
 gui.defaultProject.name: BlockCode 作品
+gui.defaultProject.shortname: 作品
+
+gui.projects.empty: 没有作品！
 
 gui.prompt.close: 关闭
 gui.prompt.cancel: 取消
