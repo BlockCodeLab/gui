@@ -1,4 +1,5 @@
 import { paperCore } from '@blockcode/blocks-player';
+import loadImage from '../../lib/load-image';
 
 import imageTank1 from './tanks/tank_1.png';
 import imageTurret1 from './tanks/turret_1.png';
@@ -109,6 +110,8 @@ export default class Tank {
     this.raster.util = this;
     this.turretRaster.owner = this;
 
+    this._imageCache = {};
+
     this.reset();
   }
 
@@ -191,8 +194,11 @@ export default class Tank {
     let dx = step * Math.cos(radian);
     let dy = step * Math.sin(radian);
 
+    if (!this._imageCache.buttet) {
+      this._imageCache.buttet = await loadImage(imageBullet);
+    }
     const bullet = new paperCore.Raster({
-      source: imageBullet,
+      image: this._imageCache.buttet,
       position: this.raster.position,
       rotation: this.raster.rotation,
       scaling: this.raster.scaling,
@@ -233,14 +239,17 @@ export default class Tank {
 
   async _boom(position) {
     if (!this.running) return;
+    if (!this._imageCache.booms) {
+      this._imageCache.booms = [await loadImage(imageBoom1), await loadImage(imageBoom2), await loadImage(imageBoom3)];
+    }
     const boom = new paperCore.Raster({
-      source: imageBoom1,
+      image: this._imageCache.booms[0],
       position,
     });
     await sleep(30);
-    boom.source = imageBoom2;
+    boom.image = this._imageCache.booms[1];
     await sleep(50);
-    boom.source = imageBoom3;
+    boom.image = this._imageCache.booms[2];
     await sleep(90);
     boom.remove();
   }
