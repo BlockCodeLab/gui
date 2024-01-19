@@ -15,9 +15,10 @@ import imageBoom2 from './tanks/boom2.png';
 import imageBoom3 from './tanks/boom3.png';
 
 const SPEED_RATIO = 20;
-const MAX_SCANING_WIDTH = 20;
-const MAX_SCANING_DISTANCE = 500;
-const MIN_ATTACK_DISTANCE = 100;
+const DEFAULT_SCAN_WIDTH = 4;
+const MAX_SCAN_WIDTH = 40;
+const MAX_SCAN_DISTANCE = 500;
+const MIN_ATTACK_DISTANCE = 70;
 const MAX_ATTACK_DISTANCE = 400;
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -26,8 +27,8 @@ const calcDistance = (p1, p2) => Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) **
 const number = (n) => (isNaN(n) ? 0 : +n);
 const clamp = (n, min, max) => Math.min(Math.max(n, min), max);
 
-const angle = (a) => parseInt(((a % 360) + 360) % 360);
-const equalAngle = (a1, a2) => angle(a1) === angle(a2);
+const calcDegrees = (deg) => parseInt(((deg % 360) + 360) % 360);
+const equalDegrees = (deg1, deg2) => calcDegrees(deg1) === calcDegrees(deg2);
 
 export default class Tank {
   static PLACE = {
@@ -114,7 +115,7 @@ export default class Tank {
   reset() {
     this._speed = 0;
     this._health = 100;
-    this._scanWidth = 5;
+    this._scanWidth = DEFAULT_SCAN_WIDTH;
     this._attacking = false;
     clearTimeout(this._turretReady);
   }
@@ -164,10 +165,12 @@ export default class Tank {
     this.raster.visible = this.turretRaster.visible = !value;
   }
 
-  _turn(target, direction) {
-    if (!equalAngle(target.rotation, direction)) {
-      const da = angle(direction) - angle(target.rotation);
-      return target.tween({ rotation: target.rotation + da }, 500 * (Math.abs(da) / 360));
+  async _turn(target, direction) {
+    if (!equalDegrees(target.rotation, direction)) {
+      let degress = calcDegrees(direction) - calcDegrees(target.rotation);
+      if (degress > 180) degress -= 360;
+      if (degress < -180) degress += 360;
+      await target.tween({ rotation: target.rotation + degress }, 500 * (Math.abs(degress) / 360));
     }
   }
 
@@ -176,14 +179,14 @@ export default class Tank {
     if (this._attacking || this.death) return;
     this._attacking = true;
 
-    direction = number(direction);
+    direction = Math.round(number(direction));
     distance = number(distance);
 
     clearTimeout(this._turretReady);
-    const turning = this._turn(this.turretRaster, direction);
-    if (turning) await turning;
+    await this._turn(this.turretRaster, direction);
 
-    const radian = ((90 - direction) * Math.PI) / 180;
+    const degrees = calcDegrees(direction);
+    const radian = ((90 - degrees) * Math.PI) / 180;
     let step = 10;
     let dx = step * Math.cos(radian);
     let dy = step * Math.sin(radian);
@@ -299,16 +302,14 @@ export default class Tank {
 
   async setDirection(direction) {
     if (!this.running) return;
-    direction = number(direction);
-    const turning = this._turn(this.raster, direction);
-    if (turning) {
-      turning.onUpdate = () => (this.turretRaster.rotation = this.raster.rotation);
-      await turning;
-    }
+    direction = Math.round(number(direction));
+    clearTimeout(this._turretReady);
+    this._turn(this.turretRaster, direction);
+    await this._turn(this.raster, direction);
   }
 
   turnRight(degrees) {
-    let direction = this.raster.rotation % 360;
+    let direction = this.raster.rotation; // % 360;
     direction += number(degrees);
     return this.setDirection(direction);
   }
@@ -346,7 +347,7 @@ export default class Tank {
 
   set scanWidth(width) {
     width = number(width);
-    this._scanWidth = clamp(width, 1, MAX_SCANING_WIDTH);
+    this._scanWidth = clamp(width, 1, MAX_SCAN_WIDTH);
   }
 
   async scan(direction) {
@@ -356,14 +357,15 @@ export default class Tank {
 
     direction = number(direction);
 
+    const scanDistance = MAX_SCAN_DISTANCE * (1 - 0.3 * (this.scanWidth / MAX_SCAN_WIDTH));
     const radian1 = ((90 - (direction - this.scanWidth / 2)) * Math.PI) / 180;
-    const d1x = MAX_SCANING_DISTANCE * Math.cos(radian1);
-    const d1y = MAX_SCANING_DISTANCE * Math.sin(radian1);
+    const d1x = scanDistance * Math.cos(radian1);
+    const d1y = scanDistance * Math.sin(radian1);
     const point1 = new paperCore.Point(this.raster.position.x + d1x, this.raster.position.y - d1y);
 
     const radian2 = ((90 - (direction + this.scanWidth / 2)) * Math.PI) / 180;
-    const d2x = MAX_SCANING_DISTANCE * Math.cos(radian2);
-    const d2y = MAX_SCANING_DISTANCE * Math.sin(radian2);
+    const d2x = scanDistance * Math.cos(radian2);
+    const d2y = scanDistance * Math.sin(radian2);
     const point2 = new paperCore.Point(this.raster.position.x + d2x, this.raster.position.y - d2y);
 
     const scanShape = new paperCore.Path({

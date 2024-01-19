@@ -45,7 +45,7 @@ export const simple = (color, id) => `
 
   runtime.on('@ai_simple_${color}_${id}_start', async (done) => {
     while (true) {
-      while (!((await tank.util.scan(90) < 400))) {
+      while (!((await tank.util.scan(90) < '400') && (await tank.util.scan(90) > '100'))) {
         if (!runtime.running) return;
         await runtime.nextFrame();
       }
@@ -60,7 +60,7 @@ export const simple = (color, id) => `
 
   runtime.on('@ai_simple_${color}_${id}_start', async (done) => {
     while (true) {
-      while (!((await tank.util.scan(0) < 400))) {
+      while (!((await tank.util.scan(0) < '400') && (await tank.util.scan(0) > '100'))) {
         if (!runtime.running) return;
         await runtime.nextFrame();
       }
@@ -75,7 +75,7 @@ export const simple = (color, id) => `
 
   runtime.on('@ai_simple_${color}_${id}_start', async (done) => {
     while (true) {
-      while (!((await tank.util.scan(270) < 400))) {
+      while (!((await tank.util.scan(270) < '400') && (await tank.util.scan(270) > '100'))) {
         if (!runtime.running) return;
         await runtime.nextFrame();
       }
@@ -90,7 +90,7 @@ export const simple = (color, id) => `
 
   runtime.on('@ai_simple_${color}_${id}_start', async (done) => {
     while (true) {
-      while (!((await tank.util.scan(180) < 400))) {
+      while (!((await tank.util.scan(180) < '400') && (await tank.util.scan(180) > '100'))) {
         if (!runtime.running) return;
         await runtime.nextFrame();
       }
@@ -149,7 +149,7 @@ export const medium = (color, id) => `
         await runtime.nextFrame();
       }
       tank.util.speed = 0;
-      if (((await tank.util.scan(_angle_)) < '400')) {
+      if (((await tank.util.scan(_angle_)) < '400') && ((await tank.util.scan(_angle_)) > '100')) {
         await tank.util.attack(_angle_, (await tank.util.scan(_angle_)));
       }
       _angle_ = (isNaN(_angle_) ? 0 : +_angle_) + +(-10);
@@ -208,7 +208,7 @@ export const senior = (color, id) => `
     runtime.broadcast('@ai_senior_${color}_${id}_watch_health');
     _angle_ = (isNaN(_angle_) ? 0 : +_angle_) + +(-60);
     for (let _ = 0; _ < 78; _++) {
-      if (((await tank.util.scan(_angle_)) < '400')) {
+      if (((await tank.util.scan(_angle_)) < '400') && ((await tank.util.scan(_angle_)) > '100')) {
         await tank.util.attack(_angle_, (await tank.util.scan(_angle_)));
         _angle_ = (isNaN(_angle_) ? 0 : +_angle_) + +(-10);
       }
