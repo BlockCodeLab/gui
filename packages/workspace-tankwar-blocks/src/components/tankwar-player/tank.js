@@ -17,6 +17,7 @@ import imageBoom3 from './tanks/boom3.png';
 const SPEED_RATIO = 20;
 const MAX_SCANING_WIDTH = 20;
 const MAX_SCANING_DISTANCE = 500;
+const MIN_ATTACK_DISTANCE = 100;
 const MAX_ATTACK_DISTANCE = 400;
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -194,7 +195,7 @@ export default class Tank {
       scaling: this.raster.scaling,
     });
 
-    distance = clamp(distance, 0, MAX_ATTACK_DISTANCE);
+    distance = clamp(distance, MIN_ATTACK_DISTANCE, MAX_ATTACK_DISTANCE);
 
     const half = distance / 2;
     const scaling = step / distance / 2;
