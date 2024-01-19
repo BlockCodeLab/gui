@@ -1,5 +1,5 @@
 import { useLocale, useEditor } from '@blockcode/core';
-import { classNames, Text, Button, Label, BufferedInput } from '@blockcode/ui';
+import { classNames, Text, Button, Label, BufferedInput, ComingSoon } from '@blockcode/ui';
 
 import styles from './stage-info.module.css';
 import imageTank2 from './tank-2.png';
@@ -91,19 +91,21 @@ export default function StageInfo({ playing, enemies, enemiesAI, health, onChang
               />
             </div>
           </Button>
-          <Button
-            disabled={true}
-            className={classNames(styles.button, styles.groupButtonLast, {
-              [styles.groupButtonToggledOn]: false,
-            })}
-          >
-            <div className={styles.buttonText}>
-              <Text
-                id="tankwar.stageInfo.mode.remote"
-                defaultMessage="Remote Players"
-              />
-            </div>
-          </Button>
+          <ComingSoon placement="bottom">
+            <Button
+              disabled={playing}
+              className={classNames(styles.button, styles.groupButtonLast, {
+                [styles.groupButtonToggledOn]: false,
+              })}
+            >
+              <div className={styles.buttonText}>
+                <Text
+                  id="tankwar.stageInfo.mode.remote"
+                  defaultMessage="Remote Players"
+                />
+              </div>
+            </Button>
+          </ComingSoon>
         </Label>
       </div>
 
