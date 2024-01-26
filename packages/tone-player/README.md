@@ -1,4 +1,4 @@
-# @blockcode/ui
+# @blockcode/tone-player
 
 To install dependencies:
 

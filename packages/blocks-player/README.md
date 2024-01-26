@@ -1,4 +1,4 @@
-# @blockcode/ui
+# @blockcode/blocks-player
 
 To install dependencies:
 

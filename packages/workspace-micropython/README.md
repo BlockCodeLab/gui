@@ -1,4 +1,4 @@
-# @blockcode/extension-micropython
+# @blockcode/workspace-micropython
 
 To install dependencies:
 
@@ -6,10 +6,8 @@ To install dependencies:
 bun install
 ```
 
-To run:
+To development:
 
 ```bash
-bun run index.js
+bun run dev
 ```
-
-This project was created using `bun init` in bun v1.0.3. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.

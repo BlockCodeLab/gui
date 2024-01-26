@@ -1,4 +1,4 @@
-# @blockcode/ui
+# @blockcode/device-pyboard
 
 To install dependencies:
 

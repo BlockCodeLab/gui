@@ -1,4 +1,4 @@
-# @blockcode/ui
+# @blockcode/blocks-editor
 
 To install dependencies:
 
