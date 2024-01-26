@@ -27,7 +27,7 @@ javascriptGenerator['motion_turnright'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const degreesCode = javascriptGenerator.valueToCode(block, 'DEGREES', javascriptGenerator.ORDER_NONE);
+  const degreesCode = javascriptGenerator.valueToCode(block, 'DEGREES', javascriptGenerator.ORDER_NONE) || 0;
   code += `await tank.util.turnRight(${degreesCode});\n`;
   return code;
 };
@@ -37,7 +37,7 @@ javascriptGenerator['motion_turnleft'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const degreesCode = javascriptGenerator.valueToCode(block, 'DEGREES', javascriptGenerator.ORDER_NONE);
+  const degreesCode = javascriptGenerator.valueToCode(block, 'DEGREES', javascriptGenerator.ORDER_NONE) || 0;
   code += `await tank.util.turnLeft(${degreesCode});\n`;
   return code;
 };
@@ -47,8 +47,8 @@ javascriptGenerator['motion_pointindirection'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const degreesCode = javascriptGenerator.valueToCode(block, 'DEGREES', javascriptGenerator.ORDER_NONE);
-  code += `await tank.util.setDirection(+${degreesCode});\n`;
+  const directionCode = javascriptGenerator.valueToCode(block, 'DIRECTION', javascriptGenerator.ORDER_NONE) || 0;
+  code += `await tank.util.setDirection(+${directionCode});\n`;
   return code;
 };
 
@@ -57,7 +57,7 @@ javascriptGenerator['motion_setspeed'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const speedCode = javascriptGenerator.valueToCode(block, 'SPEED', javascriptGenerator.ORDER_NONE);
+  const speedCode = javascriptGenerator.valueToCode(block, 'SPEED', javascriptGenerator.ORDER_NONE) || 0;
   code += `tank.util.speed = ${speedCode};\n`;
   return code;
 };

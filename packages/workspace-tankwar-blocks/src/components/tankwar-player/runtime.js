@@ -1,5 +1,4 @@
 import { Runtime as BaseRuntime, paperCore } from '@blockcode/blocks-player';
-import Tank from './tank';
 
 export default class Runtime extends BaseRuntime {
   get player() {

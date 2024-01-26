@@ -64,8 +64,6 @@ const motion = () => `
     </block>
     <block type="motion_stop"/>
     ${blockSeparator}
-    <block type="motion_xposition"/>
-    <block type="motion_yposition"/>
     <block type="motion_speed"/>
     <block type="motion_direction"/>
     ${categorySeparator}
