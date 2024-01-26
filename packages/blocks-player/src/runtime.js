@@ -1,7 +1,5 @@
 import { EventEmitter } from 'node:events';
 
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
 export default class Runtime extends EventEmitter {
   static DEFAULT_FPS = 24;
 
@@ -12,6 +10,7 @@ export default class Runtime extends EventEmitter {
     this._running = false;
     this._requestStop = requestStop;
     this._timer = 0;
+    this._timers = [];
 
     this._idCounter = 0;
     this._eventsGroups = {};
@@ -99,11 +98,13 @@ export default class Runtime extends EventEmitter {
   async stop() {
     this._running = false;
     await this.nextFrame();
+    this._timers.forEach(clearTimeout);
+    this._timers.length = 0;
     this._requestStop();
   }
 
   sleep(seconds) {
-    return sleep(seconds * 1000);
+    return new Promise((resolve) => this._timers.push(setTimeout(resolve, seconds * 1000)));
   }
 
   nextFrame() {

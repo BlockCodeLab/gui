@@ -21,13 +21,14 @@ const MAX_SCAN_WIDTH = 40;
 const MAX_SCAN_DISTANCE = 500;
 const MIN_ATTACK_DISTANCE = 70;
 const MAX_ATTACK_DISTANCE = 400;
+const TURN_ROUND_MS = 1000;
 
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const calcDistance = (p1, p2) => Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
 
 const number = (n) => (isNaN(n) ? 0 : +n);
 const clamp = (n, min, max) => Math.min(Math.max(n, min), max);
 
+const degToRad = (deg) => (deg * Math.PI) / 180;
 const calcDegrees = (deg) => parseInt(((deg % 360) + 360) % 360);
 const equalDegrees = (deg1, deg2) => calcDegrees(deg1) === calcDegrees(deg2);
 
@@ -110,17 +111,42 @@ export default class Tank {
     this.raster.util = this;
     this.turretRaster.owner = this;
 
+    this._lastScanDistance = 0;
     this._imageCache = {};
+    this._timers = [];
 
     this.reset();
+  }
+
+  sleep(ms) {
+    return new Promise((resolve) => this._timers.push(setTimeout(resolve, ms)));
   }
 
   reset() {
     this._speed = 0;
     this._health = 100;
     this._scanWidth = DEFAULT_SCAN_WIDTH;
-    this._attacking = false;
+
+    if (this._scanShape) {
+      this._scanShape.remove();
+      this._scanShape = null;
+    }
+    if (this._bulletRaster) {
+      this._bulletRaster.remove();
+      this._bulletRaster = null;
+    }
+    if (this._boomRaster) {
+      this._boomRaster.remove();
+      this._boomRaster = null;
+    }
+    if (this._collideTester) {
+      this._collideTester.remove();
+      this._collideTester = null;
+    }
+
     clearTimeout(this._turretReady);
+    this._timers.forEach(clearTimeout);
+    this._timers.length = 0;
   }
 
   bringToFront() {
@@ -135,6 +161,15 @@ export default class Tank {
   set running(value) {
     this.reset();
     this._running = value;
+
+    if (value) {
+      const width = this.raster.scaling.x * this.raster.width - 5;
+      this._collideTester = new paperCore.Path.Rectangle({
+        point: [this.raster.position.x - width / 2, this.raster.position.y - 5],
+        size: [width, 10],
+        applyMatrix: false,
+      });
+    }
   }
 
   get bullseye() {
@@ -173,14 +208,13 @@ export default class Tank {
       let degress = calcDegrees(direction) - calcDegrees(target.rotation);
       if (degress > 180) degress -= 360;
       if (degress < -180) degress += 360;
-      await target.tween({ rotation: target.rotation + degress }, 500 * (Math.abs(degress) / 360));
+      await target.tween({ rotation: target.rotation + degress }, TURN_ROUND_MS * (Math.abs(degress) / 360));
     }
   }
 
   async attack(direction, distance) {
     if (!this.running) return;
-    if (this._attacking || this.death) return;
-    this._attacking = true;
+    if (this._bulletRaster || this.death) return;
 
     direction = Math.round(number(direction));
     distance = number(distance);
@@ -189,7 +223,7 @@ export default class Tank {
     await this._turn(this.turretRaster, direction);
 
     const degrees = calcDegrees(direction);
-    const radian = ((90 - degrees) * Math.PI) / 180;
+    const radian = degToRad(90 - degrees);
     let step = 10;
     let dx = step * Math.cos(radian);
     let dy = step * Math.sin(radian);
@@ -197,7 +231,7 @@ export default class Tank {
     if (!this._imageCache.buttet) {
       this._imageCache.buttet = await loadImage(imageBullet);
     }
-    const bullet = new paperCore.Raster({
+    this._bulletRaster = new paperCore.Raster({
       image: this._imageCache.buttet,
       position: this.raster.position,
       rotation: this.raster.rotation,
@@ -210,30 +244,31 @@ export default class Tank {
     const scaling = step / distance / 2;
 
     while (distance > 0) {
-      await sleep(15);
+      await this.sleep(15);
       if (distance < step) {
         dx = distance * Math.cos(radian);
         dy = distance * Math.sin(radian);
       }
       distance -= step;
-      bullet.position.x += dx;
-      bullet.position.y -= dy;
-      bullet.scaling.x += distance > half ? scaling : -scaling;
-      bullet.scaling.y = bullet.scaling.x;
-      if (bullet.scaling.x < this.raster.scaling.x) {
-        bullet.scaling = this.raster.scaling;
+      this._bulletRaster.position.x += dx;
+      this._bulletRaster.position.y -= dy;
+      this._bulletRaster.scaling.x += distance > half ? scaling : -scaling;
+      this._bulletRaster.scaling.y = this._bulletRaster.scaling.x;
+      if (this._bulletRaster.scaling.x < this.raster.scaling.x) {
+        this._bulletRaster.scaling = this.raster.scaling;
       }
     }
-    this._boom(bullet.position);
+    this._boom(this._bulletRaster.position);
 
-    this._hit(bullet, (enemy) => {
-      if (calcDistance(enemy.position, bullet.position) < enemy.util.bullseye) {
+    this._hit(this._bulletRaster, (enemy) => {
+      if (calcDistance(enemy.position, this._bulletRaster.position) < enemy.util.bullseye) {
         enemy.util.hurt(10);
       } else {
         enemy.util.hurt(5);
       }
     });
-    this._attacking = false;
+    this._bulletRaster.remove();
+    this._bulletRaster = null;
     this._turretReady = setTimeout(() => this._turn(this.turretRaster, this.raster.rotation), 1000);
   }
 
@@ -242,16 +277,17 @@ export default class Tank {
     if (!this._imageCache.booms) {
       this._imageCache.booms = [await loadImage(imageBoom1), await loadImage(imageBoom2), await loadImage(imageBoom3)];
     }
-    const boom = new paperCore.Raster({
+    this._boomRaster = new paperCore.Raster({
       image: this._imageCache.booms[0],
       position,
     });
-    await sleep(30);
-    boom.image = this._imageCache.booms[1];
-    await sleep(50);
-    boom.image = this._imageCache.booms[2];
-    await sleep(90);
-    boom.remove();
+    await this.sleep(30);
+    this._boomRaster.image = this._imageCache.booms[1];
+    await this.sleep(50);
+    this._boomRaster.image = this._imageCache.booms[2];
+    await this.sleep(90);
+    this._boomRaster.remove();
+    this._boomRaster = null;
   }
 
   _hit(tester, hit) {
@@ -263,7 +299,6 @@ export default class Tank {
         }
       });
     }
-    tester.remove();
   }
 
   async move(direction, speed) {
@@ -273,15 +308,30 @@ export default class Tank {
     this.speed = number(speed);
   }
 
+  get colliding() {
+    let result = false;
+    this._hit(this._collideTester, () => (result = true));
+    return result;
+  }
+
   drive() {
     if (!this.running) return;
     if (this.speed === 0) return;
     if (this.hidden || this.death) return;
-    const radian = ((90 - this.direction) * Math.PI) / 180;
-    const dx = (this.speed / SPEED_RATIO) * Math.cos(radian);
-    const dy = (this.speed / SPEED_RATIO) * Math.sin(radian);
-    this.raster.position.x += dx;
-    this.raster.position.y -= dy;
+
+    let speed = this.speed / SPEED_RATIO;
+    const radian = degToRad(90 - this.direction);
+
+    const height = this.raster.scaling.y * this.raster.height;
+    this._collideTester.rotation = this.raster.rotation;
+    this._collideTester.position.x = this.raster.position.x + (height / 2 + 5) * Math.cos(radian);
+    this._collideTester.position.y = this.raster.position.y - (height / 2 + 5) * Math.sin(radian);
+    this._hit(this.raster, (enemy) => {
+      if (this.colliding) speed = 0;
+    });
+
+    this.raster.position.x += speed * Math.cos(radian);
+    this.raster.position.y -= speed * Math.sin(radian);
     this.turretRaster.position = this.raster.position;
   }
 
@@ -294,12 +344,19 @@ export default class Tank {
   }
 
   get speed() {
-    return clamp(this._speed, 0, 100);
+    return clamp(this._speed, -100, 100);
   }
 
   set speed(value) {
     if (!this.running) return;
-    this._speed = clamp(value, 0, 100);
+    this._speed = clamp(value, -100, 100);
+  }
+
+  get speedVelocity() {
+    const angle = calcDegrees(this.speed < 0 ? 180 + this.direction : this.direction);
+    const radia = degToRad(90 - angle);
+    const length = Math.abs(this.speed);
+    return new paperCore.Point(length * Math.cos(radia), length * Math.sin(radia));
   }
 
   get direction() {
@@ -361,23 +418,28 @@ export default class Tank {
 
   async scan(direction) {
     if (!this.running) return Infinity;
-    if (this._scanning || this.death) return Infinity;
-    this._scanning = true;
+    if (this._scanShape || this.death) return Infinity;
 
     direction = number(direction);
+    if (!equalDegrees(this._lastScanDistance, direction)) {
+      let degress = calcDegrees(direction) - calcDegrees(this._lastScanDistance);
+      if (degress > 180) degress -= 360;
+      if (degress < -180) degress += 360;
+      await this.sleep(TURN_ROUND_MS * (Math.abs(degress) / 360));
+      this._lastScanDistance = direction;
+    }
 
-    const scanDistance = MAX_SCAN_DISTANCE * (1 - 0.3 * (this.scanWidth / MAX_SCAN_WIDTH));
-    const radian1 = ((90 - (direction - this.scanWidth / 2)) * Math.PI) / 180;
-    const d1x = scanDistance * Math.cos(radian1);
-    const d1y = scanDistance * Math.sin(radian1);
+    const radian1 = degToRad(90 - (direction - this.scanWidth / 2));
+    const d1x = MAX_SCAN_DISTANCE * Math.cos(radian1);
+    const d1y = MAX_SCAN_DISTANCE * Math.sin(radian1);
     const point1 = new paperCore.Point(this.raster.position.x + d1x, this.raster.position.y - d1y);
 
-    const radian2 = ((90 - (direction + this.scanWidth / 2)) * Math.PI) / 180;
-    const d2x = scanDistance * Math.cos(radian2);
-    const d2y = scanDistance * Math.sin(radian2);
+    const radian2 = degToRad(90 - (direction + this.scanWidth / 2));
+    const d2x = MAX_SCAN_DISTANCE * Math.cos(radian2);
+    const d2y = MAX_SCAN_DISTANCE * Math.sin(radian2);
     const point2 = new paperCore.Point(this.raster.position.x + d2x, this.raster.position.y - d2y);
 
-    const scanShape = new paperCore.Path({
+    this._scanShape = new paperCore.Path({
       segments: [this.raster.position, point1, point2],
       closed: true,
       fillColor: {
@@ -392,14 +454,15 @@ export default class Tank {
         destination: point1,
       },
     });
-    await sleep(10);
+    await this.sleep(TURN_ROUND_MS * (this.scanWidth / 360));
 
     let result = Infinity;
-    this._hit(scanShape, (enemy) => {
+    this._hit(this._scanShape, (enemy) => {
       const distance = calcDistance(this.raster.position, enemy.position);
       if (distance < result) result = distance;
     });
-    this._scanning = false;
+    this._scanShape.remove();
+    this._scanShape = null;
     return result;
   }
 }

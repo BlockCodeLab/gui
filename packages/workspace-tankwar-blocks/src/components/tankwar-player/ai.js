@@ -2,6 +2,8 @@ export const simple = (color, id) => `
 ((tank) => {
   runtime.openEventsGroup('${color}_${id}');
 
+  let _angle_ = 0;
+
   runtime.on('start', async () => {
     if ((tank.util.y > '0')) {
       await tank.util.move(180, 100);
@@ -28,11 +30,13 @@ export const simple = (color, id) => `
       }
     }
     while (true) {
+      tank.util.speed = 0;
       await tank.util.move(90, 70);
       while (!((tank.util.x > '400'))) {
         if (!runtime.running) return;
         await runtime.nextFrame();
       }
+      tank.util.speed = 0;
       await tank.util.move(270, 70);
       while (!((tank.util.x < '-400'))) {
         if (!runtime.running) return;
@@ -45,57 +49,13 @@ export const simple = (color, id) => `
 
   runtime.on('@ai_simple_${color}_${id}_start', async (done) => {
     while (true) {
-      while (!((await tank.util.scan(90) < '400') && (await tank.util.scan(90) > '100'))) {
+      while (!((await tank.util.scan(_angle_) < '400') && (await tank.util.scan(_angle_) > '100'))) {
+        _angle_ = (isNaN(_angle_) ? 0 : +_angle_) + +(90);
         if (!runtime.running) return;
         await runtime.nextFrame();
       }
       tank.util.speed = 0;
-      await tank.util.attack(90, (await tank.util.scan(90)));
-      tank.util.speed = 50;
-      if (!runtime.running) return;
-      await runtime.nextFrame();
-    }
-    done()
-  });
-
-  runtime.on('@ai_simple_${color}_${id}_start', async (done) => {
-    while (true) {
-      while (!((await tank.util.scan(0) < '400') && (await tank.util.scan(0) > '100'))) {
-        if (!runtime.running) return;
-        await runtime.nextFrame();
-      }
-      tank.util.speed = 0;
-      await tank.util.attack(0, (await tank.util.scan(0)));
-      tank.util.speed = 50;
-      if (!runtime.running) return;
-      await runtime.nextFrame();
-    }
-    done()
-  });
-
-  runtime.on('@ai_simple_${color}_${id}_start', async (done) => {
-    while (true) {
-      while (!((await tank.util.scan(270) < '400') && (await tank.util.scan(270) > '100'))) {
-        if (!runtime.running) return;
-        await runtime.nextFrame();
-      }
-      tank.util.speed = 0;
-      await tank.util.attack(270, (await tank.util.scan(270)));
-      tank.util.speed = 50;
-      if (!runtime.running) return;
-      await runtime.nextFrame();
-    }
-    done()
-  });
-
-  runtime.on('@ai_simple_${color}_${id}_start', async (done) => {
-    while (true) {
-      while (!((await tank.util.scan(180) < '400') && (await tank.util.scan(180) > '100'))) {
-        if (!runtime.running) return;
-        await runtime.nextFrame();
-      }
-      tank.util.speed = 0;
-      await tank.util.attack(180, (await tank.util.scan(180)));
+      await tank.util.attack((_angle_ + 1), (await tank.util.scan(_angle_)));
       tank.util.speed = 50;
       if (!runtime.running) return;
       await runtime.nextFrame();
@@ -150,7 +110,7 @@ export const medium = (color, id) => `
       }
       tank.util.speed = 0;
       if (((await tank.util.scan(_angle_)) < '400') && ((await tank.util.scan(_angle_)) > '100')) {
-        await tank.util.attack(_angle_, (await tank.util.scan(_angle_)));
+        await tank.util.attack((_angle_ + 1), (await tank.util.scan(_angle_)));
       }
       _angle_ = (isNaN(_angle_) ? 0 : +_angle_) + +(-10);
       if (anonymous.aborted) return;
@@ -209,7 +169,7 @@ export const senior = (color, id) => `
     _angle_ = (isNaN(_angle_) ? 0 : +_angle_) + +(-60);
     for (let _ = 0; _ < 78; _++) {
       if (((await tank.util.scan(_angle_)) < '400') && ((await tank.util.scan(_angle_)) > '100')) {
-        await tank.util.attack(_angle_, (await tank.util.scan(_angle_)));
+        await tank.util.attack((_angle_ + 1), (await tank.util.scan(_angle_)));
         _angle_ = (isNaN(_angle_) ? 0 : +_angle_) + +(-10);
       }
       _angle_ = (isNaN(_angle_) ? 0 : +_angle_) + +(10);
