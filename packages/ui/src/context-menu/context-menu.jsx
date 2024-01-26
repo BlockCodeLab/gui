@@ -59,14 +59,15 @@ export function ContextMenu({ menuItems, className, children }) {
             }));
           }
           globalThis.document.removeEventListener('mousedown', handler);
-          globalThis.document.removeEventListener('mouseup', hide);
+          globalThis.document.removeEventListener('click', handler);
         };
         globalThis.document.addEventListener('mousedown', handler);
+        globalThis.document.addEventListener('click', handler);
+        globalThis.document.removeEventListener('mouseup', hide);
       };
 
       const show = (e) => {
         e.preventDefault();
-
         virtualElement.getBoundingClientRect = generateGetBoundingClientRect(e.clientX, e.clientY);
 
         contextRef.current.dataset.show = true;
@@ -77,7 +78,6 @@ export function ContextMenu({ menuItems, className, children }) {
         popper.update();
         globalThis.document.addEventListener('mouseup', hide);
       };
-
       contextForElement.addEventListener('contextmenu', show);
     }
     return () => {};

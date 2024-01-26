@@ -27,17 +27,16 @@ export function MenuItem({ children, className, disabled: isDisabled, href, hotk
   const context = useEditor();
 
   const navigateToHref = () => href && window.open(href, '_blank');
-  const handleClick =
-    !disabled &&
-    ((e) => {
-      if (onClick) {
-        e.locale = locale;
-        e.context = context;
-        onClick(e);
-        return;
-      }
-      navigateToHref();
-    });
+  const handleClick = (e) => {
+    if (disabled) return;
+    if (onClick) {
+      e.locale = locale;
+      e.context = context;
+      onClick(e);
+      return;
+    }
+    navigateToHref();
+  };
   if (notMobile && hotkey) setHotkey(hotkey, handleClick);
 
   if (onDisable) {
@@ -64,6 +63,7 @@ export function MenuItem({ children, className, disabled: isDisabled, href, hotk
         className
       )}
       onClick={handleClick}
+      onMouseDown={(e) => e.stopPropagation()}
     >
       <div className={styles.content}>{label || children}</div>
       {notMobile && hotkey && <div className={styles.hotkey}>{showHotkey(hotkey)}</div>}
