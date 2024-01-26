@@ -1,7 +1,5 @@
 blocks.menu.file: File
 blocks.menu.file.newProject: New
-blocks.menu.file.notSaved: Not saved
-blocks.menu.file.replaceProject: Replace contents of the current project?
 blocks.menu.file.openProject: Open
 blocks.menu.file.saveProject: Save
 blocks.menu.file.uploadProject: Load from your computer

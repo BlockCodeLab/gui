@@ -258,6 +258,22 @@ export function useEditor() {
     getProject(key) {
       return localForage.getItem(key);
     },
+
+    async renameProject(key, name) {
+      const project = localForage.getItem(key);
+      project.name = name;
+      await localForage.setItem(project.key, project);
+    },
+
+    async duplicateProject(key) {
+      const project = localForage.getItem(key);
+      project.key = Date.now().toString(36);
+      await localForage.setItem(project.key, project);
+    },
+
+    async deleteProject(key) {
+      await localForage.removeItem(key);
+    },
   };
 }
 

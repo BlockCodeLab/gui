@@ -1,20 +1,32 @@
-import { useEffect } from 'preact/hooks';
-import { classNames, Text, Button, Modal } from '@blockcode/ui';
+import { useEffect, useRef, useState } from 'preact/hooks';
+import { classNames, Text, BufferedInput, Button, Modal } from '@blockcode/ui';
 
 import styles from './prompt.module.css';
 
-export default function DataPrompt({ title, label, onClose, onSubmit }) {
+export default function Prompt({ title, label, inputMode, defaultValue, onClose, onSubmit }) {
+  const ref = useRef();
+  const [value, setValue] = useState(defaultValue);
+
+  const handleSubmit = () => {
+    onSubmit(value);
+  };
+
   const handleKeyDown = (e) => {
     if (e.key === 'Escape') onClose();
-    if (onSubmit && e.key === 'Enter') onSubmit();
+    if (e.key === 'Enter') {
+      onSubmit(ref.current.base.value, options);
+    }
   };
 
   useEffect(() => {
+    if (ref.current) {
+      ref.current.base.focus();
+    }
     globalThis.addEventListener('keydown', handleKeyDown);
     return () => {
       globalThis.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [ref]);
 
   return (
     <Modal
@@ -23,7 +35,18 @@ export default function DataPrompt({ title, label, onClose, onSubmit }) {
       onClose={onClose}
     >
       <div className={styles.promptContent}>
-        <div className={styles.label}>{label}</div>
+        <div className={classNames(styles.label, { [styles.inputLabel]: inputMode })}>{label}</div>
+        {inputMode && (
+          <BufferedInput
+            autoFocus
+            forceFocus
+            ref={ref}
+            className={styles.nameTextInput}
+            defaultValue={value}
+            name={label}
+            onSubmit={setValue}
+          />
+        )}
 
         <div className={styles.buttonRow}>
           <Button
@@ -45,7 +68,7 @@ export default function DataPrompt({ title, label, onClose, onSubmit }) {
           {onSubmit && (
             <Button
               className={classNames(styles.button, styles.okButton)}
-              onClick={onSubmit}
+              onClick={handleSubmit}
             >
               <Text
                 id="gui.prompt.ok"

@@ -14,6 +14,11 @@ gui.defaultProject.name: BlockCode Project
 gui.defaultProject.shortname: Project
 
 gui.projects.empty: No project!
+gui.projects.notSaved: Not saved
+gui.projects.replaceProject: Replace contents of the current project?
+gui.projects.contextMenu.rename: rename
+gui.projects.contextMenu.duplicate: duplicate
+gui.projects.contextMenu.delete: delete
 
 gui.prompt.close: Close
 gui.prompt.cancel: Cancel

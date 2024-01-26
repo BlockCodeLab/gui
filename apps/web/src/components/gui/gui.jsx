@@ -21,7 +21,7 @@ export default function GUI() {
   const { menus, tabs, sidebars, pane, tutorials, canEditProjectName, selectedTab, selectTab, setLayout } = useLayout();
   const { alerts, setAlert, removeAlert } = useAlert();
   const { addLocaleData, getText } = useLocale();
-  const { openProject } = useEditor();
+  const { openProject, modified } = useEditor();
 
   const openStoreLibrary = () => setLibraryOpened(true);
   const closeStoreLibrary = () => setLibraryOpened(false);
@@ -69,6 +69,22 @@ export default function GUI() {
   const handlePromptClose = () => {
     prompt.onClose && prompt.onClose();
     setPrompt(null);
+  };
+
+  const handleOpen = (project) => {
+    if (modified) {
+      setPrompt({
+        title: getText('gui.projects.notSaved', 'Not saved'),
+        label: getText('gui.projects.replaceProject', 'Replace contents of the current project?'),
+        onSubmit: () => {
+          openProject(project);
+          setLibraryOpened(false);
+        },
+      });
+    } else {
+      openProject(project);
+      setLibraryOpened(false);
+    }
   };
 
   return (
@@ -138,12 +154,19 @@ export default function GUI() {
         </div>
       </div>
 
-      {libraryOpened && <StoreLibrary onClose={() => setLibraryOpened(false)} />}
+      {libraryOpened && (
+        <StoreLibrary
+          onRequestPrompt={setPrompt}
+          onOpen={handleOpen}
+          onClose={() => setLibraryOpened(false)}
+        />
+      )}
 
       {prompt && (
         <Prompt
           title={prompt.title}
           label={prompt.label}
+          inputMode={prompt.inputMode}
           onClose={handlePromptClose}
           onSubmit={prompt.onSubmit ? handlePromptSubmit : false}
         />

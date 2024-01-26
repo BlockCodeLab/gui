@@ -82,13 +82,13 @@ export default function ({
               setPrompt({
                 title: (
                   <Text
-                    id="blocks.menu.file.notSaved"
+                    id="gui.projects.notSaved"
                     defaultMessage="Not saved"
                   />
                 ),
                 label: (
                   <Text
-                    id="blocks.menu.file.replaceProject"
+                    id="gui.projects.replaceProject"
                     defaultMessage="Replace contents of the current project?"
                   />
                 ),
@@ -109,26 +109,8 @@ export default function ({
             />
           ),
           hotkey: [isMac ? Keys.COMMAND : Keys.CONTROL, Keys.O],
-          onClick({ context }) {
-            if (context.modified) {
-              setPrompt({
-                title: (
-                  <Text
-                    id="blocks.menu.file.notSaved"
-                    defaultMessage="Not saved"
-                  />
-                ),
-                label: (
-                  <Text
-                    id="blocks.menu.file.replaceProject"
-                    defaultMessage="Replace contents of the current project?"
-                  />
-                ),
-                onSubmit: openStoreLibrary,
-              });
-            } else {
-              openStoreLibrary();
-            }
+          onClick() {
+            openStoreLibrary();
           },
         },
         {

@@ -14,6 +14,11 @@ gui.defaultProject.name: BlockCode 作品
 gui.defaultProject.shortname: 作品
 
 gui.projects.empty: 没有作品！
+gui.projects.notSaved: 未保存作品
+gui.projects.replaceProject: 要创建新作品替换当前作品吗？
+gui.projects.contextMenu.rename: 重命名
+gui.projects.contextMenu.duplicate: 复制
+gui.projects.contextMenu.delete: 删除
 
 gui.prompt.close: 关闭
 gui.prompt.cancel: 取消
