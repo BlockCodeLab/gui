@@ -20,7 +20,7 @@
   font-size: 0.825rem;
 }
 
-.library-item-extension {
+.library-item-featured {
   align-self: stretch;
 }
 
@@ -128,7 +128,7 @@
   padding-bottom: 0.25rem;
 }
 
-.featured-extension-metadata {
+.featured-metadata {
   width: 100%;
   padding: 0 1.25rem 1rem 1.25rem;
   display: flex;
@@ -141,25 +141,25 @@
   text-align: left;
 }
 
-.featured-extension-requirement {
+.featured-requirement {
   width: 100%;
   display: flex;
   flex-direction: column;
 }
 
-.featured-extension-collaboration {
+.featured-collaboration {
   width: 100%;
   display: flex;
   flex-direction: column;
 }
 
-.featured-extension-metadata-detail {
+.featured-metadata-detail {
   height: 100%;
   padding-top: 0.4rem;
   font-weight: bold;
 }
 
-.featured-extension-metadata-detail img {
+.featured-metadata-detail img {
   margin-right: 0.25rem;
 }
 

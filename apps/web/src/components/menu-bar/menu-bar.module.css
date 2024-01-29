@@ -55,6 +55,14 @@
   flex-grow: 1;
 }
 
+.right-menu {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
 .menu-label {
   padding: 0 0.75rem;
 }
@@ -162,4 +170,9 @@ input.menu-label:checked + .menu-bar-item {
   box-shadow: 0 0 0 calc(var(--space) * 0.5) var(--ui-white-transparent);
   background-color: var(--ui-white);
   color: var(--text-primary);
+}
+
+.home-icon,
+.closeIcon {
+  padding: 0 0.35rem;
 }

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'preact/hooks';
 import { ContextMenu } from '../context-menu/context-menu';
 import { Modal } from '../modal/modal';
 import { Spinner } from '../spinner/spinner';
-import LibraryItem from './library-item';
+import { LibraryItem } from './library-item';
 
 import styles from './library.module.css';
 
@@ -73,11 +73,8 @@ export function Library({ title, filterable, filterPlaceholder, emptyText, tags,
                 image={dataItem.image}
                 name={dataItem.name}
                 description={dataItem.description}
-                extensionId={dataItem.extensionId}
-                internetRequired={dataItem.internetRequired}
-                usbRequired={dataItem.usbRequired}
                 bluetoothRequired={dataItem.bluetoothRequired}
-                circuitRequired={dataItem.circuitRequired}
+                internetRequired={dataItem.internetRequired}
                 collaborator={dataItem.collaborator}
                 onMouseEnter={dataItem.onMouseEnter}
                 onMouseLeave={dataItem.onMouseLeave}

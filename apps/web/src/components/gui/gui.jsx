@@ -10,6 +10,7 @@ import MenuBar from '../menu-bar/menu-bar';
 import Tabs, { TabLabel, TabPanel } from '../tabs/tabs';
 import PaneView from '../pane-view/pane-view';
 import Prompt from '../prompt/prompt';
+import WorkspaceLibrary from '../workspace-library/workspace-library';
 import StoreLibrary from '../store-library/store-library';
 
 /* styles and assets */
@@ -17,32 +18,32 @@ import styles from './gui.module.css';
 
 export default function GUI() {
   const [prompt, setPrompt] = useState(null);
-  const [libraryOpened, setLibraryOpened] = useState(false);
-  const { menus, tabs, sidebars, pane, tutorials, canEditProjectName, selectedTab, selectTab, setLayout } = useLayout();
+  const [workspaceLibraryOpened, setWorkspaceLibraryOpened] = useState(false);
+  const [storeLibraryOpened, setStoreLibraryOpened] = useState(false);
+  const {
+    menus,
+    tabs,
+    sidebars,
+    pane,
+    tutorials,
+    canEditProjectName,
+    selectedTabIndex,
+    selectTab,
+    setLayout,
+    clearLayout,
+  } = useLayout();
   const { alerts, setAlert, removeAlert } = useAlert();
   const { addLocaleData, getText } = useLocale();
-  const { openProject, modified } = useEditor();
+  const { editor, setEditor, openProject, closeProject, modified, ...context } = useEditor();
 
-  const openStoreLibrary = () => setLibraryOpened(true);
-  const closeStoreLibrary = () => setLibraryOpened(false);
-
-  if (selectedTab === -1) {
-    (async () => {
-      const { default: createWorkspace } = await import('@blockcode/workspace-tankwar-blocks');
-      createWorkspace({
-        addLocaleData,
-        getText,
-        setLayout,
-        openStoreLibrary,
-        closeStoreLibrary,
-        setPrompt,
-        setAlert,
-        removeAlert,
-        openProject,
-      });
-      selectTab(0);
-    })();
+  const openWorkspaceLibrary = () => setWorkspaceLibraryOpened(true);
+  const closeWorkspaceLibrary = () => setWorkspaceLibraryOpened(false);
+  if (!editor || !editor.package) {
+    openWorkspaceLibrary();
   }
+
+  const openStoreLibrary = () => setStoreLibraryOpened(true);
+  const closeStoreLibrary = () => setStoreLibraryOpened(false);
 
   let LeftSidebarContent, RightSidebarContent;
   sidebars.forEach((sidebar) => {
@@ -61,8 +62,8 @@ export default function GUI() {
     [styles.tabPanelBottom]: !PaneContent,
   });
 
-  const handlePromptSubmit = () => {
-    prompt.onSubmit && prompt.onSubmit();
+  const handlePromptSubmit = (...args) => {
+    prompt.onSubmit && prompt.onSubmit(...args);
     setPrompt(null);
   };
 
@@ -71,19 +72,62 @@ export default function GUI() {
     setPrompt(null);
   };
 
-  const handleOpen = (project) => {
+  const handleOpenWorkspace = (workspacePackage, open = openProject) => {
+    import(`@blockcode/workspace-${workspacePackage}`).then(({ default: createWorkspace }) => {
+      createWorkspace({
+        addLocaleData,
+        getText,
+        setLayout,
+        openStoreLibrary,
+        closeStoreLibrary,
+        setPrompt,
+        setAlert,
+        removeAlert,
+        openProject: open,
+      });
+      selectTab(0);
+      setEditor({
+        package: workspacePackage,
+      });
+      closeWorkspaceLibrary();
+    });
+  };
+
+  const handleOpenProject = (project) => {
+    const open = () => {
+      openProject(project);
+      closeStoreLibrary();
+    };
+    if (!editor || !editor.package || editor.package !== project.editor.package) {
+      closeProject();
+      handleOpenWorkspace(project.editor.package, open);
+      return;
+    }
     if (modified) {
       setPrompt({
         title: getText('gui.projects.notSaved', 'Not saved'),
         label: getText('gui.projects.replaceProject', 'Replace contents of the current project?'),
-        onSubmit: () => {
-          openProject(project);
-          setLibraryOpened(false);
-        },
+        onSubmit: open,
       });
     } else {
-      openProject(project);
-      setLibraryOpened(false);
+      open();
+    }
+  };
+
+  const handleBackHome = () => {
+    const close = () => {
+      clearLayout();
+      closeProject();
+      openWorkspaceLibrary();
+    };
+    if (modified) {
+      setPrompt({
+        title: getText('gui.projects.notSaved', 'Not saved'),
+        label: getText('gui.projects.closeProject', 'Close current project?'),
+        onSubmit: close,
+      });
+    } else {
+      close();
     }
   };
 
@@ -95,7 +139,9 @@ export default function GUI() {
         className={styles.menuBarPosition}
         menus={menus}
         tutorials={tutorials}
+        showHomeButton={!workspaceLibraryOpened}
         canEditProjectName={canEditProjectName}
+        onRequestHome={handleBackHome}
       />
 
       <div className={styles.bodyWrapper}>
@@ -114,7 +160,7 @@ export default function GUI() {
               {tabs.map(({ Content: TabContent, ...tab }, index) => (
                 <>
                   <TabLabel
-                    checked={index === selectedTab}
+                    checked={index === selectedTabIndex}
                     key={index}
                     name={index}
                     onSelect={() => selectTab(index)}
@@ -152,13 +198,22 @@ export default function GUI() {
             </div>
           )}
         </div>
+
+        {workspaceLibraryOpened && (
+          <WorkspaceLibrary
+            onRequestPrompt={setPrompt}
+            onRequestStoreLibrary={openStoreLibrary}
+            onOpenWorkspace={handleOpenWorkspace}
+            onOpenProject={handleOpenProject}
+          />
+        )}
       </div>
 
-      {libraryOpened && (
+      {storeLibraryOpened && (
         <StoreLibrary
           onRequestPrompt={setPrompt}
-          onOpen={handleOpen}
-          onClose={() => setLibraryOpened(false)}
+          onOpenProject={handleOpenProject}
+          onClose={() => setStoreLibraryOpened(false)}
         />
       )}
 
@@ -166,7 +221,9 @@ export default function GUI() {
         <Prompt
           title={prompt.title}
           label={prompt.label}
+          content={prompt.content}
           inputMode={prompt.inputMode}
+          defaultValue={prompt.defaultValue}
           onClose={handlePromptClose}
           onSubmit={prompt.onSubmit ? handlePromptSubmit : false}
         />

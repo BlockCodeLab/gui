@@ -18,7 +18,7 @@ export function Menu({ id, className, children, name }) {
   );
 }
 
-const notMobile = /Win|Mac|Linux/i.test(globalThis.navigator.platform || globalThis.navigator.userAgent);
+const notMobile = /Win|Mac|Linux/i.test(navigator.platform || navigator.userAgent);
 
 export function MenuItem({ children, className, disabled: isDisabled, href, hotkey, onLabel, onDisable, onClick }) {
   const [disabled, setDisable] = useState(isDisabled);
@@ -27,7 +27,7 @@ export function MenuItem({ children, className, disabled: isDisabled, href, hotk
   const context = useEditor();
 
   const navigateToHref = () => href && window.open(href, '_blank');
-  const handleClick = (e) => {
+  const handleClick = (e = {}) => {
     if (disabled) return;
     if (onClick) {
       e.locale = locale;

@@ -2,17 +2,18 @@ import classNames from 'classnames';
 import { Text } from '@blockcode/core';
 
 import styles from './library-item.module.css';
+import iconBlocks from './icons/icon-blocks.svg';
+import iconMicroPython from './icons/icon-micropython.svg';
 import iconBluetooth from './icons/icon-bluetooth.svg';
 import iconInternet from './icons/icon-internet.svg';
-import iconUSB from './icons/icon-usb.svg';
 
-export default function LibraryItem(props) {
+export function LibraryItem(props) {
   return props.featured ? (
     <div
       className={classNames(styles.libraryItem, styles.featuredItem, {
         [styles.disabled]: props.disabled,
         [styles.hidden]: props.hidden,
-        [styles.libraryItemExtension]: props.extensionId,
+        [styles.libraryItemFeatured]: props.featured,
       })}
       onClick={props.onSelect}
     >
@@ -47,38 +48,46 @@ export default function LibraryItem(props) {
           />
         </div>
       )}
-      <div
-        className={classNames(styles.featuredText, {
-          [styles.featuredExtensionText]: props.extensionId,
-        })}
-      >
+      <div className={styles.featuredText}>
         <span className={styles.libraryItemName}>{props.name}</span>
         <br />
         <span className={styles.featuredDescription}>{props.description}</span>
       </div>
-      {(props.bluetoothRequired || props.internetConnectionRequired || props.collaborator) && (
-        <div className={styles.featuredExtensionMetadata}>
-          <div className={styles.featuredExtensionRequirement}>
-            {(props.bluetoothRequired ||
-              props.circuitRequired ||
-              props.internetConnectionRequired ||
-              props.usbConnectionRequired) && (
+      {(props.blocksRequired ||
+        props.micropythonRequired ||
+        props.bluetoothRequired ||
+        props.internetRequired ||
+        props.collaborator) && (
+        <div className={styles.featuredMetadata}>
+          <div className={styles.featuredRequirement}>
+            {(props.blocksRequired ||
+              props.micropythonRequired ||
+              props.bluetoothRequired ||
+              props.internetRequired) && (
               <div>
                 <div>
-                  <Text
-                    id="gui.library.requires"
-                    defaultMessage="Requires"
-                  />
+                  {props.blocksRequired || props.micropythonRequired ? (
+                    <Text
+                      id="gui.library.programming"
+                      defaultMessage="Programming"
+                    />
+                  ) : (
+                    <Text
+                      id="gui.library.requires"
+                      defaultMessage="Requires"
+                    />
+                  )}
                 </div>
-                <div className={styles.featuredExtensionMetadataDetail}>
+                <div className={styles.featuredMetadataDetail}>
+                  {props.blocksRequired && <img src={iconBlocks} />}
+                  {props.micropythonRequired && <img src={iconMicroPython} />}
                   {props.bluetoothRequired && <img src={iconBluetooth} />}
                   {props.internetRequired && <img src={iconInternet} />}
-                  {props.usbRequired && <img src={iconUSB} />}
                 </div>
               </div>
             )}
           </div>
-          <div className={styles.featuredExtensionCollaboration}>
+          <div className={styles.featuredCollaboration}>
             {props.collaborator && (
               <div>
                 <div>
@@ -87,7 +96,7 @@ export default function LibraryItem(props) {
                     defaultMessage="Collaboration with"
                   />
                 </div>
-                <div className={styles.featuredExtensionMetadataDetail}>{props.collaborator}</div>
+                <div className={styles.featuredMetadataDetail}>{props.collaborator}</div>
               </div>
             )}
           </div>

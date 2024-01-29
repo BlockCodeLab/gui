@@ -1,7 +1,7 @@
 import { classNames, Text } from '@blockcode/ui';
 
 import styles from './menu-bar.module.css';
-import tutorialsIcon from './icon-tutorials.svg';
+import tutorialsIcon from './icons/icon-tutorials.svg';
 
 export default function TutorialsButton() {
   return (

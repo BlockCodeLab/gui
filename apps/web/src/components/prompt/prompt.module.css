@@ -2,6 +2,10 @@
   width: 360px;
 }
 
+.prompt-wide-modal {
+  width: 600px;
+}
+
 .prompt-content {
   background: var(--ui-white);
   padding: 1.5rem 2.25rem;
@@ -14,6 +18,15 @@
 
 .label.input-label {
   margin-bottom: 0.75rem;
+}
+
+.content {
+  margin-bottom: 1.5rem;
+  font-size: var(--standard-font-size);
+  color: var(--text-primary);
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .name-text-input {

@@ -9,9 +9,10 @@ import ProjectTitleInput from './project-title-input';
 
 /* styles and assets */
 import styles from './menu-bar.module.css';
-import checkIcon from './icon-check.svg';
-import languageIcon from './icon-language.svg';
-import dropdownCaret from './icon-dropdown-caret.svg';
+import checkIcon from './icons/icon-check.svg';
+import languageIcon from './icons/icon-language.svg';
+import dropdownCaret from './icons/icon-dropdown-caret.svg';
+import homeIcon from './icons/icon-home.svg';
 
 const mapMenuItems = (menuItems) =>
   menuItems &&
@@ -33,7 +34,7 @@ const mapMenuItems = (menuItems) =>
     )
   );
 
-export default function MenuBar({ className, menus, tutorials, canEditProjectName }) {
+export default function MenuBar({ className, menus, tutorials, showHomeButton, canEditProjectName, onRequestHome }) {
   const { language: currentLanguage, setLanguage, getText } = useLocale();
 
   return (
@@ -108,6 +109,20 @@ export default function MenuBar({ className, menus, tutorials, canEditProjectNam
             placeholder={getText('gui.menuBar.projectTitlePlaceholder', 'Project title here')}
             defaultValue={getText('gui.defaultProject.name', 'BlockCode Project')}
           />
+        )}
+      </div>
+
+      <div className={styles.rightMenu}>
+        {showHomeButton && (
+          <div
+            className={classNames(styles.menuBarItem, styles.hoverable)}
+            onClick={onRequestHome}
+          >
+            <img
+              className={styles.homeIcon}
+              src={homeIcon}
+            />
+          </div>
         )}
       </div>
     </div>

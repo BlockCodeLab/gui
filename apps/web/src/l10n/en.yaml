@@ -5,6 +5,7 @@ gui.modal.back: Back
 gui.library.comingSoon: Coming Soon
 gui.library.preview: Preview
 gui.library.requires: Requires
+gui.library.programming: Programming
 gui.library.collaboration: Collaboration
 
 gui.menuBar.tutorials: Tutorials
@@ -16,6 +17,7 @@ gui.defaultProject.shortname: Project
 gui.projects.empty: No project!
 gui.projects.notSaved: Not saved
 gui.projects.replaceProject: Replace contents of the current project?
+gui.projects.closeProject: Close current project?
 gui.projects.contextMenu.rename: rename
 gui.projects.contextMenu.duplicate: duplicate
 gui.projects.contextMenu.delete: delete
@@ -23,3 +25,31 @@ gui.projects.contextMenu.delete: delete
 gui.prompt.close: Close
 gui.prompt.cancel: Cancel
 gui.prompt.ok: OK
+
+gui.workspace.myprojects: My projects
+gui.workspace.allprojects: View all ({counts})
+gui.workspace.newproject: Create new project
+
+gui.workspace.micropython.name: MicroPython
+gui.workspace.micropython.description: Write magical code that controls everything.
+gui.workspace.micropython.collaborator: BlockCode Lab
+gui.workspace.blocks.name: Blocks
+gui.workspace.blocks.description: A wonderful world of building blocks.
+gui.workspace.blocks.collaborator: BlockCode Lab
+gui.workspace.popsicle.name: Popsicle (Scratch)
+gui.workspace.popsicle.description: The equipment can play with the real world.
+gui.workspace.popsicle.collaborator: BlockCode Lab
+gui.workspace.tankwar.name: Tank War
+gui.workspace.tankwar.description: Program your tank and go to battle!
+gui.workspace.tankwar.collaborator: Yeqin Gong
+gui.workspace.picoed.name: ELECFREAKS Pico:ed V2
+gui.workspace.picoed.description: Small board, endless possibilities.
+gui.workspace.picoed.collaborator: Yeqin Gong
+
+gui.terms: Terms of Use
+gui.terms.content: >
+  <b>Terms of Use</b>
+
+gui.privacy: Privacy
+gui.privacy.content: >
+  <b>Privacy</b>

@@ -3,7 +3,7 @@ import { classNames, Text, BufferedInput, Button, Modal } from '@blockcode/ui';
 
 import styles from './prompt.module.css';
 
-export default function Prompt({ title, label, inputMode, defaultValue, onClose, onSubmit }) {
+export default function Prompt({ title, label, content, inputMode, defaultValue, onClose, onSubmit }) {
   const ref = useRef();
   const [value, setValue] = useState(defaultValue);
 
@@ -14,7 +14,7 @@ export default function Prompt({ title, label, inputMode, defaultValue, onClose,
   const handleKeyDown = (e) => {
     if (e.key === 'Escape') onClose();
     if (e.key === 'Enter') {
-      onSubmit(ref.current.base.value, options);
+      onSubmit(ref.current.base.value);
     }
   };
 
@@ -22,29 +22,36 @@ export default function Prompt({ title, label, inputMode, defaultValue, onClose,
     if (ref.current) {
       ref.current.base.focus();
     }
-    globalThis.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
     return () => {
-      globalThis.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, [ref]);
 
   return (
     <Modal
       title={title}
-      className={styles.promptModal}
+      className={content ? styles.promptWideModal : styles.promptModal}
       onClose={onClose}
     >
       <div className={styles.promptContent}>
-        <div className={classNames(styles.label, { [styles.inputLabel]: inputMode })}>{label}</div>
+        {label && <div className={classNames(styles.label, { [styles.inputLabel]: inputMode })}>{label}</div>}
+
         {inputMode && (
           <BufferedInput
             autoFocus
             forceFocus
             ref={ref}
             className={styles.nameTextInput}
-            defaultValue={value}
-            name={label}
+            defaultValue={defaultValue}
             onSubmit={setValue}
+          />
+        )}
+
+        {content && (
+          <div
+            className={styles.content}
+            dangerouslySetInnerHTML={{ __html: content }}
           />
         )}
 

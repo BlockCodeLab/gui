@@ -4,7 +4,7 @@ import { Library } from '@blockcode/ui';
 
 import styles from './store-library.module.css';
 
-export default function StoreLibrary({ onRequestPrompt, onOpen, onClose }) {
+export default function StoreLibrary({ onRequestPrompt, onOpenProject, onClose }) {
   const [data, setData] = useState([]);
   const { getText } = useLocale();
   const { listProjects, getProject, renameProject, duplicateProject, deleteProject } = useEditor();
@@ -13,10 +13,11 @@ export default function StoreLibrary({ onRequestPrompt, onOpen, onClose }) {
     const projects = await listProjects();
     setData(
       projects
+        .sort((a, b) => b.modifiedDate - a.modifiedDate)
         .map((item) => ({
           name: item.name || `${getText('gui.defaultProject.shortname', 'Project')} [${item.key.toUpperCase()}]`,
           image: item.image,
-          onSelect: async () => onOpen(await getProject(item.key)),
+          onSelect: async () => onOpenProject(await getProject(item.key)),
           contextMenu: [
             [
               {
@@ -26,9 +27,12 @@ export default function StoreLibrary({ onRequestPrompt, onOpen, onClose }) {
                     title: getText('gui.projects.contextMenu.rename', 'rename'),
                     label: getText('gui.menuBar.projectTitlePlaceholder', 'Project title here'),
                     inputMode: true,
-                    onSubmit: (name) => {
-                      renameProject(item.key, name);
-                      getData();
+                    defaultValue: item.name,
+                    onSubmit: async (name) => {
+                      if (name) {
+                        await renameProject(item.key, name);
+                        getData();
+                      }
                     },
                   });
                 },
@@ -53,10 +57,8 @@ export default function StoreLibrary({ onRequestPrompt, onOpen, onClose }) {
             ],
           ],
         }))
-        .reverse()
     );
   };
-
   useEffect(getData, []);
 
   return (

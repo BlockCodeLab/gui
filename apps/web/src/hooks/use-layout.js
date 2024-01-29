@@ -1,5 +1,6 @@
 import { useReducer } from 'preact/hooks';
 
+const CLEAR_LAYOUT = 'CLEAR_LAYOUT';
 const SET_LAYOUT = 'SET_LAYOUT';
 const SELECT_TAB = 'SELECT_TAB';
 const ADD_TABS = 'ADD_TABS';
@@ -11,17 +12,19 @@ const initialState = {
   pane: false,
   tutorials: false,
   canEditProjectName: false,
-  selectedTab: -1,
+  selectedTabIndex: -1,
 };
 
 const reducer = (state, action) => {
   switch (action.type) {
+    case CLEAR_LAYOUT:
+      return Object.assign({}, initialState);
     case SET_LAYOUT:
       return Object.assign({}, initialState, action.payload);
     case SELECT_TAB:
       return {
         ...state,
-        selectedTab: action.payload,
+        selectedTabIndex: action.payload,
       };
     case ADD_TABS:
       return {
@@ -38,6 +41,10 @@ export function useLayout() {
 
   return {
     ...state,
+
+    clearLayout() {
+      dispatch({ type: CLEAR_LAYOUT });
+    },
 
     setLayout(layout) {
       dispatch({ type: SET_LAYOUT, payload: layout });

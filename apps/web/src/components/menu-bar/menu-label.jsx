@@ -6,9 +6,9 @@ export default function MenuLabel({ id, className, checked, children, name }) {
   const handleChange = ({ target }) => {
     const handler = () => {
       target.checked = false;
-      globalThis.document.removeEventListener('click', handler);
+      document.removeEventListener('click', handler);
     };
-    globalThis.document.addEventListener('click', handler);
+    document.addEventListener('click', handler);
   };
 
   const setStyle = (target) => {
