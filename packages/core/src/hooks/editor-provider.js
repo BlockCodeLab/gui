@@ -2,7 +2,7 @@ import localForage from 'localforage';
 import { createContext } from 'preact';
 import { useContext, useReducer } from 'preact/hooks';
 
-const CONFIG_EDITOR = 'CONFIG_EDITOR';
+const CLOSE_PROJECT = 'CLOSE_PROJECT';
 const OPEN_PROJECT = 'OPEN_PROJECT';
 const SET_PROJECT_NAME = 'SET_PROJECT_NAME';
 const SET_PROJECT_THUMB = 'SET_PROJECT_THUMB';
@@ -15,6 +15,7 @@ const ADD_ASSET = 'ADD_ASSET';
 const DELETE_ASSET = 'DELETE_ASSET';
 const MODIFY_ASSET = 'MODIFY_ASSET';
 const CONNECT_DEVICE = 'CONNECT_DEVICE';
+const CONFIG_EDITOR = 'CONFIG_EDITOR';
 const SAVE_KEY = 'SAVE_KEY';
 
 localForage.config({
@@ -25,7 +26,7 @@ const initialState = {
   key: null,
   thumb: '',
   name: '',
-  editor: {},
+  editor: null,
   assetList: [],
   fileList: [],
   selectedIndex: -1,
@@ -34,14 +35,16 @@ const initialState = {
 };
 
 export const EditorContext = createContext({
-  state: initialState,
+  state: Object.assign({}, initialState),
   dispatch: () => {},
 });
 
 const reducer = (state, action) => {
   switch (action.type) {
+    case CLOSE_PROJECT:
+      return Object.assign({}, initialState);
     case OPEN_PROJECT:
-      return Object.assign(initialState, action.payload);
+      return Object.assign({}, initialState, action.payload);
     case SET_PROJECT_NAME:
       return {
         ...state,
@@ -135,11 +138,7 @@ const reducer = (state, action) => {
     case CONFIG_EDITOR:
       return {
         ...state,
-        editor: {
-          ...action.payload,
-          name: state.editor.name,
-          package: state.editor.package,
-        },
+        editor: Object.assign(state.editor || {}, action.payload),
         modified: true,
       };
     case SAVE_KEY:
@@ -158,6 +157,10 @@ export function useEditor() {
   return {
     ...state,
 
+    closeProject() {
+      dispatch({ type: CLOSE_PROJECT });
+    },
+
     async openProject(project) {
       if (typeof project === 'stirng') {
         project = await localForage.getItem(key);
@@ -165,7 +168,7 @@ export function useEditor() {
       if (project) {
         dispatch({ type: OPEN_PROJECT, payload: project });
       } else {
-        Promise.reject(new Error(`${key} does not exist.`));
+        throw new Error(`${key} does not exist.`);
       }
     },
 
@@ -236,9 +239,19 @@ export function useEditor() {
     },
 
     async saveNow() {
-      let key = state.key || Date.now().toString(36);
+      const modifiedDate = Date.now();
+      let key = state.key || modifiedDate.toString(36);
       const { name, thumb, editor, assetList, fileList, selectedIndex } = state;
-      const result = await localForage.setItem(key, { key, name, thumb, editor, assetList, fileList, selectedIndex });
+      const result = await localForage.setItem(key, {
+        key,
+        name,
+        thumb,
+        editor,
+        assetList,
+        fileList,
+        selectedIndex,
+        modifiedDate,
+      });
       dispatch({ type: SAVE_KEY, payload: { key, modified: false } });
       return result;
     },
@@ -250,6 +263,7 @@ export function useEditor() {
           key,
           name: value.name,
           image: value.thumb,
+          modifiedDate: value.modifiedDate,
         });
       });
       return result;
@@ -260,14 +274,15 @@ export function useEditor() {
     },
 
     async renameProject(key, name) {
-      const project = localForage.getItem(key);
+      const project = await localForage.getItem(key);
       project.name = name;
       await localForage.setItem(project.key, project);
     },
 
     async duplicateProject(key) {
-      const project = localForage.getItem(key);
-      project.key = Date.now().toString(36);
+      const project = await localForage.getItem(key);
+      project.modifiedDate = Date.now();
+      project.key = project.modifiedDate.toString(36);
       await localForage.setItem(project.key, project);
     },
 
