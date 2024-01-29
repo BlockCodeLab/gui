@@ -2,8 +2,6 @@
 
 import { Serial, sleep } from '@blockcode/core';
 
-const navigator = globalThis.navigator;
-
 const CTRL_A = '\x01'; // raw repl
 const CTRL_B = '\x02'; // exit raw repl
 const CTRL_C = '\x03'; // ctrl-c
@@ -30,8 +28,8 @@ export default class MicroPythonBoard {
   constructor() {
     this.serial = null;
     this._connected = false;
-    this._encoder = new globalThis.TextEncoder();
-    this._decoder = new globalThis.TextDecoder();
+    this._encoder = new TextEncoder();
+    this._decoder = new TextDecoder();
   }
 
   requestPort(filters = []) {

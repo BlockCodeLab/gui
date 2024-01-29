@@ -41,7 +41,7 @@ export default function PopsicleBlocksWorkspace({
   const extendsMenu = [
     {
       id: 'device',
-      disable: true,
+      hidden: true,
     },
   ];
 

@@ -162,7 +162,7 @@ export function PopsiclePlayer({ stageSize, playing, onRequestStop }) {
       width={`${viewSize.width}px`}
       height={`${viewSize.height}px`}
       onSetup={handleSetup}
-      onClick={() => globalThis.document.querySelectorAll('input:focus').forEach((e) => e.blur())}
+      onClick={() => document.querySelectorAll('input:focus').forEach((e) => e.blur())}
     />
   );
 }

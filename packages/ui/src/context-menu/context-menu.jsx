@@ -58,12 +58,12 @@ export function ContextMenu({ menuItems, className, children }) {
               modifiers: [...options.modifiers, { name: 'eventListeners', enabled: false }],
             }));
           }
-          globalThis.document.removeEventListener('mousedown', handler);
-          globalThis.document.removeEventListener('click', handler);
+          document.removeEventListener('mousedown', handler);
+          document.removeEventListener('click', handler);
         };
-        globalThis.document.addEventListener('mousedown', handler);
-        globalThis.document.addEventListener('click', handler);
-        globalThis.document.removeEventListener('mouseup', hide);
+        document.addEventListener('mousedown', handler);
+        document.addEventListener('click', handler);
+        document.removeEventListener('mouseup', hide);
       };
 
       const show = (e) => {
@@ -76,7 +76,7 @@ export function ContextMenu({ menuItems, className, children }) {
           modifiers: [...options.modifiers, { name: 'eventListeners', enabled: true }],
         }));
         popper.update();
-        globalThis.document.addEventListener('mouseup', hide);
+        document.addEventListener('mouseup', hide);
       };
       contextForElement.addEventListener('contextmenu', show);
     }

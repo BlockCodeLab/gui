@@ -5,8 +5,6 @@ import createTerminal from './create-terminal';
 
 import styles from './terminal-view.module.css';
 
-const ResizeObserver = globalThis.ResizeObserver;
-
 export default function TerminalView({ className }) {
   const ref = useRef(null);
   const { device } = useEditor();
@@ -34,7 +32,7 @@ export default function TerminalView({ className }) {
           ref.term.blur();
         }
       });
-      ref.resizeObserver = new ResizeObserver(() => ref.term.fit(true));
+      ref.resizeObserver = new window.ResizeObserver(() => ref.term.fit(true));
       ref.resizeObserver.observe(ref.current);
     }
     return () => {

@@ -1,4 +1,4 @@
-import { pythonGenerator } from '@blockcode/blocks-editor';
+import { pythonGenerator } from '@blockcode/workspace-blocks';
 
 pythonGenerator['sound_sounds_menu'] = (block) => {
   const soundName = block.getFieldValue('SOUND_MENU');

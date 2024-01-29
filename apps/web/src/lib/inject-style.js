@@ -1,6 +1,5 @@
 const globalCssObject = {};
 
-const document = globalThis.document;
 const styleElement = document.createElement('div');
 const globalStyleSheet = document.createElement('style');
 document.body.insertBefore(globalStyleSheet, document.body.firstChild);

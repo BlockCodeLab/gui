@@ -22,7 +22,7 @@ export class Tone {
     if (this._audioContext) {
       this._clear();
     }
-    this._audioContext = new globalThis.AudioContext();
+    this._audioContext = new AudioContext();
     this._oscillator = this._audioContext.createOscillator();
     this._oscillator.type = this._type;
     this._oscillator.connect(this._audioContext.destination);

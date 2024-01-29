@@ -5,8 +5,8 @@ import defaultTheme from './defing-theme';
 
 import 'xterm/css/xterm.css';
 
-const isMac = /Mac/i.test(globalThis.navigator.platform || globalThis.navigator.userAgent);
-const isWin = /Win/i.test(globalThis.navigator.platform || globalThis.navigator.userAgent);
+const isMac = /Mac/i.test(navigator.platform || navigator.userAgent);
+const isWin = /Win/i.test(navigator.platform || navigator.userAgent);
 
 export default function createTerminal(ref) {
   const term = new Terminal({

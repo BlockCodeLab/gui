@@ -1,6 +1,6 @@
 import { useState } from 'preact/hooks';
 import { useLocale, useEditor } from '@blockcode/core';
-import { classNames } from '@blockcode/ui';
+import { classNames, ComingSoon } from '@blockcode/ui';
 import { BlocksEditor as Editor, ScratchBlocks, makeToolboxXML } from '@blockcode/blocks-editor';
 import { pythonGenerator } from '../../generators/python';
 
@@ -99,15 +99,17 @@ export default function BlocksEditor({
       />
       {disableExtension ? null : (
         <div className={classNames('scratchCategoryMenu', styles.extensionButton)}>
-          <button
-            className={styles.addButton}
-            title={getText('blocks.extensions.addExtension', 'Add Extension')}
-          >
-            <img
-              src={iconAddExtension}
-              title="Add Extension"
-            />
-          </button>
+          <ComingSoon>
+            <button
+              className={styles.addButton}
+              title={getText('blocks.extensions.addExtension', 'Add Extension')}
+            >
+              <img
+                src={iconAddExtension}
+                title="Add Extension"
+              />
+            </button>
+          </ComingSoon>
         </div>
       )}
       {prompt && (

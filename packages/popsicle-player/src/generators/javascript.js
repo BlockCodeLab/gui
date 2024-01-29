@@ -1,3 +1,4 @@
+import { ScratchBlocks } from '@blockcode/blocks-editor';
 import { javascriptGenerator } from '@blockcode/blocks-player';
 
 import './javascript/control';

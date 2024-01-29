@@ -81,7 +81,7 @@ export default function BlocksWorkspace({
 
     sidebars: [],
 
-    pane: BackpackPane,
+    pane: false, //BackpackPane,
 
     tutorials: true,
 

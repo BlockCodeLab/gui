@@ -20,7 +20,7 @@ import 'monaco-editor/esm/vs/basic-languages/xml/xml.contribution';
 
 import './define-theme';
 
-globalThis.MonacoEnvironment = {
+window.MonacoEnvironment = {
   getWorker: (_, label) => {
     switch (label) {
       case 'json':

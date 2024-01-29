@@ -4,7 +4,7 @@ import { ScratchBlocks } from '@blockcode/blocks-editor';
 import { connectDevice, disconnectDevice, downloadDevice } from '@blockcode/device-pyboard';
 import defaultFilters from './filters.yaml';
 
-const isMac = /Mac/i.test(globalThis.navigator.platform || globalThis.navigator.userAgent);
+const isMac = /Mac/i.test(navigator.platform || navigator.userAgent);
 
 export default function ({
   newProject,
@@ -298,7 +298,7 @@ export default function ({
     const index = extendsMenu.findIndex((menuInfo) => menuInfo.id === id);
     if (index >= 0) {
       const [menuInfo] = extendsMenu.splice(index, 1);
-      if (menuInfo.disable) {
+      if (menuInfo.hidden) {
         return [];
       }
       menu.menuItems.concat(menuInfo.menuItems);

@@ -1,4 +1,4 @@
-const { atob, btoa } = globalThis;
+const { atob, btoa } = window;
 
 export const base64ToUint8Array = (base64) => {
   const binary = atob(base64);

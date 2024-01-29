@@ -2,9 +2,9 @@ import unifyLocale from './unify-locale';
 
 /* default english */
 export const defaultLanguage = 'en';
-export const browserLanguage = globalThis.navigator.language;
+export const browserLanguage = navigator.language;
 
-const { DisplayNames, Locale } = globalThis.Intl;
+const { DisplayNames, Locale } = window.Intl;
 const defaultLN = new DisplayNames([defaultLanguage], { type: 'language' });
 const browserLN = new DisplayNames([browserLanguage], { type: 'language' });
 

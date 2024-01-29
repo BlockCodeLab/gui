@@ -1,4 +1,5 @@
-import { ScratchBlocks, pythonGenerator } from '@blockcode/blocks-editor';
+import { ScratchBlocks } from '@blockcode/blocks-editor';
+import { pythonGenerator } from '@blockcode/workspace-blocks';
 
 import './python/events';
 import './python/looks';

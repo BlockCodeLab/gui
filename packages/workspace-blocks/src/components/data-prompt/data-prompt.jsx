@@ -35,10 +35,10 @@ export default function DataPrompt({
   useEffect(() => {
     if (ref.current) {
       ref.current.base.focus();
-      globalThis.addEventListener('keydown', handleKeyDown);
+      window.addEventListener('keydown', handleKeyDown);
     }
     return () => {
-      globalThis.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, [ref]);
 
@@ -56,7 +56,6 @@ export default function DataPrompt({
           ref={ref}
           className={styles.variableNameTextInput}
           defaultValue={value}
-          name={label}
           onSubmit={setValue}
         />
         {showVariableOptions && (

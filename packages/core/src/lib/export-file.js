@@ -1,7 +1,7 @@
 export function exportFile(data, filename) {
-  const link = globalThis.document.createElement('a');
-  const blob = new globalThis.Blob([data]);
-  const url = globalThis.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  const blob = new Blob([data]);
+  const url = URL.createObjectURL(blob);
   link.setAttribute('href', url);
   link.setAttribute('download', filename);
   link.click();

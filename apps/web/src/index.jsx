@@ -12,7 +12,7 @@ function App() {
     en,
     'zh-Hans': zhHans,
   });
-  globalThis.document.querySelector('html').lang = language;
+  document.querySelector('html').lang = language;
 
   return (
     <LocalesProvider>
@@ -23,4 +23,4 @@ function App() {
   );
 }
 
-render(<App />, globalThis.document.getElementById('root'));
+render(<App />, document.getElementById('root'));

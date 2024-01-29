@@ -2,7 +2,7 @@ const color16 = (r, g, b) => ((r & 0xf8) << 8) | ((g & 0xfc) << 3) | (b >> 3);
 
 export default function (type, base64) {
   return new Promise((resolve) => {
-    const image = new globalThis.Image();
+    const image = new Image();
     image.src = `data:${type};base64,${base64}`;
     image.addEventListener('load', async () => {
       const canvas = new OffscreenCanvas(image.width, image.height);

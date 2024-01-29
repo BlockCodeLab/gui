@@ -1,4 +1,4 @@
-import { pythonGenerator } from '@blockcode/blocks-editor';
+import { pythonGenerator } from '@blockcode/workspace-blocks';
 
 pythonGenerator['event_whenkeypressed'] = (block) => {
   let code = '';

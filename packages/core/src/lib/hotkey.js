@@ -67,7 +67,7 @@ export const Keys = {
   META: 'Meta',
 };
 
-const isMac = /Mac/i.test(globalThis.navigator.platform || globalThis.navigator.userAgent);
+const isMac = /Mac/i.test(navigator.platform || navigator.userAgent);
 
 const KeysSymbol = {
   [Keys.ESC]: isMac ? '⎋' : 'Esc',
@@ -157,7 +157,7 @@ export function showHotkey(hotkey) {
   return keysName.filter((key) => key).join(isMac ? '' : '+');
 }
 
-globalThis.addEventListener('keydown', (e) => {
+window.addEventListener('keydown', (e) => {
   Hotkeys.forEach((handler, hotkey) => {
     const testKey = (key) => {
       if (key === Keys.CONTROL && e.ctrlKey) {
@@ -178,6 +178,7 @@ globalThis.addEventListener('keydown', (e) => {
       return false;
     };
     if (hotkey.every(testKey) && typeof handler === 'function') {
+      e.preventDefault();
       handler();
     }
   });

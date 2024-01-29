@@ -1,7 +1,7 @@
 import { Keys } from '@blockcode/core';
 import { Text } from '@blockcode/ui';
 
-const isMac = /Mac/i.test(globalThis.navigator.platform || globalThis.navigator.userAgent);
+const isMac = /Mac/i.test(navigator.platform || navigator.userAgent);
 
 export default () => [
   {
