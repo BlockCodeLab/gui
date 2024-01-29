@@ -1,20 +1,21 @@
-const content = `
-from popsicle.scratch import *
+const DEFAULT_MAIN_CONTENT = `
+from popsicle.blocks import *
+import code1
+run()
 `;
 
-export default function (getText) {
-  return {
-    editor: {
-      name: 'PicoedBlocks',
-      package: '@blockcode/workspace-picoed-blocks',
+export default {
+  assetList: [
+    {
+      id: 'main',
+      type: 'text/x-python',
+      content: DEFAULT_MAIN_CONTENT,
     },
-    assetList: [],
-    fileList: [
-      {
-        id: 'main',
-        name: 'main',
-        content,
-      },
-    ],
-  };
-}
+  ],
+  fileList: [
+    {
+      id: 'code1',
+      type: 'text/x-python',
+    },
+  ],
+};

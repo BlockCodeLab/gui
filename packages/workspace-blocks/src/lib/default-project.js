@@ -1,13 +1,10 @@
-const DEFAULT_MAIN_CONTENT = `from popsicle.scratch import *
+const DEFAULT_MAIN_CONTENT = `
+from popsicle.blocks import *
 import code1
 run()
 `;
 
 export default {
-  editor: {
-    name: 'Blocks',
-    package: '@blockcode/workspace-popsicle-blocks',
-  },
   assetList: [
     {
       id: 'main',

@@ -38,10 +38,6 @@ run(stage.render)
 
 export default function (getText) {
   return {
-    editor: {
-      name: 'PopsicleBlocks',
-      package: '@blockcode/workspace-popsicle-blocks',
-    },
     assetList: [
       {
         id: 'main',

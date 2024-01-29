@@ -5,10 +5,6 @@ print("hello world!")
 `;
 
 export default {
-  editor: {
-    name: 'MicroPython',
-    package: '@blockcode/workspace-micropython',
-  },
   fileList: [
     {
       id: 'main',
