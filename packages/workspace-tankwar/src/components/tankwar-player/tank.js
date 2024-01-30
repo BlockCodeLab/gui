@@ -394,7 +394,7 @@ export default class Tank {
         scaling: this.raster.scaling,
         position: this.raster.position,
         rotation: this.raster.rotation,
-      }).sendToBack();
+      }).insertAbove(paperCore.project.activeLayer.children['background']);
     }
   }
 
