@@ -1,5 +1,5 @@
 {
-  "name": "@blockcode/workspace-tankwar-blocks",
+  "name": "@blockcode/workspace-tankwar",
   "module": "dist/index.js",
   "type": "module",
   "scripts": {

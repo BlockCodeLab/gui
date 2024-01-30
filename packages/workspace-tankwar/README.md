@@ -1,4 +1,4 @@
-# @blockcode/workspace-tankwar-blocks
+# @blockcode/workspace-tankwar
 
 To install dependencies:
 

@@ -7,5 +7,3 @@ pythonGenerator['event_whenkeypressed'] = (block) => {
   code += `${functionCode}when_key_pressed("${keyCode}",${functionName}\n`;
   return code;
 };
-
-pythonGenerator['event_whengreaterthan'] = (block) => {};

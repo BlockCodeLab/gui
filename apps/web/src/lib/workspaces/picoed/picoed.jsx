@@ -1,11 +1,10 @@
 import { Text } from '@blockcode/ui';
-import picoed2Image from './picoed2.png';
+import picoedImage from './picoed.png';
 
 export default {
-  // disabled: true,
   preview: true,
-  package: 'picoed-blocks',
-  image: picoed2Image,
+  package: 'picoed',
+  image: picoedImage,
   name: (
     <Text
       id="gui.workspace.picoed.name"

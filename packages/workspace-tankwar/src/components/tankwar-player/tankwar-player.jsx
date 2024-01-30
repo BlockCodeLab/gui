@@ -2,6 +2,7 @@ import { useState } from 'preact/hooks';
 import { useEditor } from '@blockcode/core';
 import { BlocksPlayer, paperCore } from '@blockcode/blocks-player';
 
+import backgroundImage from './tanks/background.png';
 import Tank from './tank';
 import Runtime from './runtime';
 import generate from './generate';
@@ -54,6 +55,7 @@ export function TankwarPlayer({ playing, enemies, enemiesAI, onRequestStop, onCh
         setCurrentRuntime(false);
       } else {
         paperCore.project.activeLayer.children.forEach((item) => {
+          if (item.name === backgroundImage) return;
           if (item.util instanceof Tank || item.owner instanceof Tank) return;
           item.remove();
         });
@@ -85,6 +87,11 @@ export function TankwarPlayer({ playing, enemies, enemiesAI, onRequestStop, onCh
   const handleSetup = (canvas) => {
     setCanvas(canvas);
     paperCore.view.zoom = 0.5;
+    new paperCore.Raster({
+      name: backgroundImage,
+      source: backgroundImage,
+      position: paperCore.view.center,
+    });
     new Tank('player', Tank.STYLE.PLAYER, Tank.PLACE.LEFT);
     new Tank('red', Tank.STYLE.ENEMY_A, Tank.PLACE.RIGHT);
     new Tank('yellow', Tank.STYLE.ENEMY_B, Tank.PLACE.RIGHT_BOTTOM);

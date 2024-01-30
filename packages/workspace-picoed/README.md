@@ -1,4 +1,4 @@
-# @blockcode/workspace-popsicle-blocks
+# @blockcode/workspace-picoed
 
 To install dependencies:
 

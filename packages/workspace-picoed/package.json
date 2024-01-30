@@ -1,5 +1,5 @@
 {
-  "name": "@blockcode/workspace-picoed-blocks",
+  "name": "@blockcode/workspace-picoed",
   "module": "dist/index.js",
   "type": "module",
   "scripts": {

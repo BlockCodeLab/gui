@@ -1,5 +1,5 @@
 {
-  "name": "@blockcode/workspace-popsicle-blocks",
+  "name": "@blockcode/workspace-popsicle",
   "module": "dist/index.js",
   "type": "module",
   "scripts": {

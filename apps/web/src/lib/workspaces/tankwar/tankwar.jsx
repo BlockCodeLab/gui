@@ -3,7 +3,7 @@ import tankwarImage from './tankwar.png';
 
 export default {
   preview: true,
-  package: 'tankwar-blocks',
+  package: 'tankwar',
   image: tankwarImage,
   name: (
     <Text

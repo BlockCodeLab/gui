@@ -2,14 +2,13 @@ import { Text } from '@blockcode/ui';
 import popsicleImage from './popsicle.png';
 
 export default {
-  // disabled: true,
   preview: true,
-  package: 'popsicle-blocks',
+  package: 'popsicle',
   image: popsicleImage,
   name: (
     <Text
       id="gui.workspace.popsicle.name"
-      defaultMessage="Popsicle (Scratch)"
+      defaultMessage="Popsicle"
     />
   ),
   description: (

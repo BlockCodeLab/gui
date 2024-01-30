@@ -2,7 +2,6 @@ import { Text } from '@blockcode/ui';
 import blocksImage from './blocks.png';
 
 export default {
-  // disabled: true,
   preview: true,
   package: 'blocks',
   image: blocksImage,
