@@ -36,7 +36,7 @@ gui.workspace.micropython.collaborator: BlockCode Lab
 gui.workspace.blocks.name: Blocks
 gui.workspace.blocks.description: A wonderful world of building blocks.
 gui.workspace.blocks.collaborator: BlockCode Lab
-gui.workspace.popsicle.name: Popsicle (Scratch)
+gui.workspace.popsicle.name: Popsicle
 gui.workspace.popsicle.description: The equipment can play with the real world.
 gui.workspace.popsicle.collaborator: BlockCode Lab
 gui.workspace.tankwar.name: Tank War

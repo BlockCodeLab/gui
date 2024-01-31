@@ -139,7 +139,7 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject, onReq
       <div className={styles.footer}>
         <span
           className={classNames(styles.footerItem, styles.link)}
-          onClick={() => window.open('https://github.com/BlockCodeLab', '_blank')}
+          onClick={() => window.open('https://lab.blockcode.fun/', '_blank')}
         >
           BlockCode Lab
         </span>

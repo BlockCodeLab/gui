@@ -63,7 +63,7 @@ export default {
     IndexPage({
       entry: './index.js',
       template: resolve(SRC_DIR, 'template/index.hbs'),
-      title: 'BlockCode GUI',
+      title: 'BlockCode Playgrounds',
       importmap: JSON.stringify({ imports }),
     }),
     HotServer({

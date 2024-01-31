@@ -34,7 +34,7 @@ export default function GUI() {
   } = useLayout();
   const { alerts, setAlert, removeAlert } = useAlert();
   const { addLocaleData, getText } = useLocale();
-  const { editor, setEditor, openProject, closeProject, modified, ...context } = useEditor();
+  const { editor, setEditor, openProject, closeProject, modified } = useEditor();
 
   const openWorkspaceLibrary = () => setWorkspaceLibraryOpened(true);
   const closeWorkspaceLibrary = () => setWorkspaceLibraryOpened(false);
