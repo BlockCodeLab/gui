@@ -27,7 +27,7 @@ export default class Runtime extends EventEmitter {
   }
 
   get timer() {
-    return Date.now() - this._timer;
+    return (Date.now() - this._timer) / 1000;
   }
 
   openEventsGroup(groupName) {
@@ -68,6 +68,18 @@ export default class Runtime extends EventEmitter {
       this._eventsGroups[groupName].push(listener);
       listener(...args);
     });
+  }
+
+  onGreaterThen(name, value, listener) {
+    if (name === 'TIMER') {
+      listener._done = false;
+      this.on('frame', () => {
+        if (this.timer > value && !listener._done) {
+          listener();
+        }
+        listener._done = this.timer > value;
+      });
+    }
   }
 
   emit(...args) {

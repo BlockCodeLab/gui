@@ -5,15 +5,18 @@ javascriptGenerator['event_whenflagclicked'] = (block) => {
   return `runtime.on('start', async function anonymous() {/* nextCode */});\n`;
 };
 
-javascriptGenerator['event_whengreaterthan'] = (block) => {};
+javascriptGenerator['event_whengreaterthan'] = (block) => {
+  const name = block.getFieldValue('WHENGREATERTHANMENU');
+  const value = javascriptGenerator.valueToCode(block, 'VALUE', javascriptGenerator.ORDER_NONE) || 0;
+  return `runtime.onGreaterThen('${name}', ${value}, async function anonymous() {/* nextCode */});\n`;
+};
 
 javascriptGenerator['event_whenbroadcastreceived'] = (block) => {
   const messageName = javascriptGenerator.variableDB_.getName(
     block.getFieldValue('BROADCAST_OPTION'),
     ScratchBlocks.Variables.NAME_TYPE
   );
-  const code = `runtime.on('${messageName}', async function anonymous(done) {/* nextCode */  done()\n});\n`;
-  return code;
+  return `runtime.on('${messageName}', async function anonymous(done) {/* nextCode */  done()\n});\n`;
 };
 
 javascriptGenerator['event_broadcast_menu'] = (block) => {
