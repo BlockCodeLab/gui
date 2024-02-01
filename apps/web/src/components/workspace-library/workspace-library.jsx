@@ -23,7 +23,15 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject, onReq
         .filter((_, i) => i < DISPLAY_PROJECTS_COUNTS)
         .map((item) => ({
           key: item.key,
-          name: item.name || `${getText('gui.defaultProject.shortname', 'Project')} [${item.key.toUpperCase()}]`,
+          name: item.name || (
+            <>
+              <Text
+                id="gui.defaultProject.shortname"
+                defaultMessage="Project"
+              />
+              {` [${item.key.toUpperCase()}]`}
+            </>
+          ),
           image: item.image,
         }))
     );
