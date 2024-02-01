@@ -7,7 +7,7 @@ import styles from './sidebar.module.css';
 
 export default function Sidebar() {
   const [playing, setPlaying] = useState(false);
-  const [enemies, setEnemies] = useState(2);
+  const [enemies, setEnemies] = useState(3);
   const [enemiesAI, setEnemiesAI] = useState({
     red: 'simple',
     yellow: 'medium',
