@@ -15,7 +15,12 @@
     "build:code": "cd packages/code-editor && BUN_ENV=production bun run build",
     "build:blocks": "cd packages/blocks-editor && BUN_ENV=production bun run build && cd ../blocks-player && BUN_ENV=production bun run build",
     "build:workspace-blocks": "bun run build:core && bun run build:pyboard && bun run build:blocks && cd packages/workspace-blocks && BUN_ENV=production bun run build",
-    "build:workspace-tankwar": "bun run build:workspace-blocks && cd packages/workspace-tankwar-blocks && BUN_ENV=production bun run build"
+    "build:workspace-popsicle": "cd packages/workspace-popsicle && BUN_ENV=production bun run build",
+    "build:workspace-tankwar": "cd packages/workspace-tankwar && BUN_ENV=production bun run build",
+    "build:workspace-picoed": "cd packages/workspace-picoed && BUN_ENV=production bun run build",
+    "build:workspace-blocks-all": "bun run build:workspace-blocks && bun run build:workspace-popsicle && bun run build:workspace-tankwar && bun run build:workspace-picoed",
+    "build:workspace-micropython": "bun run build:code && cd packages/workspace-micropython && BUN_ENV=production bun run build",
+    "build:workspace-all": "bun run build:workspace-blocks-all && bun run build:workspace-micropython"
   },
   "workspaces": [
     "apps/*",
