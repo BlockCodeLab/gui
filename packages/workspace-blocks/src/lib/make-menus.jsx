@@ -231,9 +231,8 @@ export default function ({
           onLabel({ locale, context }) {
             if (context.device) {
               return locale.getText('blocks.menu.device.disconnect', 'Disconnect this device');
-            } else {
-              return locale.getText('blocks.menu.device.connect', 'Connect your device');
             }
+            return locale.getText('blocks.menu.device.connect', 'Connect your device');
           },
           onClick({ context }) {
             if (context.device) {
@@ -271,9 +270,8 @@ export default function ({
           onLabel({ locale, context }) {
             if (context.editor.autoDownload) {
               return locale.getText('blocks.menu.device.turnOffAutoDownload', 'Turn off auto download');
-            } else {
-              return locale.getText('blocks.menu.device.turnOnAutoDownload', 'Turn on auto download');
             }
+            return locale.getText('blocks.menu.device.turnOnAutoDownload', 'Turn on auto download');
           },
           onDisable({ context, setDisable }) {
             if (!context.device && context.editor.autoDownload) {
@@ -298,9 +296,7 @@ export default function ({
     const index = extendsMenu.findIndex((menuInfo) => menuInfo.id === id);
     if (index >= 0) {
       const [menuInfo] = extendsMenu.splice(index, 1);
-      if (menuInfo.hidden) {
-        return [];
-      }
+      if (menuInfo.hidden) return [];
       menu.menuItems.concat(menuInfo.menuItems);
     }
     return menu;

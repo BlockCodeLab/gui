@@ -5,7 +5,6 @@ import { useContext, useReducer } from 'preact/hooks';
 const CLOSE_PROJECT = 'CLOSE_PROJECT';
 const OPEN_PROJECT = 'OPEN_PROJECT';
 const SET_PROJECT_NAME = 'SET_PROJECT_NAME';
-const SET_PROJECT_THUMB = 'SET_PROJECT_THUMB';
 const ADD_FILE = 'ADD_FILE';
 const OPEN_FILE = 'OPEN_FILE';
 const DELETE_FILE = 'DELETE_FILE';
@@ -24,7 +23,6 @@ localForage.config({
 
 const initialState = {
   key: null,
-  thumb: '',
   name: '',
   editor: null,
   assetList: [],
@@ -49,12 +47,6 @@ const reducer = (state, action) => {
       return {
         ...state,
         name: action.payload,
-        modified: true,
-      };
-    case SET_PROJECT_THUMB:
-      return {
-        ...state,
-        thumb: action.payload,
         modified: true,
       };
     case ADD_FILE:
@@ -234,18 +226,21 @@ export function useEditor() {
       dispatch({ type: CONFIG_EDITOR, payload: config });
     },
 
-    setThumb(thumb) {
-      dispatch({ type: SET_PROJECT_THUMB, payload: thumb });
+    async saveThumb(thumb) {
+      if (state.key) {
+        const project = await localForage.getItem(state.key);
+        project.thumb = thumb;
+        localForage.setItem(state.key, project);
+      }
     },
 
     async saveNow() {
       const modifiedDate = Date.now();
-      let key = state.key || modifiedDate.toString(36);
-      const { name, thumb, editor, assetList, fileList, selectedIndex } = state;
+      const key = state.key || modifiedDate.toString(36);
+      const { name, editor, assetList, fileList, selectedIndex } = state;
       const result = await localForage.setItem(key, {
         key,
         name,
-        thumb,
         editor,
         assetList,
         fileList,

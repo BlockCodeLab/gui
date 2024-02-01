@@ -11,7 +11,7 @@ import * as AIs from './ai';
 export function TankwarPlayer({ playing, enemies, enemiesAI, onRequestStop, onChangeHealth }) {
   const [canvas, setCanvas] = useState(null);
   const [currentRuntime, setCurrentRuntime] = useState(false);
-  const { fileList, thumb, setThumb } = useEditor();
+  const { fileList, saveThumb } = useEditor();
   const player = fileList[0];
 
   if (canvas) {
@@ -76,10 +76,7 @@ export function TankwarPlayer({ playing, enemies, enemiesAI, onRequestStop, onCh
           tanks.player.util.place = Tank.PLACE.LEFT;
           tanks.green.util.hidden = true;
         }
-        const newThumb = canvas.toDataURL();
-        if (thumb !== newThumb) {
-          setThumb(newThumb);
-        }
+        saveThumb(canvas.toDataURL());
       }
     }
   }
