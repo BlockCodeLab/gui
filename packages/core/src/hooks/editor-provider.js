@@ -42,6 +42,9 @@ const reducer = (state, action) => {
     case CLOSE_PROJECT:
       return Object.assign({}, initialState);
     case OPEN_PROJECT:
+      if (!action.payload.editor) {
+        action.payload.editor = state.editor;
+      }
       return Object.assign({}, initialState, action.payload);
     case SET_PROJECT_NAME:
       return {

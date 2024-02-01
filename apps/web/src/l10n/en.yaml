@@ -2,6 +2,8 @@ gui.comingSoon: Coming Soon!
 
 gui.modal.back: Back
 
+gui.alert.importing: importing...
+
 gui.library.comingSoon: Coming Soon
 gui.library.preview: Preview
 gui.library.requires: Requires

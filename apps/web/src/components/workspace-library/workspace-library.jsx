@@ -131,7 +131,7 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject, onReq
             collaborator={item.collaborator}
             blocksRequired={item.blocksRequired}
             micropythonRequired={item.micropythonRequired}
-            onSelect={() => onOpenWorkspace(item.package)}
+            onSelect={item.disabled ? null : () => onOpenWorkspace(item.package)}
           />
         ))}
       </div>
