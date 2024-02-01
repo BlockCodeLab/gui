@@ -55,7 +55,7 @@ export function TankwarPlayer({ playing, enemies, enemiesAI, onRequestStop, onCh
         setCurrentRuntime(false);
       } else {
         paperCore.project.activeLayer.children.forEach((item) => {
-          if (item.name === backgroundImage) return;
+          if (item.name === 'background') return;
           if (item.util instanceof Tank || item.owner instanceof Tank) return;
           item.remove();
         });
@@ -85,7 +85,7 @@ export function TankwarPlayer({ playing, enemies, enemiesAI, onRequestStop, onCh
     setCanvas(canvas);
     paperCore.view.zoom = 0.5;
     new paperCore.Raster({
-      name: backgroundImage,
+      name: 'background',
       source: backgroundImage,
       position: paperCore.view.center,
     });

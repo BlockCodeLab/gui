@@ -111,6 +111,7 @@ export default class Tank {
     this.raster.util = this;
     this.turretRaster.owner = this;
 
+    this._hidden = true;
     this._lastScanDistance = 0;
     this._imageCache = {};
     this._timers = [];
@@ -196,10 +197,11 @@ export default class Tank {
   }
 
   get hidden() {
-    return !this.raster.visible;
+    return this._hidden;
   }
 
   set hidden(value) {
+    this._hidden = value;
     this.raster.visible = this.turretRaster.visible = !value;
   }
 
@@ -231,6 +233,10 @@ export default class Tank {
     if (!this._imageCache.buttet) {
       this._imageCache.buttet = await loadImage(imageBullet);
     }
+    if (this._bulletRaster) {
+      this._bulletRaster.remove();
+      this._bulletRaster = null;
+    }
     this._bulletRaster = new paperCore.Raster({
       image: this._imageCache.buttet,
       position: this.raster.position,
@@ -260,7 +266,7 @@ export default class Tank {
     }
     this._boom(this._bulletRaster.position);
 
-    this._hit(this._bulletRaster, (enemy) => {
+    this._collide(this._bulletRaster, (enemy) => {
       if (calcDistance(enemy.position, this._bulletRaster.position) < enemy.util.bullseye) {
         enemy.util.hurt(10);
       } else {
@@ -277,6 +283,10 @@ export default class Tank {
     if (!this._imageCache.booms) {
       this._imageCache.booms = [await loadImage(imageBoom1), await loadImage(imageBoom2), await loadImage(imageBoom3)];
     }
+    if (this._boomRaster) {
+      this._boomRaster.remove();
+      this._boomRaster = null;
+    }
     this._boomRaster = new paperCore.Raster({
       image: this._imageCache.booms[0],
       position,
@@ -290,13 +300,15 @@ export default class Tank {
     this._boomRaster = null;
   }
 
-  _hit(tester, hit) {
+  _intersectsOrContains(tester, target) {
+    return tester.intersects(target) || target.contains(tester.position);
+  }
+
+  _collide(tester, collidingCallback) {
     if (this.running && !this.death) {
       this.enemies.forEach((enemy) => {
         if (enemy.util.death || enemy.util.hidden) return;
-        if (tester.intersects(enemy) || enemy.contains(tester.position)) {
-          hit(enemy);
-        }
+        if (this._intersectsOrContains(tester, enemy)) collidingCallback(enemy);
       });
     }
   }
@@ -306,12 +318,6 @@ export default class Tank {
     if (this.death) return;
     await this.setDirection(direction);
     this.speed = number(speed);
-  }
-
-  get colliding() {
-    let result = false;
-    this._hit(this._collideTester, () => (result = true));
-    return result;
   }
 
   drive() {
@@ -326,8 +332,12 @@ export default class Tank {
     this._collideTester.rotation = this.raster.rotation;
     this._collideTester.position.x = this.raster.position.x + (height / 2 + 5) * Math.cos(radian);
     this._collideTester.position.y = this.raster.position.y - (height / 2 + 5) * Math.sin(radian);
-    this._hit(this.raster, (enemy) => {
-      if (this.colliding) speed = 0;
+
+    this.enemies.forEach((enemy) => {
+      if (enemy.util.hidden) return;
+      if (this._intersectsOrContains(this.raster, enemy) && this._intersectsOrContains(this._collideTester, enemy)) {
+        speed = 0;
+      }
     });
 
     this.raster.position.x += speed * Math.cos(radian);
@@ -388,7 +398,7 @@ export default class Tank {
     if (!this.running) return;
     this._health -= Math.abs(value);
     if (this.death) {
-      this.hidden = true;
+      this.raster.visible = this.turretRaster.visible = false;
       new paperCore.Raster({
         source: imageBroken,
         scaling: this.raster.scaling,
@@ -439,6 +449,10 @@ export default class Tank {
     const d2y = MAX_SCAN_DISTANCE * Math.sin(radian2);
     const point2 = new paperCore.Point(this.raster.position.x + d2x, this.raster.position.y - d2y);
 
+    if (this._scanShape) {
+      this._scanShape.remove();
+      this._scanShape = null;
+    }
     this._scanShape = new paperCore.Path({
       segments: [this.raster.position, point1, point2],
       closed: true,
@@ -457,7 +471,7 @@ export default class Tank {
     await this.sleep(TURN_ROUND_MS * (this.scanWidth / 360));
 
     let result = Infinity;
-    this._hit(this._scanShape, (enemy) => {
+    this._collide(this._scanShape, (enemy) => {
       const distance = calcDistance(this.raster.position, enemy.position);
       if (distance < result) result = distance;
     });
