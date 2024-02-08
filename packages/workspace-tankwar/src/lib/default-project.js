@@ -1,10 +1,8 @@
-export default function () {
-  return {
-    fileList: [
-      {
-        id: 'player',
-        name: 'player',
-      },
-    ],
-  };
-}
+export default {
+  fileList: [
+    {
+      id: 'player',
+      name: 'player',
+    },
+  ],
+};

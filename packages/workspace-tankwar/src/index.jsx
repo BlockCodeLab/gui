@@ -5,7 +5,7 @@ import BlocksEditor from './components/blocks-editor/blocks-editor';
 import Sidebar from './components/sidebar/sidebar';
 
 /* assets */
-import getDefaultProject from './lib/default-project';
+import defaultProject from './lib/default-project';
 
 /* languages */
 import en from './l10n/en.yaml';
@@ -31,7 +31,7 @@ export default function PopsicleBlocksWorkspace({
 
   const newProject = () => {
     openProject(
-      Object.assign(getDefaultProject(getText), {
+      Object.assign(defaultProject, {
         selectedIndex: 0,
       })
     );

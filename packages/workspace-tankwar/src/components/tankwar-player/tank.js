@@ -21,6 +21,7 @@ const MAX_SCAN_WIDTH = 40;
 const MAX_SCAN_DISTANCE = 500;
 const MIN_ATTACK_DISTANCE = 70;
 const MAX_ATTACK_DISTANCE = 400;
+const BULLET_STEP = 10;
 const TURN_ROUND_MS = 1000;
 
 const calcDistance = (p1, p2) => Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
@@ -127,6 +128,7 @@ export default class Tank {
     this._speed = 0;
     this._health = 100;
     this._scanWidth = DEFAULT_SCAN_WIDTH;
+    this._turretReady = null;
 
     if (this._scanShape) {
       this._scanShape.remove();
@@ -222,13 +224,11 @@ export default class Tank {
     distance = number(distance);
 
     clearTimeout(this._turretReady);
+    this._turretReady = null;
     await this._turn(this.turretRaster, direction);
 
     const degrees = calcDegrees(direction);
     const radian = degToRad(90 - degrees);
-    let step = 10;
-    let dx = step * Math.cos(radian);
-    let dy = step * Math.sin(radian);
 
     if (!this._imageCache.buttet) {
       this._imageCache.buttet = await loadImage(imageBullet);
@@ -239,7 +239,10 @@ export default class Tank {
     }
     this._bulletRaster = new paperCore.Raster({
       image: this._imageCache.buttet,
-      position: this.raster.position,
+      position: new paperCore.Point(
+        this.raster.position.x + 50 * Math.cos(radian),
+        this.raster.position.y - 50 * Math.sin(radian)
+      ),
       rotation: this.raster.rotation,
       scaling: this.raster.scaling,
     });
@@ -247,15 +250,17 @@ export default class Tank {
     distance = clamp(distance, MIN_ATTACK_DISTANCE, MAX_ATTACK_DISTANCE);
 
     const half = distance / 2;
-    const scaling = step / distance / 2;
+    const scaling = BULLET_STEP / distance / 2;
 
+    let dx = BULLET_STEP * Math.cos(radian);
+    let dy = BULLET_STEP * Math.sin(radian);
     while (distance > 0) {
       await this.sleep(15);
-      if (distance < step) {
+      if (distance < BULLET_STEP) {
         dx = distance * Math.cos(radian);
         dy = distance * Math.sin(radian);
       }
-      distance -= step;
+      distance -= BULLET_STEP;
       this._bulletRaster.position.x += dx;
       this._bulletRaster.position.y -= dy;
       this._bulletRaster.scaling.x += distance > half ? scaling : -scaling;
@@ -275,7 +280,10 @@ export default class Tank {
     });
     this._bulletRaster.remove();
     this._bulletRaster = null;
-    this._turretReady = setTimeout(() => this._turn(this.turretRaster, this.raster.rotation), 1000);
+    this._turretReady = setTimeout(() => {
+      this._turn(this.turretRaster, this.raster.rotation);
+      this._turretReady = null;
+    }, 1000);
   }
 
   async _boom(position) {
@@ -379,8 +387,9 @@ export default class Tank {
   async setDirection(direction) {
     if (!this.running) return;
     direction = Math.round(number(direction));
-    clearTimeout(this._turretReady);
-    this._turn(this.turretRaster, direction);
+    if (!this._turretReady) {
+      this._turn(this.turretRaster, direction);
+    }
     await this._turn(this.raster, direction);
   }
 

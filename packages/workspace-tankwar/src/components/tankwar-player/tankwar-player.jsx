@@ -21,7 +21,9 @@ export function TankwarPlayer({ playing, enemies, enemiesAI, onRequestStop, onCh
       if (!currentRuntime) {
         // start
         const ai = [];
-        ai.push(AIs[enemiesAI.red]('red', Date.now().toString(36)));
+        if (enemies > 0) {
+          ai.push(AIs[enemiesAI.red]('red', Date.now().toString(36)));
+        }
         if (enemies > 1) {
           ai.push(AIs[enemiesAI.yellow]('yellow', Date.now().toString(36)));
         }
@@ -59,12 +61,13 @@ export function TankwarPlayer({ playing, enemies, enemiesAI, onRequestStop, onCh
           if (item.util instanceof Tank || item.owner instanceof Tank) return;
           item.remove();
         });
-        if (enemies === 1) {
+        if (enemies > 0) {
           tanks.red.util.place = Tank.PLACE.RIGHT;
         } else {
-          tanks.red.util.place = Tank.PLACE.RIGHT_TOP;
+          tanks.yellow.util.hidden = true;
         }
         if (enemies > 1) {
+          tanks.red.util.place = Tank.PLACE.RIGHT_TOP;
           tanks.yellow.util.place = Tank.PLACE.RIGHT_BOTTOM;
         } else {
           tanks.yellow.util.hidden = true;

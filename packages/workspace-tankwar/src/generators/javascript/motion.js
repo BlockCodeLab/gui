@@ -18,7 +18,7 @@ javascriptGenerator['motion_move'] = (block) => {
   }
   const directionValue = javascriptGenerator.valueToCode(block, 'DIRECTION', javascriptGenerator.ORDER_NONE) || 0;
   const speedValue = javascriptGenerator.valueToCode(block, 'SPEED', javascriptGenerator.ORDER_NONE) || 100;
-  code += `tank.util.move(${directionValue}, ${speedValue});\n`;
+  code += `await tank.util.move(${directionValue}, ${speedValue});\n`;
   return code;
 };
 
