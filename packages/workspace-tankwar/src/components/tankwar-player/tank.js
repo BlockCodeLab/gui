@@ -22,6 +22,7 @@ const MAX_SCAN_DISTANCE = 500;
 const MIN_ATTACK_DISTANCE = 70;
 const MAX_ATTACK_DISTANCE = 400;
 const BULLET_STEP = 10;
+const BULLET_SKIP_DISTANCE = 50;
 const TURN_ROUND_MS = 1000;
 
 const calcDistance = (p1, p2) => Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
@@ -221,7 +222,7 @@ export default class Tank {
     if (this._bulletRaster || this.death) return;
 
     direction = Math.round(number(direction));
-    distance = number(distance);
+    distance = number(distance) - BULLET_SKIP_DISTANCE;
 
     clearTimeout(this._turretReady);
     this._turretReady = null;
@@ -237,11 +238,12 @@ export default class Tank {
       this._bulletRaster.remove();
       this._bulletRaster = null;
     }
+
     this._bulletRaster = new paperCore.Raster({
       image: this._imageCache.buttet,
       position: new paperCore.Point(
-        this.raster.position.x + 50 * Math.cos(radian),
-        this.raster.position.y - 50 * Math.sin(radian)
+        this.raster.position.x + BULLET_SKIP_DISTANCE * Math.cos(radian),
+        this.raster.position.y - BULLET_SKIP_DISTANCE * Math.sin(radian)
       ),
       rotation: this.raster.rotation,
       scaling: this.raster.scaling,
