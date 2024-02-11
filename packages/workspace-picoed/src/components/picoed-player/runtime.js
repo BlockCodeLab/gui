@@ -1,4 +1,5 @@
 import { Runtime as BaseRuntime, paperCore } from '@blockcode/blocks-player';
+import { Tone, Music } from '@blockcode/tone-player';
 import { base64ToUint8Array } from '../../lib/base64-util';
 import { fonts } from './fonts';
 
@@ -7,7 +8,21 @@ export default class Runtime extends BaseRuntime {
   static LEDS_ROWS = 7;
   static BLANK_MATRIX = new Array(Runtime.LEDS_COLS).fill(0);
 
+  get tone() {
+    if (!this._tone) {
+      this._tone = new Tone({ type: 'square' });
+    }
+    return this._tone;
+  }
+
+  get Music() {
+    return Music;
+  }
+
   stop() {
+    if (this._tone) {
+      this._tone.stop();
+    }
     super.stop();
     this.led = false;
     this.matrix = Runtime.BLANK_MATRIX;
@@ -15,6 +30,18 @@ export default class Runtime extends BaseRuntime {
 
   get picoed() {
     return paperCore.project.activeLayer.children;
+  }
+
+  get aPressed() {
+    return this.picoed.A.data.pressed;
+  }
+
+  get bPressed() {
+    return this.picoed.B.data.pressed;
+  }
+
+  get anyPressed() {
+    return this.aPressed || this.bPressed;
   }
 
   get led() {
@@ -28,7 +55,7 @@ export default class Runtime extends BaseRuntime {
       this.picoed.led.fillColor = 'red';
       this.picoed.led.shadowColor = 'red';
     } else {
-      this.picoed.led.fillColor = 'black';
+      this.picoed.led.fillColor = 'rgba(0, 0, 0, 0.15)';
       this.picoed.led.shadowColor = null;
     }
   }

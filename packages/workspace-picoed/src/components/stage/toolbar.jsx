@@ -19,7 +19,7 @@ export default function Toolbar({ playing, onPlay, onStop }) {
             [styles.actived]: playing,
           })}
           src={iconGreenFlag}
-          title={getText('popsicle.blocks.greenFlag', 'Go')}
+          title={getText('picoed.greenFlag', 'Go')}
           onClick={onPlay}
         />
         <img
@@ -27,7 +27,7 @@ export default function Toolbar({ playing, onPlay, onStop }) {
             [styles.actived]: playing,
           })}
           src={iconStopAll}
-          title={getText('popsicle.blocks.stopAll', 'Stop')}
+          title={getText('picoed.stopAll', 'Stop')}
           onClick={onStop}
         />
       </div>
@@ -38,7 +38,7 @@ export default function Toolbar({ playing, onPlay, onStop }) {
         >
           <img
             src={iconSmallStage}
-            title={getText('popsicle.blocks.smallStage', 'Switch to small stage')}
+            title={getText('picoed.blocks.smallStage', 'Switch to small stage')}
           />
         </Button>
         <Button
@@ -47,7 +47,7 @@ export default function Toolbar({ playing, onPlay, onStop }) {
         >
           <img
             src={iconLargeStage}
-            title={getText('popsicle.blocks.largeStage', 'Switch to large stage')}
+            title={getText('picoed.blocks.largeStage', 'Switch to large stage')}
           />
         </Button>
       </div> */}

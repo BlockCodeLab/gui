@@ -1,6 +1,6 @@
 import { useState } from 'preact/hooks';
 import { useEditor } from '@blockcode/core';
-import { BlocksPlayer, paperCore, javascriptGenerator } from '@blockcode/blocks-player';
+import { BlocksPlayer, paperCore } from '@blockcode/blocks-player';
 
 import Runtime from './runtime';
 import generate from './generate';
@@ -48,7 +48,7 @@ export function PicoedPlayer({ playing, onRequestStop }) {
     new paperCore.Raster({
       source: picoedImage,
       position: paperCore.view.center,
-      scaling: new paperCore.Point(0.8, 0.8),
+      scaling: 0.8,
     });
 
     // led
@@ -56,8 +56,8 @@ export function PicoedPlayer({ playing, onRequestStop }) {
       name: 'led',
       center: [176, 77],
       radius: 3,
-      fillColor: 'black',
-      shadowBlur: 12,
+      fillColor: 'rgba(0, 0, 0, 0.15)',
+      shadowBlur: 8,
     });
 
     // leds matrix
@@ -75,23 +75,38 @@ export function PicoedPlayer({ playing, onRequestStop }) {
     }
 
     // buttons
+    const buttonProps = {
+      size: [13, 19],
+      fillColor: 'white',
+      onMouseEnter() {
+        if (!this.data.pressed) {
+          this.fillColor = 'rgba(0, 0, 0, 0.05)';
+        } else {
+          this.fillColor = 'rgba(255, 0, 0, 0.15)';
+        }
+      },
+      onMouseDown() {
+        this.data.pressed = true;
+        this.fillColor = 'rgba(255, 0, 0, 0.15)';
+      },
+      onMouseUp() {
+        this.data.pressed = false;
+        this.fillColor = 'rgba(0, 0, 0, 0.05)';
+      },
+      onMouseLeave() {
+        this.data.pressed = false;
+        this.fillColor = 'white';
+      },
+    };
     new paperCore.Path.Ellipse({
       name: `A`,
       point: [75.3, 156],
-      size: [13, 19],
-      fillColor: 'white',
-      onClick() {
-        console.log('A');
-      },
+      ...buttonProps,
     });
     new paperCore.Path.Ellipse({
       name: `B`,
       point: [332.8, 156],
-      size: [13, 19],
-      fillColor: 'white',
-      onClick() {
-        console.log('B');
-      },
+      ...buttonProps,
     });
   };
 
