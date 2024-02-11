@@ -298,14 +298,14 @@ const looks = (isStage, targetId, costumeName, backdropName) => `
 
 const sound = (soundName) => `
   <category name="%{BKY_CATEGORY_SOUND}" id="sound" colour="#D65CD6" secondaryColour="#BD42BD">
-    <block id="sound_playuntildone" type="sound_playuntildone">
+    <block type="sound_playuntildone">
       <value name="SOUND_MENU">
         <shadow type="sound_sounds_menu">
           <field name="SOUND_MENU">${soundName}</field>
         </shadow>
       </value>
     </block>
-    <block id="sound_play" type="sound_play">
+    <block type="sound_play">
       <value name="SOUND_MENU">
         <shadow type="sound_sounds_menu">
           <field name="SOUND_MENU">${soundName}</field>

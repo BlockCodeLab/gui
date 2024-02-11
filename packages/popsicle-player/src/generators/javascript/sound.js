@@ -27,11 +27,9 @@ javascriptGenerator['sound_playuntildone'] = (block) => {
 
 javascriptGenerator['sound_stopallsounds'] = (block) => {
   let code = '';
-
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-
   code += `await runtime.tone.stop()\n`;
   return code;
 };

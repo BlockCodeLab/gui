@@ -58,7 +58,9 @@ export default class Runtime extends BaseRuntime {
   }
 
   stop() {
-    this.tone.stop();
+    if (this._tone) {
+      this._tone.stop();
+    }
     super.stop();
   }
 }
