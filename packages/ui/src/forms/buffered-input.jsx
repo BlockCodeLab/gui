@@ -8,8 +8,8 @@ export function BufferedInput({ value, forceFocus, onSubmit, ...props }) {
   const handleFlush = (e) => {
     const isNumeric = typeof value === 'number';
     const validatesNumeric = isNumeric ? !isNaN(bufferedValue) : true;
-    if (bufferedValue !== null && validatesNumeric) {
-      onSubmit && onSubmit(isNumeric ? Number(bufferedValue) : bufferedValue);
+    if (bufferedValue !== null && validatesNumeric && onSubmit) {
+      onSubmit(isNumeric ? Number(bufferedValue) : bufferedValue);
     }
     setBufferedValue(null);
     if (e && forceFocus) e.target.focus();

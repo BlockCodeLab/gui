@@ -1,9 +1,11 @@
 import classNames from 'classnames';
 import { useEffect, useRef } from 'preact/hooks';
-import { createPopper } from '@popperjs/core';
+import { createPopper } from '@popperjs/core/lib/popper-lite';
+import offsetModifier from '@popperjs/core/lib/modifiers/offset';
+import arrowModifier from '@popperjs/core/lib/modifiers/arrow';
 import styles from './tooltip.module.css';
 
-export function Tooltip({ content, className, placement, offset, children }) {
+export function Tooltip({ content, className, placement, offset, clickable, children, onShow, onHide }) {
   const tooltipRef = useRef(null);
 
   const tooltipId = `${Math.random().toString(36).slice(2)}_tooltip`;
@@ -16,6 +18,8 @@ export function Tooltip({ content, className, placement, offset, children }) {
       const popper = createPopper(tooltipForElement, tooltipRef.current, {
         placement: placement || 'auto',
         modifiers: [
+          arrowModifier,
+          offsetModifier,
           {
             name: 'offset',
             options: {
@@ -24,6 +28,7 @@ export function Tooltip({ content, className, placement, offset, children }) {
           },
         ],
       });
+      tooltipRef.popper = popper;
 
       const show = () => {
         tooltipRef.current.dataset.show = true;
@@ -32,6 +37,7 @@ export function Tooltip({ content, className, placement, offset, children }) {
           modifiers: [...options.modifiers, { name: 'eventListeners', enabled: true }],
         }));
         popper.update();
+        if (onShow) onShow();
       };
 
       const hide = () => {
@@ -40,10 +46,28 @@ export function Tooltip({ content, className, placement, offset, children }) {
           ...options,
           modifiers: [...options.modifiers, { name: 'eventListeners', enabled: false }],
         }));
+        if (onHide) onHide();
       };
 
-      ['mouseenter', 'focus'].forEach((event) => tooltipForElement.addEventListener(event, show));
-      ['mouseleave', 'blur'].forEach((event) => tooltipForElement.addEventListener(event, hide));
+      if (clickable) {
+        const clickShow = () => {
+          show();
+          const clickHide = () => {
+            hide();
+            document.removeEventListener('mousedown', clickHide);
+          };
+          document.addEventListener('mousedown', clickHide);
+        };
+        tooltipForElement.addEventListener('mouseup', clickShow);
+        tooltipRef.current.addEventListener('mousedown', (e) => e.stopPropagation());
+      } else {
+        [
+          ['mouseenter', show],
+          ['focus', show],
+          ['mouseleave', hide],
+          ['blur', hide],
+        ].forEach(([event, listener]) => tooltipForElement.addEventListener(event, listener));
+      }
     }
     return () => {};
   }, [tooltipRef]);

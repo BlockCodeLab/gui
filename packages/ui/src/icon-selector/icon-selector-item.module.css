@@ -6,9 +6,7 @@
 
   font-size: 0.8rem;
   color: var(--text-primary);
-  border-width: 2px;
-  border-style: solid;
-  border-color: var(--ui-black-transparent);
+  border: 2px solid var(--ui-black-transparent);
   border-radius: var(--space);
 
   text-align: center;

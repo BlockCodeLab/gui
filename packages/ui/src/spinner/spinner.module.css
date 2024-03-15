@@ -7,7 +7,7 @@
   border-width: 0.1875rem;
   border-style: solid;
   border-color: var(--ui-white-transparent);
-  box-sizing: content-box;
+  box-sizing: content-box !important;
 }
 
 .spinner::before,

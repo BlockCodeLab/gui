@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import styles from './button.module.css';
 
-export function Button({ className, disabled, onClick, children }) {
+export function Button({ className, vertical, disabled, onClick, children }) {
   const handleClick = disabled ? () => {} : onClick;
   return (
     <button
@@ -11,7 +11,13 @@ export function Button({ className, disabled, onClick, children }) {
       onClick={handleClick}
       disabled={disabled}
     >
-      <div className={styles.content}>{children}</div>
+      <div
+        className={classNames(styles.content, {
+          [styles.verticalContent]: vertical,
+        })}
+      >
+        {children}
+      </div>
     </button>
   );
 }

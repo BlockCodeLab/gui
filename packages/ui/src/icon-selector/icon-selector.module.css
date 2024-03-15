@@ -1,8 +1,6 @@
 .icon-selector-wrapper {
-  flex: 1;
   background: var(--ui-white-transparent);
-  overflow-y: auto;
-  height: 100%;
+  overflow: auto;
 }
 
 .items-wrapper {
@@ -11,7 +9,7 @@
   flex-direction: row;
   padding: calc(var(--space) / 2);
   padding-bottom: var(--space);
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .icon-item {

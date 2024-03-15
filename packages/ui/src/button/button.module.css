@@ -14,7 +14,13 @@
   white-space: nowrap;
   width: 100%;
   display: flex;
+  flex-direction: row;
   align-items: center;
+  justify-content: center;
+}
+
+.vertical-content {
+  flex-direction: column;
 }
 
 .disabled {

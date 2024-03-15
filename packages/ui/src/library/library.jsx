@@ -7,10 +7,19 @@ import { LibraryItem } from './library-item';
 
 import styles from './library.module.css';
 
-export function Library({ title, filterable, filterPlaceholder, emptyText, tags, items, onClose }) {
+export function Library({
+  loading: defaultLoading,
+  title,
+  filterable,
+  filterPlaceholder,
+  emptyText,
+  tags,
+  items,
+  onClose,
+}) {
   const [data, setData] = useState([]);
   const [query, setQuery] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(defaultLoading || false);
 
   useEffect(() => {
     setData(items);

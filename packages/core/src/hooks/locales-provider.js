@@ -65,6 +65,7 @@ export function useLocale() {
     getText(id, defaultMessage, option = {}) {
       if (typeof defaultMessage === 'object') {
         option = defaultMessage;
+        defaultMessage = option.defaultMessage;
       }
       return translator.translate(id, {
         ...option,
