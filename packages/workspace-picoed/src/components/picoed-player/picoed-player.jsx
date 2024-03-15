@@ -17,6 +17,7 @@ export function PicoedPlayer({ playing, onRequestStop }) {
     const picoedItems = paperCore.project.activeLayer.children;
 
     if (playing) {
+      let handleKeyPress = null;
       if (!currentRuntime) {
         // start
         const code = generate(picoed.script);
@@ -31,6 +32,17 @@ export function PicoedPlayer({ playing, onRequestStop }) {
           runtime.emit('keypressed_b');
           runtime.emit('keypressed_any');
         };
+        handleKeyPress = (e) => {
+          if (e.key === 'a') {
+            runtime.emit('keypressed_a');
+            runtime.emit('keypressed_any');
+          }
+          if (e.key === 'b') {
+            runtime.emit('keypressed_b');
+            runtime.emit('keypressed_any');
+          }
+        };
+        document.addEventListener('keypress', handleKeyPress);
       }
     } else {
       if (currentRuntime) {
@@ -39,6 +51,8 @@ export function PicoedPlayer({ playing, onRequestStop }) {
         setCurrentRuntime(false);
         picoedItems.A.onClick = null;
         picoedItems.B.onClick = null;
+        document.removeEventListener('keypress', handleKeyPress);
+        handleKeyPress = null;
       }
     }
   }
@@ -98,15 +112,35 @@ export function PicoedPlayer({ playing, onRequestStop }) {
         this.fillColor = 'white';
       },
     };
-    new paperCore.Path.Ellipse({
+    const buttonA = new paperCore.Path.Ellipse({
       name: `A`,
       point: [75.3, 156],
       ...buttonProps,
     });
-    new paperCore.Path.Ellipse({
+    const buttonB = new paperCore.Path.Ellipse({
       name: `B`,
       point: [332.8, 156],
       ...buttonProps,
+    });
+    document.addEventListener('keydown', ({ key }) => {
+      if (key === 'a') {
+        buttonA.data.pressed = true;
+        buttonA.fillColor = 'rgba(255, 0, 0, 0.15)';
+      }
+      if (key === 'b') {
+        buttonB.data.pressed = true;
+        buttonB.fillColor = 'rgba(255, 0, 0, 0.15)';
+      }
+    });
+    document.addEventListener('keyup', ({ key }) => {
+      if (key === 'a') {
+        buttonA.data.pressed = false;
+        buttonA.fillColor = 'white';
+      }
+      if (key === 'b') {
+        buttonB.data.pressed = false;
+        buttonB.fillColor = 'white';
+      }
     });
   };
 
