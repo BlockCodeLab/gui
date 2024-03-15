@@ -22,6 +22,7 @@ blocks.backpackPane.title: 书包
 
 blocks.downloadToDevice: 下载
 blocks.extensions.addExtension: 添加扩展
+blocks.extensions.empty: 没有扩展！
 
 blocks.dataPrompt.forAllTargets: 适用于全局
 blocks.dataPrompt.forThisTarget: 仅适用于当前

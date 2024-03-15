@@ -77,7 +77,18 @@ export default function BlocksWorkspace({
       removeAlert,
     }),
 
-    tabs: [CodeTab],
+    tabs: [
+      {
+        ...CodeTab,
+        Content: () => (
+          <BlocksEditor
+            onShowPrompt={setPrompt}
+            onShowAlert={setAlert}
+            onHideAlert={removeAlert}
+          />
+        ),
+      },
+    ],
 
     sidebars: [],
 

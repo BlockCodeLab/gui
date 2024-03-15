@@ -1,16 +1,21 @@
 import { useState } from 'preact/hooks';
 import { useLocale, useEditor } from '@blockcode/core';
-import { classNames, ComingSoon } from '@blockcode/ui';
+import { classNames } from '@blockcode/ui';
 import { BlocksEditor as Editor, ScratchBlocks, makeToolboxXML } from '@blockcode/blocks-editor';
 import { pythonGenerator } from '../../generators/python';
+import loadExtension from '../../lib/load-extension';
 
 import DataPrompt from '../data-prompt/data-prompt';
+import ExtensionLibrary from '../extension-library/extension-library';
 
 import styles from './blocks-editor.module.css';
 import iconAddExtension from './icon-add-extension.svg';
 
+const loadedExtensions = new Map();
+let selectedCategoryId;
+
 export default function BlocksEditor({
-  toolbox,
+  toolbox: defaultToolbox,
   messages,
   xml,
   enableMultiTargets,
@@ -18,11 +23,16 @@ export default function BlocksEditor({
   disableGenerator,
   disableExtension,
   onChange,
+  onLoadExtension,
+  onShowPrompt,
+  onShowAlert,
+  onHideAlert,
 }) {
-  const { getText } = useLocale();
+  const { addLocaleData, getText } = useLocale();
   const { fileList, selectedIndex, modifyFile } = useEditor();
   const [workspace, setWorkspace] = useState();
   const [prompt, setPrompt] = useState(false);
+  const [extensionLibraryOpen, setExtensionLibrary] = useState(false);
 
   messages = {
     EVENT_WHENPROGRAMSTART: getText('blocks.event.programStart', 'when program start'),
@@ -43,8 +53,7 @@ export default function BlocksEditor({
     setPrompt(prompt);
   };
 
-  toolbox = toolbox || makeToolboxXML();
-  if (!xml && selectedIndex !== -1) {
+  if (selectedIndex !== -1 && !xml) {
     const file = fileList[selectedIndex];
     xml = file && file.xml;
   }
@@ -65,32 +74,58 @@ export default function BlocksEditor({
         }
         return false;
       }
-
       return true;
     });
   }
 
-  const handleChange =
-    onChange ||
-    ((xml, workspace) => {
-      const modifies = { xml };
-      if (!disableGenerator) {
-        modifies.content = pythonGenerator.workspaceToCode(workspace);
-      }
-      modifyFile(modifies);
-    });
+  let toolboxXML = defaultToolbox || makeToolboxXML();
+  loadedExtensions.forEach((extensionObject) => {
+    toolboxXML += loadExtension(extensionObject, getText);
+  });
+
+  const handleChange = (newXml, workspace) => {
+    if (!disableGenerator) {
+      const newCode = pythonGenerator.workspaceToCode(workspace);
+      modifyFile({
+        xml: newXml,
+        content: newCode,
+      });
+      console.log(newCode);
+    }
+    if (onChange) {
+      onChange(newXml, workspace);
+    }
+  };
 
   const handlePromptSubmit = (input, options) => {
     prompt.callback(input, [], options);
     setPrompt(false);
   };
-
   const handlePromptClose = () => setPrompt(false);
+
+  const handleExtensionLibraryOpen = () => setExtensionLibrary(true);
+  const handleExtensionLibraryClose = () => setExtensionLibrary(false);
+
+  const handleSelectExtension = (extensionObject) => {
+    addLocaleData(extensionObject.translations);
+    if (onLoadExtension) {
+      onLoadExtension(extensionObject);
+    }
+    loadedExtensions.set(extensionObject.id, extensionObject);
+    selectedCategoryId = extensionObject.id;
+  };
+
+  if (selectedCategoryId) {
+    setTimeout(() => {
+      workspace.toolbox_.setSelectedCategoryById(selectedCategoryId);
+      selectedCategoryId = null;
+    }, 1);
+  }
 
   return (
     <div className={styles.editorWrapper}>
       <Editor
-        toolbox={toolbox}
+        toolbox={toolboxXML}
         messages={messages}
         xml={xml}
         variables={variables}
@@ -99,17 +134,16 @@ export default function BlocksEditor({
       />
       {disableExtension ? null : (
         <div className={classNames('scratchCategoryMenu', styles.extensionButton)}>
-          <ComingSoon>
-            <button
-              className={styles.addButton}
-              title={getText('blocks.extensions.addExtension', 'Add Extension')}
-            >
-              <img
-                src={iconAddExtension}
-                title="Add Extension"
-              />
-            </button>
-          </ComingSoon>
+          <button
+            className={styles.addButton}
+            title={getText('blocks.extensions.addExtension', 'Add Extension')}
+            onClick={handleExtensionLibraryOpen}
+          >
+            <img
+              src={iconAddExtension}
+              title="Add Extension"
+            />
+          </button>
         </div>
       )}
       {prompt && (
@@ -123,6 +157,16 @@ export default function BlocksEditor({
           showCloudOption={prompt.showCloudOption}
           onClose={handlePromptClose}
           onSubmit={handlePromptSubmit}
+        />
+      )}
+      {extensionLibraryOpen && (
+        <ExtensionLibrary
+          workspace={workspace}
+          onSelect={handleSelectExtension}
+          onClose={handleExtensionLibraryClose}
+          onShowPrompt={onShowPrompt}
+          onShowAlert={onShowAlert}
+          onHideAlert={onHideAlert}
         />
       )}
     </div>

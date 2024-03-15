@@ -22,6 +22,7 @@ blocks.backpackPane.title: Backpack
 
 blocks.downloadToDevice: Download
 blocks.extensions.addExtension: Add Extension
+blocks.extensions.empty: No extension!
 
 blocks.dataPrompt.forAllTargets: For all targets
 blocks.dataPrompt.forThisTarget: For this target only

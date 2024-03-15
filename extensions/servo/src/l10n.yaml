@@ -1,0 +1,15 @@
+en:
+  extension.servo.name: Servo
+  extension.servo.90servo: set PIN [PIN] 90° servo angle to [ANGLE]°
+  extension.servo.180servo: set PIN [PIN] 180° servo angle to [ANGLE]°
+  extension.servo.motor: set PIN [PIN] 360° servo rotate [ROTATE]
+  extension.servo.motorClockwise: clockwise
+  extension.servo.motorAnticlockwise: anticlockwise
+
+zh-Hans:
+  extension.servo.name: 舵机
+  extension.servo.90servo: 将引脚 [PIN] 90° 舵机角度设为 [ANGLE]°
+  extension.servo.180servo: 将引脚 [PIN] 180° 舵机角度设为 [ANGLE]°
+  extension.servo.motor: 将引脚 [PIN] 360° 舵机转向设为 [ROTATE]
+  extension.servo.motorClockwise: 顺时针
+  extension.servo.motorAnticlockwise: 逆时针
