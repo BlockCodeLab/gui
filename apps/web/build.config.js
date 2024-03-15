@@ -1,4 +1,5 @@
 import { dirname, resolve, extname } from 'node:path';
+import { readdirSync, existsSync } from 'node:fs';
 import CSSLoader from 'bun-loader-css';
 import YamlLoader from 'bun-loader-yaml';
 import IndexPage from 'bun-index-page';
@@ -12,41 +13,26 @@ const DIST_DIR = resolve(PROJECT_ROOT, 'dist');
 const isRelease = Bun.env.BUN_ENV === 'production';
 const isHotServer = !!Bun.env.HOT_SERVER;
 
-const imports = Object.fromEntries(
-  [
-    'preact',
-    'preact/hooks',
-    `preact/jsx-${isRelease ? '' : 'dev-'}runtime`,
-    '@blockcode/core',
-    '@blockcode/ui',
-    '@blockcode/device-pyboard',
-    // codes
-    '@blockcode/code-editor',
-    '@blockcode/workspace-micropython',
-    // blocks
-    '@blockcode/blocks-editor',
-    '@blockcode/blocks-player',
-    '@blockcode/tone-player',
-    '@blockcode/popsicle-player',
-    '@blockcode/workspace-blocks',
-    '@blockcode/workspace-popsicle',
-    '@blockcode/workspace-picoed',
-    '@blockcode/workspace-tankwar',
-  ].map((moduleId) => [
-    moduleId,
-    `./${moduleId.includes('/') ? '' : `${moduleId}/`}${moduleId}${extname(import.meta.resolveSync(moduleId))}`,
-  ])
+const packages = readdirSync(resolve(PROJECT_ROOT, '../../packages'), { withFileTypes: true })
+  .filter((dirent) => dirent.isDirectory())
+  .map((dirent) => `@blockcode/${dirent.name}`);
+
+const extensions = [].concat(
+  ...readdirSync(resolve(PROJECT_ROOT, '../../extensions'), { withFileTypes: true })
+    .filter((dirent) => dirent.isDirectory())
+    .map((dirent) => [`@blockcode/extension-${dirent.name}`, `@blockcode/extension-${dirent.name}/blocks`])
 );
 
-const assets = [
-  '@blockcode/ui',
-  '@blockcode/blocks-editor',
-  '@blockcode/workspace-micropython',
-  '@blockcode/workspace-blocks',
-  '@blockcode/workspace-popsicle',
-  '@blockcode/workspace-picoed',
-  '@blockcode/workspace-tankwar',
-];
+const imports = Object.fromEntries(
+  ['preact', 'preact/hooks', `preact/jsx-${isRelease ? '' : 'dev-'}runtime`]
+    .concat(packages, extensions)
+    .map((moduleId) => [
+      moduleId,
+      `./${moduleId.includes('/') ? '' : `${moduleId}/`}${moduleId}${extname(import.meta.resolveSync(moduleId))}`,
+    ])
+);
+
+const assets = [].concat(packages, extensions);
 
 export default {
   entrypoints: [resolve(SRC_DIR, 'index.jsx')],
@@ -87,12 +73,14 @@ export default {
         watch: isHotServer,
       })
     ),
-    assets.map((moduleId) =>
-      CopyPlugin({
-        from: resolve(dirname(import.meta.resolveSync(moduleId)), 'assets'),
-        to: 'assets/',
-        watch: isHotServer,
-      })
-    )
+    assets
+      .filter((moduleId) => existsSync(resolve(dirname(import.meta.resolveSync(moduleId)), 'assets')))
+      .map((moduleId) =>
+        CopyPlugin({
+          from: resolve(dirname(import.meta.resolveSync(moduleId)), 'assets'),
+          to: 'assets/',
+          watch: isHotServer,
+        })
+      )
   ),
 };

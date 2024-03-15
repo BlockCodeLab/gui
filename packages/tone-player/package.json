@@ -7,6 +7,7 @@
     "dev": "bun-build --watch ./src"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "bun-types": "latest",
+    "bun-build": "link:bun-build"
   }
 }
