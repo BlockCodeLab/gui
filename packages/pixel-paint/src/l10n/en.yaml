@@ -1,0 +1,33 @@
+pixelPaint.contextMenu.duplicate: duplicate
+pixelPaint.contextMenu.export: export
+pixelPaint.contextMenu.delete: delete
+
+pixelPaint.actionButton.upload: Upload Image
+pixelPaint.actionButton.uploadCostume: Upload Costume
+pixelPaint.actionButton.uploadBackdrop: Upload Backdrop
+pixelPaint.actionButton.surprise: Surprise
+pixelPaint.actionButton.paint: Paint
+pixelPaint.actionButton.image: Choose a Image
+pixelPaint.actionButton.costume: Choose a Costume
+pixelPaint.actionButton.backdrop: Choose a Backdrop
+
+pixelPaint.painter.image: Image
+pixelPaint.painter.costume: Costume
+pixelPaint.painter.backdrop: Backdrop
+pixelPaint.painter.name: name
+pixelPaint.painter.undo: Undo
+pixelPaint.painter.redo: Redo
+pixelPaint.painter.pen: Pen
+pixelPaint.painter.eraser: Eraser
+pixelPaint.painter.fill: Fill
+pixelPaint.painter.text: Text
+pixelPaint.painter.line: Line
+pixelPaint.painter.rectangle: Rectangle
+pixelPaint.painter.circle: Circle
+pixelPaint.painter.select: Select
+pixelPaint.painter.center: Center
+pixelPaint.painter.outline: Outline
+
+pixelPaint.colorPicker.color: Color
+pixelPaint.colorPicker.saturation: Saturation
+pixelPaint.colorPicker.brightness: Brightness

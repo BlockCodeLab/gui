@@ -1,0 +1,28 @@
+.sprite-selector {
+  flex: 1;
+  position: relative;
+  background-color: var(--ui-secondary);
+  border-top-right-radius: var(--space);
+  border-top-left-radius: var(--space);
+  border: 1px solid var(--ui-black-transparent);
+  border-bottom: 0;
+}
+
+.selector-items-wrapper {
+  padding-bottom: 70px;
+  width: 400px;
+}
+
+.selector-items-wrapper.small {
+  width: 240px;
+}
+
+.delete-menu-item:hover {
+  background: var(--error-primary);
+}
+
+.add-button {
+  position: absolute;
+  bottom: 0.75rem;
+  right: 1rem;
+}

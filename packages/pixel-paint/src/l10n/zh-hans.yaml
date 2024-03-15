@@ -1,0 +1,33 @@
+pixelPaint.contextMenu.duplicate: 复制
+pixelPaint.contextMenu.export: 导出
+pixelPaint.contextMenu.delete: 删除
+
+pixelPaint.actionButton.upload: 上传图片
+pixelPaint.actionButton.uploadCostume: 上传造型
+pixelPaint.actionButton.uploadBackdrop: 上传背景
+pixelPaint.actionButton.surprise: 随机
+pixelPaint.actionButton.paint: 绘制
+pixelPaint.actionButton.image: 选择一个图片
+pixelPaint.actionButton.costume: 选择一个造型
+pixelPaint.actionButton.backdrop: 选择一个背景
+
+pixelPaint.painter.image: 图片
+pixelPaint.painter.costume: 造型
+pixelPaint.painter.backdrop: 背景
+pixelPaint.painter.name: 名字
+pixelPaint.painter.undo: 撤销
+pixelPaint.painter.redo: 重做
+pixelPaint.painter.pen: 画笔
+pixelPaint.painter.eraser: 橡皮擦
+pixelPaint.painter.fill: 填充
+pixelPaint.painter.text: 文本
+pixelPaint.painter.line: 线段
+pixelPaint.painter.rectangle: 矩形
+pixelPaint.painter.circle: 圆形
+pixelPaint.painter.select: 选择
+pixelPaint.painter.center: 中心
+pixelPaint.painter.outline: 轮廓
+
+pixelPaint.colorPicker.color: 颜色
+pixelPaint.colorPicker.saturation: 饱和度
+pixelPaint.colorPicker.brightness: 亮度

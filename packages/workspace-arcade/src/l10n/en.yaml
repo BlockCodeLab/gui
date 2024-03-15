@@ -1,0 +1,68 @@
+blocks.dataPrompt.forAllTargets: For all sprites
+blocks.dataPrompt.forThisTarget: For this sprite only
+blocks.dataPrompt.availableToAllTargets: This variable will be available to all sprites.
+blocks.dataPrompt.listAvailableToAllTargets: This list will be available to all sprites.
+
+arcade.pixelPaint.default: Painter
+arcade.pixelPaint.costumes: Costumes
+arcade.pixelPaint.backdrops: Backdrops
+
+arcade.greenFlag: Go
+arcade.stopAll: Stop
+arcade.smallStage: Switch to small stage
+arcade.largeStage: Switch to large stage
+
+arcade.contextMenu.duplicate: duplicate
+arcade.contextMenu.export: export
+arcade.contextMenu.delete: delete
+arcade.actionButton.uploadSprite: Upload Sprite
+arcade.actionButton.uploadBackdrop: Upload Backdrop
+arcade.actionButton.surprise: Surprise
+arcade.actionButton.paint: Paint
+arcade.actionButton.sprite: Choose a Sprite
+arcade.actionButton.backdrop: Choose a Backdrop
+
+arcade.stageSelector.title: Stage
+arcade.stageSelector.backdrops: Backdrops
+
+arcade.spriteInfo.sprite: Sprite
+arcade.spriteInfo.name: name
+arcade.spriteInfo.x: X
+arcade.spriteInfo.y: Y
+arcade.spriteInfo.display: Show
+arcade.spriteInfo.show: Show sprite
+arcade.spriteInfo.hide: Hide sprite
+arcade.spriteInfo.size: Size
+arcade.spriteInfo.direction: Direction
+
+arcade.defaultProject.stageName: Stage
+arcade.defaultProject.spriteName: Sprite1
+arcade.defaultProject.backdropName: backdrop1
+arcade.defaultProject.costumeName1: costume1
+arcade.defaultProject.costumeName2: costume2
+
+arcade.blocks.fnButton: fn
+arcade.blocks.stopOther: other scripts in sprite
+arcade.blocks.sensingOfDistanceto.center: center
+arcade.blocks.soundEffects.tempo: tempo
+arcade.blocks.musicMenu.dadadadum: dadadadum
+arcade.blocks.musicMenu.entertainer: entertainer
+arcade.blocks.musicMenu.prelude: prelude
+arcade.blocks.musicMenu.ode: ode
+arcade.blocks.musicMenu.nyan: nyan
+arcade.blocks.musicMenu.ringtone: ringtone
+arcade.blocks.musicMenu.funk: funk
+arcade.blocks.musicMenu.blues: blues
+arcade.blocks.musicMenu.birthday: birthday
+arcade.blocks.musicMenu.wedding: wedding
+arcade.blocks.musicMenu.funeral: funeral
+arcade.blocks.musicMenu.punchline: punchline
+arcade.blocks.musicMenu.python: python
+arcade.blocks.musicMenu.baddy: baddy
+arcade.blocks.musicMenu.chase: chase
+arcade.blocks.musicMenu.baDing: ba ding
+arcade.blocks.musicMenu.wawawawaa: wawawawaa
+arcade.blocks.musicMenu.jumpUp: jump up
+arcade.blocks.musicMenu.jumpDown: jump down
+arcade.blocks.musicMenu.powerUp: power up
+arcade.blocks.musicMenu.powerDown: power down
