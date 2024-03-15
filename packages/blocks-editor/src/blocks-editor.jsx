@@ -49,10 +49,12 @@ const supportedEvents = new Set([
   ScratchBlocks.Events.VAR_RENAME,
 ]);
 
+const makeXml = (toolbox) => `<xml style="display: none">\n${toolbox}\n</xml>`;
+
 export function BlocksEditor({ toolbox, messages, xml, variables, onWorkspaceCreated, onChange }) {
   const ref = useRef(null);
   const { language } = useLocale();
-  const [currentXml, setCurrentXml] = useState();
+  const [currentXml, setCurrentXml] = useState(xml);
   const [currentToolbox, setCurrentToolbox] = useState();
 
   const locale = unifyLocale(language);
@@ -102,7 +104,7 @@ export function BlocksEditor({ toolbox, messages, xml, variables, onWorkspaceCre
     ScratchBlocks.DropDownDiv.hideWithoutAnimation();
 
     setTimeout(() => {
-      ref.workspace.updateToolbox(toolbox);
+      ref.workspace.updateToolbox(makeXml(toolbox));
       loadXmlToWorkspace(true);
 
       const currentCategoryPos = ref.workspace.toolbox_.getCategoryPositionById(categoryId);
@@ -117,16 +119,18 @@ export function BlocksEditor({ toolbox, messages, xml, variables, onWorkspaceCre
   };
 
   const handleChange = () => {
-    if (ref.workspace && onChange) {
+    if (ref.workspace) {
       const xmlDom = ScratchBlocks.Xml.workspaceToDom(ref.workspace);
       // exclude broadcast messages variables
-      const xml = ScratchBlocks.Xml.domToText(xmlDom).replace(
+      const newXml = ScratchBlocks.Xml.domToText(xmlDom).replace(
         /<variable type="broadcast_msg"[^>]+>[^<]+<\/variable>/gi,
-        ''
+        '',
       );
-      if (xml !== currentXml) {
-        onChange(xml, ref.workspace);
-        setCurrentXml(xml);
+      if (newXml !== currentXml) {
+        setCurrentXml(newXml);
+        if (onChange) {
+          onChange(newXml, ref.workspace);
+        }
       }
     }
   };
@@ -142,9 +146,9 @@ export function BlocksEditor({ toolbox, messages, xml, variables, onWorkspaceCre
       ref.workspace = ScratchBlocks.inject(
         ref.current,
         Object.assign({}, BLOCKS_DEFAULT_OPTIONS, {
-          toolbox,
+          toolbox: makeXml(toolbox),
           media: './assets/blocks-media/',
-        })
+        }),
       );
       if (onWorkspaceCreated) {
         onWorkspaceCreated(ref.workspace);

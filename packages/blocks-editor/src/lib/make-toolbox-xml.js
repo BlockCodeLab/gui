@@ -271,9 +271,6 @@ const myBlocks = () => `
   </category>
 `;
 
-const xmlOpen = '<xml style="display: none">';
-const xmlClose = '</xml>';
-
 export default function makeToolboxXML(categoriesXML = []) {
   categoriesXML = categoriesXML.slice();
   const moveCategory = (categoryId) => {
@@ -296,7 +293,6 @@ export default function makeToolboxXML(categoriesXML = []) {
   // const myBlocksXML = moveCategory('procedures') || myBlocks();
 
   const everything = [
-    xmlOpen,
     motionXML,
     looksXML,
     soundXML,
@@ -311,7 +307,5 @@ export default function makeToolboxXML(categoriesXML = []) {
   for (const extensionCategory of categoriesXML) {
     everything.push(extensionCategory.xml);
   }
-
-  everything.push(xmlClose);
   return everything.join(`\n`);
 }
