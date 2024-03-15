@@ -11,9 +11,8 @@ import defaultProject from './lib/default-project';
 import en from './l10n/en.yaml';
 import zhHans from './l10n/zh-hans.yaml';
 
-export default function PopsicleBlocksWorkspace({
+export default function PicoedBlocksWorkspace({
   addLocaleData,
-  getText,
   setLayout,
   openStoreLibrary,
   closeStoreLibrary,
@@ -51,7 +50,13 @@ export default function PopsicleBlocksWorkspace({
     tabs: [
       {
         ...CodeTab,
-        Content: BlocksEditor,
+        Content: () => (
+          <BlocksEditor
+            onShowPrompt={setPrompt}
+            onShowAlert={setAlert}
+            onHideAlert={removeAlert}
+          />
+        ),
       },
     ],
 

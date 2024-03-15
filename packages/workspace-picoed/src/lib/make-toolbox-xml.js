@@ -27,12 +27,38 @@ const xmlEscape = (unsafe) => {
 
 const looks = () => `
   <category name="%{BKY_CATEGORY_LOOKS}" id="looks" colour="#9966FF" secondaryColour="#774DCB">
-    <block type="looks_led"/>
+    <block type="looks_led_state"/>
+    <block type="looks_toggle_led"/>
     ${blockSeparator}
     <block type="looks_text">
-      <value name="MESSAGE">
+      <value name="TEXT">
         <shadow type="text">
-          <field name="TEXT">${ScratchBlocks.Msg.LOOKS_HELLO}</field>
+          <field name="TEXT">Hello!</field>
+        </shadow>
+      </value>
+    </block>
+    <block type="looks_brightness">
+      <value name="BRIGHTNESS">
+        <shadow type="math_whole_number">
+          <field name="NUM">10</field>
+        </shadow>
+      </value>
+    </block>
+    ${blockSeparator}
+    <block type="looks_xy">
+      <value name="X">
+        <shadow type="math_whole_number">
+          <field name="NUM">1</field>
+        </shadow>
+      </value>
+      <value name="Y">
+        <shadow type="math_whole_number">
+          <field name="NUM">1</field>
+        </shadow>
+      </value>
+      <value name="BRIGHTNESS">
+        <shadow type="math_whole_number">
+          <field name="NUM">10</field>
         </shadow>
       </value>
     </block>

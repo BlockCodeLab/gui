@@ -1,9 +1,13 @@
 picoed.greenFlag: 运行
 picoed.stopAll: 停止
 
-picoed.blocks.setLed: 将 LED 设为
-picoed.blocks.led.on: 开
-picoed.blocks.led.off: 关
+picoed.blocks.ledState: 将 LED 状态设为 %1
+picoed.blocks.ledOn: 开
+picoed.blocks.ledOff: 关
+picoed.blocks.toggleLed: 切换 LED 状态
+picoed.blocks.displayText: 显示文本 %1
+picoed.blocks.brightness: 将文本亮度设为 %1 %
+picoed.blocks.displayXY: '将 x: %1 y: %2 的亮度设为 %3 %'
 picoed.blocks.soundEffects.tempo: 速度
 picoed.blocks.musicMenu.dadadadum: 开场
 picoed.blocks.musicMenu.entertainer: 娱乐

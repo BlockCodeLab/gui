@@ -1,6 +1,6 @@
 import { useLocale, useEditor, exportFile } from '@blockcode/core';
-import { ScratchBlocks } from '@blockcode/blocks-editor';
-import { CodeTab, pythonGenerator } from '@blockcode/workspace-blocks';
+import { CodeTab } from '@blockcode/workspace-blocks';
+import { javascriptGenerator } from '@blockcode/blocks-player';
 
 import makeToolboxXML from '../../lib/make-toolbox-xml';
 
@@ -8,12 +8,19 @@ const Editor = CodeTab.Content;
 
 const DEFAULT_SOUND_NAME = 'DADADADUM';
 
-export default function BlocksEditor() {
+export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert }) {
   const { getText } = useLocale();
   const { fileList } = useEditor();
   const picoed = fileList[0];
 
   const messages = {
+    LED_STATE: getText('picoed.blocks.ledState', 'set LED state %1'),
+    LED_STATE_ON: getText('picoed.blocks.ledOn', 'on'),
+    LED_STATE_OFF: getText('picoed.blocks.ledOff', 'off'),
+    LED_TOGGLE: getText('picoed.blocks.toggleLed', 'toggle LED'),
+    DISPLAY_TEXT: getText('picoed.blocks.displayText', 'display text %1'),
+    BRIGHTNESS: getText('picoed.blocks.brightness', 'set text brightness %1 %'),
+    DISPLAY_XY: getText('picoed.blocks.displayXY', 'set x: %1 y: %2 brightness %3 %'),
     SOUND_EFFECTS_TEMPO: getText('picoed.blocks.soundEffects.tempo', 'tempo'),
     SOUND_MENU_DADADADUM: getText('picoed.blocks.musicMenu.dadadadum', 'dadadadum'),
     SOUND_MENU_ENTERTAINER: getText('picoed.blocks.musicMenu.entertainer', 'entertainer'),
@@ -40,23 +47,21 @@ export default function BlocksEditor() {
 
   const toolbox = makeToolboxXML(DEFAULT_SOUND_NAME);
 
-  // pythonGenerator.additionalDefinitions_ = isStage
-  //   ? [['create_stage', `stage=Stage(${listAssets(target.assets)},${target.backdrop})`]]
-  //   : [
-  //       ['import_stage', 'from stage import stage'],
-  //       [
-  //         'create_sprite',
-  //         `sprite=Sprite("${target.id}",${listAssets(target.assets)},${target.costume},${target.x},${target.y},` +
-  //           `${target.size},${target.direction},${target.rotationStyle},${target.hidden ? 'True' : 'False'})`,
-  //       ],
-  //       ['add_sprite', `stage.add_sprite(sprite)`],
-  //     ];
+  const handleLoadExtension = ({ id: extensionId, blocks }) => {
+    blocks.forEach(({ id: blockId, player }) => {
+      javascriptGenerator[`${extensionId}_${blockId}`] = player ? player.bind(javascriptGenerator) : () => '';
+    });
+  };
 
   return (
     <Editor
+      xml={picoed.xml}
       toolbox={toolbox}
       messages={messages}
-      xml={picoed.xml}
+      onLoadExtension={handleLoadExtension}
+      onShowPrompt={onShowPrompt}
+      onShowAlert={onShowAlert}
+      onHideAlert={onHideAlert}
     />
   );
 }

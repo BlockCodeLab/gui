@@ -1,10 +1,13 @@
 picoed.greenFlag: Go
 picoed.stopAll: Stop
 
-picoed.blocks.setLed: set LED
-picoed.blocks.led.on: on
-picoed.blocks.led.off: off
+picoed.blocks.ledState: set LED state %1
+picoed.blocks.ledOn: on
+picoed.blocks.ledOff: off
 picoed.blocks.toggleLed: toggle LED
+picoed.blocks.displayText: display text %1
+picoed.blocks.brightness: set text brightness %1 %
+picoed.blocks.displayXY: 'set x: %1 y: %2 brightness %3 %'
 picoed.blocks.soundEffects.tempo: tempo
 picoed.blocks.musicMenu.dadadadum: dadadadum
 picoed.blocks.musicMenu.entertainer: entertainer
