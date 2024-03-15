@@ -1,4 +1,5 @@
 import { useReducer } from 'preact/hooks';
+import { Text, Spinner } from '@blockcode/ui';
 
 const SET_ALERT = 'SET_ALERT';
 const REMOVE_ALERT = 'REMOVE_ALERT';
@@ -35,17 +36,48 @@ const reducer = (state, action) => {
   }
 };
 
+const getAlertByName = (name, options = {}) => {
+  let alert;
+  switch (name) {
+    case 'importing':
+      alert = {
+        icon: <Spinner level="success" />,
+        message: (
+          <Text
+            id="gui.alert.importing"
+            defaultMessage="importing..."
+          />
+        ),
+      };
+      break;
+  }
+  return Object.assign(alert, options);
+};
+
 export function useAlert() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return {
     ...state,
 
-    setAlert(alert, timeout = 0) {
+    setAlert(...args) {
+      let name, alert;
+      let timeout = 0;
+      for (const arg of args) {
+        if (typeof arg === 'string') name = arg;
+        if (typeof arg === 'object') alert = arg;
+        if (typeof arg === 'number') timeout = arg;
+      }
+      if (name) {
+        alert = getAlertByName(name, alert);
+      }
+      if (!alert) return;
+
       if (!alert.id) {
         alert.id = Date.now().toString(36);
       }
       dispatch({ type: SET_ALERT, payload: alert });
+
       if (timeout > 0) {
         setTimeout(() => {
           dispatch({ type: REMOVE_ALERT, payload: alert.id });

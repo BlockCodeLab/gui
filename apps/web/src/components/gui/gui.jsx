@@ -1,6 +1,6 @@
 import { useState } from 'preact/hooks';
 import { useLocale, useEditor } from '@blockcode/core';
-import { classNames, Spinner } from '@blockcode/ui';
+import { classNames } from '@blockcode/ui';
 import { useLayout } from '../../hooks/use-layout';
 import { useAlert } from '../../hooks/use-alert';
 
@@ -73,11 +73,7 @@ export default function GUI() {
   };
 
   const handleOpenWorkspace = (workspacePackage, open = openProject) => {
-    setAlert({
-      id: workspacePackage,
-      icon: <Spinner level="success" />,
-      message: getText('gui.alert.importing', 'importing...'),
-    });
+    setAlert('importing', { id: workspacePackage });
     import(`@blockcode/workspace-${workspacePackage}`).then(({ default: createWorkspace }) => {
       createWorkspace({
         addLocaleData,
