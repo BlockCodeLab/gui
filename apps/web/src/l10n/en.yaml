@@ -28,6 +28,9 @@ gui.prompt.close: Close
 gui.prompt.cancel: Cancel
 gui.prompt.ok: OK
 
+gui.coverpages.tankwar.title: The Tank War is coming! Join us! NOW!
+gui.coverpages.tankwar.button: Join us
+
 gui.workspace.myprojects: My projects
 gui.workspace.allprojects: View all ({counts})
 gui.workspace.newproject: Create new project
@@ -38,6 +41,9 @@ gui.workspace.micropython.collaborator: BlockCode Lab
 gui.workspace.blocks.name: Blocks
 gui.workspace.blocks.description: A wonderful world of building blocks.
 gui.workspace.blocks.collaborator: BlockCode Lab
+gui.workspace.arcade.name: Scratch Arcade
+gui.workspace.arcade.description: Arcade game edit and play.
+gui.workspace.arcade.collaborator: BlockCode Lab
 gui.workspace.popsicle.name: Popsicle
 gui.workspace.popsicle.description: The equipment can play with the real world.
 gui.workspace.popsicle.collaborator: BlockCode Lab

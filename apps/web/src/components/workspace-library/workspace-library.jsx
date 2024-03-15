@@ -3,6 +3,7 @@ import { useLocale, useEditor } from '@blockcode/core';
 import { classNames, Text, ContextMenu, LibraryItem } from '@blockcode/ui';
 import GettingStarted from '../getting-started/getting-started';
 import workspaces from '../../lib/workspaces/workspaces';
+import makeCoverpages from './make-coverpages';
 
 import styles from './workspace-library.module.css';
 import { version } from '../../../package.json';
@@ -14,6 +15,8 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject, onReq
   const [counts, setCounts] = useState(0);
   const { getText } = useLocale();
   const { listProjects, getProject, renameProject, duplicateProject, deleteProject } = useEditor();
+
+  const coverpages = makeCoverpages(onOpenWorkspace, onOpenProject);
 
   const getData = async () => {
     const projects = await listProjects();
@@ -41,7 +44,10 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject, onReq
 
   return (
     <div className={styles.workspaceWrapper}>
-      {/* <GettingStarted className={styles.gettingStarted} /> */}
+      <GettingStarted
+        className={styles.gettingStarted}
+        coverpages={coverpages}
+      />
 
       {data.length > 0 && (
         <>

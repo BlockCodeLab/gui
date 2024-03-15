@@ -28,6 +28,9 @@ gui.prompt.close: 关闭
 gui.prompt.cancel: 取消
 gui.prompt.ok: 确认
 
+gui.coverpages.tankwar.title: 战争一触即发，赶紧来战吧！
+gui.coverpages.tankwar.button: 加入战斗
+
 gui.workspace.myprojects: 我的作品
 gui.workspace.allprojects: 查看全部（{counts}）
 gui.workspace.newproject: 开始新作品
@@ -38,6 +41,9 @@ gui.workspace.micropython.collaborator: BlockCode Lab
 gui.workspace.blocks.name: Blocks
 gui.workspace.blocks.description: 积木搭起的奇妙程序世界。
 gui.workspace.blocks.collaborator: BlockCode Lab
+gui.workspace.arcade.name: Scratch 游戏机
+gui.workspace.arcade.description: 在游戏机上玩自制小游戏。
+gui.workspace.arcade.collaborator: BlockCode Lab
 gui.workspace.popsicle.name: Popsicle
 gui.workspace.popsicle.description: 手里的小设备，玩转真实的大世界。
 gui.workspace.popsicle.collaborator: BlockCode Lab
