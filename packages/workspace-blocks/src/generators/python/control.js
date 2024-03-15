@@ -1,14 +1,10 @@
 import { pythonGenerator } from './generator';
 
 pythonGenerator['control_wait'] = (block) => {
-  // wait for
   let code = '';
-
   if (pythonGenerator.STATEMENT_PREFIX) {
-    // Automatic prefix insertion is switched off for this block.  Add manually.
     code += pythonGenerator.injectId(pythonGenerator.STATEMENT_PREFIX, block);
   }
-
   const durationCode = pythonGenerator.valueToCode(block, 'DURATION', pythonGenerator.ORDER_NONE);
   code += `await wait_for(${durationCode})\n`;
   return code;

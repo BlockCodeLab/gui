@@ -2,25 +2,19 @@ import { ScratchBlocks } from '@blockcode/blocks-editor';
 import { pythonGenerator } from './generator';
 
 pythonGenerator['event_whenflagclicked'] = (block) => {
-  let code = '';
-  const [functionName, functionCode] = pythonGenerator.functionToCode('start');
-  code += `${functionCode}when_start(${functionName})\n`;
-  return code;
+  const hatCode = pythonGenerator.hatToCode('start');
+  return `${hatCode}when_start(${pythonGenerator.HAT_FUNCTION_PLACEHOLDER})\n`;
 };
 
 pythonGenerator['event_whengreaterthan'] = (block) => {};
 
 pythonGenerator['event_whenbroadcastreceived'] = (block) => {
-  let code = '';
-
   const messageName = pythonGenerator.variableDB_.getName(
     block.getFieldValue('BROADCAST_OPTION'),
     ScratchBlocks.Variables.NAME_TYPE
   );
-  const [functionName, functionCode] = pythonGenerator.functionToCode('broadcast_received', 'sprite');
-
-  code += `${functionCode}when_broadcast_received("${messageName}",${functionName},sprite)\n`;
-  return code;
+  const hatCode = pythonGenerator.hatToCode('broadcast_received', 'sprite');
+  return `${hatCode}when_broadcast_received("${messageName}", ${pythonGenerator.HAT_FUNCTION_PLACEHOLDER}, sprite)\n`;
 };
 
 pythonGenerator['event_broadcast_menu'] = (block) => {

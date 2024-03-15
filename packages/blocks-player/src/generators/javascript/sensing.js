@@ -6,6 +6,5 @@ javascriptGenerator['sensing_timer'] = (block) => {
 };
 
 javascriptGenerator['sensing_resettimer'] = (block) => {
-  const code = 'runtime.resetTimer()\n';
-  return code;
+  return 'runtime.resetTimer()\n';
 };

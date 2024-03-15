@@ -1,7 +1,6 @@
 import { javascriptGenerator } from './generator';
 
 javascriptGenerator['control_wait'] = (block) => {
-  // wait for
   let code = '';
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
@@ -12,7 +11,6 @@ javascriptGenerator['control_wait'] = (block) => {
 };
 
 javascriptGenerator['control_repeat'] = (block) => {
-  // for
   let code = '';
   let timesCode, branchCode;
 
@@ -26,7 +24,7 @@ javascriptGenerator['control_repeat'] = (block) => {
     branchCode =
       javascriptGenerator.prefixLines(
         javascriptGenerator.injectId(javascriptGenerator.STATEMENT_SUFFIX, block),
-        javascriptGenerator.INDENT
+        javascriptGenerator.INDENT,
       ) + branchCode;
   }
   code += `for (let _ = 0; _ < ${timesCode}; _++) {\n${branchCode}  if (anonymous.aborted) return;\n  await runtime.nextFrame();\n}\n`;
@@ -34,7 +32,6 @@ javascriptGenerator['control_repeat'] = (block) => {
 };
 
 javascriptGenerator['control_forever'] = (block) => {
-  // while
   let code = '';
   let branchCode;
 
@@ -47,7 +44,7 @@ javascriptGenerator['control_forever'] = (block) => {
     branchCode =
       javascriptGenerator.prefixLines(
         javascriptGenerator.injectId(javascriptGenerator.STATEMENT_SUFFIX, block),
-        javascriptGenerator.INDENT
+        javascriptGenerator.INDENT,
       ) + branchCode;
   }
   code += `while (true) {\n${branchCode}  if (anonymous.aborted) return;\n  await runtime.nextFrame();\n}\n`;
@@ -55,7 +52,6 @@ javascriptGenerator['control_forever'] = (block) => {
 };
 
 javascriptGenerator['control_if'] = (block) => {
-  // if-else
   let code = '';
   let branchCode, conditionCode;
 
@@ -69,7 +65,7 @@ javascriptGenerator['control_if'] = (block) => {
     branchCode =
       javascriptGenerator.prefixLines(
         javascriptGenerator.injectId(javascriptGenerator.STATEMENT_SUFFIX, block),
-        javascriptGenerator.INDENT
+        javascriptGenerator.INDENT,
       ) + branchCode;
   }
   code += `if (${conditionCode}) {\n${branchCode}}\n`;
@@ -81,7 +77,7 @@ javascriptGenerator['control_if'] = (block) => {
       branchCode =
         javascriptGenerator.prefixLines(
           javascriptGenerator.injectId(javascriptGenerator.STATEMENT_SUFFIX, block),
-          javascriptGenerator.INDENT
+          javascriptGenerator.INDENT,
         ) + branchCode;
     }
     code += `else {\n${branchCode}}\n`;
@@ -92,7 +88,6 @@ javascriptGenerator['control_if'] = (block) => {
 javascriptGenerator['control_if_else'] = javascriptGenerator['control_if'];
 
 javascriptGenerator['control_wait_until'] = (block) => {
-  // wait until
   let code = '';
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
@@ -103,7 +98,6 @@ javascriptGenerator['control_wait_until'] = (block) => {
 };
 
 javascriptGenerator['control_repeat_until'] = (block) => {
-  // while not
   let code = '';
   let branchCode, conditionCode;
 
@@ -117,7 +111,7 @@ javascriptGenerator['control_repeat_until'] = (block) => {
     branchCode =
       javascriptGenerator.prefixLines(
         javascriptGenerator.injectId(javascriptGenerator.STATEMENT_SUFFIX, block),
-        javascriptGenerator.INDENT
+        javascriptGenerator.INDENT,
       ) + branchCode;
   }
   code += `while (!(${conditionCode})) {\n${branchCode}  if (anonymous.aborted) return;\n  await runtime.nextFrame();\n}\n`;
@@ -125,7 +119,6 @@ javascriptGenerator['control_repeat_until'] = (block) => {
 };
 
 javascriptGenerator['control_while'] = (block) => {
-  // while
   let code = '';
   let branchCode, conditionCode;
 
@@ -139,7 +132,7 @@ javascriptGenerator['control_while'] = (block) => {
     branchCode =
       javascriptGenerator.prefixLines(
         javascriptGenerator.injectId(javascriptGenerator.STATEMENT_SUFFIX, block),
-        javascriptGenerator.INDENT
+        javascriptGenerator.INDENT,
       ) + branchCode;
   }
   code += `while (${conditionCode}) {\n${branchCode}  if (anonymous.aborted) return;\n  await runtime.nextFrame();\n}\n`;
@@ -148,7 +141,6 @@ javascriptGenerator['control_while'] = (block) => {
 
 javascriptGenerator['control_stop'] = (block) => {
   let code = '';
-
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
@@ -167,9 +159,3 @@ javascriptGenerator['control_stop'] = (block) => {
   }
   return code;
 };
-
-javascriptGenerator['control_start_as_clone'] = (block) => {};
-
-javascriptGenerator['control_create_clone_of'] = (block) => {};
-
-javascriptGenerator['control_delete_this_clone'] = (block) => {};

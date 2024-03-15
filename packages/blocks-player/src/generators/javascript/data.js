@@ -4,7 +4,7 @@ import { javascriptGenerator } from './generator';
 javascriptGenerator['data_variable'] = (block) => {
   const variableName = javascriptGenerator.variableDB_.getName(
     block.getFieldValue('VARIABLE'),
-    ScratchBlocks.Variables.NAME_TYPE
+    ScratchBlocks.Variables.NAME_TYPE,
   );
   const code = `${variableName}`;
   return [code, javascriptGenerator.ORDER_CONDITIONAL];
@@ -17,7 +17,7 @@ javascriptGenerator['data_setvariableto'] = (block) => {
   }
   const variableName = javascriptGenerator.variableDB_.getName(
     block.getFieldValue('VARIABLE'),
-    ScratchBlocks.Variables.NAME_TYPE
+    ScratchBlocks.Variables.NAME_TYPE,
   );
   const variableValue = javascriptGenerator.valueToCode(block, 'VALUE', javascriptGenerator.ORDER_NONE) || 0;
   code += `${variableName} = ${variableValue};\n`;
@@ -31,7 +31,7 @@ javascriptGenerator['data_changevariableby'] = (block) => {
   }
   const variableName = javascriptGenerator.variableDB_.getName(
     block.getFieldValue('VARIABLE'),
-    ScratchBlocks.Variables.NAME_TYPE
+    ScratchBlocks.Variables.NAME_TYPE,
   );
   const variableValue = javascriptGenerator.valueToCode(block, 'VALUE', javascriptGenerator.ORDER_NONE) || 0;
   code += `${variableName} = (isNaN(${variableName}) ? 0 : +${variableName}) + +(${variableValue});\n`;
@@ -44,10 +44,6 @@ javascriptGenerator['data_listcontents'] = (block) => {
     ScratchBlocks.LIST_VARIABLE_TYPE;
   return [listName, javascriptGenerator.ORDER_ATOMIC];
 };
-
-// javascriptGenerator['data_listindexall'] = (block) => {};
-
-// javascriptGenerator['data_listindexrandom'] = (block) => {};
 
 javascriptGenerator['data_addtolist'] = (block) => {
   let code = '';

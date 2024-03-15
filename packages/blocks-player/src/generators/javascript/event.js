@@ -14,7 +14,7 @@ javascriptGenerator['event_whengreaterthan'] = (block) => {
 javascriptGenerator['event_whenbroadcastreceived'] = (block) => {
   const messageName = javascriptGenerator.variableDB_.getName(
     block.getFieldValue('BROADCAST_OPTION'),
-    ScratchBlocks.Variables.NAME_TYPE
+    ScratchBlocks.Variables.NAME_TYPE,
   );
   return `runtime.on('${messageName}', async function anonymous(done) {/* nextCode */  done()\n});\n`;
 };
@@ -22,7 +22,7 @@ javascriptGenerator['event_whenbroadcastreceived'] = (block) => {
 javascriptGenerator['event_broadcast_menu'] = (block) => {
   const messageName = javascriptGenerator.variableDB_.getName(
     block.getFieldValue('BROADCAST_OPTION'),
-    ScratchBlocks.Variables.NAME_TYPE
+    ScratchBlocks.Variables.NAME_TYPE,
   );
   return [messageName, javascriptGenerator.ORDER_ATOMIC];
 };

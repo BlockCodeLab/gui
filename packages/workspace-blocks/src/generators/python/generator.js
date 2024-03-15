@@ -48,7 +48,7 @@ pythonGenerator.addReservedWords(
     'issubclass,iter,len,license,list,locals,long,map,max,memoryview,min,' +
     'next,object,oct,open,ord,pow,print,property,quit,range,raw_input,reduce,' +
     'reload,repr,reversed,round,set,setattr,slice,sorted,staticmethod,str,' +
-    'sum,super,tuple,type,unichr,unicode,vars,xrange,zip'
+    'sum,super,tuple,type,unichr,unicode,vars,xrange,zip',
 );
 
 /**
@@ -157,8 +157,8 @@ pythonGenerator.init = (workspace) => {
     pythonGenerator.definitions_['variables'] = defvars.join('\n');
   }
 
-  // import scratch for micropython library
-  pythonGenerator.definitions_['import_popsicle_scratch'] = 'from popsicle.scratch import *';
+  // import blocks for micropython library
+  pythonGenerator.definitions_['import_popsicle_blocks'] = 'from popsicle.blocks import *';
 };
 
 /**
@@ -314,12 +314,12 @@ pythonGenerator.getAdjustedInt = (block, atId, opt_delta, opt_negate) => {
   return at;
 };
 
-pythonGenerator.functionToCode = (name = '', ...args) => {
+pythonGenerator.hatToCode = (name = '', ...args) => {
   if (!pythonGenerator.functionNames_[name]) {
     pythonGenerator.functionNames_[name] = 0;
   }
   pythonGenerator.functionNames_[name] += 1;
-  name = `${name}_${pythonGenerator.functionNames_[name]}`;
-  const code = `async def ${name}(${args.join(',')}):\n${pythonGenerator.PASS}`;
-  return [name, code];
+  const functionName = `${name}_${pythonGenerator.functionNames_[name]}`;
+  pythonGenerator.HAT_FUNCTION_PLACEHOLDER = functionName;
+  return `async def ${functionName}(${args.join(', ')}):\n${pythonGenerator.PASS}\n`;
 };
