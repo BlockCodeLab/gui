@@ -50,20 +50,20 @@ export default function StageInfo({ playing, enemies, enemiesAI, health, onChang
           <Button
             disabled={playing}
             className={classNames(styles.button, styles.groupButtonFirst, {
+              [styles.groupButtonToggledOn]: enemies === 0,
+            })}
+            onClick={() => onChangeEnemies(0)}
+          >
+            <div className={styles.buttonText}>0</div>
+          </Button>
+          <Button
+            disabled={playing}
+            className={classNames(styles.button, styles.groupButton, {
               [styles.groupButtonToggledOn]: enemies === 1,
             })}
             onClick={() => onChangeEnemies(1)}
           >
             <div className={styles.buttonText}>1</div>
-          </Button>
-          <Button
-            disabled={playing}
-            className={classNames(styles.button, styles.groupButton, {
-              [styles.groupButtonToggledOn]: enemies === 2,
-            })}
-            onClick={() => onChangeEnemies(2)}
-          >
-            <div className={styles.buttonText}>2</div>
           </Button>
           <Button
             disabled={playing}
@@ -76,37 +76,38 @@ export default function StageInfo({ playing, enemies, enemiesAI, health, onChang
           </Button>
         </Label>
 
-        <Label secondary>
-          <Button
-            disabled={playing}
-            className={classNames(styles.button, styles.groupButtonFirst, {
-              [styles.groupButtonToggledOn]: true,
-            })}
-            onClick={() => onChangeEnemies(1)}
-          >
-            <div className={styles.buttonText}>
-              <Text
-                id="tankwar.stageInfo.mode.local"
-                defaultMessage="Local AI"
-              />
-            </div>
-          </Button>
-          <ComingSoon placement="bottom">
+        {enemies > 0 && (
+          <Label secondary>
             <Button
               disabled={playing}
-              className={classNames(styles.button, styles.groupButtonLast, {
-                [styles.groupButtonToggledOn]: false,
+              className={classNames(styles.button, styles.groupButtonFirst, {
+                [styles.groupButtonToggledOn]: true,
               })}
             >
               <div className={styles.buttonText}>
                 <Text
-                  id="tankwar.stageInfo.mode.remote"
-                  defaultMessage="Remote Players"
+                  id="tankwar.stageInfo.mode.local"
+                  defaultMessage="Local AI"
                 />
               </div>
             </Button>
-          </ComingSoon>
-        </Label>
+            <ComingSoon placement="bottom">
+              <Button
+                disabled={playing}
+                className={classNames(styles.button, styles.groupButtonLast, {
+                  [styles.groupButtonToggledOn]: false,
+                })}
+              >
+                <div className={styles.buttonText}>
+                  <Text
+                    id="tankwar.stageInfo.mode.remote"
+                    defaultMessage="Remote Players"
+                  />
+                </div>
+              </Button>
+            </ComingSoon>
+          </Label>
+        )}
       </div>
 
       {['red', 'yellow', 'green'].slice(0, enemies).map((tank, index) => (

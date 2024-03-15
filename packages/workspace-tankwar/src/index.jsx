@@ -11,9 +11,8 @@ import defaultProject from './lib/default-project';
 import en from './l10n/en.yaml';
 import zhHans from './l10n/zh-hans.yaml';
 
-export default function PopsicleBlocksWorkspace({
+export default function TankwarBlocksWorkspace({
   addLocaleData,
-  getText,
   setLayout,
   openStoreLibrary,
   closeStoreLibrary,

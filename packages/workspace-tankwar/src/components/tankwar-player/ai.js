@@ -2,67 +2,55 @@ export const simple = (color, id) => `
 ((tank) => {
   runtime.openEventsGroup('${color}_${id}');
 
-  let _angle_ = 0;
-
-  runtime.on('start', async () => {
-    if ((tank.util.y > '0')) {
-      await tank.util.move(180, 100);
-      while (!((tank.util.y < '10'))) {
-        if (!runtime.running) return;
-        await runtime.nextFrame();
-      }
-      tank.util.speed = 0;
-    }
-    else {
-      await tank.util.move(0, 100);
-      while (!((tank.util.y > '-10'))) {
-        if (!runtime.running) return;
-        await runtime.nextFrame();
-      }
-      tank.util.speed = 0;
-    }
-    runtime.broadcast('@ai_simple_${color}_${id}_start');
-    if ((tank.util.x > '0')) {
-      await tank.util.move(270, 70);
-      while (!((tank.util.x < '-400'))) {
-        if (!runtime.running) return;
-        await runtime.nextFrame();
-      }
-    }
+  runtime.on('start', async function anonymous() {
+    await tank.util.turnRight(45);
+    tank.util.speed = 100;
+    await runtime.sleep(2.5);
+    tank.util.speed = 0;
+    await tank.util.turnLeft(90);
+    runtime.broadcast('@ai_simple_${color}_${id}_message_1');
     while (true) {
+      tank.util.speed = 100;
+      await runtime.sleep(5.5);
       tank.util.speed = 0;
-      await tank.util.move(90, 70);
-      while (!((tank.util.x > '400'))) {
-        if (!runtime.running) return;
-        await runtime.nextFrame();
-      }
-      tank.util.speed = 0;
-      await tank.util.move(270, 70);
-      while (!((tank.util.x < '-400'))) {
-        if (!runtime.running) return;
-        await runtime.nextFrame();
-      }
-      if (!runtime.running) return;
+      await tank.util.turnLeft(180);
+      if (anonymous.aborted) return;
       await runtime.nextFrame();
     }
   });
-
-  runtime.on('@ai_simple_${color}_${id}_start', async (done) => {
+  
+  runtime.on('@ai_simple_${color}_${id}_message_1', async function anonymous(done) {
     while (true) {
-      while (!((await tank.util.scan(_angle_) < '400') && (await tank.util.scan(_angle_) > '100'))) {
-        _angle_ = (isNaN(_angle_) ? 0 : +_angle_) + +(90);
-        if (!runtime.running) return;
-        await runtime.nextFrame();
+      if ((await tank.util.scan(0) !== Infinity)) {
+        await tank.util.attack(0, (await tank.util.scan(0)));
       }
-      tank.util.speed = 0;
-      await tank.util.attack((_angle_ + 1), (await tank.util.scan(_angle_)));
-      tank.util.speed = 50;
-      if (!runtime.running) return;
+      if ((await tank.util.scan(45) !== Infinity)) {
+        await tank.util.attack(45, (await tank.util.scan(45)));
+      }
+      if ((await tank.util.scan(90) !== Infinity)) {
+        await tank.util.attack(90, (await tank.util.scan(90)));
+      }
+      if ((await tank.util.scan(135) !== Infinity)) {
+        await tank.util.attack(135, (await tank.util.scan(135)));
+      }
+      if ((await tank.util.scan(180) !== Infinity)) {
+        await tank.util.attack(180, (await tank.util.scan(180)));
+      }
+      if ((await tank.util.scan(225) !== Infinity)) {
+        await tank.util.attack(225, (await tank.util.scan(225)));
+      }
+      if ((await tank.util.scan(270) !== Infinity)) {
+        await tank.util.attack(270, (await tank.util.scan(270)));
+      }
+      if ((await tank.util.scan(315) !== Infinity)) {
+        await tank.util.attack(315, (await tank.util.scan(315)));
+      }
+      if (anonymous.aborted) return;
       await runtime.nextFrame();
     }
     done()
   });
-
+  
   runtime.closeEventsGroup();
 })(runtime.${color}Tank);
 `;

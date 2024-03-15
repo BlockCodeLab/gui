@@ -61,22 +61,17 @@ export function TankwarPlayer({ playing, enemies, enemiesAI, onRequestStop, onCh
           if (item.util instanceof Tank || item.owner instanceof Tank) return;
           item.remove();
         });
+        tanks.player.util.place = Tank.PLACE.LEFT_TOP;
         if (enemies > 0) {
-          tanks.red.util.place = Tank.PLACE.RIGHT;
+          tanks.red.util.place = Tank.PLACE.RIGHT_BOTTOM;
         } else {
-          tanks.yellow.util.hidden = true;
-        }
-        if (enemies > 1) {
-          tanks.red.util.place = Tank.PLACE.RIGHT_TOP;
-          tanks.yellow.util.place = Tank.PLACE.RIGHT_BOTTOM;
-        } else {
-          tanks.yellow.util.hidden = true;
+          tanks.red.util.hidden = true;
         }
         if (enemies > 2) {
-          tanks.player.util.place = Tank.PLACE.LEFT_TOP;
+          tanks.yellow.util.place = Tank.PLACE.RIGHT_TOP;
           tanks.green.util.place = Tank.PLACE.LEFT_BOTTOM;
         } else {
-          tanks.player.util.place = Tank.PLACE.LEFT;
+          tanks.yellow.util.hidden = true;
           tanks.green.util.hidden = true;
         }
         saveThumb(canvas.toDataURL());
