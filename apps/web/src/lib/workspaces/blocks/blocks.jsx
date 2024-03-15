@@ -2,13 +2,13 @@ import { Text } from '@blockcode/ui';
 import blocksImage from './blocks.png';
 
 export default {
-  preview: true,
+  disabled: true,
   package: 'blocks',
   image: blocksImage,
   name: (
     <Text
       id="gui.workspace.blocks.name"
-      defaultMessage="Blocks"
+      defaultMessage="MicroPython Blocks"
     />
   ),
   description: (

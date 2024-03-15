@@ -38,7 +38,7 @@ gui.workspace.newproject: 开始新作品
 gui.workspace.micropython.name: MicroPython
 gui.workspace.micropython.description: 编写控制万物的神奇代码。
 gui.workspace.micropython.collaborator: BlockCode Lab
-gui.workspace.blocks.name: Blocks
+gui.workspace.blocks.name: MicroPython 图形积木
 gui.workspace.blocks.description: 积木搭起的奇妙程序世界。
 gui.workspace.blocks.collaborator: BlockCode Lab
 gui.workspace.arcade.name: Scratch 游戏机

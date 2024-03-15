@@ -2,7 +2,7 @@ import { Text } from '@blockcode/ui';
 import popsicleImage from './popsicle.png';
 
 export default {
-  preview: true,
+  disabled: true,
   package: 'popsicle',
   image: popsicleImage,
   name: (

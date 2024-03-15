@@ -38,7 +38,7 @@ gui.workspace.newproject: Create new project
 gui.workspace.micropython.name: MicroPython
 gui.workspace.micropython.description: Write magical code that controls everything.
 gui.workspace.micropython.collaborator: BlockCode Lab
-gui.workspace.blocks.name: Blocks
+gui.workspace.blocks.name: MicroPython Blocks
 gui.workspace.blocks.description: A wonderful world of building blocks.
 gui.workspace.blocks.collaborator: BlockCode Lab
 gui.workspace.arcade.name: Scratch Arcade
