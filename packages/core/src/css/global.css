@@ -21,7 +21,3 @@ body,
   box-sizing: border-box;
   user-select: none;
 }
-
-button:active:not([disabled]) {
-  background-color: hsla(260, 60%, 60%, 0.35);
-}
