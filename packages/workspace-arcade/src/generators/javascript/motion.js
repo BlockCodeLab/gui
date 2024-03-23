@@ -191,7 +191,7 @@ javascriptGenerator['motion_setrotationstyle'] = (block) => {
     default:
       break;
   }
-  code += `sprite.data.rotationStyle = runtime.RotationStyle.${styleCode};\n`;
+  code += `sprite.util.rotationStyle = runtime.RotationStyle.${styleCode};\n`;
   return code;
 };
 

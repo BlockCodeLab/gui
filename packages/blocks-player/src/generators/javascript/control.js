@@ -27,7 +27,7 @@ javascriptGenerator['control_repeat'] = (block) => {
         javascriptGenerator.INDENT,
       ) + branchCode;
   }
-  code += `for (let _ = 0; _ < ${timesCode}; _++) {\n${branchCode}  if (anonymous.aborted) return;\n  await runtime.nextFrame();\n}\n`;
+  code += `for (let _ = 0; _ < ${timesCode}; _++) {\n${branchCode}  if (anonymous.aborted) break;\n  await runtime.nextFrame();\n}\n`;
   return code;
 };
 
@@ -47,7 +47,7 @@ javascriptGenerator['control_forever'] = (block) => {
         javascriptGenerator.INDENT,
       ) + branchCode;
   }
-  code += `while (true) {\n${branchCode}  if (anonymous.aborted) return;\n  await runtime.nextFrame();\n}\n`;
+  code += `while (true) {\n${branchCode}  if (anonymous.aborted) break;\n  await runtime.nextFrame();\n}\n`;
   return code;
 };
 
@@ -93,7 +93,7 @@ javascriptGenerator['control_wait_until'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const conditionCode = javascriptGenerator.valueToCode(block, 'CONDITION', javascriptGenerator.ORDER_NONE) || 'false';
-  code += `while (!(${conditionCode})) {\n  if (anonymous.aborted) return;\n  await runtime.nextFrame();\n}\n`;
+  code += `while (!(${conditionCode})) {\n  if (anonymous.aborted) break;\n  await runtime.nextFrame();\n}\n`;
   return code;
 };
 
@@ -114,7 +114,7 @@ javascriptGenerator['control_repeat_until'] = (block) => {
         javascriptGenerator.INDENT,
       ) + branchCode;
   }
-  code += `while (!(${conditionCode})) {\n${branchCode}  if (anonymous.aborted) return;\n  await runtime.nextFrame();\n}\n`;
+  code += `while (!(${conditionCode})) {\n${branchCode}  if (anonymous.aborted) break;\n  await runtime.nextFrame();\n}\n`;
   return code;
 };
 
@@ -135,7 +135,7 @@ javascriptGenerator['control_while'] = (block) => {
         javascriptGenerator.INDENT,
       ) + branchCode;
   }
-  code += `while (${conditionCode}) {\n${branchCode}  if (anonymous.aborted) return;\n  await runtime.nextFrame();\n}\n`;
+  code += `while (${conditionCode}) {\n${branchCode}  if (anonymous.aborted) break;\n  await runtime.nextFrame();\n}\n`;
   return code;
 };
 

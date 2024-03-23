@@ -1,11 +1,10 @@
 import { ScratchBlocks } from '@blockcode/blocks-editor';
 
 import '../../blocks/events';
-import '../../blocks/motion';
 import '../../blocks/sensing';
 import '../../blocks/sound';
 
-export default function (assetList, fileList, selectedIndex, getText) {
+export default function (assetList, fileList, selectedIndex, workspace) {
   const stage = fileList[0];
   const sprite = fileList[selectedIndex];
   const otherSprites = fileList.filter((_, i) => i > 0 && i !== selectedIndex);
@@ -81,7 +80,7 @@ export default function (assetList, fileList, selectedIndex, getText) {
           {
             type: 'field_dropdown',
             name: 'COSTUME',
-            options: sprite.assets.map((assetId, i) => {
+            options: sprite.assets.map((assetId) => {
               const asset = assetList.find(({ id }) => assetId === id);
               return [asset.name, assetId];
             }),
@@ -96,6 +95,11 @@ export default function (assetList, fileList, selectedIndex, getText) {
     },
   };
 
+  const stageMenu = stage.assets.map((assetId) => {
+    const asset = assetList.find(({ id }) => assetId === id);
+    return [asset.name, assetId];
+  });
+
   ScratchBlocks.Blocks['looks_backdrops'] = {
     init() {
       this.jsonInit({
@@ -104,10 +108,7 @@ export default function (assetList, fileList, selectedIndex, getText) {
           {
             type: 'field_dropdown',
             name: 'BACKDROP',
-            options: stage.assets.map((assetId, i) => {
-              const asset = assetList.find(({ id }) => assetId === id);
-              return [asset.name, assetId];
-            }),
+            options: stageMenu,
           },
         ],
         colour: ScratchBlocks.Colours.looks.secondary,
@@ -115,6 +116,23 @@ export default function (assetList, fileList, selectedIndex, getText) {
         colourTertiary: ScratchBlocks.Colours.looks.tertiary,
         colourQuaternary: ScratchBlocks.Colours.looks.quaternary,
         extensions: ['output_string'],
+      });
+    },
+  };
+
+  ScratchBlocks.Blocks['event_whenbackdropswitchesto'] = {
+    init() {
+      this.jsonInit({
+        message0: ScratchBlocks.Msg.EVENT_WHENBACKDROPSWITCHESTO,
+        args0: [
+          {
+            type: 'field_dropdown',
+            name: 'BACKDROP',
+            options: stageMenu,
+          },
+        ],
+        category: ScratchBlocks.Categories.event,
+        extensions: ['colours_event', 'shape_hat'],
       });
     },
   };
@@ -166,6 +184,75 @@ export default function (assetList, fileList, selectedIndex, getText) {
         ],
         extensions: ['colours_sensing', 'output_string'],
       });
+    },
+  };
+
+  ScratchBlocks.Blocks['sensing_of_object_menu'] = {
+    init() {
+      const menu = [...otherSpritesMenu];
+      if (!isStage) {
+        menu.unshift([ScratchBlocks.Msg.SENSING_OF_STAGE, '_stage_']);
+      }
+      this.jsonInit({
+        message0: '%1',
+        args0: [
+          {
+            type: 'field_dropdown',
+            name: 'OBJECT',
+            options: menu,
+          },
+        ],
+        category: ScratchBlocks.Categories.sensing,
+        extensions: ['colours_sensing', 'output_string'],
+      });
+    },
+  };
+
+  const stagePropertyMenu = [
+    [ScratchBlocks.Msg.SENSING_OF_BACKDROPNUMBER, 'backdrop #'],
+    [ScratchBlocks.Msg.SENSING_OF_BACKDROPNAME, 'backdrop name'],
+    // [ScratchBlocks.Msg.SENSING_OF_VOLUME, 'volume']
+  ];
+
+  const spritePropertyMenu = [
+    [ScratchBlocks.Msg.SENSING_OF_XPOSITION, 'x position'],
+    [ScratchBlocks.Msg.SENSING_OF_YPOSITION, 'y position'],
+    [ScratchBlocks.Msg.SENSING_OF_DIRECTION, 'direction'],
+    [ScratchBlocks.Msg.SENSING_OF_COSTUMENUMBER, 'costume #'],
+    [ScratchBlocks.Msg.SENSING_OF_COSTUMENAME, 'costume name'],
+    [ScratchBlocks.Msg.SENSING_OF_SIZE, 'size'],
+    // [ScratchBlocks.Msg.SENSING_OF_VOLUME, 'volume']
+  ];
+
+  ScratchBlocks.Blocks['sensing_of'] = {
+    init() {
+      this.jsonInit({
+        message0: ScratchBlocks.Msg.SENSING_OF,
+        args0: [
+          {
+            type: 'field_dropdown',
+            name: 'PROPERTY',
+            options: isStage ? spritePropertyMenu : stagePropertyMenu,
+          },
+          {
+            type: 'input_value',
+            name: 'OBJECT',
+          },
+        ],
+        output: true,
+        category: ScratchBlocks.Categories.sensing,
+        outputShape: ScratchBlocks.OUTPUT_SHAPE_ROUND,
+        extensions: ['colours_sensing'],
+      });
+    },
+    onchange(e) {
+      if (e.blockId !== 'sensing_of_object_menu') return;
+      if (e.name === 'OBJECT') {
+        const property = this.getField('PROPERTY');
+        property.menuGenerator_ = e.newValue === '_stage_' ? stagePropertyMenu : spritePropertyMenu;
+        property.setText(property.menuGenerator_[0][0]);
+        property.setValue(property.menuGenerator_[0][1]);
+      }
     },
   };
 }

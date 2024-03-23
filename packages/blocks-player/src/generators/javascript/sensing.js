@@ -1,7 +1,7 @@
 import { javascriptGenerator } from './generator';
 
 javascriptGenerator['sensing_timer'] = (block) => {
-  const code = 'runtime.getTimer()';
+  const code = 'runtime.time';
   return [code, javascriptGenerator.ORDER_FUNCTION_CALL];
 };
 

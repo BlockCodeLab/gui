@@ -1,12 +1,46 @@
 import { javascriptGenerator } from '@blockcode/blocks-player';
 
-javascriptGenerator['looks_sayforsecs'] = (block) => {};
+javascriptGenerator['looks_sayforsecs'] = (block) => {
+  let code = '';
+  if (javascriptGenerator.STATEMENT_PREFIX) {
+    code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
+  }
+  const textValue = javascriptGenerator.valueToCode(block, 'MESSAGE', javascriptGenerator.ORDER_NONE);
+  const timeValue = javascriptGenerator.valueToCode(block, 'SECS', javascriptGenerator.ORDER_NONE);
+  code += `await sprite.util.say(${textValue}, ${timeValue});\n`;
+  return code;
+};
 
-javascriptGenerator['looks_say'] = (block) => {};
+javascriptGenerator['looks_say'] = (block) => {
+  let code = '';
+  if (javascriptGenerator.STATEMENT_PREFIX) {
+    code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
+  }
+  const textValue = javascriptGenerator.valueToCode(block, 'MESSAGE', javascriptGenerator.ORDER_NONE);
+  code += `sprite.util.say(${textValue});\n`;
+  return code;
+};
 
-javascriptGenerator['looks_thinkforsecs'] = (block) => {};
+javascriptGenerator['looks_thinkforsecs'] = (block) => {
+  let code = '';
+  if (javascriptGenerator.STATEMENT_PREFIX) {
+    code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
+  }
+  const textValue = javascriptGenerator.valueToCode(block, 'MESSAGE', javascriptGenerator.ORDER_NONE);
+  const timeValue = javascriptGenerator.valueToCode(block, 'SECS', javascriptGenerator.ORDER_NONE);
+  code += `await sprite.util.think(${textValue}, ${timeValue});\n`;
+  return code;
+};
 
-javascriptGenerator['looks_think'] = (block) => {};
+javascriptGenerator['looks_think'] = (block) => {
+  let code = '';
+  if (javascriptGenerator.STATEMENT_PREFIX) {
+    code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
+  }
+  const textValue = javascriptGenerator.valueToCode(block, 'MESSAGE', javascriptGenerator.ORDER_NONE);
+  code += `sprite.util.think(${textValue});\n`;
+  return code;
+};
 
 javascriptGenerator['looks_show'] = (block) => {
   let code = '';

@@ -26,7 +26,7 @@ export default class Runtime extends EventEmitter {
     return this._running;
   }
 
-  get timer() {
+  get time() {
     return (Date.now() - this._timer) / 1000;
   }
 
@@ -74,10 +74,10 @@ export default class Runtime extends EventEmitter {
     if (name === 'TIMER') {
       listener._done = false;
       this.on('frame', () => {
-        if (this.timer > value && !listener._done) {
+        if (this.time > value && !listener._done) {
           listener();
         }
-        listener._done = this.timer > value;
+        listener._done = this.time > value;
       });
     }
   }

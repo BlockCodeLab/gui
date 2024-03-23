@@ -79,6 +79,7 @@ export default function GUI() {
         addLocaleData,
         getText,
         setLayout,
+        selectTab,
         openStoreLibrary,
         closeStoreLibrary,
         setPrompt,

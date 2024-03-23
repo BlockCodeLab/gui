@@ -1,5 +1,6 @@
 import { useLocale, useEditor } from '@blockcode/core';
 import { classNames, Text, ActionButton } from '@blockcode/ui';
+import uid from '../../lib/uid';
 
 import loadImage from '../../lib/load-image';
 
@@ -13,41 +14,77 @@ import fileUploadIcon from '../sprite-selector/icon-file-upload.svg';
 const DEFAULT_BACKDROP_THUMB =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAAtJREFUGFdjYAACAAAFAAGq1chRAAAAAElFTkSuQmCC';
 
-export default function StageSelector() {
+export default function StageSelector({ playing, onSelectTab, onAlert, onRemoveAlert }) {
   const { getText } = useLocale();
   const { fileList, assetList, selectedIndex, openFile, addAsset, modifyFile } = useEditor();
 
-  let thumb, count;
+  let backdropIds, thumb, count;
   const stage = fileList[0];
+
   if (stage) {
-    const asset = assetList.find((asset) => asset.id === stage.assets[stage.backdrop]);
-    if (asset) {
-      thumb = `data:${asset.type};base64,${asset.data}`;
-      count = stage.assets.length;
+    backdropIds = stage.assets;
+    const image = assetList.find((asset) => asset.id === backdropIds[stage.frame]);
+    if (image) {
+      thumb = `data:${image.type};base64,${image.data}`;
+      count = backdropIds.length;
     }
   }
 
-  const handleFileChange = async ({ target }) => {
-    for (const file of target.files) {
-      const imageName = file.name.slice(0, file.name.lastIndexOf('.'));
-      const image = await loadImage(file);
-      addAsset({
-        id: imageName,
-        type: file.type,
-        name: imageName,
-        data: image.src.slice(`data:${file.type};base64,`.length),
-        width: image.width,
-        height: image.height,
-        centerX: Math.floor(image.width / 2),
-        centerY: Math.floor(image.height / 2),
-      });
+  const handleUploadFile = () => {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+    fileInput.multiple = true;
+    fileInput.click();
+    fileInput.addEventListener('change', async (e) => {
+      const alertId = uid();
+      onAlert('importing', { id: alertId });
+
+      for (const file of e.target.files) {
+        const imageId = uid();
+        const imageName = file.name.slice(0, file.name.lastIndexOf('.'));
+        const image = await loadImage(file);
+        addAsset({
+          id: imageId,
+          type: file.type,
+          name: imageName,
+          data: image.src.slice(`data:${file.type};base64,`.length),
+          width: image.width,
+          height: image.height,
+          centerX: Math.floor(image.width / 2),
+          centerY: Math.floor(image.height / 2),
+        });
+        backdropIds.push(imageId);
+      }
+      onRemoveAlert(alertId);
+
       modifyFile({
         id: stage.id,
-        assets: [].concat(stage.assets, imageName),
-        backdrop: stage.backdrop + 1,
+        assets: backdropIds,
+        frame: backdropIds.length - 1,
       });
       openFile(0);
-    }
+    });
+  };
+
+  const handlePaintImage = () => {
+    openFile(0);
+    const imageId = uid();
+    addAsset({
+      id: imageId,
+      type: 'image/png',
+      name: getText(`arcade.defaultProject.backdropName`, 'backdrop'),
+      data: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAAtJREFUGFdjYAACAAAFAAGq1chRAAAAAElFTkSuQmCC',
+      width: 1,
+      height: 1,
+      centerX: 1,
+      centerY: 1,
+    });
+    modifyFile({
+      assets: backdropIds.concat(imageId),
+      frame: count,
+    });
+    onSelectTab(1);
   };
 
   return (
@@ -66,7 +103,7 @@ export default function StageSelector() {
         </div>
       </div>
       <img
-        className={styles.costumeCanvas}
+        className={styles.backdropImage}
         src={thumb || DEFAULT_BACKDROP_THUMB}
       />
       <div className={styles.label}>
@@ -78,6 +115,7 @@ export default function StageSelector() {
       <div className={styles.count}>{count || 0}</div>
 
       <ActionButton
+        disabled={playing}
         className={styles.addButton}
         icon={backdropIcon}
         tooltip={getText('arcade.actionButton.backdrop', 'Choose a Backdrop')}
@@ -86,9 +124,7 @@ export default function StageSelector() {
           {
             icon: fileUploadIcon,
             tooltip: getText('arcade.actionButton.uploadBackdrop', 'Upload Backdrop'),
-            fileAccept: 'image/*',
-            fileMultiple: true,
-            onFileChange: handleFileChange,
+            onClick: handleUploadFile,
           },
           {
             icon: surpriseIcon,
@@ -98,7 +134,7 @@ export default function StageSelector() {
           {
             icon: paintIcon,
             tooltip: getText('arcade.actionButton.paint', 'Paint'),
-            onClick: () => {},
+            onClick: handlePaintImage,
           },
           {
             icon: searchIcon,

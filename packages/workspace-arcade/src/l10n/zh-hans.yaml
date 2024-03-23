@@ -7,6 +7,9 @@ arcade.pixelPaint.default: 绘画板
 arcade.pixelPaint.costumes: 造型
 arcade.pixelPaint.backdrops: 背景
 
+arcade.deletePrompt.title: 删除 {name}
+arcade.deletePrompt.label: 确认要删除这个角色吗？
+
 arcade.greenFlag: 运行
 arcade.stopAll: 停止
 arcade.smallStage: 缩小舞台
@@ -40,10 +43,9 @@ arcade.directionPicker.leftRight: 左右翻转
 arcade.directionPicker.dontRotate: 不旋转
 
 arcade.defaultProject.stageName: 舞台
-arcade.defaultProject.spriteName: 角色1
-arcade.defaultProject.backdropName: 背景1
-arcade.defaultProject.costumeName1: 造型1
-arcade.defaultProject.costumeName2: 造型2
+arcade.defaultProject.spriteName: 角色
+arcade.defaultProject.backdropName: 背景
+arcade.defaultProject.costumeName: 造型
 
 arcade.blocks.fnButton: 功能键
 arcade.blocks.stopOther: 该角色的其他脚本

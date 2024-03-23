@@ -23,10 +23,10 @@ export default function ArcadePlayer({ stageSize, playing, onRequestStop }) {
         },
         isStage
           ? {
-              backdrop: raster.util.backdrop,
+              frame: raster.util.backdrop - 1,
             }
           : {
-              costume: raster.util.costume,
+              frame: raster.util.costume - 1,
               x: raster.util.x,
               y: raster.util.y,
               size: raster.util.size,
@@ -69,8 +69,12 @@ export default function ArcadePlayer({ stageSize, playing, onRequestStop }) {
     paperCore.view.viewSize = viewSize;
     paperCore.view.zoom = zoomRatio;
 
+    const stageLayer = paperCore.project.layers.stage;
+    const spriteLayer = paperCore.project.layers.sprite;
+    const contourLayer = paperCore.project.layers.contour;
+    const dialogLayer = paperCore.project.layers.dialog;
+
     if (playing) {
-      const spriteLayer = paperCore.project.layers['sprite'];
       spriteLayer.onMouseDown = false;
       if (!currentRuntime) {
         // start
@@ -80,12 +84,11 @@ export default function ArcadePlayer({ stageSize, playing, onRequestStop }) {
     } else {
       if (currentRuntime) {
         // stop
-        currentRuntime.stop();
-        setCurrentRuntime(false);
+        currentRuntime.stop().then(() => {
+          dialogLayer.removeChildren();
+          setCurrentRuntime(false);
+        });
       } else {
-        const stageLayer = paperCore.project.layers['stage'];
-        const spriteLayer = paperCore.project.layers['sprite'];
-
         spriteLayer.onMouseDown = (e) => {
           for (const hitTarget of spriteLayer.hitTestAll(e.point)) {
             if (hitTarget.item.getAverageColor(e.point)) {
@@ -111,37 +114,36 @@ export default function ArcadePlayer({ stageSize, playing, onRequestStop }) {
 
           let raster = layer.children[target.id];
           if (!raster) {
-            raster = new paperCore.Raster();
+            raster = layer.addChild(new paperCore.Raster());
             raster.name = target.id;
-            raster.data = { assets, zoomRatio };
+            raster.data = { assets };
             raster.util = createUtil(raster, isStage);
             raster.util.on('update', () => updateTargetFromRaster(raster, isStage));
-            layer.addChild(raster);
           }
           raster.data.assets = assets;
 
           if (isStage) {
-            raster.util.backdrop = target.backdrop;
+            raster.util.backdrop = target.frame + 1;
           } else {
             raster.onMouseUp = setMouseUpHandler(raster, index);
-            raster.util.costume = target.costume;
+            raster.util.costume = target.frame + 1;
             raster.util.x = target.x;
             raster.util.y = target.y;
             raster.util.size = target.size;
             raster.util.hidden = target.hidden;
             raster.util.direction = target.direction;
             raster.data.rotationStyle = target.rotationStyle;
-            raster.data.zoomRatio = zoomRatio;
           }
         });
 
-        // remove deleted sprties
+        // remove clones and deleted sprties
         spriteLayer.children.forEach((child) => {
-          if (child instanceof paperCore.Path) return;
-          if (fileList.find((file) => file.id === child.name)) return;
-          if (child.util.contour) {
-            child.util.contour.remove();
-          }
+          if (fileList.find((file) => child.name === file.id)) return;
+          child.remove();
+        });
+        // and contours
+        contourLayer.children.forEach((child) => {
+          if (fileList.find((file) => child.name === file.id)) return;
           child.remove();
         });
       }
@@ -150,10 +152,11 @@ export default function ArcadePlayer({ stageSize, playing, onRequestStop }) {
 
   const handleSetup = (canvas) => {
     setCanvas(canvas);
-    const stageLayer = new paperCore.Layer();
-    const spriteLayer = new paperCore.Layer();
-    stageLayer.name = 'stage';
-    spriteLayer.name = 'sprite';
+    new paperCore.Layer({ name: 'stage' });
+    new paperCore.Layer({ name: 'contour' });
+    new paperCore.Layer({ name: 'sprite' });
+    new paperCore.Layer({ name: 'dialog' });
+    paperCore.project.layers.sprite.activate();
   };
 
   return (

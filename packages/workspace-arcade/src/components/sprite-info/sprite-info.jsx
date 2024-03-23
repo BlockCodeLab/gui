@@ -1,7 +1,9 @@
 import { useLocale, useEditor } from '@blockcode/core';
-import { classNames, Button, Label, BufferedInput } from '@blockcode/ui';
+import { classNames, ToggleButtons, Button, Label, BufferedInput } from '@blockcode/ui';
 import { ScratchBlocks } from '@blockcode/blocks-editor';
 import { pythonGenerator } from '@blockcode/workspace-blocks';
+import DirectionPicker from '../direction-picker/direction-picker';
+import RotationStyle from '../../lib/rotation-style';
 
 import styles from './sprite-info.module.css';
 import hideIcon from './icon-hide.svg';
@@ -9,21 +11,23 @@ import showIcon from './icon-show.svg';
 import xIcon from './icon-x.svg';
 import yIcon from './icon-y.svg';
 
-export default function SpriteInfo({ stageSize }) {
+export default function SpriteInfo({ playing, stageSize }) {
   const { getText } = useLocale();
   const { fileList, selectedIndex, modifyFile } = useEditor();
 
-  const disabled = selectedIndex < 1;
+  const disabled = playing || selectedIndex < 1;
 
-  const sprite = disabled
-    ? {
-        name: '',
-        x: '',
-        y: '',
-        size: '',
-        direction: '',
-      }
-    : fileList[selectedIndex];
+  const sprite =
+    selectedIndex < 1
+      ? {
+          name: '',
+          x: '',
+          y: '',
+          size: '',
+          direction: '',
+          rotationStyle: RotationStyle.ALL_AROUND,
+        }
+      : fileList[selectedIndex];
 
   const handleChangeInfo = (key, value) => {
     if (key === 'name') {
@@ -111,6 +115,7 @@ export default function SpriteInfo({ stageSize }) {
         <div className={classNames(styles.row, styles.rowPrimary)}>{nameInput}</div>
         <div className={styles.row}>
           <Button
+            disabled={disabled}
             className={classNames(styles.button, {
               [styles.groupButtonToggledOff]: disabled || sprite.hidden,
             })}
@@ -143,30 +148,23 @@ export default function SpriteInfo({ stageSize }) {
           secondary
           text={getText('arcade.spriteInfo.display', 'Show')}
         >
-          <Button
-            className={classNames(styles.button, styles.groupButtonFirst, {
-              [styles.groupButtonToggledOff]: disabled || sprite.hidden,
-            })}
-            onClick={() => handleChangeInfo('hidden', false)}
-          >
-            <img
-              src={showIcon}
-              className={styles.buttonIcon}
-              title={getText('arcade.spriteInfo.show', 'Show sprite')}
-            />
-          </Button>
-          <Button
-            className={classNames(styles.button, styles.groupButtonLast, {
-              [styles.groupButtonToggledOff]: disabled || !sprite.hidden,
-            })}
-            onClick={() => handleChangeInfo('hidden', true)}
-          >
-            <img
-              src={hideIcon}
-              className={styles.buttonIcon}
-              title={getText('arcade.spriteInfo.hide', 'Hide sprite')}
-            />
-          </Button>
+          <ToggleButtons
+            items={[
+              {
+                icon: showIcon,
+                title: getText('arcade.spriteInfo.show', 'Show sprite'),
+                value: false,
+              },
+              {
+                icon: hideIcon,
+                title: getText('arcade.spriteInfo.hide', 'Hide sprite'),
+                value: true,
+              },
+            ]}
+            disabled={disabled}
+            value={!!sprite.hidden}
+            onChange={(value) => handleChangeInfo('hidden', value)}
+          />
         </Label>
         <Label
           secondary
@@ -184,13 +182,20 @@ export default function SpriteInfo({ stageSize }) {
           secondary
           text={getText('arcade.spriteInfo.direction', 'Direction')}
         >
-          <BufferedInput
-            small
-            disabled={disabled}
-            className={styles.largeInput}
-            onSubmit={(value) => handleChangeInfo('direction', value)}
-            value={Math.round(sprite.direction)}
-          />
+          <DirectionPicker
+            direction={sprite.direction}
+            rotationStyle={sprite.rotationStyle}
+            onChange={(value) => handleChangeInfo('direction', value)}
+            onChangeRotationStyle={(value) => handleChangeInfo('rotationStyle', value)}
+          >
+            <BufferedInput
+              small
+              disabled={disabled}
+              className={styles.largeInput}
+              onSubmit={(value) => handleChangeInfo('direction', value)}
+              value={Math.round(sprite.direction)}
+            />
+          </DirectionPicker>
         </Label>
       </div>
     </div>

@@ -1,13 +1,19 @@
 import { paperCore } from '@blockcode/blocks-player';
 import { EventEmitter } from 'node:events';
 
-import { loadAsset } from '../../lib/load-image';
+import { loadImageFromAsset } from '../../lib/load-image';
 import RotationStyle from '../../lib/rotation-style';
 
 import createContour from './create-contour';
 import Runtime from './runtime';
 
-const POSITION_PADDING = 8;
+const FONT_SIZE = 12;
+const LINE_MAX_CHARS = 18;
+const DIALOG_RADIUS = 10;
+const DIALOG_PADDING = 8;
+const DIALOG_HANDLE_HEIGHT = DIALOG_RADIUS * 0.8;
+const DIALOG_MIN_WIDTH = DIALOG_RADIUS * 3;
+const DIALOG_MIN_HEIGHT = DIALOG_RADIUS * 2 + DIALOG_HANDLE_HEIGHT;
 
 const degToRad = (deg) => (deg * Math.PI) / 180;
 const radToDeg = (rad) => (rad * 180) / Math.PI;
@@ -17,15 +23,38 @@ class Util extends EventEmitter {
   constructor(raster) {
     super();
     this._raster = raster;
-    this._contour = null;
   }
 
   get raster() {
     return this._raster;
   }
 
+  get name() {
+    return this.raster.name;
+  }
+
+  get stageLayer() {
+    return paperCore.project.layers.stage;
+  }
+
+  get spriteLayer() {
+    return paperCore.project.layers.sprite;
+  }
+
+  get contourLayer() {
+    return paperCore.project.layers.contour;
+  }
+
+  get dialogLayer() {
+    return paperCore.project.layers.dialog;
+  }
+
   get running() {
-    return !this.raster.layer.onMouseDown;
+    return !this.spriteLayer.onMouseDown;
+  }
+
+  get editing() {
+    return !this.running;
   }
 
   get data() {
@@ -45,34 +74,10 @@ class Util extends EventEmitter {
     );
   }
 
-  get contour() {
-    return this._contour;
-  }
-
-  async setImage(assetIndex, calcContour = true) {
-    const asset = this.assets[assetIndex];
-    if (!asset) return;
-
-    const image = await loadAsset(asset);
-    this.raster.image = image;
-    this.raster.pivot = new paperCore.Point(asset.centerX - asset.width / 2, asset.centerY - asset.height / 2);
-
-    this.data.assetIndex = assetIndex;
-    if (this.running) {
+  requestUpdate() {
+    if (!this.editing) {
       this.emit('update');
     }
-
-    if (calcContour) {
-      this.createContour();
-    }
-  }
-
-  createContour() {
-    if (this._contour) {
-      this._contour.remove();
-      this._contour = null;
-    }
-    this._contour = createContour(this.raster);
   }
 
   received(...args) {
@@ -82,89 +87,139 @@ class Util extends EventEmitter {
 
 class StageUtil extends Util {
   get backdrop() {
-    return this.data.assetIndex;
+    return this.data.frame + 1;
   }
 
   set backdrop(value) {
     if (typeof value === 'string') {
-      value = isNaN(+value) ? this.assets.findIndex((asset) => asset.id === value) : +value;
+      let backdrop = +value;
+      if (isNaN(num)) {
+        backdrop = this.assets.findIndex((asset) => asset.id === value);
+        if (backdrop === -1) return;
+        value = backdrop + 1;
+      } else {
+        value = backdrop;
+      }
     }
-    const assetIndex = value % this.assets.length;
-    if (assetIndex !== this.data.assetIndex) {
-      this.setImage(assetIndex, false);
+
+    let frame = (value - 1) % this.assets.length;
+    if (frame < 0) frame + this.assets.length;
+
+    if (this.editing || frame !== this.data.frame) {
+      const asset = this.assets[frame];
+      if (!asset) return;
+
+      this.data.frame = frame;
+      this.requestUpdate();
+
+      loadImageFromAsset(asset).then((image) => {
+        this.raster.image = image;
+        this.raster.pivot = new paperCore.Point(asset.centerX - asset.width / 2, asset.centerY - asset.height / 2);
+        this.raster.position.x = paperCore.view.center.x;
+        this.raster.position.y = paperCore.view.center.y;
+      });
     }
   }
 }
 
 class SpriteUtil extends Util {
   get costume() {
-    return this.data.assetIndex;
+    return this.data.frame + 1;
   }
 
   set costume(value) {
     if (typeof value === 'string') {
-      value = isNaN(+value) ? this.assets.findIndex((asset) => asset.id === value) : +value;
+      let costume = +value;
+      if (isNaN(num)) {
+        costume = this.assets.findIndex((asset) => asset.id === value);
+        if (costume === -1) return;
+        value = costume + 1;
+      } else {
+        value = costume;
+      }
     }
-    const assetIndex = value % this.assets.length;
-    if (assetIndex !== this.data.assetIndex) {
-      this.setImage(assetIndex);
+
+    let frame = (value - 1) % this.assets.length;
+    if (frame < 0) frame + this.assets.length;
+
+    if (this.editing || frame !== this.data.frame) {
+      const asset = this.assets[frame];
+      if (!asset) return;
+
+      this.data.frame = frame;
+      loadImageFromAsset(asset).then((image) => {
+        this.raster.image = image;
+        this.raster.pivot = new paperCore.Point(asset.centerX - asset.width / 2, asset.centerY - asset.height / 2);
+        this.createContour();
+        this.goto(this.x, this.y, true);
+      });
+    }
+  }
+
+  get contour() {
+    return this.contourLayer.children[this.name];
+  }
+
+  createContour() {
+    this.removeContour();
+    createContour(this.raster);
+  }
+
+  removeContour() {
+    if (this.contour) {
+      this.contour.remove();
     }
   }
 
   get x() {
-    return this.data.x;
+    return Math.round(this.data.x);
+  }
+
+  get y() {
+    return Math.round(this.data.y);
   }
 
   set x(x) {
-    if (x !== this.data.x || paperCore.view.zoom !== this.data.zoomRatio) {
-      if (this.contour) {
-        const dx = x - this.data.x;
-        const left = this.contour.bounds.right - POSITION_PADDING + dx;
-        const right = this.contour.bounds.left + POSITION_PADDING + dx;
-        if (left < this.stageBounds.left) {
-          x += this.stageBounds.left - left;
-        }
-        if (right > this.stageBounds.right) {
-          x += this.stageBounds.right - right;
-        }
-      }
+    if (this.editing || x != this.data.x) {
       this.data.x = x;
-      if (this.running) {
-        this.emit('update');
-      }
-
-      this.raster.position.x = paperCore.view.center.x + x;
+      this.requestUpdate();
+      this.raster.position.x = paperCore.view.center.x + this.data.x;
       if (this.contour) {
         this.contour.position.x = this.raster.position.x;
+      }
+      if (this.dialog) {
+        this.createDialog(this.dialog.data.text, this.dialog.data.style);
       }
     }
   }
 
-  get y() {
-    return this.data.y;
-  }
-
   set y(y) {
-    if (y !== this.data.y || paperCore.view.zoom !== this.data.zoomRatio) {
-      if (this.contour) {
-        const dy = y - this.data.y;
-        const top = this.contour.bounds.bottom - POSITION_PADDING - dy;
-        const bottom = this.contour.bounds.top + POSITION_PADDING - dy;
-        if (top < this.stageBounds.top) {
-          y -= this.stageBounds.top - top;
-        }
-        if (bottom > this.stageBounds.bottom) {
-          y -= this.stageBounds.bottom - bottom;
-        }
-      }
+    if (this.editing || y != this.data.y) {
       this.data.y = y;
-      if (this.running) {
-        this.emit('update');
-      }
-
-      this.raster.position.y = paperCore.view.center.y - y;
+      this.requestUpdate();
+      this.raster.position.y = paperCore.view.center.y - this.data.y;
       if (this.contour) {
         this.contour.position.y = this.raster.position.y;
+      }
+      if (this.dialog) {
+        this.createDialog(this.dialog.data.text, this.dialog.data.style);
+      }
+    }
+  }
+
+  goto(x, y, force) {
+    if (this.editing || force || x !== this.data.x || y !== this.data.y) {
+      this.data.x = x;
+      this.data.y = y;
+      this.requestUpdate();
+      this.raster.position.x = paperCore.view.center.x + this.data.x;
+      this.raster.position.y = paperCore.view.center.y - this.data.y;
+
+      if (this.contour) {
+        this.contour.position = this.raster.position;
+      }
+      if (this.dialog) {
+        this.createDialog(this.dialog.data.text, this.dialog.data.style);
       }
     }
   }
@@ -178,7 +233,7 @@ class SpriteUtil extends Util {
     if (width > maxWidth || height > maxHeight) {
       size = Math.floor(Math.min(maxWidth / this.raster.image.width, maxHeight / this.raster.image.height) * 100);
     }
-    return size;
+    return Math.round(size);
   }
 
   get size() {
@@ -187,17 +242,19 @@ class SpriteUtil extends Util {
 
   set size(value) {
     const size = this._size(value);
-    if (size !== this.data.size) {
+    if (this.editing || size !== this.data.size) {
       this.data.size = size;
-      if (this.running) {
-        this.emit('update');
-      }
+      this.requestUpdate();
 
       const scaling = size / 100;
       this.raster.scaling.x = scaling;
       this.raster.scaling.y = scaling;
+
       if (this.contour) {
         this.contour.scaling = this.raster.scaling;
+      }
+      if (this.dialog) {
+        this.createDialog(this.dialog.data.text, this.dialog.data.style);
       }
     }
   }
@@ -209,12 +266,7 @@ class SpriteUtil extends Util {
   set hidden(value) {
     if (value === this.raster.visible) {
       this.raster.visible = !value;
-      if (this.running) {
-        this.emit('update');
-      }
-      // if (this.contour) {
-      //   this.contour.visible = this.raster.visible;
-      // }
+      this.requestUpdate();
     }
   }
 
@@ -225,7 +277,7 @@ class SpriteUtil extends Util {
     } else if (direction > 180) {
       direction -= 360;
     }
-    return direction;
+    return Math.round(direction);
   }
 
   get direction() {
@@ -233,15 +285,25 @@ class SpriteUtil extends Util {
   }
 
   set direction(value) {
-    const direction = this._direction(value);
-    if (direction !== this.data.direction) {
+    this.rotate(this._direction(value), this.rotationStyle);
+  }
+
+  get rotationStyle() {
+    return this.data.rotationStyle;
+  }
+
+  set rotationStyle(value) {
+    this.rotate(this.direction, value);
+  }
+
+  rotate(direction, style) {
+    if (this.editing || direction !== this.data.direction || style !== this.data.rotationStyle) {
       this.data.direction = direction;
-      if (this.running) {
-        this.emit('update');
-      }
+      this.data.rotationStyle = style;
+      this.requestUpdate();
 
       if (this.data.rotationStyle === RotationStyle.ALL_AROUND) {
-        this.raster.rotation = direction - Runtime.DEFAULT_DIRECTION;
+        this.raster.rotation = this.direction - Runtime.DEFAULT_DIRECTION;
       } else if (this.data.rotationStyle === RotationStyle.HORIZONTAL_FLIP) {
         this.raster.rotation = 0;
 
@@ -253,14 +315,18 @@ class SpriteUtil extends Util {
           this.contour.scaling.x = this.raster.scaling.x;
           this.contour.scaling.y = this.raster.scaling.y;
         }
+      } else {
+        this.raster.rotation = 0;
       }
+
       if (this.contour) {
         this.contour.rotation = this.raster.rotation;
       }
+      if (this.dialog) {
+        this.createDialog(this.dialog.data.text, this.dialog.data.style);
+      }
     }
   }
-
-  get layer() {}
 
   move(steps) {
     const radian = degToRad(this.direction - Runtime.DEFAULT_DIRECTION);
@@ -268,15 +334,6 @@ class SpriteUtil extends Util {
     const dy = steps * Math.sin(radian);
     this.x += dx;
     this.y -= dy;
-  }
-
-  goto(x, y) {
-    if (typeof x === 'object') {
-      y = x.y;
-      x = x.x;
-    }
-    this.x = x;
-    this.y = y;
   }
 
   towards(target) {
@@ -290,11 +347,6 @@ class SpriteUtil extends Util {
   }
 
   async glide(duration, x, y) {
-    if (typeof x === 'object') {
-      y = x.y;
-      x = x.x;
-    }
-
     if (duration <= 0) {
       this.goto(x, y);
       return;
@@ -318,7 +370,7 @@ class SpriteUtil extends Util {
         this.goto(x, y);
         break;
       }
-      if (!this.runtime.running) break;
+      if (this.editing) break;
     }
   }
 
@@ -378,6 +430,279 @@ class SpriteUtil extends Util {
     }
     this.x += dx;
     this.y -= dy;
+  }
+
+  get dialog() {
+    return this.dialogLayer.children[this.name];
+  }
+
+  createDialog(text, style = 'say') {
+    this.removeDialog();
+
+    let clen = 0;
+    let llen = 0;
+    let line = '';
+    const lines = [];
+    for (let i = 0; i < text.length; i++) {
+      clen = 1 + ~~((text.charCodeAt(i) & 0xff00) !== 0);
+      if (llen + clen > LINE_MAX_CHARS) {
+        lines.push(line);
+        llen = 0;
+        line = '';
+      }
+      llen += clen;
+      line += text[i];
+    }
+    lines.push(line);
+
+    const dialogText = new paperCore.PointText({
+      content: lines.join('\n'),
+      fontFamily: 'Monaco, Courier New, Consolas, Menlo, monospace',
+      fillColor: '#575e75',
+      fontSize: `${FONT_SIZE}px`,
+    });
+
+    let { width: w, height: h } = dialogText.bounds;
+    w += DIALOG_PADDING * 2;
+    h += DIALOG_PADDING * 2 + DIALOG_HANDLE_HEIGHT;
+    if (w < DIALOG_MIN_WIDTH) w = DIALOG_MIN_WIDTH;
+    if (h < DIALOG_MIN_HEIGHT) h = DIALOG_MIN_HEIGHT;
+
+    const place = {
+      y: 'top',
+      x: 'Right',
+    };
+    let x = this.contour.bounds.right;
+    let y = this.contour.bounds.top + DIALOG_PADDING;
+
+    if (x + w - DIALOG_RADIUS > this.stageBounds.right) {
+      place.x = 'Left';
+      x = this.contour.bounds.left;
+    }
+    if (y - h < this.stageBounds.top) {
+      place.y = 'bottom';
+      y = this.contour.bounds.bottom - DIALOG_PADDING - DIALOG_HANDLE_HEIGHT;
+    }
+
+    const dialogSegments = {
+      topRight: [
+        ...(style === 'think' ? [] : [new paperCore.Point(x - 0.1 * DIALOG_RADIUS, y - 0.2 * DIALOG_RADIUS)]),
+        new paperCore.Point(x, y - 0.8 * DIALOG_RADIUS),
+        new paperCore.Segment(
+          new paperCore.Point(x - DIALOG_RADIUS, y - 1.8 * DIALOG_RADIUS),
+          new paperCore.Point(0, DIALOG_RADIUS),
+        ),
+        new paperCore.Point(x - DIALOG_RADIUS, y - h + DIALOG_RADIUS),
+        new paperCore.Segment(new paperCore.Point(x, y - h), new paperCore.Point(-DIALOG_RADIUS, 0)),
+        new paperCore.Point(x + w - DIALOG_RADIUS * 2, y - h),
+        new paperCore.Segment(
+          new paperCore.Point(x + w - DIALOG_RADIUS, y - h + DIALOG_RADIUS),
+          new paperCore.Point(0, -DIALOG_RADIUS),
+        ),
+        new paperCore.Point(x + w - DIALOG_RADIUS, y - 1.8 * DIALOG_RADIUS),
+        new paperCore.Segment(
+          new paperCore.Point(x + w - DIALOG_RADIUS * 2, y - 0.8 * DIALOG_RADIUS),
+          new paperCore.Point(DIALOG_RADIUS, 0),
+        ),
+        ...(style === 'think'
+          ? [
+              new paperCore.Point(x + 1.4 * DIALOG_RADIUS, y - 0.8 * DIALOG_RADIUS),
+              new paperCore.Segment(
+                new paperCore.Point(x, y - 0.8 * DIALOG_RADIUS),
+                new paperCore.Point(0.7 * DIALOG_RADIUS, 0.8 * DIALOG_RADIUS),
+              ),
+            ]
+          : [
+              new paperCore.Point(x + 0.8 * DIALOG_RADIUS, y - 0.8 * DIALOG_RADIUS),
+              new paperCore.Segment(
+                new paperCore.Point(x + 0.1 * DIALOG_RADIUS, y - 0.1 * DIALOG_RADIUS),
+                new paperCore.Point(0.2 * DIALOG_RADIUS, 0),
+              ),
+              new paperCore.Segment(
+                new paperCore.Point(x - 0.1 * DIALOG_RADIUS, y - 0.2 * DIALOG_RADIUS),
+                new paperCore.Point(0, 0.2 * DIALOG_RADIUS),
+              ),
+            ]),
+      ],
+      topLeft: [
+        ...(style === 'think' ? [] : [new paperCore.Point(x + 0.1 * DIALOG_RADIUS, y - 0.2 * DIALOG_RADIUS)]),
+        new paperCore.Point(x, y - 0.8 * DIALOG_RADIUS),
+        new paperCore.Segment(
+          new paperCore.Point(x + DIALOG_RADIUS, y - 1.8 * DIALOG_RADIUS),
+          new paperCore.Point(0, DIALOG_RADIUS),
+        ),
+        new paperCore.Point(x + DIALOG_RADIUS, y - h + DIALOG_RADIUS),
+        new paperCore.Segment(new paperCore.Point(x, y - h), new paperCore.Point(DIALOG_RADIUS, 0)),
+        new paperCore.Point(x - w + DIALOG_RADIUS * 2, y - h),
+        new paperCore.Segment(
+          new paperCore.Point(x - w + DIALOG_RADIUS, y - h + DIALOG_RADIUS),
+          new paperCore.Point(0, -DIALOG_RADIUS),
+        ),
+        new paperCore.Point(x - w + DIALOG_RADIUS, y - 1.8 * DIALOG_RADIUS),
+        new paperCore.Segment(
+          new paperCore.Point(x - w + DIALOG_RADIUS * 2, y - 0.8 * DIALOG_RADIUS),
+          new paperCore.Point(-DIALOG_RADIUS, 0),
+        ),
+        ...(style === 'think'
+          ? [
+              new paperCore.Point(x - 1.4 * DIALOG_RADIUS, y - 0.8 * DIALOG_RADIUS),
+              new paperCore.Segment(
+                new paperCore.Point(x, y - 0.8 * DIALOG_RADIUS),
+                new paperCore.Point(-0.7 * DIALOG_RADIUS, 0.8 * DIALOG_RADIUS),
+              ),
+            ]
+          : [
+              new paperCore.Point(x - 0.8 * DIALOG_RADIUS, y - 0.8 * DIALOG_RADIUS),
+              new paperCore.Segment(
+                new paperCore.Point(x - 0.1 * DIALOG_RADIUS, y - 0.1 * DIALOG_RADIUS),
+                new paperCore.Point(-0.2 * DIALOG_RADIUS, 0),
+              ),
+              new paperCore.Segment(
+                new paperCore.Point(x + 0.1 * DIALOG_RADIUS, y - 0.2 * DIALOG_RADIUS),
+                new paperCore.Point(0, 0.2 * DIALOG_RADIUS),
+              ),
+            ]),
+      ],
+      bottomRight: [
+        ...(style === 'think' ? [] : [new paperCore.Point(x - 0.1 * DIALOG_RADIUS, y + 0.2 * DIALOG_RADIUS)]),
+        new paperCore.Point(x, y + 0.8 * DIALOG_RADIUS),
+        new paperCore.Segment(
+          new paperCore.Point(x - DIALOG_RADIUS, y + 1.8 * DIALOG_RADIUS),
+          new paperCore.Point(0, -DIALOG_RADIUS),
+        ),
+        new paperCore.Point(x - DIALOG_RADIUS, y + h - DIALOG_RADIUS),
+        new paperCore.Segment(new paperCore.Point(x, y + h), new paperCore.Point(-DIALOG_RADIUS, 0)),
+        new paperCore.Point(x + w - DIALOG_RADIUS * 2, y + h),
+        new paperCore.Segment(
+          new paperCore.Point(x + w - DIALOG_RADIUS, y + h - DIALOG_RADIUS),
+          new paperCore.Point(0, DIALOG_RADIUS),
+        ),
+        new paperCore.Point(x + w - DIALOG_RADIUS, y + 1.8 * DIALOG_RADIUS),
+        new paperCore.Segment(
+          new paperCore.Point(x + w - DIALOG_RADIUS * 2, y + 0.8 * DIALOG_RADIUS),
+          new paperCore.Point(DIALOG_RADIUS, 0),
+        ),
+        ...(style === 'think'
+          ? [
+              new paperCore.Point(x + 1.4 * DIALOG_RADIUS, y + 0.8 * DIALOG_RADIUS),
+              new paperCore.Segment(
+                new paperCore.Point(x, y + 0.8 * DIALOG_RADIUS),
+                new paperCore.Point(0.7 * DIALOG_RADIUS, -0.8 * DIALOG_RADIUS),
+              ),
+            ]
+          : [
+              new paperCore.Point(x + 0.8 * DIALOG_RADIUS, y + 0.8 * DIALOG_RADIUS),
+              new paperCore.Segment(
+                new paperCore.Point(x + 0.1 * DIALOG_RADIUS, y + 0.1 * DIALOG_RADIUS),
+                new paperCore.Point(0.2 * DIALOG_RADIUS, 0),
+              ),
+              new paperCore.Segment(
+                new paperCore.Point(x - 0.1 * DIALOG_RADIUS, y + 0.2 * DIALOG_RADIUS),
+                new paperCore.Point(0, -0.2 * DIALOG_RADIUS),
+              ),
+            ]),
+      ],
+      bottomLeft: [
+        ...(style === 'think' ? [] : [new paperCore.Point(x + 0.1 * DIALOG_RADIUS, y + 0.2 * DIALOG_RADIUS)]),
+        new paperCore.Point(x, y + 0.8 * DIALOG_RADIUS),
+        new paperCore.Segment(
+          new paperCore.Point(x + DIALOG_RADIUS, y + 1.8 * DIALOG_RADIUS),
+          new paperCore.Point(0, -DIALOG_RADIUS),
+        ),
+        new paperCore.Point(x + DIALOG_RADIUS, y + h - DIALOG_RADIUS),
+        new paperCore.Segment(new paperCore.Point(x, y + h), new paperCore.Point(DIALOG_RADIUS, 0)),
+        new paperCore.Point(x - w + DIALOG_RADIUS * 2, y + h),
+        new paperCore.Segment(
+          new paperCore.Point(x - w + DIALOG_RADIUS, y + h - DIALOG_RADIUS),
+          new paperCore.Point(0, DIALOG_RADIUS),
+        ),
+        new paperCore.Point(x - w + DIALOG_RADIUS, y + 1.8 * DIALOG_RADIUS),
+        new paperCore.Segment(
+          new paperCore.Point(x - w + DIALOG_RADIUS * 2, y + 0.8 * DIALOG_RADIUS),
+          new paperCore.Point(-DIALOG_RADIUS, 0),
+        ),
+        ...(style === 'think'
+          ? [
+              new paperCore.Point(x - 1.4 * DIALOG_RADIUS, y + 0.8 * DIALOG_RADIUS),
+              new paperCore.Segment(
+                new paperCore.Point(x, y + 0.8 * DIALOG_RADIUS),
+                new paperCore.Point(-0.7 * DIALOG_RADIUS, -0.8 * DIALOG_RADIUS),
+              ),
+            ]
+          : [
+              new paperCore.Point(x - 0.8 * DIALOG_RADIUS, y + 0.8 * DIALOG_RADIUS),
+              new paperCore.Segment(
+                new paperCore.Point(x - 0.1 * DIALOG_RADIUS, y + 0.1 * DIALOG_RADIUS),
+                new paperCore.Point(-0.2 * DIALOG_RADIUS, 0),
+              ),
+              new paperCore.Segment(
+                new paperCore.Point(x + 0.1 * DIALOG_RADIUS, y + 0.2 * DIALOG_RADIUS),
+                new paperCore.Point(0, -0.2 * DIALOG_RADIUS),
+              ),
+            ]),
+      ],
+    };
+
+    const dialogShape = new paperCore.Path({
+      segments: dialogSegments[`${place.y}${place.x}`],
+      strokeWidth: 2,
+      strokeColor: 'hsla(0, 0%, 0%, 0.15)',
+      fillColor: '#ffffff',
+    });
+
+    let textY = dialogShape.bounds.top + DIALOG_PADDING + FONT_SIZE;
+    dialogText.point = new paperCore.Point(
+      dialogShape.bounds.left + DIALOG_PADDING,
+      place.y === 'top' ? textY : style === 'think' ? textY + 0.2 * DIALOG_RADIUS : textY + DIALOG_HANDLE_HEIGHT - 2,
+    );
+
+    const dialogGroup = this.dialogLayer.addChild(
+      new paperCore.Group({
+        name: this.name,
+        children: [dialogShape, dialogText],
+        data: { style, text },
+      }),
+    );
+
+    if (style === 'think') {
+      const thinkArrow = {
+        topRight: [x - 0.2 * DIALOG_RADIUS, y - 0.3 * DIALOG_RADIUS],
+        topLeft: [x - 0.2 * DIALOG_RADIUS, y - 0.3 * DIALOG_RADIUS],
+        bottomRight: [x - 0.2 * DIALOG_RADIUS, y - 0.3 * DIALOG_RADIUS],
+        bottomLeft: [x - 0.2 * DIALOG_RADIUS, y - 0.3 * DIALOG_RADIUS],
+      };
+      dialogGroup.addChild(
+        new paperCore.Path.Ellipse({
+          point: thinkArrow[`${place.y}${place.x}`],
+          size: [0.7 * DIALOG_RADIUS, 0.5 * DIALOG_RADIUS],
+          strokeWidth: 2,
+          strokeColor: 'hsla(0, 0%, 0%, 0.15)',
+          fillColor: '#ffffff',
+        }),
+      );
+    }
+  }
+
+  removeDialog() {
+    if (this.dialog) {
+      this.dialog.remove();
+    }
+  }
+
+  async say(text, wait = 0) {
+    this.createDialog(`${text}`);
+    if (wait > 0) {
+      await sleep(wait * 1000);
+      this.removeDialog();
+    }
+  }
+
+  async think(text, wait = 0) {
+    this.createDialog(`${text}`, 'think');
+    if (wait > 0) {
+      await sleep(wait * 1000);
+      this.removeDialog();
+    }
   }
 
   isTouching(target) {

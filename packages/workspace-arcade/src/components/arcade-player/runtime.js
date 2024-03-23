@@ -1,13 +1,14 @@
 import { paperCore, Runtime as BaseRuntime } from '@blockcode/blocks-player';
 import { Tone, Music } from '@blockcode/tone-player';
 import RotationStyle from '../../lib/rotation-style';
+import { VIEW_WIDTH, VIEW_HEIGHT, DEFAULT_DIRECTION } from '../../lib/default-project';
 
 import '../../generators/javascript';
 
 export default class Runtime extends BaseRuntime {
-  static VIEW_WIDTH = 320;
-  static VIEW_HEIGHT = 240;
-  static DEFAULT_DIRECTION = 90;
+  static VIEW_WIDTH = VIEW_WIDTH;
+  static VIEW_HEIGHT = VIEW_HEIGHT;
+  static DEFAULT_DIRECTION = DEFAULT_DIRECTION;
 
   get tone() {
     if (!this._tone) {
@@ -26,9 +27,7 @@ export default class Runtime extends BaseRuntime {
 
   get stage() {
     const stageLayer = paperCore.project.layers['stage'];
-    const raster = stageLayer.children[0];
-    raster.util.runtime = this;
-    return raster;
+    return stageLayer.children[0];
   }
 
   get sprites() {
@@ -60,6 +59,6 @@ export default class Runtime extends BaseRuntime {
     if (this._tone) {
       this._tone.stop();
     }
-    super.stop();
+    return super.stop();
   }
 }

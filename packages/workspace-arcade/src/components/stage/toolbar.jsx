@@ -1,5 +1,5 @@
 import { useLocale } from '@blockcode/core';
-import { classNames, Button } from '@blockcode/ui';
+import { classNames, ToggleButtons } from '@blockcode/ui';
 
 import styles from './toolbar.module.css';
 import iconGreenFlag from './icon-green-flag.svg';
@@ -9,9 +9,6 @@ import iconLargeStage from './icon-large-stage.svg';
 
 export default function Toolbar({ stageSize, playing, onPlay, onStop, onSizeToggle }) {
   const { getText } = useLocale();
-
-  const handleSmallStage = () => onSizeToggle('small');
-  const handleLargeStage = () => onSizeToggle('large');
 
   return (
     <div className={styles.toolbarWrapper}>
@@ -34,28 +31,23 @@ export default function Toolbar({ stageSize, playing, onPlay, onStop, onSizeTogg
         />
       </div>
       <div className={styles.toolbarButtonsGroup}>
-        <Button
-          className={classNames(styles.toolbarButton, styles.groupButtonFirst, {
-            [styles.groupButtonToggledOff]: stageSize !== 'small',
-          })}
-          onClick={handleSmallStage}
-        >
-          <img
-            src={iconSmallStage}
-            title={getText('arcade.smallStage', 'Switch to small stage')}
-          />
-        </Button>
-        <Button
-          className={classNames(styles.toolbarButton, styles.groupButtonLast, {
-            [styles.groupButtonToggledOff]: stageSize === 'small',
-          })}
-          onClick={handleLargeStage}
-        >
-          <img
-            src={iconLargeStage}
-            title={getText('arcade.largeStage', 'Switch to large stage')}
-          />
-        </Button>
+        <ToggleButtons
+          disabled={playing}
+          items={[
+            {
+              icon: iconSmallStage,
+              title: getText('arcade.smallStage', 'Switch to small stage'),
+              value: 'small',
+            },
+            {
+              icon: iconLargeStage,
+              title: getText('arcade.largeStage', 'Switch to large stage'),
+              value: 'large',
+            },
+          ]}
+          value={stageSize}
+          onChange={onSizeToggle}
+        />
       </div>
     </div>
   );

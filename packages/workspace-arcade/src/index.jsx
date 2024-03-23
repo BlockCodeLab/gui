@@ -18,6 +18,8 @@ export default function ArcadeBlocksWorkspace({
   addLocaleData,
   getText,
   setLayout,
+  selectTab,
+  setPrompt,
   setAlert,
   removeAlert,
   openProject,
@@ -50,14 +52,26 @@ export default function ArcadeBlocksWorkspace({
       {
         icon: paintIcon,
         label: <PaintText />,
-        Content: PixelPaint,
+        Content: () => (
+          <PixelPaint
+            onAlert={setAlert}
+            onRemoveAlert={removeAlert}
+          />
+        ),
       },
     ],
 
     sidebars: [
       {
         expand: 'right',
-        Content: Sidebar,
+        Content: () => (
+          <Sidebar
+            onSelectTab={selectTab}
+            onPrompt={setPrompt}
+            onAlert={setAlert}
+            onRemoveAlert={removeAlert}
+          />
+        ),
       },
     ],
 

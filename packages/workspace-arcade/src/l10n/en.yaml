@@ -7,6 +7,9 @@ arcade.pixelPaint.default: Painter
 arcade.pixelPaint.costumes: Costumes
 arcade.pixelPaint.backdrops: Backdrops
 
+arcade.deletePrompt.title: Delete {name}
+arcade.deletePrompt.label: Do you want to delete the sprite?
+
 arcade.greenFlag: Go
 arcade.stopAll: Stop
 arcade.smallStage: Switch to small stage
@@ -40,10 +43,9 @@ arcade.directionPicker.leftRight: Left/Right
 arcade.directionPicker.dontRotate: Do not rotate
 
 arcade.defaultProject.stageName: Stage
-arcade.defaultProject.spriteName: Sprite1
-arcade.defaultProject.backdropName: backdrop1
-arcade.defaultProject.costumeName1: costume1
-arcade.defaultProject.costumeName2: costume2
+arcade.defaultProject.spriteName: Sprite
+arcade.defaultProject.backdropName: backdrop
+arcade.defaultProject.costumeName: costume
 
 arcade.blocks.fnButton: fn
 arcade.blocks.stopOther: other scripts in sprite

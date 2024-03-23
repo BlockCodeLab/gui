@@ -19,7 +19,7 @@ const xmlEscape = (unsafe) => {
   });
 };
 
-const motion = (isStage, targetId) => `
+const motion = (isStage, sprite) => `
   <category name="%{BKY_CATEGORY_MOTION}" id="motion" colour="#4C97FF" secondaryColour="#3373CC">
     ${
       isStage
@@ -54,17 +54,17 @@ const motion = (isStage, targetId) => `
           </block>
           <block type="motion_gotoxy">
             <value name="X">
-              <shadow id="movex" type="math_number">
-                <field name="NUM">0</field>
+              <shadow type="math_number">
+                <field name="NUM">${Math.round(sprite.x)}</field>
               </shadow>
             </value>
             <value name="Y">
-              <shadow id="movey" type="math_number">
-                <field name="NUM">0</field>
+              <shadow type="math_number">
+                <field name="NUM">${Math.round(sprite.y)}</field>
               </shadow>
             </value>
           </block>
-          <block type="motion_glideto" id="motion_glideto">
+          <block type="motion_glideto">
             <value name="SECS">
               <shadow type="math_number">
                 <field name="NUM">1</field>
@@ -81,18 +81,18 @@ const motion = (isStage, targetId) => `
               </shadow>
             </value>
             <value name="X">
-              <shadow id="glidex" type="math_number">
-                <field name="NUM">0</field>
+              <shadow type="math_number">
+                <field name="NUM">${Math.round(sprite.x)}</field>
               </shadow>
             </value>
             <value name="Y">
-              <shadow id="glidey" type="math_number">
-                <field name="NUM">0</field>
+              <shadow type="math_number">
+                <field name="NUM">${Math.round(sprite.y)}</field>
               </shadow>
             </value>
           </block>
           ${blockSeparator}
-          <block type="motion_pointindirection">
+          <block type="motion_pointindirection" data-value="${Math.round(sprite.direction)}">
             <value name="DIRECTION">
               <shadow type="math_angle">
                 <field name="NUM">90</field>
@@ -114,8 +114,8 @@ const motion = (isStage, targetId) => `
           </block>
           <block type="motion_setx">
             <value name="X">
-              <shadow id="setx" type="math_number">
-                <field name="NUM">0</field>
+              <shadow type="math_number">
+                <field name="NUM">${Math.round(sprite.x)}</field>
               </shadow>
             </value>
           </block>
@@ -128,26 +128,26 @@ const motion = (isStage, targetId) => `
           </block>
           <block type="motion_sety">
             <value name="Y">
-              <shadow id="sety" type="math_number">
-                <field name="NUM">0</field>
+              <shadow type="math_number">
+                <field name="NUM">${Math.round(sprite.y)}</field>
               </shadow>
             </value>
           </block>
           ${blockSeparator}
           <block type="motion_ifonedgebounce"/>
           ${blockSeparator}
-          <block type="motion_setrotationstyle"/>
+          <block type="motion_setrotationstyle" data-value="${sprite.rotationStyle}"/>
           ${blockSeparator}
-          <block id="${targetId}_xposition" type="motion_xposition"/>
-          <block id="${targetId}_yposition" type="motion_yposition"/>
-          <block id="${targetId}_direction" type="motion_direction"/>
+          <block type="motion_xposition"/>
+          <block type="motion_yposition"/>
+          <block type="motion_direction"/>
           ${categorySeparator}
           `
     }
   </category>
 `;
 
-const looks = (isStage, targetId, costumeName, backdropName) => `
+const looks = (isStage, sprite, stage, costumeValue, backdropValue) => `
   <category name="%{BKY_CATEGORY_LOOKS}" id="looks" colour="#9966FF" secondaryColour="#774DCB">
     ${
       isStage
@@ -155,14 +155,14 @@ const looks = (isStage, targetId, costumeName, backdropName) => `
           <block type="looks_switchbackdropto">
             <value name="BACKDROP">
               <shadow type="looks_backdrops">
-                <field name="BACKDROP">${backdropName}</field>
+                <field name="BACKDROP">${backdropValue}</field>
               </shadow>
             </value>
           </block>
           <block type="looks_switchbackdroptoandwait">
             <value name="BACKDROP">
               <shadow type="looks_backdrops">
-                <field name="BACKDROP">${backdropName}</field>
+                <field name="BACKDROP">${backdropValue}</field>
               </shadow>
             </value>
           </block>
@@ -208,10 +208,10 @@ const looks = (isStage, targetId, costumeName, backdropName) => `
             </value>
           </block>
           ${blockSeparator}
-          <block id="${targetId}_switchcostumeto" type="looks_switchcostumeto">
+          <block type="looks_switchcostumeto">
             <value name="COSTUME">
               <shadow type="looks_costume">
-                <field name="COSTUME">${costumeName}</field>
+                <field name="COSTUME">${costumeValue}</field>
               </shadow>
             </value>
           </block>
@@ -219,7 +219,7 @@ const looks = (isStage, targetId, costumeName, backdropName) => `
           <block type="looks_switchbackdropto">
             <value name="BACKDROP">
               <shadow type="looks_backdrops">
-                <field name="BACKDROP">${backdropName}</field>
+                <field name="BACKDROP">${backdropValue}</field>
               </shadow>
             </value>
           </block>
@@ -269,7 +269,7 @@ const looks = (isStage, targetId, costumeName, backdropName) => `
         ? ''
         : `
           <block type="looks_show"/>
-          <block type="looks_hide"/>
+          <block type="looks_hide" data-value="${sprite.hidden}"/>
           ${blockSeparator}
           <block type="looks_gotofrontback"/>
           <block type="looks_goforwardbackwardlayers">
@@ -284,31 +284,31 @@ const looks = (isStage, targetId, costumeName, backdropName) => `
     ${
       isStage
         ? `
-          <block id="backdropnumbername" type="looks_backdropnumbername"/>
+          <block type="looks_backdropnumbername" data-value="${stage.frame}"/>
           `
         : `
-          <block id="${targetId}_costumenumbername" type="looks_costumenumbername"/>
-          <block id="backdropnumbername" type="looks_backdropnumbername"/>
-          <block id="${targetId}_size" type="looks_size"/>
+          <block type="looks_costumenumbername" data-value="${sprite.frame}"/>
+          <block type="looks_backdropnumbername" data-value="${stage.frame}"/>
+          <block type="looks_size" data-value="${sprite.size}"/>
           `
     }
     ${categorySeparator}
   </category>
 `;
 
-const sound = (soundName) => `
+const sound = (sound) => `
   <category name="%{BKY_CATEGORY_SOUND}" id="sound" colour="#D65CD6" secondaryColour="#BD42BD">
     <block type="sound_playuntildone">
       <value name="SOUND_MENU">
         <shadow type="sound_sounds_menu">
-          <field name="SOUND_MENU">${soundName}</field>
+          <field name="SOUND_MENU">${sound}</field>
         </shadow>
       </value>
     </block>
     <block type="sound_play">
       <value name="SOUND_MENU">
         <shadow type="sound_sounds_menu">
-          <field name="SOUND_MENU">${soundName}</field>
+          <field name="SOUND_MENU">${sound}</field>
         </shadow>
       </value>
     </block>
@@ -346,7 +346,7 @@ const events = () => `
   </category>
 `;
 
-const control = (isStage) => `
+const control = (isStage, noSprite) => `
   <category name="%{BKY_CATEGORY_CONTROL}" id="control" colour="#FFAB19" secondaryColour="#CF8B17">
     <block type="control_wait">
       <value name="DURATION">
@@ -363,57 +363,60 @@ const control = (isStage) => `
         </shadow>
       </value>
     </block>
-    <block id="forever" type="control_forever"/>
+    <block type="control_forever"/>
     ${blockSeparator}
     <block type="control_if"/>
     <block type="control_if_else"/>
-    <block id="wait_until" type="control_wait_until"/>
-    <block id="repeat_until" type="control_repeat_until"/>
+    <block type="control_wait_until"/>
+    <block type="control_repeat_until"/>
     <block type="control_while"/>
     ${blockSeparator}
     <block type="control_stop"/>
-    ${blockSeparator}
     ${
-      isStage
-        ? `
-          <block type="control_create_clone_of">
-            <value name="CLONE_OPTION">
-              <shadow type="control_create_clone_of_menu"/>
-            </value>
-          </block>
-          `
-        : `
-          <block type="control_start_as_clone"/>
-          <block type="control_create_clone_of">
-            <value name="CLONE_OPTION">
-              <shadow type="control_create_clone_of_menu"/>
-            </value>
-          </block>
-          <block type="control_delete_this_clone"/>
-          `
+      noSprite
+        ? ''
+        : isStage
+          ? `
+              ${blockSeparator}
+              <block type="control_create_clone_of">
+                <value name="CLONE_OPTION">
+                  <shadow type="control_create_clone_of_menu"/>
+                </value>
+              </block>
+              `
+          : `
+              ${blockSeparator}
+              <block type="control_start_as_clone"/>
+              <block type="control_create_clone_of">
+                <value name="CLONE_OPTION">
+                  <shadow type="control_create_clone_of_menu"/>
+                </value>
+              </block>
+              <block type="control_delete_this_clone"/>
+              `
     }
     ${categorySeparator}
   </category>
 `;
 
-const sensing = (isStage) => `
+const sensing = (isStage, noSprite) => `
   <category name="%{BKY_CATEGORY_SENSING}" id="sensing" colour="#4CBFE6" secondaryColour="#2E8EB8">
     ${
       isStage
         ? ''
         : `
-        <block type="sensing_touchingobject">
-          <value name="TOUCHINGOBJECTMENU">
-            <shadow type="sensing_touchingobjectmenu"/>
-          </value>
-        </block>
-        <block type="sensing_distanceto">
-          <value name="DISTANCETOMENU">
-            <shadow type="sensing_distancetomenu"/>
-          </value>
-        </block>
-        ${blockSeparator}
-        `
+          <block type="sensing_touchingobject">
+            <value name="TOUCHINGOBJECTMENU">
+              <shadow type="sensing_touchingobjectmenu"/>
+            </value>
+          </block>
+          <block type="sensing_distanceto">
+            <value name="DISTANCETOMENU">
+              <shadow type="sensing_distancetomenu"/>
+            </value>
+          </block>
+          ${blockSeparator}
+          `
     }
     <block type="sensing_keypressed">
       <value name="KEY_OPTION">
@@ -421,34 +424,40 @@ const sensing = (isStage) => `
       </value>
     </block>
     ${blockSeparator}
-    <block id="timer" type="sensing_timer"/>
+    <block type="sensing_timer"/>
     <block type="sensing_resettimer"/>
-    ${blockSeparator}
-    <block id="of" type="sensing_of">
-      <value name="OBJECT">
-        <shadow id="sensing_of_object_menu" type="sensing_of_object_menu"/>
-      </value>
-    </block>
+    ${
+      noSprite
+        ? ''
+        : `
+          ${blockSeparator}
+          <block type="sensing_of">
+            <value name="OBJECT">
+              <shadow type="sensing_of_object_menu"/>
+            </value>
+          </block>
+          `
+    }
     ${categorySeparator}
-  </category>
-`;
+  </category >
+  `;
 
-export default function (isStage, targetId, costumeName = '', backdropName = '', soundName = '') {
-  costumeName = xmlEscape(costumeName);
-  backdropName = xmlEscape(backdropName);
-  soundName = xmlEscape(soundName);
+export default function (isStage, noSprite, stage, sprite, soundValue) {
+  const costumeValue = noSprite ? '' : xmlEscape(sprite.assets[sprite.frame]);
+  const backdropValue = xmlEscape(stage.assets[stage.frame]);
+  soundValue = xmlEscape(soundValue);
   return makeToolboxXML([
     {
       id: 'motion',
-      xml: motion(isStage, targetId),
+      xml: motion(isStage, sprite),
     },
     {
       id: 'looks',
-      xml: looks(isStage, targetId, costumeName, backdropName),
+      xml: looks(isStage, stage, sprite, costumeValue, backdropValue),
     },
     {
       id: 'sound',
-      xml: sound(soundName),
+      xml: sound(soundValue),
     },
     {
       id: 'events',
@@ -456,11 +465,11 @@ export default function (isStage, targetId, costumeName = '', backdropName = '',
     },
     {
       id: 'control',
-      xml: control(isStage),
+      xml: control(isStage, noSprite),
     },
     {
       id: 'sensing',
-      xml: sensing(isStage),
+      xml: sensing(isStage, noSprite),
     },
   ]);
 }

@@ -13,7 +13,7 @@ import searchIcon from './icon-search.svg';
 import paintIcon from './icon-paint.svg';
 import fileUploadIcon from './icon-file-upload.svg';
 
-export default function SpriteSelector({ stageSize }) {
+export default function SpriteSelector({ playing, stageSize, onSelectTab, onPrompt, onAlert, onRemoveAlert }) {
   const { getText } = useLocale();
   const { fileList, assetList, selectedIndex, addFile, openFile, deleteFile, addAsset, deleteAsset, modifyAsset } =
     useEditor();
@@ -39,48 +39,93 @@ export default function SpriteSelector({ stageSize }) {
     });
   };
 
-  const handleFileChange = async ({ target }) => {
-    for (const file of target.files) {
-      const fileId = uid();
-      const assetId = uid();
-      const imageName = file.name.slice(0, file.name.lastIndexOf('.'));
-      const image = await loadImage(file);
-      addAsset({
-        id: assetId,
-        type: file.type,
-        name: imageName,
-        data: image.src.slice(`data:${file.type};base64,`.length),
-        width: image.width,
-        height: image.height,
-        centerX: Math.floor(image.width / 2),
-        centerY: Math.floor(image.height / 2),
-      });
-      addFile({
-        id: fileId,
-        type: 'text/x-python',
-        name: imageName,
-        assets: [assetId],
-        costume: 0,
-        x: 0,
-        y: 0,
-        size: 100,
-        direction: 90,
-        rotationStyle: RotationStyle.ALL_AROUND,
-      });
-      generateMainFile(fileId);
-    }
-    target.value = '';
+  const handleUploadFile = () => {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*'; // TODO: .sprite file
+    fileInput.multiple = true;
+    fileInput.click();
+    fileInput.addEventListener('change', async (e) => {
+      const alertId = uid();
+      onAlert('importing', { id: alertId });
+
+      for (const file of e.target.files) {
+        const fileId = uid();
+        const imageId = uid();
+        const imageName = file.name.slice(0, file.name.lastIndexOf('.'));
+        const image = await loadImage(file);
+        addAsset({
+          id: imageId,
+          type: file.type,
+          name: imageName,
+          data: image.src.slice(`data:${file.type};base64,`.length),
+          width: image.width,
+          height: image.height,
+          centerX: Math.floor(image.width / 2),
+          centerY: Math.floor(image.height / 2),
+        });
+        addFile({
+          id: fileId,
+          type: 'text/x-python',
+          name: imageName,
+          assets: [imageId],
+          frame: 0,
+          x: 0,
+          y: 0,
+          size: 100,
+          direction: 90,
+          rotationStyle: RotationStyle.ALL_AROUND,
+        });
+        generateMainFile(fileId);
+      }
+      onRemoveAlert(alertId);
+    });
+  };
+
+  const handlePaintImage = () => {
+    const fileId = uid();
+    const imageId = uid();
+    addAsset({
+      id: imageId,
+      type: 'image/png',
+      name: getText(`arcade.defaultProject.costumeName`, 'costume'),
+      data: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAAtJREFUGFdjYAACAAAFAAGq1chRAAAAAElFTkSuQmCC',
+      width: 1,
+      height: 1,
+      centerX: 1,
+      centerY: 1,
+    });
+    addFile({
+      id: fileId,
+      type: 'text/x-python',
+      name: getText(`arcade.defaultProject.spriteName`, 'Sprite'),
+      assets: [imageId],
+      frame: 0,
+      x: 0,
+      y: 0,
+      size: 100,
+      direction: 90,
+      rotationStyle: RotationStyle.ALL_AROUND,
+    });
+    generateMainFile(fileId);
+    onSelectTab(1);
   };
 
   const handleDelete = (index) => {
-    const { id, assets } = fileList[index];
-    deleteFile(index);
-    generateMainFile(id, true);
-    assets.forEach((assetId) => {
-      for (const file of fileList) {
-        if (file.id !== id && file.assets.includes(assetId)) return;
-      }
-      deleteAsset(assetId);
+    const { id, name, assets } = fileList[index];
+    onPrompt({
+      title: getText('arcade.deletePrompt.title', 'Delete {name}', { name }),
+      label: getText('arcade.deletePrompt.label', 'Do you want to delete the sprite?'),
+      onSubmit: () => {
+        deleteFile(index);
+        generateMainFile(id, true);
+        assets.forEach((assetId) => {
+          for (const file of fileList) {
+            if (file.id !== id && file.assets.includes(assetId)) return;
+          }
+          deleteAsset(assetId);
+        });
+      },
     });
   };
 
@@ -93,7 +138,10 @@ export default function SpriteSelector({ stageSize }) {
 
   return (
     <div className={styles.spriteSelector}>
-      <SpriteInfo stageSize={stageSize} />
+      <SpriteInfo
+        playing={playing}
+        stageSize={stageSize}
+      />
 
       <IconSelector
         id="sprite-selector"
@@ -105,7 +153,7 @@ export default function SpriteSelector({ stageSize }) {
             ? { __hidden__: true }
             : {
                 ...sprite,
-                icon: getFileIcon(sprite.assets[sprite.costume]),
+                icon: getFileIcon(sprite.assets[sprite.frame]),
                 order: sprite.order || index,
                 contextMenu: [
                   [
@@ -115,6 +163,7 @@ export default function SpriteSelector({ stageSize }) {
                     },
                     {
                       label: getText('arcade.contextMenu.export', 'export'),
+                      disabled: true,
                       onClick: () => {},
                     },
                   ],
@@ -122,8 +171,7 @@ export default function SpriteSelector({ stageSize }) {
                     {
                       label: getText('arcade.contextMenu.delete', 'delete'),
                       className: styles.deleteMenuItem,
-                      disabled: fileList.length <= 2,
-                      onClick: fileList.length > 2 && (() => handleDelete(index)),
+                      onClick: () => handleDelete(index),
                     },
                   ],
                 ],
@@ -131,10 +179,11 @@ export default function SpriteSelector({ stageSize }) {
         )}
         selectedIndex={selectedIndex}
         onSelect={openFile}
-        onDelete={fileList.length > 2 && handleDelete}
+        onDelete={handleDelete}
       />
 
       <ActionButton
+        disabled={playing}
         className={styles.addButton}
         icon={spriteIcon}
         tooltip={getText('arcade.actionButton.sprite', 'Choose a Sprite')}
@@ -143,9 +192,7 @@ export default function SpriteSelector({ stageSize }) {
           {
             icon: fileUploadIcon,
             tooltip: getText('arcade.actionButton.uploadSprite', 'Upload Sprite'),
-            fileAccept: 'image/*', // TODO: add .sprite file
-            fileMultiple: true,
-            onFileChange: handleFileChange,
+            onClick: handleUploadFile,
           },
           {
             icon: surpriseIcon,
@@ -155,7 +202,7 @@ export default function SpriteSelector({ stageSize }) {
           {
             icon: paintIcon,
             tooltip: getText('arcade.actionButton.paint', 'Paint'),
-            onClick: () => {},
+            onClick: handlePaintImage,
           },
           {
             icon: searchIcon,

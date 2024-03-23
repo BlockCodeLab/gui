@@ -42,37 +42,14 @@ export default function BlocksEditor() {
     SOUND_MENU_POWER_DOWN: getText('arcade.blocks.musicMenu.powerDown', 'power down'),
   };
 
-  buildBlocks(assetList, fileList, selectedIndex, getText);
-
-  let target, xml;
-  if (selectedIndex !== -1) {
-    target = fileList[selectedIndex];
-    xml = target && target.xml;
-  }
-  const toolbox = makeToolboxXML(
-    isStage,
-    target.id,
-    target.assets[target.costume],
-    fileList[0].assets[fileList[0].backdrop],
-    DEFAULT_SOUND_NAME,
-  );
-
   const workspace = ScratchBlocks.getMainWorkspace();
-  const updateToolboxBlockValue = (id, value) => {
-    const block = workspace.getBlockById(id);
-    if (block) {
-      block.inputList[0].fieldRow[0].setValue(value);
-    }
-  };
-  const targetUpdate = () => {
-    if (selectedIndex > 0 && workspace) {
-      ['glide', 'move', 'set'].forEach((prefix) => {
-        updateToolboxBlockValue(`${prefix}x`, Math.round(target.x).toString());
-        updateToolboxBlockValue(`${prefix}y`, Math.round(target.y).toString());
-      });
-    }
-  };
-  setTimeout(targetUpdate, 1);
+  buildBlocks(assetList, fileList, selectedIndex, workspace);
+
+  const stage = fileList[0];
+  const target = fileList[selectedIndex]; // stage or sprite
+  const xml = target && target.xml;
+
+  const toolbox = makeToolboxXML(isStage, fileList.length === 1, stage, target, DEFAULT_SOUND_NAME);
 
   const listAssets = (assets) => {
     const res = [];
@@ -90,19 +67,19 @@ export default function BlocksEditor() {
   };
 
   pythonGenerator.additionalDefinitions_ = isStage
-    ? [['create_stage', `stage=Stage(${listAssets(target.assets)},${target.backdrop})`]]
+    ? [['create_stage', `stage = Stage(${listAssets(stage.assets)}, ${stage.frame})`]]
     : [
         ['import_stage', 'from stage import stage'],
         [
           'create_sprite',
-          `sprite=Sprite("${target.id}",${listAssets(target.assets)},${target.costume},${target.x},${target.y},` +
-            `${target.size},${target.direction},${target.rotationStyle},${target.hidden ? 'True' : 'False'})`,
+          `sprite = Sprite("${target.id}", ${listAssets(target.assets)}, ${target.frame}, ${Math.round(target.x)}, ${Math.round(target.y)}, ${Math.round(target.size)}, ${Math.round(target.direction)}, ${target.rotationStyle}, ${target.hidden ? 'True' : 'False'})`,
         ],
         ['add_sprite', `stage.add_sprite(sprite)`],
       ];
 
   return (
     <Editor
+      disableExtension
       enableMultiTargets
       enableLocalVariable={!isStage}
       toolbox={toolbox}

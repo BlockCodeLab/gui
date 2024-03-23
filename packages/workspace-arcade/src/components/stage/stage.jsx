@@ -4,11 +4,9 @@ import ArcadePlayer from '../arcade-player/arcade-player';
 import Toolbar from './toolbar';
 import styles from './stage.module.css';
 
-export default function Stage({ size, onSizeToggle }) {
-  const [playing, setPlaying] = useState(false);
-
-  const handlePlay = () => setPlaying(true);
-  const handleStop = () => setPlaying(false);
+export default function Stage({ playing, size, onSizeToggle, onPlay }) {
+  const handlePlay = () => onPlay(true);
+  const handleStop = () => onPlay(false);
 
   return (
     <div className={styles.stageWrapper}>
