@@ -14,6 +14,7 @@ export { Label } from './forms/label';
 export { Menu, MenuItem, MenuSection } from './menu/menu';
 export { Modal } from './modal/modal';
 export { Spinner } from './spinner/spinner';
+export { ToggleButtons } from './toggle-buttons/toggle-buttons';
 export { Tooltip } from './tooltip/tooltip';
 export { Library } from './library/library';
 export { LibraryItem } from './library/library-item';
