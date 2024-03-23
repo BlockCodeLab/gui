@@ -2,16 +2,23 @@ export const DRAW_WIDTH = 320;
 export const DRAW_HEIGHT = 240;
 
 export class Point {
+  static get DrawWidth() {
+    return DRAW_WIDTH;
+  }
+
+  static get DrawHeight() {
+    return DRAW_HEIGHT;
+  }
+
   static from(index) {
-    const y = Math.floor(index / 4 / DRAW_WIDTH);
-    const x = Math.floor(index / 4 - y * DRAW_WIDTH);
+    const i = index >> 2;
+    const y = Math.floor(i / DRAW_WIDTH);
+    const x = i - y * DRAW_WIDTH;
     return new Point(x, y);
   }
 
   constructor(x, y) {
-    this._x = x;
-    this._y = y;
-    this._index = (this.x + this.y * DRAW_WIDTH) * 4;
+    this.setXY(x, y);
   }
 
   get x() {
@@ -20,7 +27,7 @@ export class Point {
 
   set x(x) {
     this._x = x;
-    this._index = (this.x + this.y * DRAW_WIDTH) * 4;
+    this._index = (this.x + this.y * DRAW_WIDTH) << 2;
   }
 
   get y() {
@@ -29,7 +36,7 @@ export class Point {
 
   set y(y) {
     this._y = y;
-    this._index = (this.x + this.y * DRAW_WIDTH) * 4;
+    this._index = (this.x + this.y * DRAW_WIDTH) << 2;
   }
 
   get index() {
@@ -74,6 +81,13 @@ export class Point {
 
   get bottomRightPoint() {
     return new Point(this.x + 1, this.y + 1);
+  }
+
+  setXY(x, y) {
+    this._x = x;
+    this._y = y;
+    this._index = (this.x + this.y * DRAW_WIDTH) << 2;
+    return this;
   }
 
   equals(point) {

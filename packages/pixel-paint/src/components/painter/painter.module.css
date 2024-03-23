@@ -109,3 +109,12 @@
 .label-button.selected .button-icon {
   filter: brightness(0) invert();
 }
+
+.draw-box-wrapper {
+  overflow: hidden;
+  flex: 1;
+  position: relative;
+  margin: 0 var(--space);
+  border: 1px solid var(--ui-black-transparent);
+  border-radius: calc(var(--space) / 2);
+}

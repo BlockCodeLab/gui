@@ -1,7 +1,8 @@
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { useLocale, useEditor } from '@blockcode/core';
 import { classNames, Label, BufferedInput, Input, Button } from '@blockcode/ui';
 import { Color } from '../../lib/color';
+import { createImage } from '../../lib/create-image';
 
 import ColorPicker from '../color-picker/color-picker';
 import ToolBox from '../tool-box/tool-box';
@@ -16,16 +17,10 @@ import zoomOutIcon from './icons/icon-zoom-out.svg';
 import zoomResetIcon from './icons/icon-zoom-reset.svg';
 import penIcon from '../tool-box/icons/icon-pen.svg';
 import eraserIcon from '../tool-box/icons/icon-eraser.svg';
-import fillIcon from '../tool-box/icons/icon-fill.svg';
-import textIcon from '../tool-box/icons/icon-text.svg';
-import lineIcon from '../tool-box/icons/icon-line.svg';
-import rectangleIcon from '../tool-box/icons/icon-rectangle.svg';
-import circleIcon from '../tool-box/icons/icon-circle.svg';
-import selectIcon from '../tool-box/icons/icon-select.svg';
 
-export default function Painter({ filters, assetId }) {
+export default function Painter({ mode, imageList, imageIndex }) {
   const { getText } = useLocale();
-  const { assetList, selectedIndex } = useEditor();
+  const { modifyAsset } = useEditor();
 
   const [zoom, setZoom] = useState(1);
   const [paintMode, setPaintMode] = useState('draw');
@@ -34,18 +29,57 @@ export default function Painter({ filters, assetId }) {
   const [outlineSize, setOutlineSize] = useState(2);
   const [fillColor, setFillColor] = useState(new Color([260, 0.6, 1]));
   const [outlineColor, setOutlineColor] = useState(new Color([0, 1, 0]));
+  const [undoList, setUndoList] = useState([]);
+  const [redoList, setRedoList] = useState([]);
 
-  const disabled = !assetId;
-  const image = assetList[assetId];
+  const imageAsset = imageList[imageIndex];
+  const imageId = imageAsset && imageAsset.id;
+  const disabled = !imageId;
 
-  const getPainterText = (defaultText, costumeText, backdropText) => {
-    if (!filters) return defaultText;
-    if (selectedIndex === -1) return defaultText;
-    if (selectedIndex === 0) return backdropText;
-    return costumeText;
+  const getTextByMode = (defaultText, costumeText, backdropText) => {
+    if (mode === 'costume') return costumeText;
+    if (mode === 'backdrop') return backdropText;
+    return defaultText;
   };
 
-  const handleChange = (key, value) => {};
+  const modifyImage = (imageData, name) => {
+    const image = {
+      id: imageId,
+    };
+
+    if (name) {
+      image.name = name;
+    }
+
+    if (imageData) {
+      const newImage = createImage(imageData);
+      image.type = newImage.type;
+      image.data = newImage.data;
+      image.width = newImage.width;
+      image.height = newImage.height;
+      image.centerX = newImage.centerX;
+      image.centerY = newImage.centerY;
+    }
+
+    modifyAsset(image);
+  };
+
+  const handleChange = (key, value) => {
+    let name, imageData;
+    if (key === 'name') name = value;
+    if (key === 'data') {
+      imageData = value;
+
+      if (undoList.length > 20) {
+        undoList.splice(1, 1);
+      }
+      setUndoList(undoList.concat(imageData));
+      setRedoList([]);
+
+      if (undoList.length === 0) return;
+    }
+    modifyImage(imageData, name);
+  };
 
   const handleChangeColor = (newColor) => {
     if (paintMode === 'picker-fill') {
@@ -56,12 +90,33 @@ export default function Painter({ filters, assetId }) {
     }
   };
 
+  const handleUndo = () => {
+    const imageData = undoList.pop();
+    setUndoList(undoList);
+    setRedoList(redoList.concat(imageData));
+    modifyImage(undoList.at(-1));
+  };
+
+  const handleRedo = () => {
+    const imageData = redoList.pop();
+    setUndoList(undoList.concat(imageData));
+    setRedoList(redoList);
+    modifyImage(imageData);
+  };
+
+  useEffect(() => {
+    setUndoList([]);
+    setRedoList([]);
+    setPaintMode('draw');
+    return () => {};
+  }, [imageId]);
+
   return (
     <div className={styles.painterWrapper}>
       <div className={styles.row}>
         <div className={styles.group}>
           <Label
-            text={getPainterText(
+            text={getTextByMode(
               getText('pixelPaint.painter.image', 'Image'),
               getText('pixelPaint.painter.costume', 'Costume'),
               getText('pixelPaint.painter.backdrop', 'Backdrop'),
@@ -73,9 +128,9 @@ export default function Painter({ filters, assetId }) {
               placeholder={getText('pixelPaint.painter.name', 'name')}
               onSubmit={(value) => handleChange('name', value)}
               value={
-                image
-                  ? image.name
-                  : getPainterText(
+                imageAsset
+                  ? imageAsset.name
+                  : getTextByMode(
                       getText('pixelPaint.painter.image', 'Image'),
                       getText('pixelPaint.painter.costume', 'Costume'),
                       getText('pixelPaint.painter.backdrop', 'Backdrop'),
@@ -87,11 +142,11 @@ export default function Painter({ filters, assetId }) {
 
         <div className={styles.group}>
           <Button
-            disabled
+            disabled={undoList.length <= 1}
             className={classNames(styles.button, styles.groupButtonFirst, {
               [styles.groupButtonToggledOff]: disabled,
             })}
-            onClick={() => {}}
+            onClick={handleUndo}
           >
             <img
               src={undoIcon}
@@ -100,11 +155,11 @@ export default function Painter({ filters, assetId }) {
             />
           </Button>
           <Button
-            disabled
+            disabled={redoList.length === 0}
             className={classNames(styles.button, styles.groupButtonLast, {
               [styles.groupButtonToggledOff]: disabled,
             })}
-            onClick={() => {}}
+            onClick={handleRedo}
           >
             <img
               src={redoIcon}
@@ -115,20 +170,22 @@ export default function Painter({ filters, assetId }) {
         </div>
 
         <div className={styles.group}>
-          <Button
-            vertical
-            className={classNames(styles.labelButton, {
-              [styles.selected]: paintMode === 'center',
-            })}
-            onClick={() => (paintMode !== 'center' ? setPaintMode('center') : setPaintMode('draw'))}
-          >
-            <img
-              src={centerIcon}
-              className={styles.buttonIcon}
-              title={getText('pixelPaint.painter.center', 'Center')}
-            />
-            <span>{getText('pixelPaint.painter.center', 'Center')}</span>
-          </Button>
+          {mode === 'costume' && (
+            <Button
+              vertical
+              className={classNames(styles.labelButton, {
+                [styles.selected]: paintMode === 'center',
+              })}
+              onClick={() => setPaintMode(paintMode !== 'center' ? 'center' : 'draw')}
+            >
+              <img
+                src={centerIcon}
+                className={styles.buttonIcon}
+                title={getText('pixelPaint.painter.center', 'Center')}
+              />
+              <span>{getText('pixelPaint.painter.center', 'Center')}</span>
+            </Button>
+          )}
         </div>
       </div>
 
@@ -202,19 +259,22 @@ export default function Painter({ filters, assetId }) {
           onSelect={setSelectedTool}
         />
 
-        <DrawBox
-          assetId={assetId}
-          zoom={zoom}
-          selectedTool={{
-            fillColor,
-            outlineColor,
-            penSize,
-            outlineSize,
-            type: paintMode === 'draw' ? selectedTool : paintMode,
-          }}
-          onChange={(image) => handleChange('data', image)}
-          onChangeColor={handleChangeColor}
-        />
+        <div className={styles.drawBoxWrapper}>
+          <DrawBox
+            image={imageAsset}
+            zoom={zoom}
+            selectedTool={{
+              fillColor,
+              outlineColor,
+              penSize,
+              outlineSize,
+              type: paintMode === 'draw' ? selectedTool : paintMode,
+            }}
+            undoList={undoList}
+            onChange={(imageData) => handleChange('data', imageData)}
+            onChangeColor={handleChangeColor}
+          />
+        </div>
       </div>
 
       <div className={classNames(styles.row, styles.rowRight)}>
