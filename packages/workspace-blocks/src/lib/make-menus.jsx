@@ -4,6 +4,10 @@ import { ScratchBlocks } from '@blockcode/blocks-editor';
 import { connectDevice, disconnectDevice, downloadDevice } from '@blockcode/device-pyboard';
 import defaultFilters from './filters.yaml';
 
+import fileIcon from './menu-icons/icon-file.svg';
+import editIcon from './menu-icons/icon-edit.svg';
+import deviceIcon from './menu-icons/icon-device.svg';
+
 const isMac = /Mac/i.test(navigator.platform || navigator.userAgent);
 
 export default function ({
@@ -62,10 +66,13 @@ export default function ({
 
   const fileMenu = {
     label: (
-      <Text
-        id="blocks.menu.file"
-        defaultMessage="File"
-      />
+      <>
+        <img src={fileIcon} />
+        <Text
+          id="blocks.menu.file"
+          defaultMessage="File"
+        />
+      </>
     ),
     menuItems: [
       [
@@ -161,10 +168,13 @@ export default function ({
 
   const editMenu = {
     label: (
-      <Text
-        id="blocks.menu.edit"
-        defaultMessage="Edit"
-      />
+      <>
+        <img src={editIcon} />
+        <Text
+          id="blocks.menu.edit"
+          defaultMessage="Edit"
+        />
+      </>
     ),
     menuItems: [
       [
@@ -214,10 +224,13 @@ export default function ({
 
   const deviceMenu = {
     label: (
-      <Text
-        id="blocks.menu.device"
-        defaultMessage="Device"
-      />
+      <>
+        <img src={deviceIcon} />
+        <Text
+          id="blocks.menu.device"
+          defaultMessage="Device"
+        />
+      </>
     ),
     menuItems: [
       [
@@ -306,6 +319,6 @@ export default function ({
     concatMenus(fileMenu, 'file'),
     concatMenus(editMenu, 'edit'),
     concatMenus(deviceMenu, 'device'),
-    extendsMenu
+    extendsMenu,
   );
 }

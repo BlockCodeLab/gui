@@ -31,7 +31,7 @@ const mapMenuItems = (menuItems) =>
       >
         {menu.label}
       </MenuItem>
-    )
+    ),
   );
 
 export default function MenuBar({ className, menus, tutorials, showHomeButton, canEditProjectName, onRequestHome }) {
@@ -49,10 +49,7 @@ export default function MenuBar({ className, menus, tutorials, showHomeButton, c
               className={styles.languageIcon}
               src={languageIcon}
             />
-            <img
-              className={styles.languageCaret}
-              src={dropdownCaret}
-            />
+            <img src={dropdownCaret} />
           </MenuLabel>
           <Menu
             className={styles.menu}

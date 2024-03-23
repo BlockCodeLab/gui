@@ -67,6 +67,10 @@
   padding: 0 0.75rem;
 }
 
+.menu-label img {
+  margin-right: 0.125rem;
+}
+
 .language-label {
   width: var(--language-selector-width);
   padding: 0 0.5rem;
@@ -106,10 +110,6 @@ input.menu-label:checked + .menu-bar-item {
 .language-icon {
   height: 1.5rem;
   vertical-align: middle;
-}
-
-.language-caret {
-  margin: 0 0.125rem;
 }
 
 .check-icon {
