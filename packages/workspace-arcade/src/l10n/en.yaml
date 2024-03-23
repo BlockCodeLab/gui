@@ -35,6 +35,10 @@ arcade.spriteInfo.hide: Hide sprite
 arcade.spriteInfo.size: Size
 arcade.spriteInfo.direction: Direction
 
+arcade.directionPicker.allAround: All Around
+arcade.directionPicker.leftRight: Left/Right
+arcade.directionPicker.dontRotate: Do not rotate
+
 arcade.defaultProject.stageName: Stage
 arcade.defaultProject.spriteName: Sprite1
 arcade.defaultProject.backdropName: backdrop1

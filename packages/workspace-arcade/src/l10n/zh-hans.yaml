@@ -35,6 +35,10 @@ arcade.spriteInfo.hide: 隐藏角色
 arcade.spriteInfo.size: 大小
 arcade.spriteInfo.direction: 方向
 
+arcade.directionPicker.allAround: 任意旋转
+arcade.directionPicker.leftRight: 左右翻转
+arcade.directionPicker.dontRotate: 不旋转
+
 arcade.defaultProject.stageName: 舞台
 arcade.defaultProject.spriteName: 角色1
 arcade.defaultProject.backdropName: 背景1
