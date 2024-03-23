@@ -8,13 +8,13 @@ const CLOSE_DELAY = 300; // ms
 
 export function ActionButton({
   className,
+  disabled,
   icon: mailIcon,
   tooltip: mainTooltip,
   tooltipPlacement,
   moreButtons,
-  onClick: handleClick,
+  onClick,
 }) {
-  const fileInputRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [forceHide, setForceHide] = useState(false);
 
@@ -38,21 +38,25 @@ export function ActionButton({
     }, CLOSE_DELAY);
   };
 
-  const uploadFile = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
-
-  return (
+  return disabled ? (
+    <div className={classNames(styles.actionButtonWrapper, className)}>
+      <button className={classNames(styles.button, styles.mainButton, styles.disabled)}>
+        <img
+          className={styles.mainIcon}
+          draggable={false}
+          src={mailIcon}
+        />
+      </button>
+    </div>
+  ) : (
     <div
-      className={classNames(styles.actionButtonContainer, className, {
+      className={classNames(styles.actionButtonWrapper, className, {
         [styles.expanded]: isOpen,
         [styles.forceHidden]: forceHide,
       })}
       onMouseEnter={handleToggleOpenState}
       onMouseLeave={handleClosePopover}
-      onClick={handleClick}
+      onClick={onClick}
     >
       <div className={styles.moreButtonsOuter}>
         <div
@@ -60,41 +64,26 @@ export function ActionButton({
           onClick={(e) => e.stopPropagation()}
         >
           {moreButtons &&
-            moreButtons.map(
-              (
-                { icon, tooltip, onClick: handleClick, fileAccept, fileMultiple, onFileChange: handleFileChange },
-                index
-              ) => (
-                <Tooltip
-                  className={styles.tooltip}
-                  content={tooltip}
-                  key={index}
-                  placement={tooltipPlacement || 'left'}
-                  offset={[0, 12]}
+            moreButtons.map((item, index) => (
+              <Tooltip
+                className={styles.tooltip}
+                content={item.tooltip}
+                key={index}
+                placement={tooltipPlacement || 'left'}
+                offset={[0, 12]}
+              >
+                <button
+                  className={classNames(styles.button, styles.moreButton)}
+                  onClick={item.onClick}
                 >
-                  <button
-                    className={classNames(styles.button, styles.moreButton)}
-                    onClick={handleFileChange ? uploadFile : handleClick}
-                  >
-                    <img
-                      className={styles.moreIcon}
-                      draggable={false}
-                      src={icon}
-                    />
-                    {handleFileChange && (
-                      <input
-                        accept={fileAccept}
-                        className={styles.fileInput}
-                        multiple={fileMultiple || false}
-                        ref={fileInputRef}
-                        type="file"
-                        onChange={handleFileChange}
-                      />
-                    )}
-                  </button>
-                </Tooltip>
-              )
-            )}
+                  <img
+                    className={styles.moreIcon}
+                    draggable={false}
+                    src={item.icon}
+                  />
+                </button>
+              </Tooltip>
+            ))}
         </div>
       </div>
       <Tooltip

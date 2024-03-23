@@ -7,7 +7,7 @@
   --arrow-rounding: 0.125rem;
 }
 
-.action-menu-container {
+.action-button-wrapper {
   display: flex;
   flex-direction: column-reverse;
   transition: 0.2s;
@@ -28,16 +28,17 @@
   transition: background-color 0.2s;
 }
 
-.button:hover {
+.disabled {
+  cursor: auto;
+  background: var(--ui-black-transparent);
+}
+
+.button:not(.disabled):hover {
   background: var(--extensions-primary);
 }
 
 .button:active {
   padding: inherit;
-}
-
-.button.coming-soon:hover {
-  background: var(--data-primary);
 }
 
 .main-button {
@@ -46,10 +47,16 @@
   height: var(--main-button-size);
   box-shadow: 0 0 0 4px var(--motion-transparent);
   z-index: var(--z-index-add-button);
-  transition: transform, box-shadow 0.5s;
+  transition:
+    transform,
+    box-shadow 0.5s;
 }
 
-.main-button:hover {
+.main-button.disabled {
+  box-shadow: none;
+}
+
+.main-button:not(.disabled):hover {
   transform: scale(1.1);
   box-shadow: 0 0 0 6px var(--motion-transparent);
 }

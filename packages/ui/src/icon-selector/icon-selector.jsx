@@ -5,7 +5,7 @@ import styles from './icon-selector.module.css';
 
 const defaultID = styles.iconSelectorWrapper.split('_')[0];
 
-export function IconSelector({ className, id, items, selectedIndex, onDelete, onSelect }) {
+export function IconSelector({ className, id, displayOrder, items, selectedIndex, onDelete, onSelect }) {
   const ref = useRef();
   const buildHandler = (i, item, handler) => (e) => {
     e.stopPropagation();
@@ -29,6 +29,7 @@ export function IconSelector({ className, id, items, selectedIndex, onDelete, on
             item.__hidden__ ? null : (
               <IconSelectorItem
                 checked={i === selectedIndex}
+                displayOrder={displayOrder}
                 className={classNames(styles.iconItem, item.className)}
                 contextMenu={item.contextMenu}
                 details={item.details}

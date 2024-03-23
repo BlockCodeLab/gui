@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { cloneElement } from 'preact';
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { flatChildren, setHotkey, showHotkey, useLocale, useEditor } from '@blockcode/core';
 
 import styles from './menu.module.css';
@@ -21,7 +21,7 @@ export function Menu({ id, className, children, name }) {
 const notMobile = /Win|Mac|Linux/i.test(navigator.platform || navigator.userAgent);
 
 export function MenuItem({ children, className, disabled: isDisabled, href, hotkey, onLabel, onDisable, onClick }) {
-  const [disabled, setDisable] = useState(isDisabled);
+  const [disabled, setDisable] = useState();
   const [label, setLabel] = useState();
   const locale = useLocale();
   const context = useEditor();
@@ -52,6 +52,11 @@ export function MenuItem({ children, className, disabled: isDisabled, href, hotk
     }
   }
 
+  useEffect(() => {
+    setDisable(isDisabled);
+    return () => {};
+  }, [isDisabled]);
+
   return (
     <li
       className={classNames(
@@ -60,7 +65,7 @@ export function MenuItem({ children, className, disabled: isDisabled, href, hotk
           [styles.hoverable]: !disabled,
           [styles.disabled]: disabled,
         },
-        className
+        className,
       )}
       onClick={handleClick}
       onMouseDown={(e) => e.stopPropagation()}
@@ -80,7 +85,7 @@ export function MenuSection({ children }) {
           cloneElement(child, {
             className: classNames(child.props.className, { [styles.menuSection]: index === 0 }),
             key: index,
-          })
+          }),
       )}
     </>
   );

@@ -11,6 +11,7 @@ export function IconSelectorItem({
   icon,
   order,
   checked,
+  displayOrder,
   className,
   onSelect,
   onDelete,
@@ -23,7 +24,6 @@ export function IconSelectorItem({
         className={styles.selector}
         id={`${id}-icon-${name}`}
         name={`${id}-icon`}
-        style={`order:${order * 2 - 1}`}
         type="radio"
         value={name}
       />
@@ -31,13 +31,13 @@ export function IconSelectorItem({
         className={classNames(styles.iconSelectorItem, className)}
         for={`${id}-icon-${name}`}
         onClick={onSelect}
-        style={`order:${order * 2}`}
       >
         <div className={styles.iconOuter}>
           <img
             className={styles.iconInner}
             src={icon}
           />
+          {displayOrder && <div className={styles.iconOrder}>{order + 1}</div>}
         </div>
         <div className={styles.iconInfo}>
           <div className={styles.iconTitle}>{title}</div>

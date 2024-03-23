@@ -5,20 +5,19 @@ import { Menu, MenuItem, MenuSection } from '../menu/menu';
 import styles from './context-menu.module.css';
 
 const mapMenuItems = (menuItems) =>
-  menuItems &&
-  menuItems.map((menu, index) =>
-    Array.isArray(menu) ? (
-      <MenuSection key={index}>{mapMenuItems(menu)}</MenuSection>
+  menuItems.map((item, index) =>
+    Array.isArray(item) ? (
+      <MenuSection key={index}>{mapMenuItems(item)}</MenuSection>
     ) : (
       <MenuItem
         key={index}
-        disabled={menu.disabled}
-        className={menu.className}
-        onClick={menu.onClick}
+        disabled={item.disabled}
+        className={item.className}
+        onClick={item.onClick}
       >
-        {menu.label}
+        {item.label}
       </MenuItem>
-    )
+    ),
   );
 
 const generateGetBoundingClientRect =
@@ -86,21 +85,23 @@ export function ContextMenu({ menuItems, className, children }) {
   return (
     <>
       {children}
-      <div
-        ref={contextRef}
-        id={contextId}
-        className={styles.contextMenuWrapper}
-        role="context"
-      >
-        {menuItems && menuItems.length && (
-          <Menu
-            name={contextId}
-            className={classNames(styles.contextMenu, className)}
-          >
-            {mapMenuItems(menuItems)}
-          </Menu>
-        )}
-      </div>
+      {menuItems && (
+        <div
+          ref={contextRef}
+          id={contextId}
+          className={styles.contextMenuWrapper}
+          role="context"
+        >
+          {menuItems.length && (
+            <Menu
+              name={contextId}
+              className={classNames(styles.contextMenu, className)}
+            >
+              {mapMenuItems(menuItems)}
+            </Menu>
+          )}
+        </div>
+      )}
     </>
   );
 }
