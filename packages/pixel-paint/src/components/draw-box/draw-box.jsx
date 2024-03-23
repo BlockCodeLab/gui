@@ -3,6 +3,7 @@ import { classNames } from '@blockcode/ui';
 import { Point } from '../../lib/point';
 import { Color } from '../../lib/color';
 import { loadImageFromAsset } from '../../lib/load-image';
+import { getBoundingBox } from '../../lib/get-bounding-box';
 
 import styles from './draw-box.module.css';
 import centerIcon from '../painter/icons/icon-center.svg';
@@ -20,8 +21,9 @@ export default function DrawBox({ image: defaultImage, selectedTool, zoom, undoL
     imageData = context.getImageData(0, 0, Point.DrawWidth, Point.DrawHeight);
   };
 
-  const putImageData = () => {
-    context.putImageData(imageData, 0, 0);
+  const putImageData = (x = 0, y = 0) => {
+    context.clearRect(0, 0, Point.DrawWidth, Point.DrawHeight);
+    context.putImageData(imageData, x, y);
   };
 
   const saveImageData = () => {
@@ -212,6 +214,11 @@ export default function DrawBox({ image: defaultImage, selectedTool, zoom, undoL
       putImageData();
     } else if (selectedTool.type.startsWith('picker-')) {
       e.stopPropagation();
+    } else if (selectedTool.type.startsWith('center')) {
+      const dx = Point.DrawWidth / 2 - x;
+      const dy = Point.DrawHeight / 2 - y;
+      putImageData(dx, dy);
+      getImageData();
     }
 
     // mouse leave draw box
@@ -228,6 +235,8 @@ export default function DrawBox({ image: defaultImage, selectedTool, zoom, undoL
   const handleMouseMove = (e) => {
     e.preventDefault();
     if (!ref.current) return;
+
+    if (selectedTool.type === 'center') return;
 
     const rect = ref.current.getBoundingClientRect();
     let x = e.clientX - rect.left;
@@ -247,7 +256,7 @@ export default function DrawBox({ image: defaultImage, selectedTool, zoom, undoL
       }
       putImageData();
     } else if (selectedTool.type.startsWith('picker-')) {
-      const [r, g, b, a] = context.getImageData(x, y, 1, 1).data;
+      // const [r, g, b, a] = context.getImageData(x, y, 1, 1).data;
     }
   };
 
@@ -255,7 +264,10 @@ export default function DrawBox({ image: defaultImage, selectedTool, zoom, undoL
     e.preventDefault();
     drawing = false;
 
-    if (selectedTool.type === 'center') return;
+    if (selectedTool.type === 'center') {
+      saveImageData();
+      return;
+    }
 
     const rect = ref.current.getBoundingClientRect();
     let x = e.clientX - rect.left;
@@ -281,10 +293,8 @@ export default function DrawBox({ image: defaultImage, selectedTool, zoom, undoL
     saveImageData();
 
     if (selectedTool.type === 'eraser') {
-      const point = new Point(x, y);
-
       restoreImageData();
-      pen(point);
+      pen(new Point(x, y));
       putImageData();
     }
   };

@@ -42,17 +42,11 @@ export default function Painter({ mode, imageList, imageIndex }) {
     return defaultText;
   };
 
-  const modifyImage = (imageData, name) => {
-    const image = {
-      id: imageId,
-    };
+  const modifyImage = (image) => {
+    image.id = imageId;
 
-    if (name) {
-      image.name = name;
-    }
-
-    if (imageData) {
-      const newImage = createImage(imageData);
+    if (image.data) {
+      const newImage = createImage(image.data);
       image.type = newImage.type;
       image.data = newImage.data;
       image.width = newImage.width;
@@ -60,25 +54,32 @@ export default function Painter({ mode, imageList, imageIndex }) {
       image.centerX = newImage.centerX;
       image.centerY = newImage.centerY;
     }
-
     modifyAsset(image);
   };
 
   const handleChange = (key, value) => {
-    let name, imageData;
-    if (key === 'name') name = value;
+    const image = {};
+
+    if (key === 'name') {
+      image.name = value;
+    }
     if (key === 'data') {
-      imageData = value;
+      image.data = value;
 
       if (undoList.length > 20) {
         undoList.splice(1, 1);
       }
-      setUndoList(undoList.concat(imageData));
+      setUndoList(undoList.concat(image.data));
       setRedoList([]);
 
       if (undoList.length === 0) return;
     }
-    modifyImage(imageData, name);
+
+    modifyImage(image);
+
+    if (paintMode !== 'draw') {
+      setPaintMode('draw');
+    }
   };
 
   const handleChangeColor = (newColor) => {
@@ -94,14 +95,14 @@ export default function Painter({ mode, imageList, imageIndex }) {
     const imageData = undoList.pop();
     setUndoList(undoList);
     setRedoList(redoList.concat(imageData));
-    modifyImage(undoList.at(-1));
+    modifyImage({ data: undoList.at(-1) });
   };
 
   const handleRedo = () => {
     const imageData = redoList.pop();
     setUndoList(undoList.concat(imageData));
     setRedoList(redoList);
-    modifyImage(imageData);
+    modifyImage({ data: imageData });
   };
 
   useEffect(() => {
