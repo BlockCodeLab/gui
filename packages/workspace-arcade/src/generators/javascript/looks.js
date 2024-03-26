@@ -81,12 +81,11 @@ javascriptGenerator['looks_setsizeto'] = (block) => {
 };
 
 javascriptGenerator['looks_size'] = (block) => {
-  const code = 'sprite.util.size';
-  return [code, javascriptGenerator.ORDER_NONE];
+  return ['sprite.util.size', javascriptGenerator.ORDER_NONE];
 };
 
 javascriptGenerator['looks_costume'] = (block) => {
-  const code = block.getFieldValue('COSTUME');
+  const code = `'${block.getFieldValue('COSTUME')}'`;
   return [code, javascriptGenerator.ORDER_ATOMIC];
 };
 
@@ -96,7 +95,7 @@ javascriptGenerator['looks_switchcostumeto'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const costumeValue = javascriptGenerator.valueToCode(block, 'COSTUME', javascriptGenerator.ORDER_NONE);
-  code += `sprite.util.costume = '${costumeValue}';\n`;
+  code += `sprite.util.costume = ${costumeValue};\n`;
   return code;
 };
 
@@ -110,7 +109,7 @@ javascriptGenerator['looks_nextcostume'] = (block) => {
 };
 
 javascriptGenerator['looks_backdrops'] = (block) => {
-  const code = block.getFieldValue('BACKDROP');
+  const code = `'${block.getFieldValue('BACKDROP')}'`;
   return [code, javascriptGenerator.ORDER_ATOMIC];
 };
 
@@ -120,7 +119,7 @@ javascriptGenerator['looks_switchbackdropto'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const backdropValue = javascriptGenerator.valueToCode(block, 'BACKDROP', javascriptGenerator.ORDER_NONE);
-  code += `stage.util.backdrop = '${backdropValue}';\n`;
+  code += `stage.util.backdrop = ${backdropValue};\n`;
   return code;
 };
 
@@ -154,8 +153,16 @@ javascriptGenerator['looks_goforwardbackwardlayers'] = (block) => {
   return code;
 };
 
-javascriptGenerator['looks_backdropnumbername'] = (block) => {};
+javascriptGenerator['looks_backdropnumbername'] = (block) => {
+  const numberOrName = block.getFieldValue('NUMBER_NAME');
+  const code = numberOrName === 'name' ? 'stage.util.backdropName' : 'stage.util.backdrop';
+  return [code, javascriptGenerator.ORDER_NONE];
+};
 
-javascriptGenerator['looks_costumenumbername'] = (block) => {};
+javascriptGenerator['looks_costumenumbername'] = (block) => {
+  const numberOrName = block.getFieldValue('NUMBER_NAME');
+  const code = numberOrName === 'name' ? 'sprite.util.costumeName' : 'sprite.util.costume';
+  return [code, javascriptGenerator.ORDER_NONE];
+};
 
 javascriptGenerator['looks_switchbackdroptoandwait'] = (block) => {};

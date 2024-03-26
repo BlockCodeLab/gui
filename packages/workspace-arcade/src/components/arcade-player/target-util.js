@@ -86,6 +86,10 @@ class Util extends EventEmitter {
 }
 
 class StageUtil extends Util {
+  get backdropName() {
+    return this.assets[this.data.frame].name;
+  }
+
   get backdrop() {
     return this.data.frame + 1;
   }
@@ -93,8 +97,11 @@ class StageUtil extends Util {
   set backdrop(value) {
     if (typeof value === 'string') {
       let backdrop = +value;
-      if (isNaN(num)) {
-        backdrop = this.assets.findIndex((asset) => asset.id === value);
+      if (isNaN(backdrop)) {
+        backdrop = this.assets.findIndex((asset) => asset.name === value);
+        if (backdrop === -1) {
+          backdrop = this.assets.findIndex((asset) => asset.id === value);
+        }
         if (backdrop === -1) return;
         value = backdrop + 1;
       } else {
@@ -123,6 +130,10 @@ class StageUtil extends Util {
 }
 
 class SpriteUtil extends Util {
+  get costumeName() {
+    return this.assets[this.data.frame].name;
+  }
+
   get costume() {
     return this.data.frame + 1;
   }
@@ -130,8 +141,11 @@ class SpriteUtil extends Util {
   set costume(value) {
     if (typeof value === 'string') {
       let costume = +value;
-      if (isNaN(num)) {
-        costume = this.assets.findIndex((asset) => asset.id === value);
+      if (isNaN(costume)) {
+        costume = this.assets.findIndex((asset) => asset.name === value);
+        if (costume === -1) {
+          costume = this.assets.findIndex((asset) => asset.id === value);
+        }
         if (costume === -1) return;
         value = costume + 1;
       } else {

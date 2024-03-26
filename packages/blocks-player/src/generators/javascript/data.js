@@ -6,8 +6,7 @@ javascriptGenerator['data_variable'] = (block) => {
     block.getFieldValue('VARIABLE'),
     ScratchBlocks.Variables.NAME_TYPE,
   );
-  const code = `${variableName}`;
-  return [code, javascriptGenerator.ORDER_CONDITIONAL];
+  return [variableName, javascriptGenerator.ORDER_CONDITIONAL];
 };
 
 javascriptGenerator['data_setvariableto'] = (block) => {
