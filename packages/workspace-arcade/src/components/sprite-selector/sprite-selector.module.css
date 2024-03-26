@@ -9,8 +9,9 @@
 }
 
 .selector-items-wrapper {
-  padding-bottom: 70px;
+  padding-bottom: 120px;
   width: 400px;
+  min-height: 100%;
 }
 
 .selector-items-wrapper.small {
