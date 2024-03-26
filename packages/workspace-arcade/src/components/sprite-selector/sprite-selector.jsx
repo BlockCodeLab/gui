@@ -15,29 +15,7 @@ import fileUploadIcon from './icon-file-upload.svg';
 
 export default function SpriteSelector({ playing, stageSize, onSelectTab, onPrompt, onAlert, onRemoveAlert }) {
   const { getText } = useLocale();
-  const { fileList, assetList, selectedIndex, addFile, openFile, deleteFile, addAsset, deleteAsset, modifyAsset } =
-    useEditor();
-
-  const generateMainFile = (spriteId, deleteMode = false) => {
-    const mainContent = [];
-    mainContent.push('from popsicle.scratch import *');
-    fileList.forEach((file, i) => {
-      if (deleteMode && file.id === spriteId) return;
-      if (i === 0) {
-        mainContent.push(`from ${file.id} import stage`);
-      } else {
-        mainContent.push(`import ${file.id}`);
-      }
-    });
-    if (!deleteMode) {
-      mainContent.push(`import ${spriteId}`);
-    }
-    mainContent.push('run(stage.render)');
-    modifyAsset({
-      id: 'main',
-      content: mainContent.join('\n'),
-    });
-  };
+  const { fileList, assetList, selectedIndex, addFile, openFile, deleteFile, addAsset, deleteAsset } = useEditor();
 
   const handleUploadFile = () => {
     const fileInput = document.createElement('input');
@@ -76,7 +54,6 @@ export default function SpriteSelector({ playing, stageSize, onSelectTab, onProm
           direction: 90,
           rotationStyle: RotationStyle.ALL_AROUND,
         });
-        generateMainFile(spriteId);
       }
       onRemoveAlert(alertId);
     });
@@ -107,7 +84,6 @@ export default function SpriteSelector({ playing, stageSize, onSelectTab, onProm
       direction: 90,
       rotationStyle: RotationStyle.ALL_AROUND,
     });
-    generateMainFile(spriteId);
     onSelectTab(1);
   };
 
@@ -128,8 +104,6 @@ export default function SpriteSelector({ playing, stageSize, onSelectTab, onProm
       }),
       content: '',
     });
-    console.log(spriteId);
-    generateMainFile(spriteId);
   };
 
   const handleDelete = (index) => {
@@ -139,7 +113,6 @@ export default function SpriteSelector({ playing, stageSize, onSelectTab, onProm
       label: getText('arcade.deletePrompt.label', 'Do you want to delete the sprite?'),
       onSubmit: () => {
         deleteFile(index);
-        generateMainFile(id, true);
         assets.forEach((assetId) => {
           for (const file of fileList) {
             if (file.id !== id && file.assets.includes(assetId)) return;
@@ -196,7 +169,7 @@ export default function SpriteSelector({ playing, stageSize, onSelectTab, onProm
                     },
                   ],
                 ],
-              },
+              }
         )}
         selectedIndex={selectedIndex}
         onSelect={openFile}

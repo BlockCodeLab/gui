@@ -1,6 +1,7 @@
 import { Text } from '@blockcode/ui';
 import { locales as blocksLocales, makeMenus, CodeTab, BackpackPane } from '@blockcode/workspace-blocks';
 import { PixelPaint, locales as paintLocales } from '@blockcode/pixel-paint';
+import generateMainFile from './lib/generate-main-file';
 
 /* components */
 import BlocksEditor from './components/blocks-editor/blocks-editor';
@@ -73,6 +74,7 @@ export default function ArcadeBlocksWorkspace({
           ],
         },
       ],
+      onDownload: (fileList, assetList) => [].concat(generateMainFile(fileList[0], fileList.slice(1)), assetList),
     }),
 
     tabs: [

@@ -17,7 +17,8 @@ export default function ({
   setAlert,
   removeAlert,
   extendsMenu,
-  filters,
+  deviceFilters,
+  onDownload = (...args) => [].concat(...args),
 } = {}) {
   let setDisableUndo = () => {};
   let setDisableRedo = () => {};
@@ -59,8 +60,8 @@ export default function ({
     } else {
       if (removeAlert) {
         removeAlert(downloadAlert.id);
-        delete downloadAlert.id;
       }
+      delete downloadAlert.id;
     }
   };
 
@@ -251,7 +252,7 @@ export default function ({
             if (context.device) {
               disconnectDevice(context.device, context.connectDevice);
             } else {
-              connectDevice(filters || defaultFilters, context.connectDevice);
+              connectDevice(deviceFilters || defaultFilters, context.connectDevice);
             }
           },
         },
@@ -266,9 +267,10 @@ export default function ({
             if (downloadAlert.id) return;
             let { device } = context;
             if (!device) {
-              device = await connectDevice(filters, context.connectDevice);
+              device = await connectDevice(deviceFilters, context.connectDevice);
             }
-            downloadDevice(device, [].concat(context.fileList, context.assetList), downloadAlert);
+            const files = onDownload(context.fileList, context.assetList);
+            downloadDevice(device, files, downloadAlert);
           },
         },
       ],
