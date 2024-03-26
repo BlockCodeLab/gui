@@ -1,3 +1,4 @@
+import { Text } from '@blockcode/ui';
 import { locales as blocksLocales, makeMenus, CodeTab, BackpackPane } from '@blockcode/workspace-blocks';
 import { PixelPaint, locales as paintLocales } from '@blockcode/pixel-paint';
 
@@ -8,7 +9,8 @@ import PaintText from './components/paint-text/paint-text';
 
 /* assets */
 import getDefaultProject from './lib/default-project';
-import paintIcon from './paint-icon.svg';
+import deviceIcon from './icon-device.svg';
+import paintIcon from './icon-paint.svg';
 
 /* languages */
 import en from './l10n/en.yaml';
@@ -42,7 +44,36 @@ export default function ArcadeBlocksWorkspace({
   newProject();
 
   setLayout({
-    menus: makeMenus({ newProject, setAlert, removeAlert }),
+    menus: makeMenus({
+      newProject,
+      setAlert,
+      removeAlert,
+      extendsMenu: [
+        {
+          id: 'device',
+          label: (
+            <>
+              <img src={deviceIcon} />
+              <Text
+                id="blocks.menu.device"
+                defaultMessage="Device"
+              />
+            </>
+          ),
+          menuItems: [
+            {
+              label: (
+                <Text
+                  id="arcade.menus.device.updateFirmware"
+                  defaultMessage="Update Arcade firmware..."
+                />
+              ),
+              onClick: () => {},
+            },
+          ],
+        },
+      ],
+    }),
 
     tabs: [
       {

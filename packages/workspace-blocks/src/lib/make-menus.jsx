@@ -310,7 +310,10 @@ export default function ({
     if (index >= 0) {
       const [menuInfo] = extendsMenu.splice(index, 1);
       if (menuInfo.hidden) return [];
-      menu.menuItems.concat(menuInfo.menuItems);
+      if (menuInfo.label) {
+        menu.label = menuInfo.label;
+      }
+      menu.menuItems = [].concat(menu.menuItems, menuInfo.menuItems);
     }
     return menu;
   };

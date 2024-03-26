@@ -3,6 +3,8 @@ blocks.dataPrompt.forThisTarget: 仅适用于当前角色
 blocks.dataPrompt.availableToAllTargets: 所有角色都可使用该变量。
 blocks.dataPrompt.listAvailableToAllTargets: 所有角色都可使用该列表。
 
+arcade.menus.device.updateFirmware: 升级游戏机固件…
+
 arcade.pixelPaint.default: 绘画板
 arcade.pixelPaint.costumes: 造型
 arcade.pixelPaint.backdrops: 背景

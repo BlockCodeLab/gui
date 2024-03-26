@@ -3,6 +3,8 @@ blocks.dataPrompt.forThisTarget: For this sprite only
 blocks.dataPrompt.availableToAllTargets: This variable will be available to all sprites.
 blocks.dataPrompt.listAvailableToAllTargets: This list will be available to all sprites.
 
+arcade.menus.device.updateFirmware: Update Arcade firmware...
+
 arcade.pixelPaint.default: Painter
 arcade.pixelPaint.costumes: Costumes
 arcade.pixelPaint.backdrops: Backdrops
