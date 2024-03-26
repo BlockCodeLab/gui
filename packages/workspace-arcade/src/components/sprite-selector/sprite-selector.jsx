@@ -18,11 +18,11 @@ export default function SpriteSelector({ playing, stageSize, onSelectTab, onProm
   const { fileList, assetList, selectedIndex, addFile, openFile, deleteFile, addAsset, deleteAsset, modifyAsset } =
     useEditor();
 
-  const generateMainFile = (fileId, deleteMode = false) => {
+  const generateMainFile = (spriteId, deleteMode = false) => {
     const mainContent = [];
     mainContent.push('from popsicle.scratch import *');
     fileList.forEach((file, i) => {
-      if (deleteMode && file.id === fileId) return;
+      if (deleteMode && file.id === spriteId) return;
       if (i === 0) {
         mainContent.push(`from ${file.id} import stage`);
       } else {
@@ -30,7 +30,7 @@ export default function SpriteSelector({ playing, stageSize, onSelectTab, onProm
       }
     });
     if (!deleteMode) {
-      mainContent.push(`import ${fileId}`);
+      mainContent.push(`import ${spriteId}`);
     }
     mainContent.push('run(stage.render)');
     modifyAsset({
@@ -50,7 +50,7 @@ export default function SpriteSelector({ playing, stageSize, onSelectTab, onProm
       onAlert('importing', { id: alertId });
 
       for (const file of e.target.files) {
-        const fileId = uid();
+        const spriteId = uid();
         const imageId = uid();
         const imageName = file.name.slice(0, file.name.lastIndexOf('.'));
         const image = await loadImage(file);
@@ -65,7 +65,7 @@ export default function SpriteSelector({ playing, stageSize, onSelectTab, onProm
           centerY: Math.floor(image.height / 2),
         });
         addFile({
-          id: fileId,
+          id: spriteId,
           type: 'text/x-python',
           name: imageName,
           assets: [imageId],
@@ -76,14 +76,14 @@ export default function SpriteSelector({ playing, stageSize, onSelectTab, onProm
           direction: 90,
           rotationStyle: RotationStyle.ALL_AROUND,
         });
-        generateMainFile(fileId);
+        generateMainFile(spriteId);
       }
       onRemoveAlert(alertId);
     });
   };
 
   const handlePaintImage = () => {
-    const fileId = uid();
+    const spriteId = uid();
     const imageId = uid();
     addAsset({
       id: imageId,
@@ -96,7 +96,7 @@ export default function SpriteSelector({ playing, stageSize, onSelectTab, onProm
       centerY: 1,
     });
     addFile({
-      id: fileId,
+      id: spriteId,
       type: 'text/x-python',
       name: getText(`arcade.defaultProject.spriteName`, 'Sprite'),
       assets: [imageId],
@@ -107,8 +107,29 @@ export default function SpriteSelector({ playing, stageSize, onSelectTab, onProm
       direction: 90,
       rotationStyle: RotationStyle.ALL_AROUND,
     });
-    generateMainFile(fileId);
+    generateMainFile(spriteId);
     onSelectTab(1);
+  };
+
+  const handleDuplicate = (index) => {
+    const spriteId = uid();
+    const sprite = fileList[index];
+    addFile({
+      ...sprite,
+      id: spriteId,
+      assets: sprite.assets.map((assetId) => {
+        const image = assetList.find((asset) => asset.id === assetId);
+        const imageId = uid();
+        addAsset({
+          ...image,
+          id: imageId,
+        });
+        return imageId;
+      }),
+      content: '',
+    });
+    console.log(spriteId);
+    generateMainFile(spriteId);
   };
 
   const handleDelete = (index) => {
@@ -159,7 +180,7 @@ export default function SpriteSelector({ playing, stageSize, onSelectTab, onProm
                   [
                     {
                       label: getText('arcade.contextMenu.duplicate', 'duplicate'),
-                      onClick: () => {},
+                      onClick: () => handleDuplicate(index),
                     },
                     {
                       label: getText('arcade.contextMenu.export', 'export'),
