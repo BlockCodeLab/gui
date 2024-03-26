@@ -138,7 +138,7 @@ javascriptGenerator['looks_gotofrontback'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const frontOrBack = block.getFieldValue('FRONT_BACK');
-  code += `stage.util.layer = ${frontOrBack};\n`;
+  code += `sprite.util.zIndex = '${frontOrBack}';\n`;
   return code;
 };
 
@@ -149,7 +149,7 @@ javascriptGenerator['looks_goforwardbackwardlayers'] = (block) => {
   }
   const forwardOrBackward = block.getFieldValue('FORWARD_BACKWARD');
   const changeValue = javascriptGenerator.valueToCode(block, 'NUM', javascriptGenerator.ORDER_NONE);
-  code += `stage.util.layer ${forwardOrBackward === 'backward' ? '-' : '+'}= ${changeValue};\n`;
+  code += `sprite.util.zIndex ${forwardOrBackward === 'backward' ? '-' : '+'}= ${changeValue};\n`;
   return code;
 };
 

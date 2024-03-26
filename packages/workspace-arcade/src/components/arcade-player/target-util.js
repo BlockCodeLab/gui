@@ -238,6 +238,26 @@ class SpriteUtil extends Util {
     }
   }
 
+  get zIndex() {
+    return this.raster.index;
+  }
+
+  set zIndex(z) {
+    if (z === 'front') {
+      this.raster.bringToFront();
+    } else if (z === 'back') {
+      this.raster.sendToBack();
+    } else {
+      z = Math.min(Math.max(z, 0), this.spriteLayer.children.length - 1);
+      const item = this.spriteLayer.children[z];
+      if (z > this.raster.index) {
+        this.raster.insertAbove(item);
+      } else {
+        this.raster.insertBelow(item);
+      }
+    }
+  }
+
   _size(value) {
     let size = value < 5 ? 5 : value;
     const width = (this.raster.image.width * size) / 100;

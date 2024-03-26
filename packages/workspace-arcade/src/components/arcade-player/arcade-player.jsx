@@ -33,6 +33,7 @@ export default function ArcadePlayer({ stageSize, playing, onRequestStop }) {
               direction: raster.util.direction,
               rotationStyle: raster.data.rotationStyle,
               hidden: !raster.visible,
+              zIndex: raster.util.zIndex,
             },
       ),
     );
@@ -107,34 +108,36 @@ export default function ArcadePlayer({ stageSize, playing, onRequestStop }) {
         };
 
         // edit
-        fileList.forEach(async (target, index) => {
-          const isStage = index === 0;
-          const layer = isStage ? stageLayer : spriteLayer;
-          const assets = assetList.filter((asset) => target.assets.includes(asset.id));
+        fileList
+          .toSorted((a, b) => a.zIndex - b.zIndex)
+          .forEach(async (target, index) => {
+            const isStage = index === 0;
+            const layer = isStage ? stageLayer : spriteLayer;
+            const assets = assetList.filter((asset) => target.assets.includes(asset.id));
 
-          let raster = layer.children[target.id];
-          if (!raster) {
-            raster = layer.addChild(new paperCore.Raster());
-            raster.name = target.id;
-            raster.data = { assets };
-            raster.util = createUtil(raster, isStage);
-            raster.util.on('update', () => updateTargetFromRaster(raster, isStage));
-          }
-          raster.data.assets = assets;
+            let raster = layer.children[target.id];
+            if (!raster) {
+              raster = layer.addChild(new paperCore.Raster());
+              raster.name = target.id;
+              raster.data = { assets };
+              raster.util = createUtil(raster, isStage);
+              raster.util.on('update', () => updateTargetFromRaster(raster, isStage));
+            }
+            raster.data.assets = assets;
 
-          if (isStage) {
-            raster.util.backdrop = target.frame + 1;
-          } else {
-            raster.onMouseUp = setMouseUpHandler(raster, index);
-            raster.util.costume = target.frame + 1;
-            raster.util.x = target.x;
-            raster.util.y = target.y;
-            raster.util.size = target.size;
-            raster.util.hidden = target.hidden;
-            raster.util.direction = target.direction;
-            raster.data.rotationStyle = target.rotationStyle;
-          }
-        });
+            if (isStage) {
+              raster.util.backdrop = target.frame + 1;
+            } else {
+              raster.onMouseUp = setMouseUpHandler(raster, index);
+              raster.util.costume = target.frame + 1;
+              raster.util.x = target.x;
+              raster.util.y = target.y;
+              raster.util.size = target.size;
+              raster.util.hidden = target.hidden;
+              raster.util.direction = target.direction;
+              raster.data.rotationStyle = target.rotationStyle;
+            }
+          });
 
         // remove clones and deleted sprties
         spriteLayer.children.forEach((child) => {
