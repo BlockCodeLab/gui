@@ -35,6 +35,120 @@ export default class Runtime extends BaseRuntime {
     return spriteLayer.children;
   }
 
+  get fnKey() {
+    return this._fnKey;
+  }
+
+  get upKey() {
+    return this._upKey;
+  }
+
+  get leftKey() {
+    return this._leftKey;
+  }
+
+  get rightKey() {
+    return this._rightKey;
+  }
+
+  get bottomKey() {
+    return this._bottomKey;
+  }
+
+  get aKey() {
+    return this._aKey;
+  }
+
+  get bKey() {
+    return this._bKey;
+  }
+
+  get xKey() {
+    return this._xKey;
+  }
+
+  get yKey() {
+    return this._yKey;
+  }
+
+  _fireKey(key) {
+    this[`_${key}Key`] = true;
+    this.fire(`keypressed_${key}`);
+  }
+
+  _releaseKey(key) {
+    this[`_${key}Key`] = false;
+  }
+
+  handleKeyDown(e) {
+    console.log(e);
+    if (e.altKey) {
+      this._fireKey('fn');
+      return;
+    }
+    switch (e.code) {
+      case 'ArrowUp':
+        this._fireKey('up');
+        return;
+      case 'ArrowLeft':
+        this._fireKey('left');
+        return;
+      case 'ArrowRight':
+        this._fireKey('right');
+        return;
+      case 'ArrowBottom':
+        this._fireKey('bottom');
+        return;
+      case 'KeyA':
+        this._fireKey('a');
+        return;
+      case 'KeyB':
+        this._fireKey('b');
+        return;
+      case 'KeyX':
+        this._fireKey('x');
+        return;
+      case 'KeyY':
+        this._fireKey('y');
+        return;
+    }
+  }
+
+  handleKeyUp(e) {
+    if (!e.altKey) {
+      this._releaseKey('fn');
+      return;
+    }
+    switch (e.code) {
+      case 'ArrowUp':
+        this._releaseKey('up');
+        return;
+      case 'ArrowLeft':
+        this._releaseKey('left');
+        return;
+      case 'ArrowRight':
+        this._releaseKey('right');
+        return;
+      case 'ArrowBottom':
+        this._releaseKey('bottom');
+        return;
+      case 'KeyA':
+        this._releaseKey('a');
+        return;
+      case 'KeyB':
+        this._releaseKey('b');
+        return;
+      case 'KeyX':
+        this._releaseKey('x');
+        return;
+      case 'KeyY':
+        this._releaseKey('y');
+        return;
+    }
+  }
+
+  whenBackdropSwitchesTo(backdrop, listener) {}
+
   getSpriteById(id) {
     const raster = this.sprites[id];
     raster.util.runtime = this;

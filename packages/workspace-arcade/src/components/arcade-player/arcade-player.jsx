@@ -76,15 +76,22 @@ export default function ArcadePlayer({ stageSize, playing, onRequestStop }) {
     const dialogLayer = paperCore.project.layers.dialog;
 
     if (playing) {
-      spriteLayer.onMouseDown = false;
+      spriteLayer.onMouseDown = null;
       if (!currentRuntime) {
         // start
         const code = generate(fileList);
-        setCurrentRuntime(new Runtime(code, onRequestStop));
+        const runtime = new Runtime(code, onRequestStop);
+        runtime.handleKeyDown = runtime.handleKeyDown.bind(runtime);
+        runtime.handleKeyUp = runtime.handleKeyUp.bind(runtime);
+        document.addEventListener('keydown', runtime.handleKeyDown);
+        document.addEventListener('keyup', runtime.handleKeyUp);
+        setCurrentRuntime(runtime);
       }
     } else {
       if (currentRuntime) {
         // stop
+        document.removeEventListener('keydown', currentRuntime.handleKeyDown);
+        document.removeEventListener('keyup', currentRuntime.handleKeyUp);
         currentRuntime.stop().then(() => {
           dialogLayer.removeChildren();
           setCurrentRuntime(false);

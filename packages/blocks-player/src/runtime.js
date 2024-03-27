@@ -14,11 +14,14 @@ export default class Runtime extends EventEmitter {
 
     this._idCounter = 0;
     this._eventsGroups = {};
+    this._eventsHappening = {};
+
     this.openEventsGroup('global');
 
     const launch = new Function('runtime', code);
     launch(this);
 
+    // for development
     console.log(code);
   }
 
@@ -70,28 +73,45 @@ export default class Runtime extends EventEmitter {
     });
   }
 
-  onGreaterThen(name, value, listener) {
+  when(eventName, listener) {
+    this._eventsHappening[eventName] = this._eventsHappening[eventName] || [];
+    this._eventsHappening[eventName].push(false);
+    const i = this._eventsHappening[eventName].length - 1;
+    this.on(`${eventName}_${i}`, listener);
+  }
+
+  whenGreaterThen(name, value, listener) {
     if (name === 'TIMER') {
       listener._done = false;
-      this.on('frame', () => {
+      this.when('frame', (done) => {
         if (this.time > value && !listener._done) {
           listener();
         }
         listener._done = this.time > value;
+        done();
       });
     }
   }
 
   emit(...args) {
-    if (this.running) {
-      super.emit(...args);
-    }
+    return new Promise((resolve) => {
+      if (this.running) {
+        super.emit(...args, resolve);
+      }
+    });
   }
 
-  broadcast(message) {
-    return new Promise((resolve) => {
-      this.emit(message, resolve);
+  fire(eventName, ...args) {
+    this.emit(eventName, ...args);
+    this._eventsHappening[eventName] = this._eventsHappening[eventName] || [];
+    const promises = this._eventsHappening[eventName].map(async (happening, i) => {
+      if (!happening) {
+        this._eventsHappening[eventName][i] = true;
+        await this.emit(`${eventName}_${i}`, ...args);
+        this._eventsHappening[eventName][i] = false;
+      }
     });
+    return Promise.race(promises);
   }
 
   start() {
@@ -99,12 +119,12 @@ export default class Runtime extends EventEmitter {
     this.emit('beforeStart');
     this.on('start', async () => {
       while (this.running) {
-        this.emit('frame');
         await this.nextFrame();
+        this.fire('frame');
       }
     });
     this._timer = Date.now();
-    this.emit('start');
+    this.fire('start');
   }
 
   async stop() {
