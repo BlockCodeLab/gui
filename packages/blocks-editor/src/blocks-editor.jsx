@@ -54,7 +54,7 @@ const makeXml = (toolbox) => `<xml style="display: none">\n${toolbox}\n</xml>`;
 export function BlocksEditor({ toolbox, messages, xml, variables, onWorkspaceCreated, onChange }) {
   const ref = useRef(null);
   const { language } = useLocale();
-  const [currentXml, setCurrentXml] = useState(xml);
+  const [currentXml, setCurrentXml] = useState();
   const [currentToolbox, setCurrentToolbox] = useState();
 
   const locale = unifyLocale(language);
