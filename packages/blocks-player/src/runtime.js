@@ -104,14 +104,18 @@ export default class Runtime extends EventEmitter {
   fire(eventName, ...args) {
     this.emit(eventName, ...args);
     this._eventsHappening[eventName] = this._eventsHappening[eventName] || [];
-    const promises = this._eventsHappening[eventName].map(async (happening, i) => {
-      if (!happening) {
-        this._eventsHappening[eventName][i] = true;
-        await this.emit(`${eventName}_${i}`, ...args);
-        this._eventsHappening[eventName][i] = false;
-      }
-    });
-    return Promise.race(promises);
+    if (this._eventsHappening[eventName].length > 0) {
+      return Promise.race(
+        this._eventsHappening[eventName].map(async (happening, i) => {
+          if (!happening) {
+            this._eventsHappening[eventName][i] = true;
+            await this.emit(`${eventName}_${i}`, ...args);
+            this._eventsHappening[eventName][i] = false;
+          }
+        }),
+      );
+    }
+    return Promise.resolve();
   }
 
   start() {
