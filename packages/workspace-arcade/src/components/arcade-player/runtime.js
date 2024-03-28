@@ -27,12 +27,20 @@ export default class Runtime extends BaseRuntime {
 
   get stage() {
     const stageLayer = paperCore.project.layers['stage'];
-    return stageLayer.children[0];
+    const stage = stageLayer.children[0];
+    stage.util._runtime = this;
+    return stage;
   }
 
   get sprites() {
     const spriteLayer = paperCore.project.layers['sprite'];
     return spriteLayer.children;
+  }
+
+  getSpriteById(id) {
+    const raster = this.sprites[id];
+    raster.util._runtime = this;
+    return raster;
   }
 
   get fnKey() {
@@ -145,14 +153,6 @@ export default class Runtime extends BaseRuntime {
         this._releaseKey('y');
         return;
     }
-  }
-
-  whenBackdropSwitchesTo(backdrop, listener) {}
-
-  getSpriteById(id) {
-    const raster = this.sprites[id];
-    raster.util.runtime = this;
-    return raster;
   }
 
   random(min = 1, max = 10) {
