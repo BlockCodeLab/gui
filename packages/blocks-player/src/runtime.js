@@ -20,9 +20,6 @@ export default class Runtime extends EventEmitter {
 
     const launch = new Function('runtime', code);
     launch(this);
-
-    // for development
-    console.log(code);
   }
 
   get running() {

@@ -49,12 +49,16 @@ class Util extends EventEmitter {
     return paperCore.project.layers.dialog;
   }
 
+  get runtime() {
+    return this._runtime;
+  }
+
   get running() {
-    return !this.spriteLayer.onMouseDown;
+    return this.runtime && this.runtime.running;
   }
 
   get editing() {
-    return !this.running;
+    return !!this.spriteLayer.onMouseDown;
   }
 
   get data() {
@@ -79,10 +83,6 @@ class Util extends EventEmitter {
       this.emit('update');
     }
   }
-
-  received(...args) {
-    this.on(...args);
-  }
 }
 
 class StageUtil extends Util {
@@ -95,6 +95,10 @@ class StageUtil extends Util {
   }
 
   set backdrop(value) {
+    this.setBackdrop(value);
+  }
+
+  async setBackdrop(value) {
     if (typeof value === 'string') {
       let backdrop = +value;
       if (isNaN(backdrop)) {
@@ -119,12 +123,15 @@ class StageUtil extends Util {
       this.data.frame = frame;
       this.requestUpdate();
 
-      loadImageFromAsset(asset).then((image) => {
-        this.raster.image = image;
-        this.raster.pivot = new paperCore.Point(asset.centerX - asset.width / 2, asset.centerY - asset.height / 2);
-        this.raster.position.x = paperCore.view.center.x;
-        this.raster.position.y = paperCore.view.center.y;
-      });
+      const image = await loadImageFromAsset(asset);
+      this.raster.image = image;
+      this.raster.pivot = new paperCore.Point(asset.centerX - asset.width / 2, asset.centerY - asset.height / 2);
+      this.raster.position.x = paperCore.view.center.x;
+      this.raster.position.y = paperCore.view.center.y;
+
+      if (this.running) {
+        await this.runtime.fire(`backdropswitchesto_${asset.id}`);
+      }
     }
   }
 }

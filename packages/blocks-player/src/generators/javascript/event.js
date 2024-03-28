@@ -30,7 +30,6 @@ javascriptGenerator['event_broadcast_menu'] = (block) => {
 javascriptGenerator['event_broadcast'] = (block) => {
   let code = '';
   if (javascriptGenerator.STATEMENT_PREFIX) {
-    // Automatic prefix insertion is switched off for this block.  Add manually.
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const messageName =
@@ -42,7 +41,6 @@ javascriptGenerator['event_broadcast'] = (block) => {
 javascriptGenerator['event_broadcastandwait'] = (block) => {
   let code = '';
   if (javascriptGenerator.STATEMENT_PREFIX) {
-    // Automatic prefix insertion is switched off for this block.  Add manually.
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const messageName =

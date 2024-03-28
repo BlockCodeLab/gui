@@ -165,4 +165,12 @@ javascriptGenerator['looks_costumenumbername'] = (block) => {
   return [code, javascriptGenerator.ORDER_NONE];
 };
 
-javascriptGenerator['looks_switchbackdroptoandwait'] = (block) => {};
+javascriptGenerator['looks_switchbackdroptoandwait'] = (block) => {
+  let code = '';
+  if (javascriptGenerator.STATEMENT_PREFIX) {
+    code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
+  }
+  const backdropValue = javascriptGenerator.valueToCode(block, 'BACKDROP', javascriptGenerator.ORDER_NONE);
+  code += `await stage.util.setBackdrop(${backdropValue});\n`;
+  return code;
+};

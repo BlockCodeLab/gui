@@ -8,7 +8,7 @@ javascriptGenerator['event_whenkeypressed'] = (block) => {
 
 javascriptGenerator['event_whenbackdropswitchesto'] = (block) => {
   const backdropCode = block.getFieldValue('BACKDROP');
-  return `runtime.whenBackdropSwitchesTo('${backdropCode}', async function anonymous(done) => {/* nextCode */  done()\n});\n`;
+  return `runtime.when('backdropswitchesto_${backdropCode}', async function anonymous(done) {/* nextCode */  done()\n});\n`;
 };
 
 javascriptGenerator['event_whenbroadcastreceived'] = (block) => {
