@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'preact/hooks';
 import { useLocale, useEditor } from '@blockcode/core';
 import { Library } from '@blockcode/ui';
+import maybeTranslateMessage from '../../lib/maybe-translate-message';
 
 import styles from './store-library.module.css';
 
@@ -27,7 +28,7 @@ export default function StoreLibrary({ onRequestPrompt, onOpenProject, onClose }
                     title: getText('gui.projects.contextMenu.rename', 'rename'),
                     label: getText('gui.menuBar.projectTitlePlaceholder', 'Project title here'),
                     inputMode: true,
-                    defaultValue: item.name,
+                    defaultValue: maybeTranslateMessage(item.name, getText),
                     onSubmit: async (name) => {
                       if (name) {
                         await renameProject(item.key, name);
@@ -56,7 +57,7 @@ export default function StoreLibrary({ onRequestPrompt, onOpenProject, onClose }
               },
             ],
           ],
-        }))
+        })),
     );
   };
   useEffect(getData, []);

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'preact/hooks';
 import { useLocale, useEditor } from '@blockcode/core';
 import { classNames, Text, ContextMenu, LibraryItem } from '@blockcode/ui';
 import GettingStarted from '../getting-started/getting-started';
+import maybeTranslateMessage from '../../lib/maybe-translate-message';
 import workspaces from '../../lib/workspaces/workspaces';
 import makeCoverpages from './make-coverpages';
 
@@ -36,7 +37,7 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject, onReq
             </>
           ),
           image: item.image,
-        }))
+        })),
     );
     setCounts(projects.length);
   };
@@ -83,7 +84,7 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject, onReq
                           title: getText('gui.projects.contextMenu.rename', 'rename'),
                           label: getText('gui.menuBar.projectTitlePlaceholder', 'Project title here'),
                           inputMode: true,
-                          defaultValue: item.name,
+                          defaultValue: maybeTranslateMessage(item.name, getText),
                           onSubmit: async (name) => {
                             if (name) {
                               await renameProject(item.key, name);

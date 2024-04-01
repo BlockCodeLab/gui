@@ -90,16 +90,20 @@
   z-index: 10; /* @todo justify */
 }
 
-.file-input {
-  display: none;
-}
-
 .expanded .more-buttons-outer {
   overflow: visible;
 }
 
 .expanded .more-buttons {
   max-height: 1000px; /* Arbitrary, needs to be a value in order for animation to run */
+}
+
+.force-hidden .more-buttons-outer {
+  display: none;
+}
+
+.force-hidden .more-Buttons {
+  transition: 0s !important;
 }
 
 .more-buttons:first-child {

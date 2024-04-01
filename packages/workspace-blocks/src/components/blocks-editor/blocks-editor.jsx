@@ -90,7 +90,6 @@ export default function BlocksEditor({
         xml: newXml,
         content: newCode,
       });
-      console.log(newCode);
     }
     if (onChange) {
       onChange(newXml, workspace);

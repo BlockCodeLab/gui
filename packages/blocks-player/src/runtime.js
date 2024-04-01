@@ -18,8 +18,8 @@ export default class Runtime extends EventEmitter {
 
     this.openEventsGroup('global');
 
-    const launch = new Function('runtime', code);
-    launch(this);
+    const launcher = new Function('runtime', code);
+    launcher(this);
   }
 
   get running() {

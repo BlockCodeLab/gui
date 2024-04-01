@@ -1,10 +1,8 @@
 /* inspired by scratch-gui */
 import classNames from 'classnames';
-import { useRef, useState } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 import { Tooltip } from '../tooltip/tooltip';
 import styles from './action-button.module.css';
-
-const CLOSE_DELAY = 300; // ms
 
 export function ActionButton({
   className,
@@ -18,25 +16,8 @@ export function ActionButton({
   const [isOpen, setIsOpen] = useState(false);
   const [forceHide, setForceHide] = useState(false);
 
-  let closeTimeoutId;
-
-  const handleToggleOpenState = () => {
-    // Mouse enter back in after timeout was started prevents it from closing.
-    if (closeTimeoutId) {
-      clearTimeout(closeTimeoutId);
-      closeTimeoutId = null;
-    } else if (!isOpen) {
-      setIsOpen(true);
-      setForceHide(false);
-    }
-  };
-
-  const handleClosePopover = () => {
-    closeTimeoutId = setTimeout(() => {
-      setIsOpen(false);
-      closeTimeoutId = null;
-    }, CLOSE_DELAY);
-  };
+  const handleToggleOpenState = () => setIsOpen(true);
+  const handleClosePopover = () => setIsOpen(false);
 
   return disabled ? (
     <div className={classNames(styles.actionButtonWrapper, className)}>
@@ -74,7 +55,12 @@ export function ActionButton({
               >
                 <button
                   className={classNames(styles.button, styles.moreButton)}
-                  onClick={item.onClick}
+                  onClick={(e) => {
+                    setForceHide(true);
+                    setIsOpen(false);
+                    item.onClick(e);
+                    setTimeout(() => setForceHide(false), 0);
+                  }}
                 >
                   <img
                     className={styles.moreIcon}

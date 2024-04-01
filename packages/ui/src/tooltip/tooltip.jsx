@@ -30,16 +30,6 @@ export function Tooltip({ content, className, placement, offset, clickable, chil
       });
       tooltipRef.popper = popper;
 
-      const show = () => {
-        tooltipRef.current.dataset.show = true;
-        popper.setOptions((options) => ({
-          ...options,
-          modifiers: [...options.modifiers, { name: 'eventListeners', enabled: true }],
-        }));
-        popper.update();
-        if (onShow) onShow();
-      };
-
       const hide = () => {
         delete tooltipRef.current.dataset.show;
         popper.setOptions((options) => ({
@@ -49,23 +39,29 @@ export function Tooltip({ content, className, placement, offset, clickable, chil
         if (onHide) onHide();
       };
 
-      if (clickable) {
-        const clickShow = () => {
-          show();
-          const clickHide = () => {
-            hide();
-            document.removeEventListener('mousedown', clickHide);
-          };
-          document.addEventListener('mousedown', clickHide);
+      const show = () => {
+        tooltipRef.current.dataset.show = true;
+        popper.setOptions((options) => ({
+          ...options,
+          modifiers: [...options.modifiers, { name: 'eventListeners', enabled: true }],
+        }));
+        popper.update();
+        if (onShow) onShow();
+
+        const clickHide = () => {
+          hide();
+          document.removeEventListener('mousedown', clickHide);
         };
-        tooltipForElement.addEventListener('mouseup', clickShow);
+        document.addEventListener('mousedown', clickHide);
+      };
+
+      if (clickable) {
+        tooltipForElement.addEventListener('mouseup', show);
         tooltipRef.current.addEventListener('mousedown', (e) => e.stopPropagation());
       } else {
         [
           ['mouseenter', show],
-          ['focus', show],
           ['mouseleave', hide],
-          ['blur', hide],
         ].forEach(([event, listener]) => tooltipForElement.addEventListener(event, listener));
       }
     }

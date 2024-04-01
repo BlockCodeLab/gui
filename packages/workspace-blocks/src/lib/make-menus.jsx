@@ -267,7 +267,7 @@ export default function ({
             if (downloadAlert.id) return;
             let { device } = context;
             if (!device) {
-              device = await connectDevice(deviceFilters, context.connectDevice);
+              device = await connectDevice(deviceFilters || defaultFilters, context.connectDevice);
             }
             const files = onDownload(context.fileList, context.assetList);
             downloadDevice(device, files, downloadAlert);

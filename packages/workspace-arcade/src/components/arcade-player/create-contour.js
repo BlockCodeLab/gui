@@ -154,8 +154,6 @@ export default function (raster) {
       scaling: raster.scaling,
       rotation: raster.rotation,
       applyMatrix: false,
-      visible: true,
-      strokeColor: 'red',
     }),
   );
 }
