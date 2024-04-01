@@ -44,6 +44,11 @@ arcade.directionPicker.allAround: All Around
 arcade.directionPicker.leftRight: Left/Right
 arcade.directionPicker.dontRotate: Do not rotate
 
+arcade.libraries.empty: No more!
+arcade.libraries.sprite: Choose a Sprite
+arcade.libraries.costume: Choose a Costume
+arcade.libraries.backdrop: Choose a Backdrop
+
 arcade.defaultProject.stageName: Stage
 arcade.defaultProject.spriteName: Sprite
 arcade.defaultProject.backdropName: backdrop

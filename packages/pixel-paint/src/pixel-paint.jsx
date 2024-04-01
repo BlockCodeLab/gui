@@ -6,7 +6,7 @@ import Painter from './components/painter/painter';
 
 import styles from './pixel-paint.module.css';
 
-export function PixelPaint({ onAlert, onRemoveAlert }) {
+export function PixelPaint({ onShowAlert, onHideAlert, onSetupLibrary }) {
   const [imageIndex, setImageIndex] = useState();
   const { fileList, assetList, selectedIndex } = useEditor();
 
@@ -29,8 +29,9 @@ export function PixelPaint({ onAlert, onRemoveAlert }) {
         imageList={imageList}
         imageIndex={imageIndex}
         onSelect={setImageIndex}
-        onAlert={onAlert}
-        onRemoveAlert={onRemoveAlert}
+        onShowAlert={onShowAlert}
+        onHideAlert={onHideAlert}
+        onSetupLibrary={onSetupLibrary}
       />
 
       <Painter

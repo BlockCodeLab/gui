@@ -1,9 +1,10 @@
+import { useState } from 'preact/hooks';
 import { useEditor, useLocale, exportFile } from '@blockcode/core';
 import { classNames, IconSelector, ActionButton } from '@blockcode/ui';
 import SpriteInfo from '../sprite-info/sprite-info';
 
 import uid from '../../lib/uid';
-import loadImage from '../../lib/load-image';
+import { uploadImage, loadImageWithDataURL } from '../../lib/load-image';
 import RotationStyle from '../../lib/rotation-style';
 
 import styles from './sprite-selector.module.css';
@@ -12,10 +13,49 @@ import surpriseIcon from './icon-surprise.svg';
 import searchIcon from './icon-search.svg';
 import paintIcon from './icon-paint.svg';
 import fileUploadIcon from './icon-file-upload.svg';
+import SpritesLibrary from '../libraries/sprites-library';
 
-export default function SpriteSelector({ playing, stageSize, onSelectTab, onPrompt, onAlert, onRemoveAlert }) {
+export default function SpriteSelector({ playing, stageSize, onSelectTab, onShowPrompt, onShowAlert, onHideAlert }) {
+  const [spritesLibrary, setSpritesLibrary] = useState(false);
   const { getText } = useLocale();
   const { fileList, assetList, selectedIndex, addFile, openFile, deleteFile, addAsset, deleteAsset } = useEditor();
+
+  const handleShowLibrary = () => setSpritesLibrary(true);
+  const handleCloseLibrary = () => setSpritesLibrary(false);
+
+  const handleSelectSprite = async (sprite) => {
+    const spriteId = uid();
+    onShowAlert('importing', { id: spriteId });
+
+    const assetIdList = [];
+    for (const costume of sprite.costumes) {
+      const costumeId = uid();
+      const image = await loadImageWithDataURL(`./assets/${costume.id}.png`);
+      addAsset({
+        ...costume,
+        id: costumeId,
+        type: 'image/png',
+        data: image.dataset.url.slice(`data:image/png;base64,`.length),
+        width: image.width,
+        height: image.height,
+      });
+      assetIdList.push(costumeId);
+    }
+
+    addFile({
+      id: spriteId,
+      type: 'text/x-python',
+      name: sprite.name,
+      assets: assetIdList,
+      frame: 0,
+      x: 0,
+      y: 0,
+      size: 100,
+      direction: 90,
+      rotationStyle: RotationStyle.ALL_AROUND,
+    });
+    onHideAlert(spriteId);
+  };
 
   const handleUploadFile = () => {
     const fileInput = document.createElement('input');
@@ -25,18 +65,18 @@ export default function SpriteSelector({ playing, stageSize, onSelectTab, onProm
     fileInput.click();
     fileInput.addEventListener('change', async (e) => {
       const alertId = uid();
-      onAlert('importing', { id: alertId });
+      onShowAlert('importing', { id: alertId });
 
       for (const file of e.target.files) {
         const spriteId = uid();
         const imageId = uid();
         const imageName = file.name.slice(0, file.name.lastIndexOf('.'));
-        const image = await loadImage(file);
+        const image = await uploadImage(file);
         addAsset({
           id: imageId,
           type: file.type,
           name: imageName,
-          data: image.src.slice(`data:${file.type};base64,`.length),
+          data: image.dataset.url.slice(`data:${file.type};base64,`.length),
           width: image.width,
           height: image.height,
           centerX: Math.floor(image.width / 2),
@@ -55,7 +95,7 @@ export default function SpriteSelector({ playing, stageSize, onSelectTab, onProm
           rotationStyle: RotationStyle.ALL_AROUND,
         });
       }
-      onRemoveAlert(alertId);
+      onHideAlert(alertId);
     });
   };
 
@@ -108,7 +148,7 @@ export default function SpriteSelector({ playing, stageSize, onSelectTab, onProm
 
   const handleDelete = (index) => {
     const { id, name, assets } = fileList[index];
-    onPrompt({
+    onShowPrompt({
       title: getText('arcade.deletePrompt.title', 'Delete {name}', { name }),
       label: getText('arcade.deletePrompt.label', 'Do you want to delete the sprite?'),
       onSubmit: () => {
@@ -131,80 +171,89 @@ export default function SpriteSelector({ playing, stageSize, onSelectTab, onProm
   };
 
   return (
-    <div className={styles.spriteSelector}>
-      <SpriteInfo
-        playing={playing}
-        stageSize={stageSize}
-      />
+    <>
+      <div className={styles.spriteSelector}>
+        <SpriteInfo
+          playing={playing}
+          stageSize={stageSize}
+        />
 
-      <IconSelector
-        id="sprite-selector"
-        className={classNames(styles.selectorItemsWrapper, {
-          [styles.small]: stageSize === 'small',
-        })}
-        items={fileList.map((sprite, index) =>
-          index === 0
-            ? { __hidden__: true }
-            : {
-                ...sprite,
-                icon: getFileIcon(sprite.assets[sprite.frame]),
-                order: sprite.order || index,
-                contextMenu: [
-                  [
-                    {
-                      label: getText('arcade.contextMenu.duplicate', 'duplicate'),
-                      onClick: () => handleDuplicate(index),
-                    },
-                    {
-                      label: getText('arcade.contextMenu.export', 'export'),
-                      disabled: true,
-                      onClick: () => {},
-                    },
+        <IconSelector
+          id="sprite-selector"
+          className={classNames(styles.selectorItemsWrapper, {
+            [styles.small]: stageSize === 'small',
+          })}
+          items={fileList.map((sprite, index) =>
+            index === 0
+              ? { __hidden__: true }
+              : {
+                  ...sprite,
+                  icon: getFileIcon(sprite.assets[sprite.frame]),
+                  order: sprite.order || index,
+                  contextMenu: [
+                    [
+                      {
+                        label: getText('arcade.contextMenu.duplicate', 'duplicate'),
+                        onClick: () => handleDuplicate(index),
+                      },
+                      {
+                        label: getText('arcade.contextMenu.export', 'export'),
+                        disabled: true,
+                        onClick: () => {},
+                      },
+                    ],
+                    [
+                      {
+                        label: getText('arcade.contextMenu.delete', 'delete'),
+                        className: styles.deleteMenuItem,
+                        onClick: () => handleDelete(index),
+                      },
+                    ],
                   ],
-                  [
-                    {
-                      label: getText('arcade.contextMenu.delete', 'delete'),
-                      className: styles.deleteMenuItem,
-                      onClick: () => handleDelete(index),
-                    },
-                  ],
-                ],
-              }
-        )}
-        selectedIndex={selectedIndex}
-        onSelect={openFile}
-        onDelete={handleDelete}
-      />
+                },
+          )}
+          selectedIndex={selectedIndex}
+          onSelect={openFile}
+          onDelete={handleDelete}
+        />
 
-      <ActionButton
-        disabled={playing}
-        className={styles.addButton}
-        icon={spriteIcon}
-        tooltip={getText('arcade.actionButton.sprite', 'Choose a Sprite')}
-        onClick={() => {}}
-        moreButtons={[
-          {
-            icon: fileUploadIcon,
-            tooltip: getText('arcade.actionButton.uploadSprite', 'Upload Sprite'),
-            onClick: handleUploadFile,
-          },
-          {
-            icon: surpriseIcon,
-            tooltip: getText('arcade.actionButton.surprise', 'Surprise'),
-            onClick: () => {},
-          },
-          {
-            icon: paintIcon,
-            tooltip: getText('arcade.actionButton.paint', 'Paint'),
-            onClick: handlePaintImage,
-          },
-          {
-            icon: searchIcon,
-            tooltip: getText('arcade.actionButton.sprite', 'Choose a Sprite'),
-            onClick: () => {},
-          },
-        ]}
-      />
-    </div>
+        <ActionButton
+          disabled={playing}
+          className={styles.addButton}
+          icon={spriteIcon}
+          tooltip={getText('arcade.actionButton.sprite', 'Choose a Sprite')}
+          onClick={handleShowLibrary}
+          moreButtons={[
+            {
+              icon: fileUploadIcon,
+              tooltip: getText('arcade.actionButton.uploadSprite', 'Upload Sprite'),
+              onClick: handleUploadFile,
+            },
+            {
+              icon: surpriseIcon,
+              tooltip: getText('arcade.actionButton.surprise', 'Surprise'),
+              onClick: () => handleSelectSprite(SpritesLibrary.surprise()),
+            },
+            {
+              icon: paintIcon,
+              tooltip: getText('arcade.actionButton.paint', 'Paint'),
+              onClick: handlePaintImage,
+            },
+            {
+              icon: searchIcon,
+              tooltip: getText('arcade.actionButton.sprite', 'Choose a Sprite'),
+              onClick: handleShowLibrary,
+            },
+          ]}
+        />
+      </div>
+
+      {spritesLibrary && (
+        <SpritesLibrary
+          onClose={handleCloseLibrary}
+          onSelect={handleSelectSprite}
+        />
+      )}
+    </>
   );
 }

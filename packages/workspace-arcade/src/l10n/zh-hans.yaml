@@ -44,6 +44,11 @@ arcade.directionPicker.allAround: 任意旋转
 arcade.directionPicker.leftRight: 左右翻转
 arcade.directionPicker.dontRotate: 不旋转
 
+arcade.libraries.empty: 空空如也！
+arcade.libraries.sprite: 选择一个角色
+arcade.libraries.costume: 选择一个造型
+arcade.libraries.backdrop: 选择一个背景
+
 arcade.defaultProject.stageName: 舞台
 arcade.defaultProject.spriteName: 角色
 arcade.defaultProject.backdropName: 背景

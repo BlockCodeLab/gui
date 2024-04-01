@@ -7,6 +7,8 @@ import generateMainFile from './lib/generate-main-file';
 import BlocksEditor from './components/blocks-editor/blocks-editor';
 import Sidebar from './components/sidebar/sidebar';
 import PaintText from './components/paint-text/paint-text';
+import BackdropsLibrary from './components/libraries/backdrops-library';
+import CostumesLibrary from './components/libraries/costumes-library';
 
 /* assets */
 import getDefaultProject from './lib/default-project';
@@ -44,6 +46,13 @@ export default function ArcadeBlocksWorkspace({
   };
   newProject();
 
+  const handleSetupLibrary = () => {
+    return {
+      BackdropsLibrary,
+      CostumesLibrary,
+    };
+  };
+
   setLayout({
     menus: makeMenus({
       newProject,
@@ -69,11 +78,13 @@ export default function ArcadeBlocksWorkspace({
                   defaultMessage="Update Arcade firmware..."
                 />
               ),
+              disabled: true,
               onClick: () => {},
             },
           ],
         },
       ],
+      deviceFilters: [{ usbVendorId: 0 }],
       onDownload: (fileList, assetList) => [].concat(generateMainFile(fileList[0], fileList.slice(1)), assetList),
     }),
 
@@ -87,8 +98,9 @@ export default function ArcadeBlocksWorkspace({
         label: <PaintText />,
         Content: () => (
           <PixelPaint
-            onAlert={setAlert}
-            onRemoveAlert={removeAlert}
+            onShowAlert={setAlert}
+            onHideAlert={removeAlert}
+            onSetupLibrary={handleSetupLibrary}
           />
         ),
       },
@@ -100,9 +112,9 @@ export default function ArcadeBlocksWorkspace({
         Content: () => (
           <Sidebar
             onSelectTab={selectTab}
-            onPrompt={setPrompt}
-            onAlert={setAlert}
-            onRemoveAlert={removeAlert}
+            onShowPrompt={setPrompt}
+            onShowAlert={setAlert}
+            onHideAlert={removeAlert}
           />
         ),
       },

@@ -1,7 +1,7 @@
 import { paperCore } from '@blockcode/blocks-player';
 import { EventEmitter } from 'node:events';
 
-import { loadImageFromAsset } from '../../lib/load-image';
+import { loadImageFromDataURL } from '../../lib/load-image';
 import RotationStyle from '../../lib/rotation-style';
 
 import createContour from './create-contour';
@@ -123,7 +123,7 @@ class StageUtil extends Util {
       this.data.frame = frame;
       this.requestUpdate();
 
-      const image = await loadImageFromAsset(asset);
+      const image = await loadImageFromDataURL(asset);
       this.raster.image = image;
       this.raster.pivot = new paperCore.Point(asset.centerX - asset.width / 2, asset.centerY - asset.height / 2);
       this.raster.position.x = paperCore.view.center.x;
@@ -168,7 +168,7 @@ class SpriteUtil extends Util {
       if (!asset) return;
 
       this.data.frame = frame;
-      loadImageFromAsset(asset).then((image) => {
+      loadImageFromDataURL(asset).then((image) => {
         this.raster.image = image;
         this.raster.pivot = new paperCore.Point(asset.centerX - asset.width / 2, asset.centerY - asset.height / 2);
         this.createContour();

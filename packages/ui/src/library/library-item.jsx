@@ -108,22 +108,14 @@ export function LibraryItem(props) {
       className={classNames(styles.libraryItem, {
         [styles.hidden]: props.hidden,
       })}
-      onBlur={props.onBlur}
       onClick={props.onSelect}
-      onFocus={props.onFocus}
-      onKeyPress={props.onKeyPress}
-      onMouseEnter={props.onMouseEnter}
-      onMouseLeave={props.onMouseLeave}
     >
-      {/* Layers of wrapping is to prevent layout thrashing on animation */}
       <div className={styles.libraryItemImageContainerWrapper}>
-        <div
-          className={styles.libraryItemImageContainer}
-          onMouseEnter={props.onMouseEnter}
-          onMouseLeave={props.onMouseLeave}
-        >
+        <div className={styles.libraryItemImageContainer}>
           <img
             className={styles.libraryItemImage}
+            onMouseEnter={props.onMouseEnter}
+            onMouseLeave={props.onMouseLeave}
             src={props.image}
           />
         </div>

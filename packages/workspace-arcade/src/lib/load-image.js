@@ -1,6 +1,6 @@
 import { VIEW_WIDTH, VIEW_HEIGHT } from './default-project';
 
-export default function (file) {
+export function uploadImage(file) {
   return new Promise(async (resolve) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -26,19 +26,37 @@ export default function (file) {
 
           const ctx = canvas.getContext('2d');
           ctx.drawImage(image, 0, 0, w, h);
-          image.src = canvas.toDataURL(file.type);
-          return;
+          image.dataset.url = canvas.toDataURL(file.type);
+          resolve(image);
         }
-        resolve(image);
       });
     });
   });
 }
 
-export function loadImageFromAsset(asset) {
+export function loadImageFromDataURL(dataurl) {
   return new Promise(async (resolve) => {
     const image = new Image();
-    image.src = typeof asset === 'string' ? asset : `data:${asset.type};base64,${asset.data}`;
-    image.addEventListener('load', () => resolve(image));
+    image.src = typeof dataurl === 'string' ? dataurl : `data:${dataurl.type};base64,${dataurl.data}`;
+    image.addEventListener('load', () => {
+      image.dataset.url = image.src;
+      resolve(image);
+    });
+  });
+}
+
+export function loadImageWithDataURL(src) {
+  return new Promise(async (resolve) => {
+    const image = new Image();
+    image.src = src;
+    image.addEventListener('load', () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = image.width;
+      canvas.height = image.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(image, 0, 0, image.width, image.height);
+      image.dataset.url = canvas.toDataURL('image/png');
+      resolve(image);
+    });
   });
 }

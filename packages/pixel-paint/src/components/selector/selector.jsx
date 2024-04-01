@@ -1,6 +1,7 @@
+import { useState } from 'preact/hooks';
 import { useLocale, useEditor } from '@blockcode/core';
 import { IconSelector, ActionButton } from '@blockcode/ui';
-import loadImage from '../../lib/load-image';
+import { uploadImage, loadImageWithDataURL } from '../../lib/load-image';
 import uid from '../../lib/uid';
 
 import styles from './selector.module.css';
@@ -11,11 +12,75 @@ import searchIcon from './icon-search.svg';
 import paintIcon from './icon-paint.svg';
 import fileUploadIcon from './icon-file-upload.svg';
 
-export default function Selector({ mode, imageList, imageIndex, onSelect, onAlert, onRemoveAlert }) {
+export default function Selector({ mode, imageList, imageIndex, onSelect, onShowAlert, onHideAlert, onSetupLibrary }) {
+  const [imagesLibrary, setImagesLibrary] = useState(false);
+  const [costumesLibrary, setCostumesLibrary] = useState(false);
+  const [backdropsLibrary, setBackdropsLibrary] = useState(false);
+
   const { getText } = useLocale();
   const { addAsset, deleteAsset, modifyFile } = useEditor();
 
   const imageIdList = imageList.map((image) => image.id);
+
+  const { ImagesLibrary, BackdropsLibrary, CostumesLibrary } = onSetupLibrary();
+
+  const handleShowLibrary = () => {
+    if (mode === 'costume') {
+      setImagesLibrary(false);
+      setCostumesLibrary(true);
+      setBackdropsLibrary(false);
+      return;
+    }
+    if (mode === 'backdrop') {
+      setImagesLibrary(false);
+      setCostumesLibrary(false);
+      setBackdropsLibrary(true);
+      return;
+    }
+    setImagesLibrary(true);
+    setCostumesLibrary(false);
+    setBackdropsLibrary(false);
+  };
+
+  const handleCloseLibrary = () => {
+    setImagesLibrary(false);
+    setCostumesLibrary(false);
+    setBackdropsLibrary(false);
+  };
+
+  const handleSelectAsset = async (asset) => {
+    const assetId = uid();
+    onShowAlert('importing', { id: assetId });
+
+    const image = await loadImageWithDataURL(`./assets/${asset.id}.png`);
+    addAsset({
+      ...asset,
+      id: assetId,
+      type: 'image/png',
+      data: image.dataset.url.slice('data:image/png;base64,'.length),
+      width: image.width,
+      height: image.height,
+    });
+    imageIdList.push(assetId);
+    onHideAlert(assetId);
+
+    modifyFile({
+      assets: imageIdList,
+      frame: imageIdList.length - 1,
+    });
+  };
+
+  const handleSurprise = () => {
+    if (mode === 'costume') {
+      handleSelectAsset(CostumesLibrary.surprise());
+      return;
+    }
+    if (mode === 'backdrop') {
+      handleSelectAsset(BackdropsLibrary.surprise());
+      return;
+    }
+    handleSelectAsset(ImagesLibrary.surprise());
+  };
 
   const getTextByMode = (defaultText, costumeText, backdropText) => {
     if (mode === 'costume') return costumeText;
@@ -38,17 +103,17 @@ export default function Selector({ mode, imageList, imageIndex, onSelect, onAler
     fileInput.click();
     fileInput.addEventListener('change', async (e) => {
       const alertId = uid();
-      onAlert('importing', { id: alertId });
+      onShowAlert('importing', { id: alertId });
 
       for (const file of e.target.files) {
         const imageId = uid();
         const imageName = file.name.slice(0, file.name.lastIndexOf('.'));
-        const image = await loadImage(file);
+        const image = await uploadImage(file);
         addAsset({
           id: imageId,
           type: file.type,
           name: imageName,
-          data: image.src.slice(`data:${file.type};base64,`.length),
+          data: image.dataset.url.slice(`data:${file.type};base64,`.length),
           width: image.width,
           height: image.height,
           centerX: Math.floor(image.width / 2),
@@ -56,7 +121,7 @@ export default function Selector({ mode, imageList, imageIndex, onSelect, onAler
         });
         imageIdList.push(imageId);
       }
-      onRemoveAlert(alertId);
+      onHideAlert(alertId);
 
       modifyFile({
         assets: imageIdList,
@@ -155,7 +220,7 @@ export default function Selector({ mode, imageList, imageIndex, onSelect, onAler
             getText('pixelPaint.actionButton.costume', 'Choose a Costume'),
             getText('pixelPaint.actionButton.backdrop', 'Choose a Backdrop'),
           )}
-          onClick={() => {}}
+          onClick={handleShowLibrary}
           moreButtons={[
             {
               icon: fileUploadIcon,
@@ -169,7 +234,7 @@ export default function Selector({ mode, imageList, imageIndex, onSelect, onAler
             {
               icon: surpriseIcon,
               tooltip: getText('pixelPaint.actionButton.surprise', 'Surprise'),
-              onClick: () => {},
+              onClick: handleSurprise,
             },
             {
               icon: paintIcon,
@@ -183,11 +248,32 @@ export default function Selector({ mode, imageList, imageIndex, onSelect, onAler
                 getText('pixelPaint.actionButton.costume', 'Choose a Costume'),
                 getText('pixelPaint.actionButton.backdrop', 'Choose a Backdrop'),
               ),
-              onClick: () => {},
+              onClick: handleShowLibrary,
             },
           ]}
         />
       </div>
+
+      {imagesLibrary && ImagesLibrary && (
+        <ImagesLibrary
+          onClose={handleCloseLibrary}
+          onSelect={handleSelectAsset}
+        />
+      )}
+
+      {costumesLibrary && CostumesLibrary && (
+        <CostumesLibrary
+          onClose={handleCloseLibrary}
+          onSelect={handleSelectAsset}
+        />
+      )}
+
+      {backdropsLibrary && BackdropsLibrary && (
+        <BackdropsLibrary
+          onClose={handleCloseLibrary}
+          onSelect={handleSelectAsset}
+        />
+      )}
     </div>
   );
 }

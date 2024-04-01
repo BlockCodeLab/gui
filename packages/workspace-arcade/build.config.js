@@ -1,6 +1,7 @@
 import { resolve } from 'node:path';
 import CSSLoader from 'bun-loader-css';
 import YamlLoader from 'bun-loader-yaml';
+import CopyPlugin from 'bun-plugin-copy';
 
 const isRelease = Bun.env.BUN_ENV === 'production';
 
@@ -16,7 +17,14 @@ export default {
   naming: {
     asset: 'assets/[name]-[hash].[ext]',
   },
-  plugins: [CSSLoader(), YamlLoader()],
+  plugins: [
+    CSSLoader(),
+    YamlLoader(),
+    CopyPlugin({
+      from: './public',
+      to: 'assets/',
+    }),
+  ],
   external: [
     'preact',
     'preact/hooks',

@@ -1,10 +1,9 @@
-const soup = 'abcdefghijklmnopqrstuvwxyz_0123456789';
+const soup = '0123456789abcdefghijklmnopqrstuvwxyz';
 
-export default function (length = 20) {
+export default function (length = 32) {
   const id = [];
   for (let i = 0; i < length; i++) {
-    const soupLength = i > 0 ? soup.length : soup.length - 11;
-    id[i] = soup.charAt(Math.random() * soupLength);
+    id[i] = soup.charAt(Math.random() * soup.length);
   }
   return id.join('');
 }
