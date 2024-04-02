@@ -68,7 +68,10 @@ const reducer = (state, action) => {
       return {
         ...state,
         fileList: state.fileList.filter((_, i) => i !== action.payload),
-        selectedIndex: action.payload === state.fileList.length - 1 ? action.payload - 1 : action.payload,
+        selectedIndex:
+          action.payload > state.selectedIndex || state.fileList.length - 1 > state.selectedIndex
+            ? state.selectedIndex
+            : state.selectedIndex - 1,
         modified: true,
       };
     case RENAME_FILE:

@@ -139,15 +139,20 @@ export default function (assetList, fileList, selectedIndex, workspace) {
 
   ScratchBlocks.Blocks['control_create_clone_of_menu'] = {
     init() {
+      const options = [...otherSpritesMenu];
+      if (!isStage) {
+        options.unshift([ScratchBlocks.Msg.CONTROL_CREATECLONEOF_MYSELF, '_myself_']);
+      }
+      if (options.length === 0) {
+        options.push(['', '']);
+      }
       this.jsonInit({
         message0: '%1',
         args0: [
           {
             type: 'field_dropdown',
             name: 'CLONE_OPTION',
-            options: isStage
-              ? [...otherSpritesMenu]
-              : [[ScratchBlocks.Msg.CONTROL_CREATECLONEOF_MYSELF, '_myself_'], ...otherSpritesMenu],
+            options,
           },
         ],
         extensions: ['colours_control', 'output_string'],
@@ -189,9 +194,12 @@ export default function (assetList, fileList, selectedIndex, workspace) {
 
   ScratchBlocks.Blocks['sensing_of_object_menu'] = {
     init() {
-      const menu = [...otherSpritesMenu];
+      const options = [...otherSpritesMenu];
       if (!isStage) {
-        menu.unshift([ScratchBlocks.Msg.SENSING_OF_STAGE, '_stage_']);
+        options.unshift([ScratchBlocks.Msg.SENSING_OF_STAGE, '_stage_']);
+      }
+      if (options.length === 0) {
+        options.push(['', '']);
       }
       this.jsonInit({
         message0: '%1',
@@ -199,7 +207,7 @@ export default function (assetList, fileList, selectedIndex, workspace) {
           {
             type: 'field_dropdown',
             name: 'OBJECT',
-            options: menu,
+            options,
           },
         ],
         category: ScratchBlocks.Categories.sensing,

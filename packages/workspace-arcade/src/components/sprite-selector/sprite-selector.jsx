@@ -147,18 +147,13 @@ export default function SpriteSelector({ playing, stageSize, onSelectTab, onShow
   };
 
   const handleDelete = (index) => {
-    const { id, name, assets } = fileList[index];
+    const { name, assets } = fileList[index];
     onShowPrompt({
       title: getText('arcade.deletePrompt.title', 'Delete {name}', { name }),
       label: getText('arcade.deletePrompt.label', 'Do you want to delete the sprite?'),
       onSubmit: () => {
+        deleteAsset(assets);
         deleteFile(index);
-        assets.forEach((assetId) => {
-          for (const file of fileList) {
-            if (file.id !== id && file.assets.includes(assetId)) return;
-          }
-          deleteAsset(assetId);
-        });
       },
     });
   };
