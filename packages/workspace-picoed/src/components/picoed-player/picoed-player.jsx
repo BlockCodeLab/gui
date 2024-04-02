@@ -16,8 +16,8 @@ export function PicoedPlayer({ playing, onRequestStop }) {
   if (canvas) {
     const picoedItems = paperCore.project.activeLayer.children;
 
+    let handleKeyPress = null;
     if (playing) {
-      let handleKeyPress = null;
       if (!currentRuntime) {
         // start
         const code = generate(picoed.script);
@@ -146,8 +146,8 @@ export function PicoedPlayer({ playing, onRequestStop }) {
 
   return (
     <BlocksPlayer
-      width={`420px`}
-      height={`320px`}
+      width="420px"
+      height="320px"
       onSetup={handleSetup}
     />
   );
