@@ -15,7 +15,7 @@ const DELETE_ASSET = 'DELETE_ASSET';
 const MODIFY_ASSET = 'MODIFY_ASSET';
 const CONNECT_DEVICE = 'CONNECT_DEVICE';
 const CONFIG_EDITOR = 'CONFIG_EDITOR';
-const SAVE_KEY = 'SAVE_KEY';
+const SAVE_DATA = 'SAVE_DATA';
 
 localForage.config({
   name: 'blockcode-store',
@@ -136,7 +136,7 @@ const reducer = (state, action) => {
         editor: Object.assign(state.editor || {}, action.payload),
         modified: true,
       };
-    case SAVE_KEY:
+    case SAVE_DATA:
       return {
         ...state,
         ...action.payload,
@@ -230,17 +230,13 @@ export function useEditor() {
     },
 
     async saveThumb(thumb) {
-      if (state.key) {
-        const project = await localForage.getItem(state.key);
-        project.thumb = thumb;
-        localForage.setItem(state.key, project);
-      }
+      dispatch({ type: SAVE_DATA, payload: { thumb } });
     },
 
     async saveNow() {
       const modifiedDate = Date.now();
       const key = state.key || modifiedDate.toString(36);
-      const { name, editor, assetList, fileList, selectedIndex } = state;
+      const { name, editor, assetList, fileList, selectedIndex, thumb } = state;
       const result = await localForage.setItem(key, {
         key,
         name,
@@ -249,8 +245,9 @@ export function useEditor() {
         fileList,
         selectedIndex,
         modifiedDate,
+        thumb,
       });
-      dispatch({ type: SAVE_KEY, payload: { key, modified: false } });
+      dispatch({ type: SAVE_DATA, payload: { key, modified: false } });
       return result;
     },
 

@@ -1,4 +1,5 @@
 import { useState } from 'preact/hooks';
+import { svgAsDataUri } from 'save-svg-as-png';
 import { useLocale, useEditor } from '@blockcode/core';
 import { classNames } from '@blockcode/ui';
 import { BlocksEditor as Editor, ScratchBlocks, makeToolboxXML } from '@blockcode/blocks-editor';
@@ -29,7 +30,7 @@ export default function BlocksEditor({
   onHideAlert,
 }) {
   const { addLocaleData, getText } = useLocale();
-  const { fileList, selectedIndex, modifyFile } = useEditor();
+  const { fileList, selectedIndex, modifyFile, saveThumb } = useEditor();
   const [workspace, setWorkspace] = useState();
   const [prompt, setPrompt] = useState(false);
   const [extensionLibraryOpen, setExtensionLibrary] = useState(false);
@@ -84,6 +85,8 @@ export default function BlocksEditor({
   });
 
   const handleChange = (newXml, workspace) => {
+    svgAsDataUri(workspace.getCanvas(), {}).then(saveThumb);
+
     if (!disableGenerator) {
       const newCode = pythonGenerator.workspaceToCode(workspace);
       modifyFile({
