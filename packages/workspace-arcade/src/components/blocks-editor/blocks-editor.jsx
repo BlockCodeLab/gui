@@ -5,6 +5,8 @@ import { CodeTab, pythonGenerator } from '@blockcode/workspace-blocks';
 import makeToolboxXML from '../../lib/make-toolbox-xml';
 import buildBlocks from './blocks';
 
+import styles from './blocks-editor.module.css';
+
 const Editor = CodeTab.Content;
 
 const DEFAULT_SOUND_NAME = 'DADADADUM';
@@ -47,7 +49,15 @@ export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert })
 
   const stage = fileList[0];
   const target = fileList[selectedIndex]; // stage or sprite
-  const xml = target && target.xml;
+
+  let thumb, xml;
+  if (target) {
+    const image = assetList.find((asset) => asset.id === target.assets[target.frame]);
+    if (image) {
+      thumb = `data:${image.type};base64,${image.data}`;
+    }
+    xml = target.xml;
+  }
 
   const toolbox = makeToolboxXML(isStage, fileList.length === 1, stage, target, DEFAULT_SOUND_NAME);
 
@@ -84,17 +94,28 @@ export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert })
   };
 
   return (
-    <Editor
-      enableMultiTargets
-      enableLocalVariable={!isStage}
-      xml={xml}
-      toolbox={toolbox}
-      messages={messages}
-      onExtensionsFilter={() => ['blocks', ['arcade', 'popsicle']]}
-      onLoadExtension={handleLoadExtension}
-      onShowPrompt={onShowPrompt}
-      onShowAlert={onShowAlert}
-      onHideAlert={onHideAlert}
-    />
+    <>
+      <Editor
+        enableMultiTargets
+        enableLocalVariable={!isStage}
+        xml={xml}
+        toolbox={toolbox}
+        messages={messages}
+        onExtensionsFilter={() => ['blocks', ['arcade', 'popsicle']]}
+        onLoadExtension={handleLoadExtension}
+        onShowPrompt={onShowPrompt}
+        onShowAlert={onShowAlert}
+        onHideAlert={onHideAlert}
+      />
+
+      {thumb && (
+        <div className={styles.targetThumb}>
+          <img
+            className={styles.thumbImage}
+            src={thumb}
+          />
+        </div>
+      )}
+    </>
   );
 }
