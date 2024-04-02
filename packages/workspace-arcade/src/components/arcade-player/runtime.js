@@ -89,7 +89,6 @@ export default class Runtime extends BaseRuntime {
   }
 
   handleKeyDown(e) {
-    console.log(e);
     if (e.altKey) {
       this._fireKey('fn');
       return;

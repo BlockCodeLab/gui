@@ -6,7 +6,7 @@ javascriptGenerator['motion_movesteps'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const stepCode = javascriptGenerator.valueToCode(block, 'STEPS', javascriptGenerator.ORDER_NONE);
-  code += `sprite.util.move(${stepCode});\n`;
+  code += `target.util.move(${stepCode});\n`;
   return code;
 };
 
@@ -16,7 +16,7 @@ javascriptGenerator['motion_turnright'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const degreesCode = javascriptGenerator.valueToCode(block, 'DEGREES', javascriptGenerator.ORDER_NONE);
-  code += `sprite.util.direction += ${degreesCode};\n`;
+  code += `target.util.direction += ${degreesCode};\n`;
   return code;
 };
 
@@ -26,7 +26,7 @@ javascriptGenerator['motion_turnleft'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const degreesCode = javascriptGenerator.valueToCode(block, 'DEGREES', javascriptGenerator.ORDER_NONE);
-  code += `sprite.util.direction -= ${degreesCode};\n`;
+  code += `target.util.direction -= ${degreesCode};\n`;
   return code;
 };
 
@@ -36,7 +36,7 @@ javascriptGenerator['motion_pointindirection'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const directionCode = javascriptGenerator.valueToCode(block, 'DIRECTION', javascriptGenerator.ORDER_NONE);
-  code += `sprite.util.direction = ${directionCode};\n`;
+  code += `target.util.direction = ${directionCode};\n`;
   return code;
 };
 
@@ -59,7 +59,7 @@ javascriptGenerator['motion_pointtowards'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const towardsCode = javascriptGenerator.valueToCode(block, 'TOWARDS', javascriptGenerator.ORDER_NONE);
-  code += `sprite.util.towards(${towardsCode});\n`;
+  code += `target.util.towards(${towardsCode});\n`;
   return code;
 };
 
@@ -70,7 +70,7 @@ javascriptGenerator['motion_gotoxy'] = (block) => {
   }
   const xCode = javascriptGenerator.valueToCode(block, 'X', javascriptGenerator.ORDER_NONE);
   const yCode = javascriptGenerator.valueToCode(block, 'Y', javascriptGenerator.ORDER_NONE);
-  code += `sprite.util.goto(${xCode}, ${yCode});\n`;
+  code += `target.util.goto(${xCode}, ${yCode});\n`;
   return code;
 };
 
@@ -93,7 +93,7 @@ javascriptGenerator['motion_goto'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const toCode = javascriptGenerator.valueToCode(block, 'TO', javascriptGenerator.ORDER_NONE);
-  code += `sprite.util.goto(${toCode});\n`;
+  code += `target.util.goto(${toCode});\n`;
   return code;
 };
 
@@ -105,7 +105,7 @@ javascriptGenerator['motion_glidesecstoxy'] = (block) => {
   const secsCode = javascriptGenerator.valueToCode(block, 'SECS', javascriptGenerator.ORDER_NONE);
   const xCode = javascriptGenerator.valueToCode(block, 'X', javascriptGenerator.ORDER_NONE);
   const yCode = javascriptGenerator.valueToCode(block, 'Y', javascriptGenerator.ORDER_NONE);
-  code += `await sprite.util.glide(${secsCode}, ${xCode}, ${yCode});\n`;
+  code += `await target.util.glide(${secsCode}, ${xCode}, ${yCode});\n`;
   return code;
 };
 
@@ -118,7 +118,7 @@ javascriptGenerator['motion_glideto'] = (block) => {
   }
   const secsCode = javascriptGenerator.valueToCode(block, 'SECS', javascriptGenerator.ORDER_NONE);
   const toCode = javascriptGenerator.valueToCode(block, 'TO', javascriptGenerator.ORDER_NONE);
-  code += `await sprite.util.glide(${secsCode}, ${toCode});\n`;
+  code += `await target.util.glide(${secsCode}, ${toCode});\n`;
   return code;
 };
 
@@ -128,7 +128,7 @@ javascriptGenerator['motion_changexby'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const dxCode = javascriptGenerator.valueToCode(block, 'DX', javascriptGenerator.ORDER_NONE);
-  code += `sprite.util.x += ${dxCode};\n`;
+  code += `target.util.x += ${dxCode};\n`;
   return code;
 };
 
@@ -138,7 +138,7 @@ javascriptGenerator['motion_setx'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const xCode = javascriptGenerator.valueToCode(block, 'X', javascriptGenerator.ORDER_NONE);
-  code += `sprite.util.x = ${xCode};\n`;
+  code += `target.util.x = ${xCode};\n`;
   return code;
 };
 
@@ -148,7 +148,7 @@ javascriptGenerator['motion_changeyby'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const dyCode = javascriptGenerator.valueToCode(block, 'DY', javascriptGenerator.ORDER_NONE);
-  code += `sprite.util.y += ${dyCode};\n`;
+  code += `target.util.y += ${dyCode};\n`;
   return code;
 };
 
@@ -158,7 +158,7 @@ javascriptGenerator['motion_sety'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const yCode = javascriptGenerator.valueToCode(block, 'Y', javascriptGenerator.ORDER_NONE);
-  code += `sprite.util.y = ${yCode};\n`;
+  code += `target.util.y = ${yCode};\n`;
   return code;
 };
 
@@ -167,7 +167,7 @@ javascriptGenerator['motion_ifonedgebounce'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  code += 'sprite.util.edgeBounce();\n';
+  code += 'target.util.edgeBounce();\n';
   return code;
 };
 
@@ -191,21 +191,21 @@ javascriptGenerator['motion_setrotationstyle'] = (block) => {
     default:
       break;
   }
-  code += `sprite.util.rotationStyle = runtime.RotationStyle.${styleCode};\n`;
+  code += `target.util.rotationStyle = runtime.RotationStyle.${styleCode};\n`;
   return code;
 };
 
 javascriptGenerator['motion_xposition'] = (block) => {
-  const code = 'sprite.util.x';
+  const code = 'target.util.x';
   return [code, javascriptGenerator.ORDER_NONE];
 };
 
 javascriptGenerator['motion_yposition'] = (block) => {
-  const code = 'sprite.util.y';
+  const code = 'target.util.y';
   return [code, javascriptGenerator.ORDER_NONE];
 };
 
 javascriptGenerator['motion_direction'] = (block) => {
-  const code = 'sprite.util.direction';
+  const code = 'target.util.direction';
   return [code, javascriptGenerator.ORDER_NONE];
 };

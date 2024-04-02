@@ -1,8 +1,8 @@
 const targetCode = (target, index) => `
-(()=>{//${target.name}
+(() => { /* ${target.name} */
 counter++;
 const stage = runtime.stage;
-${index > 0 ? `const sprite = runtime.getSpriteById('${target.id}');\n` : ''}
+${index > 0 ? `const target = runtime.getSpriteById('${target.id}');\n` : 'const target = stage;'}
 ${target.script || ''}
 counter--;
 })();

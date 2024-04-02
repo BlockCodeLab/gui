@@ -23,10 +23,30 @@ class Util extends EventEmitter {
   constructor(raster) {
     super();
     this._raster = raster;
+    this._variable = new Proxy(this.data, {
+      get: (_, name) => {
+        const prop = `$${name}`;
+        if (Object.hasOwn(this.data, prop)) {
+          return this.data[prop];
+        }
+        return this.stage.data[prop];
+      },
+      set: (_, name, value) => {
+        const prop = `$${name}`;
+        if (Object.hasOwn(this.data, prop)) {
+          return (this.data[prop] = value);
+        }
+        this.stage.data[prop] = value;
+      },
+    });
   }
 
   get raster() {
     return this._raster;
+  }
+
+  get variable() {
+    return this._variable;
   }
 
   get name() {
@@ -47,6 +67,10 @@ class Util extends EventEmitter {
 
   get dialogLayer() {
     return paperCore.project.layers.dialog;
+  }
+
+  get stage() {
+    return this.stageLayer.children[0];
   }
 
   get runtime() {
@@ -201,7 +225,7 @@ class SpriteUtil extends Util {
   }
 
   set x(x) {
-    if (this.editing || x != this.data.x) {
+    if (this.editing || x != this.data.x || isNaN(this.raster.position.x)) {
       this.data.x = x;
       this.requestUpdate();
       this.raster.position.x = paperCore.view.center.x + this.data.x;
@@ -215,7 +239,7 @@ class SpriteUtil extends Util {
   }
 
   set y(y) {
-    if (this.editing || y != this.data.y) {
+    if (this.editing || y != this.data.y || isNaN(this.raster.position.y)) {
       this.data.y = y;
       this.requestUpdate();
       this.raster.position.y = paperCore.view.center.y - this.data.y;
@@ -229,7 +253,19 @@ class SpriteUtil extends Util {
   }
 
   goto(x, y, force) {
-    if (this.editing || force || x !== this.data.x || y !== this.data.y) {
+    if (typeof x === 'object') {
+      force = y;
+      y = x.y;
+      x = x.x;
+    }
+    if (
+      this.editing ||
+      force ||
+      x !== this.data.x ||
+      y !== this.data.y ||
+      isNaN(this.raster.position.x) ||
+      isNaN(this.raster.position.y)
+    ) {
       this.data.x = x;
       this.data.y = y;
       this.requestUpdate();
@@ -388,6 +424,10 @@ class SpriteUtil extends Util {
   }
 
   async glide(duration, x, y) {
+    if (typeof x === 'object') {
+      y = x.y;
+      x = x.x;
+    }
     if (duration <= 0) {
       this.goto(x, y);
       return;

@@ -2,11 +2,65 @@ import { ScratchBlocks } from '@blockcode/blocks-editor';
 import { javascriptGenerator } from '@blockcode/blocks-player';
 
 import './javascript/control';
+import './javascript/data';
 import './javascript/event';
 import './javascript/looks';
 import './javascript/motion';
 import './javascript/sensing';
 import './javascript/sound';
+
+javascriptGenerator.init = function (workspace) {
+  // Create a dictionary of definitions to be printed before the code.
+  javascriptGenerator.definitions_ = Object.create(null);
+  // Create a dictionary mapping desired function names in definitions_
+  // to actual function names (to avoid collisions with user functions).
+  javascriptGenerator.functionNames_ = Object.create(null);
+
+  if (!javascriptGenerator.variableDB_) {
+    javascriptGenerator.variableDB_ = new ScratchBlocks.Names(javascriptGenerator.RESERVED_WORDS_);
+  } else {
+    javascriptGenerator.variableDB_.reset();
+  }
+
+  javascriptGenerator.variableDB_.setVariableMap(workspace.getVariableMap());
+
+  var defvars = [];
+  // Add user variables.
+  var variables = workspace.getAllVariables();
+  for (var i = 0; i < variables.length; i++) {
+    if (variables[i].type === ScratchBlocks.BROADCAST_MESSAGE_VARIABLE_TYPE) {
+      continue;
+    }
+    const varName = javascriptGenerator.variableDB_.getName(variables[i].getId(), ScratchBlocks.Variables.NAME_TYPE);
+    const varTarget = variables[i].isLocal ? 'target.data' : 'stage.data';
+
+    if (variables[i].isCloud) {
+      // TODO: cloud variable
+    } else {
+      if (variables[i].type === ScratchBlocks.LIST_VARIABLE_TYPE) {
+        defvars[i] = `${varTarget}['$${varName}${ScratchBlocks.LIST_VARIABLE_TYPE}'] = []`;
+      } else {
+        defvars[i] = `${varTarget}['$${varName}'] = 0`;
+      }
+    }
+  }
+
+  // Add developer variables (not created or named by the user).
+  var devVarList = ScratchBlocks.Variables.allDeveloperVariables(workspace);
+  for (var i = 0; i < devVarList.length; i++) {
+    const varName = javascriptGenerator.variableDB_.getName(devVarList[i], ScratchBlocks.Names.DEVELOPER_VARIABLE_TYPE);
+    if (devVarList[i].type === ScratchBlocks.LIST_VARIABLE_TYPE) {
+      defvars.push(`let ${varName}${ScratchBlocks.LIST_VARIABLE_TYPE} = []`);
+    } else {
+      defvars.push(`let ${varName} = 0`);
+    }
+  }
+
+  // Declare all of the variables.
+  if (defvars.length) {
+    javascriptGenerator.definitions_['variables'] = defvars.join('\n');
+  }
+};
 
 javascriptGenerator.scrub_ = function (block, code) {
   var commentCode = '';

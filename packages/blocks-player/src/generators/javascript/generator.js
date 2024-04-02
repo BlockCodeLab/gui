@@ -19,7 +19,7 @@ javascriptGenerator.addReservedWords(
     // Magic variable.
     'arguments,' +
     // Everything in the current environment (835 items in Chrome, 104 in Node).
-    Object.getOwnPropertyNames(globalThis).join(',')
+    Object.getOwnPropertyNames(globalThis).join(','),
 );
 
 /**
@@ -129,7 +129,7 @@ javascriptGenerator.init = function (workspace) {
   for (var i = 0; i < devVarList.length; i++) {
     const varName = javascriptGenerator.variableDB_.getName(devVarList[i], ScratchBlocks.Names.DEVELOPER_VARIABLE_TYPE);
     if (variables[i].type === ScratchBlocks.LIST_VARIABLE_TYPE) {
-      defvars.push(`let ${varName}List = [];`);
+      defvars.push(`let ${varName}${ScratchBlocks.LIST_VARIABLE_TYPE} = [];`);
     } else {
       defvars.push(`let ${varName} = 0;`);
     }

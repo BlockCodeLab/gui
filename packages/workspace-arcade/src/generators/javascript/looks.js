@@ -7,7 +7,7 @@ javascriptGenerator['looks_sayforsecs'] = (block) => {
   }
   const textValue = javascriptGenerator.valueToCode(block, 'MESSAGE', javascriptGenerator.ORDER_NONE);
   const timeValue = javascriptGenerator.valueToCode(block, 'SECS', javascriptGenerator.ORDER_NONE);
-  code += `await sprite.util.say(${textValue}, ${timeValue});\n`;
+  code += `await target.util.say(${textValue}, ${timeValue});\n`;
   return code;
 };
 
@@ -17,7 +17,7 @@ javascriptGenerator['looks_say'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const textValue = javascriptGenerator.valueToCode(block, 'MESSAGE', javascriptGenerator.ORDER_NONE);
-  code += `sprite.util.say(${textValue});\n`;
+  code += `target.util.say(${textValue});\n`;
   return code;
 };
 
@@ -28,7 +28,7 @@ javascriptGenerator['looks_thinkforsecs'] = (block) => {
   }
   const textValue = javascriptGenerator.valueToCode(block, 'MESSAGE', javascriptGenerator.ORDER_NONE);
   const timeValue = javascriptGenerator.valueToCode(block, 'SECS', javascriptGenerator.ORDER_NONE);
-  code += `await sprite.util.think(${textValue}, ${timeValue});\n`;
+  code += `await target.util.think(${textValue}, ${timeValue});\n`;
   return code;
 };
 
@@ -38,7 +38,7 @@ javascriptGenerator['looks_think'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const textValue = javascriptGenerator.valueToCode(block, 'MESSAGE', javascriptGenerator.ORDER_NONE);
-  code += `sprite.util.think(${textValue});\n`;
+  code += `target.util.think(${textValue});\n`;
   return code;
 };
 
@@ -47,7 +47,7 @@ javascriptGenerator['looks_show'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  code += `sprite.util.hidden = false;\n`;
+  code += `target.util.hidden = false;\n`;
   return code;
 };
 
@@ -56,7 +56,7 @@ javascriptGenerator['looks_hide'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  code += `sprite.util.hidden = true;\n`;
+  code += `target.util.hidden = true;\n`;
   return code;
 };
 
@@ -66,7 +66,7 @@ javascriptGenerator['looks_changesizeby'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const changeValue = javascriptGenerator.valueToCode(block, 'CHANGE', javascriptGenerator.ORDER_NONE);
-  code += `sprite.util.size += ${changeValue};\n`;
+  code += `target.util.size += ${changeValue};\n`;
   return code;
 };
 
@@ -76,12 +76,12 @@ javascriptGenerator['looks_setsizeto'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const sizeValue = javascriptGenerator.valueToCode(block, 'SIZE', javascriptGenerator.ORDER_NONE);
-  code += `sprite.util.size = ${sizeValue};\n`;
+  code += `target.util.size = ${sizeValue};\n`;
   return code;
 };
 
 javascriptGenerator['looks_size'] = (block) => {
-  return ['sprite.util.size', javascriptGenerator.ORDER_NONE];
+  return ['target.util.size', javascriptGenerator.ORDER_NONE];
 };
 
 javascriptGenerator['looks_costume'] = (block) => {
@@ -95,7 +95,7 @@ javascriptGenerator['looks_switchcostumeto'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const costumeValue = javascriptGenerator.valueToCode(block, 'COSTUME', javascriptGenerator.ORDER_NONE);
-  code += `sprite.util.costume = ${costumeValue};\n`;
+  code += `target.util.costume = ${costumeValue};\n`;
   return code;
 };
 
@@ -104,7 +104,7 @@ javascriptGenerator['looks_nextcostume'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  code += `sprite.util.costume++;\n`;
+  code += `target.util.costume++;\n`;
   return code;
 };
 
@@ -138,7 +138,7 @@ javascriptGenerator['looks_gotofrontback'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const frontOrBack = block.getFieldValue('FRONT_BACK');
-  code += `sprite.util.zIndex = '${frontOrBack}';\n`;
+  code += `target.util.zIndex = '${frontOrBack}';\n`;
   return code;
 };
 
@@ -149,7 +149,7 @@ javascriptGenerator['looks_goforwardbackwardlayers'] = (block) => {
   }
   const forwardOrBackward = block.getFieldValue('FORWARD_BACKWARD');
   const changeValue = javascriptGenerator.valueToCode(block, 'NUM', javascriptGenerator.ORDER_NONE);
-  code += `sprite.util.zIndex ${forwardOrBackward === 'backward' ? '-' : '+'}= ${changeValue};\n`;
+  code += `target.util.zIndex ${forwardOrBackward === 'backward' ? '-' : '+'}= ${changeValue};\n`;
   return code;
 };
 
@@ -161,7 +161,7 @@ javascriptGenerator['looks_backdropnumbername'] = (block) => {
 
 javascriptGenerator['looks_costumenumbername'] = (block) => {
   const numberOrName = block.getFieldValue('NUMBER_NAME');
-  const code = numberOrName === 'name' ? 'sprite.util.costumeName' : 'sprite.util.costume';
+  const code = numberOrName === 'name' ? 'target.util.costumeName' : 'target.util.costume';
   return [code, javascriptGenerator.ORDER_NONE];
 };
 
