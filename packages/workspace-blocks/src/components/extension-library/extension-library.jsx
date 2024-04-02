@@ -5,14 +5,32 @@ import extensions from './extensions';
 
 const loadingExtensions = Promise.all(extensions);
 
-export default function ExtensionLibrary({ onSelect, onClose, onShowPrompt, onShowAlert, onHideAlert }) {
+export default function ExtensionLibrary({ onSelect, onClose, onFilter, onShowPrompt, onShowAlert, onHideAlert }) {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const { language, getText } = useLocale();
+
+  const handleFilter = (extensionInfo) => {
+    if (onFilter) {
+      const tags = extensionInfo.tags || [];
+      const filter = onFilter(tags);
+      if (Array.isArray(filter)) {
+        return filter.every((subfilter) => {
+          if (Array.isArray(subfilter)) {
+            return subfilter.some((item) => tags.includes(item));
+          }
+          tags.includes(subfilter);
+        });
+      }
+      return filter;
+    }
+    return true;
+  };
 
   useEffect(() => {
     loadingExtensions.then((allExtensions) => {
       setData(
-        allExtensions.map((extensionInfo) =>
+        allExtensions.filter(handleFilter).map((extensionInfo) =>
           Object.assign(
             {
               ...extensionInfo,
@@ -37,12 +55,13 @@ export default function ExtensionLibrary({ onSelect, onClose, onShowPrompt, onSh
           ),
         ),
       );
+      setLoading(false);
     });
   }, []);
 
   return (
     <Library
-      loading={true}
+      loading={loading}
       items={data}
       title={getText('blocks.extensions.addExtension', 'Add Extension')}
       emptyText={getText('blocks.extensions.empty', 'No extension!')}

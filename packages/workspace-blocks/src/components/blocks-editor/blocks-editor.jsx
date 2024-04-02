@@ -24,6 +24,7 @@ export default function BlocksEditor({
   disableGenerator,
   disableExtension,
   onChange,
+  onExtensionsFilter,
   onLoadExtension,
   onShowPrompt,
   onShowAlert,
@@ -163,7 +164,7 @@ export default function BlocksEditor({
       )}
       {extensionLibraryOpen && (
         <ExtensionLibrary
-          workspace={workspace}
+          onFilter={onExtensionsFilter}
           onSelect={handleSelectExtension}
           onClose={handleExtensionLibraryClose}
           onShowPrompt={onShowPrompt}

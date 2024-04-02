@@ -58,6 +58,7 @@ export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert })
       xml={picoed.xml}
       toolbox={toolbox}
       messages={messages}
+      onExtensionsFilter={() => ['blocks', 'dupont']}
       onLoadExtension={handleLoadExtension}
       onShowPrompt={onShowPrompt}
       onShowAlert={onShowAlert}

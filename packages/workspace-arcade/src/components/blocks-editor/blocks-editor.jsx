@@ -9,7 +9,7 @@ const Editor = CodeTab.Content;
 
 const DEFAULT_SOUND_NAME = 'DADADADUM';
 
-export default function BlocksEditor() {
+export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert }) {
   const { getText } = useLocale();
   const { assetList, fileList, selectedIndex } = useEditor();
   const isStage = selectedIndex === 0;
@@ -77,14 +77,24 @@ export default function BlocksEditor() {
         ['add_sprite', `stage.add_sprite(sprite)`],
       ];
 
+  const handleLoadExtension = ({ id: extensionId, blocks }) => {
+    blocks.forEach(({ id: blockId, player }) => {
+      javascriptGenerator[`${extensionId}_${blockId}`] = player ? player.bind(javascriptGenerator) : () => '';
+    });
+  };
+
   return (
     <Editor
-      disableExtension
       enableMultiTargets
       enableLocalVariable={!isStage}
+      xml={xml}
       toolbox={toolbox}
       messages={messages}
-      xml={xml}
+      onExtensionsFilter={() => ['blocks', ['arcade', 'popsicle']]}
+      onLoadExtension={handleLoadExtension}
+      onShowPrompt={onShowPrompt}
+      onShowAlert={onShowAlert}
+      onHideAlert={onHideAlert}
     />
   );
 }

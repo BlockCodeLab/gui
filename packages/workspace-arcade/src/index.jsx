@@ -91,7 +91,13 @@ export default function ArcadeBlocksWorkspace({
     tabs: [
       {
         ...CodeTab,
-        Content: BlocksEditor,
+        Content: () => (
+          <BlocksEditor
+            onShowPrompt={setPrompt}
+            onShowAlert={setAlert}
+            onHideAlert={removeAlert}
+          />
+        ),
       },
       {
         icon: paintIcon,

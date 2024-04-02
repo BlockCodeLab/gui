@@ -19,11 +19,15 @@ export function Library({
 }) {
   const [data, setData] = useState([]);
   const [query, setQuery] = useState('');
-  const [loading, setLoading] = useState(defaultLoading || false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setData(items);
   }, [items]);
+
+  useEffect(() => {
+    setLoading(defaultLoading);
+  }, [defaultLoading]);
 
   const handleFilterChange = () => {};
   const handleFilterClear = () => setData(items);
