@@ -14,7 +14,7 @@ export default function Prompt({ title, label, content, inputMode, defaultValue,
   const handleKeyDown = (e) => {
     if (e.key === 'Escape') onClose();
     if (e.key === 'Enter') {
-      onSubmit(ref.current.base.value);
+      onSubmit(ref.current && ref.current.base.value);
     }
   };
 
