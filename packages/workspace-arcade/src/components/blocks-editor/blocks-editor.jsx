@@ -59,7 +59,24 @@ export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert })
     xml = target.xml;
   }
 
-  const toolbox = makeToolboxXML(isStage, fileList.length === 1, stage, target, DEFAULT_SOUND_NAME);
+  const backdropValue = stage.assets[stage.frame];
+  const costumeValue = target.assets[target.frame];
+  const toolbox = makeToolboxXML(isStage, fileList.length - 1, backdropValue, costumeValue, DEFAULT_SOUND_NAME);
+
+  const updateToolboxBlockValue = (id, value) => {
+    const block = workspace.getBlockById(id);
+    if (block) {
+      block.inputList[0].fieldRow[0].setValue(value);
+    }
+  };
+  setTimeout(() => {
+    if (selectedIndex > 0 && workspace) {
+      ['glide', 'move', 'set'].forEach((prefix) => {
+        updateToolboxBlockValue(`${prefix}x`, Math.round(target.x).toString());
+        updateToolboxBlockValue(`${prefix}y`, Math.round(target.y).toString());
+      });
+    }
+  }, 1);
 
   const listAssets = (assets) => {
     const res = [];
