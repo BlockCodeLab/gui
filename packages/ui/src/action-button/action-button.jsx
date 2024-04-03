@@ -19,22 +19,13 @@ export function ActionButton({
   const handleToggleOpenState = () => setIsOpen(true);
   const handleClosePopover = () => setIsOpen(false);
 
-  return disabled ? (
-    <div className={classNames(styles.actionButtonWrapper, className)}>
-      <button className={classNames(styles.button, styles.mainButton, styles.disabled)}>
-        <img
-          className={styles.mainIcon}
-          draggable={false}
-          src={mailIcon}
-        />
-      </button>
-    </div>
-  ) : (
+  return (
     <div
       className={classNames(styles.actionButtonWrapper, className, {
         [styles.expanded]: isOpen,
         [styles.forceHidden]: forceHide,
       })}
+      disabled={disabled}
       onMouseEnter={handleToggleOpenState}
       onMouseLeave={handleClosePopover}
       onClick={onClick}
@@ -55,6 +46,7 @@ export function ActionButton({
               >
                 <button
                   className={classNames(styles.button, styles.moreButton)}
+                  disabled={disabled}
                   onClick={(e) => {
                     setForceHide(true);
                     setIsOpen(false);
@@ -78,7 +70,10 @@ export function ActionButton({
         placement={tooltipPlacement || 'left'}
         offset={[0, 14]}
       >
-        <button className={classNames(styles.button, styles.mainButton)}>
+        <button
+          disabled={disabled}
+          className={classNames(styles.button, styles.mainButton)}
+        >
           <img
             className={styles.mainIcon}
             draggable={false}
