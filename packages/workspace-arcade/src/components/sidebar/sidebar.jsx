@@ -7,8 +7,10 @@ import StageSelector from '../stage-selector/stage-selector';
 import styles from './sidebar.module.css';
 
 export default function Sidebar({ onSelectTab, onShowPrompt, onShowAlert, onHideAlert }) {
-  const [playing, setPlay] = useState(false);
+  const [playing, setPlaying] = useState(false);
   const [stageSize, setStageSize] = useState(window.innerWidth < 1280 ? 'small' : 'large');
+
+  const handleStop = () => setPlaying(false);
 
   return (
     <div className={styles.sidebarWrapper}>
@@ -17,7 +19,7 @@ export default function Sidebar({ onSelectTab, onShowPrompt, onShowAlert, onHide
         playing={playing}
         size={stageSize}
         onSizeToggle={setStageSize}
-        onPlay={setPlay}
+        onPlay={setPlaying}
       />
 
       <div className={styles.selectorWrapper}>
@@ -28,12 +30,13 @@ export default function Sidebar({ onSelectTab, onShowPrompt, onShowAlert, onHide
           onShowPrompt={onShowPrompt}
           onShowAlert={onShowAlert}
           onHideAlert={onHideAlert}
+          onStop={handleStop}
         />
         <StageSelector
-          playing={playing}
           onSelectTab={onSelectTab}
           onShowAlert={onShowAlert}
           onHideAlert={onHideAlert}
+          onStop={handleStop}
         />
       </div>
     </div>

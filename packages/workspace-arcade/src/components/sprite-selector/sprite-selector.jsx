@@ -15,12 +15,23 @@ import paintIcon from './icon-paint.svg';
 import fileUploadIcon from './icon-file-upload.svg';
 import SpritesLibrary from '../libraries/sprites-library';
 
-export default function SpriteSelector({ playing, stageSize, onSelectTab, onShowPrompt, onShowAlert, onHideAlert }) {
+export default function SpriteSelector({
+  playing,
+  stageSize,
+  onStop,
+  onSelectTab,
+  onShowPrompt,
+  onShowAlert,
+  onHideAlert,
+}) {
   const [spritesLibrary, setSpritesLibrary] = useState(false);
   const { getText } = useLocale();
   const { fileList, assetList, selectedIndex, addFile, openFile, deleteFile, addAsset, deleteAsset } = useEditor();
 
-  const handleShowLibrary = () => setSpritesLibrary(true);
+  const handleShowLibrary = () => {
+    onStop();
+    setSpritesLibrary(true);
+  };
   const handleCloseLibrary = () => setSpritesLibrary(false);
 
   const handleSelectSprite = async (sprite) => {
@@ -58,6 +69,8 @@ export default function SpriteSelector({ playing, stageSize, onSelectTab, onShow
   };
 
   const handleUploadFile = () => {
+    onStop();
+
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = 'image/*'; // TODO: .sprite file
@@ -100,6 +113,8 @@ export default function SpriteSelector({ playing, stageSize, onSelectTab, onShow
   };
 
   const handlePaintImage = () => {
+    onStop();
+
     const spriteId = uid();
     const imageId = uid();
     addAsset({
@@ -127,7 +142,14 @@ export default function SpriteSelector({ playing, stageSize, onSelectTab, onShow
     onSelectTab(1);
   };
 
+  const handleSurprise = () => {
+    onStop();
+    handleSelectSprite(SpritesLibrary.surprise());
+  };
+
   const handleDuplicate = (index) => {
+    onStop();
+
     const spriteId = uid();
     const sprite = fileList[index];
     addFile({
@@ -142,6 +164,8 @@ export default function SpriteSelector({ playing, stageSize, onSelectTab, onShow
         });
         return imageId;
       }),
+      x: Math.floor(Math.random() * (240 + 1)) - 120,
+      y: Math.floor(Math.random() * (160 + 1)) - 80,
       content: '',
     });
   };
@@ -152,6 +176,7 @@ export default function SpriteSelector({ playing, stageSize, onSelectTab, onShow
       title: getText('arcade.deletePrompt.title', 'Delete {name}', { name }),
       label: getText('arcade.deletePrompt.label', 'Do you want to delete the sprite?'),
       onSubmit: () => {
+        onStop();
         deleteAsset(assets);
         deleteFile(index);
       },
@@ -213,7 +238,6 @@ export default function SpriteSelector({ playing, stageSize, onSelectTab, onShow
         />
 
         <ActionButton
-          disabled={playing}
           className={styles.addButton}
           icon={spriteIcon}
           tooltip={getText('arcade.actionButton.sprite', 'Choose a Sprite')}
@@ -227,7 +251,7 @@ export default function SpriteSelector({ playing, stageSize, onSelectTab, onShow
             {
               icon: surpriseIcon,
               tooltip: getText('arcade.actionButton.surprise', 'Surprise'),
-              onClick: () => handleSelectSprite(SpritesLibrary.surprise()),
+              onClick: handleSurprise,
             },
             {
               icon: paintIcon,

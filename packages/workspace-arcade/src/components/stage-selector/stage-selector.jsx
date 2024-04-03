@@ -16,7 +16,7 @@ import fileUploadIcon from '../sprite-selector/icon-file-upload.svg';
 const DEFAULT_BACKDROP_THUMB =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAAtJREFUGFdjYAACAAAFAAGq1chRAAAAAElFTkSuQmCC';
 
-export default function StageSelector({ playing, onSelectTab, onShowAlert, onHideAlert }) {
+export default function StageSelector({ onStop, onSelectTab, onShowAlert, onHideAlert }) {
   const [backdropsLibrary, setBackdropsLibrary] = useState(false);
   const { getText } = useLocale();
   const { fileList, assetList, selectedIndex, openFile, addAsset, modifyFile } = useEditor();
@@ -33,7 +33,10 @@ export default function StageSelector({ playing, onSelectTab, onShowAlert, onHid
     }
   }
 
-  const handleShowLibrary = () => setBackdropsLibrary(true);
+  const handleShowLibrary = () => {
+    onStop();
+    setBackdropsLibrary(true);
+  };
   const handleCloseLibrary = () => setBackdropsLibrary(false);
 
   const handleSelectBackdrop = async (backdrop) => {
@@ -61,6 +64,8 @@ export default function StageSelector({ playing, onSelectTab, onShowAlert, onHid
   };
 
   const handleUploadFile = () => {
+    onStop();
+
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
@@ -98,7 +103,9 @@ export default function StageSelector({ playing, onSelectTab, onShowAlert, onHid
   };
 
   const handlePaintImage = () => {
+    onStop();
     openFile(0);
+
     const imageId = uid();
     addAsset({
       id: imageId,
@@ -115,6 +122,11 @@ export default function StageSelector({ playing, onSelectTab, onShowAlert, onHid
       frame: count,
     });
     onSelectTab(1);
+  };
+
+  const handleSurprise = () => {
+    onStop();
+    handleSelectBackdrop(BackdropsLibrary.surprise());
   };
 
   return (
@@ -146,7 +158,6 @@ export default function StageSelector({ playing, onSelectTab, onShowAlert, onHid
         <div className={styles.count}>{count || 0}</div>
 
         <ActionButton
-          disabled={playing}
           className={styles.addButton}
           icon={backdropIcon}
           tooltip={getText('arcade.actionButton.backdrop', 'Choose a Backdrop')}
@@ -160,7 +171,7 @@ export default function StageSelector({ playing, onSelectTab, onShowAlert, onHid
             {
               icon: surpriseIcon,
               tooltip: getText('arcade.actionButton.surprise', 'Surprise'),
-              onClick: () => handleSelectBackdrop(BackdropsLibrary.surprise()),
+              onClick: handleSurprise,
             },
             {
               icon: paintIcon,
