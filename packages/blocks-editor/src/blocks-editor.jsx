@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from 'preact/hooks';
-import { useLocale } from '@blockcode/core';
+import { useRef, useEffect } from 'preact/hooks';
+import { useLocale, useEditor } from '@blockcode/core';
 import ScratchBlocks from './scratch-blocks';
 import makeToolboxXML from './lib/make-toolbox-xml';
 import unifyLocale from './lib/unify-locale';
@@ -51,36 +51,13 @@ const supportedEvents = new Set([
 
 const makeXml = (toolbox) => `<xml style="display: none">\n${toolbox}\n</xml>`;
 
-export function BlocksEditor({ toolbox, messages, xml, variables, onWorkspaceCreated, onChange }) {
+export function BlocksEditor({ toolbox, xml, variables, messages, onWorkspaceCreated, onChange }) {
   const ref = useRef(null);
   const { language } = useLocale();
-  const [currentXml, setCurrentXml] = useState();
-  const [currentToolbox, setCurrentToolbox] = useState();
+  const { selectedIndex } = useEditor();
 
-  const locale = unifyLocale(language);
-  if (ScratchBlocks.ScratchMsgs.currentLocale_ !== locale) {
-    ScratchBlocks.ScratchMsgs.setLocale(locale);
-  }
-
-  let needUpdateToolbox = false;
-  Object.entries(messages).forEach(([key, value]) => {
-    needUpdateToolbox = needUpdateToolbox || ScratchBlocks.Msg[key] !== value;
-    ScratchBlocks.Msg[key] = value;
-  });
-
-  toolbox = toolbox || makeToolboxXML();
-  if (typeof toolbox === 'function') {
-    toolbox = toolbox();
-  }
-
-  const loadXmlToWorkspace = (force) => {
-    if (xml === currentXml && !force) return;
-    setCurrentXml(xml);
-
-    let xmlDom = xml || '';
-    if (typeof xmlDom === 'string') {
-      xmlDom = ScratchBlocks.Xml.textToDom(xmlDom);
-    }
+  const loadXmlToWorkspace = () => {
+    const xmlDom = ScratchBlocks.Xml.textToDom(xml || '');
     ScratchBlocks.Xml.clearWorkspaceAndLoadFromXml(xmlDom, ref.workspace);
 
     // include global variables
@@ -88,16 +65,9 @@ export function BlocksEditor({ toolbox, messages, xml, variables, onWorkspaceCre
       const varDom = ScratchBlocks.Xml.variablesToDom(variables);
       ScratchBlocks.Xml.domToVariables(varDom, ref.workspace);
     }
-
-    if (!force) {
-      ref.workspace.clearUndo();
-    }
   };
 
-  const updateToolbox = (force) => {
-    if (toolbox === currentToolbox && !force) return;
-    setCurrentToolbox(toolbox);
-
+  const updateToolbox = () => {
     const categoryId = ref.workspace.toolbox_.getSelectedCategoryId();
     const offset = ref.workspace.toolbox_.getCategoryScrollOffset();
     ref.workspace.getFlyout().setRecyclingEnabled(false);
@@ -105,8 +75,7 @@ export function BlocksEditor({ toolbox, messages, xml, variables, onWorkspaceCre
 
     setTimeout(() => {
       ref.workspace.updateToolbox(makeXml(toolbox));
-      loadXmlToWorkspace(true);
-
+      // scrolls
       const currentCategoryPos = ref.workspace.toolbox_.getCategoryPositionById(categoryId);
       const currentCategoryLen = ref.workspace.toolbox_.getCategoryLengthById(categoryId);
       if (offset < currentCategoryLen) {
@@ -118,28 +87,40 @@ export function BlocksEditor({ toolbox, messages, xml, variables, onWorkspaceCre
     });
   };
 
+  const getWorkspaceXml = () => {
+    const xmlDom = ScratchBlocks.Xml.workspaceToDom(ref.workspace);
+    return ScratchBlocks.Xml.domToText(xmlDom);
+  };
+
   const handleChange = () => {
-    if (ref.workspace) {
-      const xmlDom = ScratchBlocks.Xml.workspaceToDom(ref.workspace);
-      // exclude broadcast messages variables
-      const newXml = ScratchBlocks.Xml.domToText(xmlDom).replace(
-        /<variable type="broadcast_msg"[^>]+>[^<]+<\/variable>/gi,
-        '',
-      );
-      if (newXml !== currentXml) {
-        setCurrentXml(newXml);
-        if (onChange) {
-          onChange(newXml, ref.workspace);
-        }
-      }
+    const newXml = getWorkspaceXml();
+    if (newXml !== xml && onChange) {
+      onChange(newXml, ref.workspace);
     }
   };
 
-  if (ref.workspace) {
-    loadXmlToWorkspace();
-    updateToolbox(needUpdateToolbox);
-    if (!xml) handleChange();
-  }
+  useEffect(() => {
+    const locale = unifyLocale(language);
+    if (ScratchBlocks.ScratchMsgs.currentLocale_ !== locale) {
+      ScratchBlocks.ScratchMsgs.setLocale(locale);
+    }
+    Object.entries(messages).forEach(([key, value]) => {
+      ScratchBlocks.Msg[key] = value;
+    });
+
+    toolbox = toolbox || makeToolboxXML;
+    if (typeof toolbox === 'function') {
+      toolbox = toolbox();
+    }
+    if (ref.workspace) updateToolbox();
+  }, [toolbox, language]);
+
+  useEffect(() => {
+    if (ref.workspace) {
+      loadXmlToWorkspace();
+      ref.workspace.clearUndo();
+    }
+  }, [selectedIndex, language]);
 
   useEffect(() => {
     if (ref.current) {
@@ -163,9 +144,7 @@ export function BlocksEditor({ toolbox, messages, xml, variables, onWorkspaceCre
       if (!xml) handleChange();
     }
     return () => {
-      if (ref.workspace) {
-        ref.workspace.dispose();
-      }
+      if (ref.workspace) ref.workspace.dispose();
     };
   }, [ref]);
 

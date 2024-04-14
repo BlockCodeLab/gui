@@ -10,7 +10,7 @@ import DataPrompt from '../data-prompt/data-prompt';
 import ExtensionLibrary from '../extension-library/extension-library';
 
 import styles from './blocks-editor.module.css';
-import iconAddExtension from './icon-add-extension.svg';
+import extensionIcon from './icon-extension.svg';
 
 const loadedExtensions = new Map();
 let selectedCategoryId;
@@ -86,18 +86,18 @@ export default function BlocksEditor({
   });
 
   const handleChange = (newXml, workspace) => {
-    svgAsDataUri(workspace.getCanvas(), {}).then(saveThumb);
-
+    let newCode;
     if (!disableGenerator) {
-      const newCode = pythonGenerator.workspaceToCode(workspace);
-      modifyFile({
-        xml: newXml,
-        content: newCode,
-      });
+      newCode = pythonGenerator.workspaceToCode(workspace);
     }
-    if (onChange) {
-      onChange(newXml, workspace);
-    }
+    modifyFile({
+      xml: newXml,
+      content: newCode,
+    });
+    if (onChange) onChange(newXml, workspace);
+
+    // save blocks thumb
+    svgAsDataUri(workspace.getCanvas(), {}).then(saveThumb);
   };
 
   const handlePromptSubmit = (input, options) => {
@@ -143,7 +143,7 @@ export default function BlocksEditor({
             onClick={handleExtensionLibraryOpen}
           >
             <img
-              src={iconAddExtension}
+              src={extensionIcon}
               title="Add Extension"
             />
           </button>

@@ -19,7 +19,7 @@ export default function ExtensionLibrary({ onSelect, onClose, onFilter, onShowPr
           if (Array.isArray(subfilter)) {
             return subfilter.some((item) => tags.includes(item));
           }
-          tags.includes(subfilter);
+          return tags.includes(subfilter);
         });
       }
       return filter;
