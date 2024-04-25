@@ -14,6 +14,10 @@ export default class Runtime extends EventEmitter {
     this._greaterThen = {};
     this._eventsHappening = {};
 
+    if (DEVELOPMENT) {
+      console.log(code);
+    }
+
     const launcher = new Function('runtime', code);
     launcher(this);
   }

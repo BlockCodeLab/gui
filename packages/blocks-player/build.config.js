@@ -13,6 +13,9 @@ export default {
   outdir: DIST_DIR,
   minify: isRelease,
   plugins: [CSSLoader()],
+  define: {
+    DEVELOPMENT: JSON.stringify(Bun.env.BUN_ENV !== 'production'),
+  },
   external: [
     'preact',
     'preact/hooks',

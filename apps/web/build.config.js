@@ -20,7 +20,7 @@ const packages = readdirSync(resolve(PROJECT_ROOT, '../../packages'), { withFile
 const extensions = [].concat(
   ...readdirSync(resolve(PROJECT_ROOT, '../../extensions'), { withFileTypes: true })
     .filter((dirent) => dirent.isDirectory())
-    .map((dirent) => [`@blockcode/extension-${dirent.name}`, `@blockcode/extension-${dirent.name}/blocks`])
+    .map((dirent) => [`@blockcode/extension-${dirent.name}`, `@blockcode/extension-${dirent.name}/blocks`]),
 );
 
 const imports = Object.fromEntries(
@@ -29,7 +29,7 @@ const imports = Object.fromEntries(
     .map((moduleId) => [
       moduleId,
       `./${moduleId.includes('/') ? '' : `${moduleId}/`}${moduleId}${extname(import.meta.resolveSync(moduleId))}`,
-    ])
+    ]),
 );
 
 const assets = [].concat(packages, extensions);
@@ -41,6 +41,9 @@ export default {
   minify: isRelease,
   naming: {
     asset: 'assets/[name]-[hash].[ext]',
+  },
+  define: {
+    DEVELOPMENT: JSON.stringify(Bun.env.BUN_ENV !== 'production'),
   },
   external: Object.keys(imports),
   plugins: [
@@ -71,7 +74,7 @@ export default {
         to: importPath,
         singleFile: true,
         watch: isHotServer,
-      })
+      }),
     ),
     assets
       .filter((moduleId) => existsSync(resolve(dirname(import.meta.resolveSync(moduleId)), 'assets')))
@@ -80,7 +83,7 @@ export default {
           from: resolve(dirname(import.meta.resolveSync(moduleId)), 'assets'),
           to: 'assets/',
           watch: isHotServer,
-        })
-      )
+        }),
+      ),
   ),
 };

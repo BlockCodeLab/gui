@@ -146,14 +146,27 @@ export default function (raster) {
   }
 
   paperCore.project.layers.contour.addChild(
-    new paperCore.Group({
-      name: `${raster.name}`,
-      children: segmentsList.map((segments) => new paperCore.Path(segments.map(([x, y]) => new paperCore.Point(x, y)))),
-      pivot: new paperCore.Point(raster.pivot.x + width / 2, raster.pivot.y + height / 2),
-      position: raster.position,
-      scaling: raster.scaling,
-      rotation: raster.rotation,
-      applyMatrix: false,
-    }),
+    new paperCore.Group(
+      Object.assign(
+        {
+          name: `${raster.name}`,
+          children: segmentsList.map(
+            (segments) => new paperCore.Path(segments.map(([x, y]) => new paperCore.Point(x, y))),
+          ),
+          pivot: new paperCore.Point(raster.pivot.x + width / 2, raster.pivot.y + height / 2),
+          position: raster.position,
+          scaling: raster.scaling,
+          rotation: raster.rotation,
+          applyMatrix: false,
+        },
+        // for development
+        DEVELOPMENT
+          ? {
+              visible: true,
+              strokeColor: '#ff8c1a40',
+            }
+          : {},
+      ),
+    ),
   );
 }

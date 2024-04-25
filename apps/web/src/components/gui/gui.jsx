@@ -35,6 +35,8 @@ export default function GUI() {
   const { alerts, setAlert, removeAlert } = useAlert();
   const { addLocaleData, getText } = useLocale();
   const { editor, setEditor, openProject, closeProject, modified } = useEditor();
+  // for debug
+  const { fileList, selectedIndex } = useEditor();
 
   const openWorkspaceLibrary = () => setWorkspaceLibraryOpened(true);
   const closeWorkspaceLibrary = () => setWorkspaceLibraryOpened(false);
@@ -230,6 +232,12 @@ export default function GUI() {
           onClose={handlePromptClose}
           onSubmit={prompt.onSubmit ? handlePromptSubmit : false}
         />
+      )}
+
+      {DEVELOPMENT && editor && (
+        <div className={styles.debugBox}>
+          <pre>{fileList[selectedIndex].content}</pre>
+        </div>
       )}
     </>
   );
