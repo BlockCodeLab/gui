@@ -1,5 +1,7 @@
 import { javascriptGenerator } from '@blockcode/blocks-player';
 
+const AWAIT_ABORT = 'if (abort || !runtime.running) break;\n';
+
 javascriptGenerator['looks_sayforsecs'] = (block) => {
   let code = '';
   if (javascriptGenerator.STATEMENT_PREFIX) {
@@ -8,7 +10,7 @@ javascriptGenerator['looks_sayforsecs'] = (block) => {
 
   const msgCode = javascriptGenerator.valueToCode(block, 'MESSAGE', javascriptGenerator.ORDER_NONE) || '""';
   const secCode = javascriptGenerator.valueToCode(block, 'SECS', javascriptGenerator.ORDER_NONE) || 2;
-  code += `await target.util.say(String(${msgCode}), runtime.number(${secCode}));\n`;
+  code += `await target.util.say(String(${msgCode}), runtime.number(${secCode}));\n${AWAIT_ABORT}`;
   return code;
 };
 
@@ -31,7 +33,7 @@ javascriptGenerator['looks_thinkforsecs'] = (block) => {
 
   const msgCode = javascriptGenerator.valueToCode(block, 'MESSAGE', javascriptGenerator.ORDER_NONE) || '""';
   const secCode = javascriptGenerator.valueToCode(block, 'SECS', javascriptGenerator.ORDER_NONE) || 2;
-  code += `await target.util.think(String(${msgCode}), runtime.number(${secCode}));\n`;
+  code += `await target.util.think(String(${msgCode}), runtime.number(${secCode}));\n${AWAIT_ABORT}`;
   return code;
 };
 
@@ -175,6 +177,6 @@ javascriptGenerator['looks_switchbackdroptoandwait'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const backdropCode = javascriptGenerator.valueToCode(block, 'BACKDROP', javascriptGenerator.ORDER_NONE) || '""';
-  code += `stage.util.backdrop = ${backdropCode};\nawait runtime.fire('backdropswitchesto:' + ${backdropCode});\n`;
+  code += `stage.util.backdrop = ${backdropCode};\nawait runtime.fire('backdropswitchesto:' + ${backdropCode});\n${AWAIT_ABORT}`;
   return code;
 };

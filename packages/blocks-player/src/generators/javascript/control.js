@@ -1,6 +1,7 @@
 import { javascriptGenerator } from './generator';
 
-const NEXT_LOOP = '  if (abort || !runtime.running) break;\n  await runtime.nextFrame();\n';
+const AWAIT_ABORT = 'if (abort || !runtime.running) break;\n';
+const NEXT_LOOP = `  ${AWAIT_ABORT}  await runtime.nextFrame();\n`;
 
 javascriptGenerator['control_wait'] = (block) => {
   let code = '';
@@ -8,7 +9,7 @@ javascriptGenerator['control_wait'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const durationCode = javascriptGenerator.valueToCode(block, 'DURATION', javascriptGenerator.ORDER_NONE) || 0;
-  code += `await runtime.sleep(runtime.number(${durationCode}));\n`;
+  code += `await runtime.sleep(runtime.number(${durationCode}));\n${AWAIT_ABORT}`;
   return code;
 };
 

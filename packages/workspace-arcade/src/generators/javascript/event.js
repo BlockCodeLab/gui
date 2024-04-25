@@ -1,7 +1,7 @@
 import { ScratchBlocks } from '@blockcode/blocks-editor';
 import { javascriptGenerator } from '@blockcode/blocks-player';
 
-const HAT_CALLBACK = `async (target, done) => {\n${javascriptGenerator.HAT_CODE}  done();\n}`;
+const HAT_CALLBACK = `async (target, done) => {\ndo {\n${javascriptGenerator.HAT_CODE}} while (false);\n  done();\n}`;
 
 javascriptGenerator['event_whenkeypressed'] = (block) => {
   const keyValue = block.getFieldValue('KEY_OPTION');

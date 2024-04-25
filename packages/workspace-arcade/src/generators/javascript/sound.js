@@ -1,5 +1,7 @@
 import { javascriptGenerator } from '@blockcode/blocks-player';
 
+const AWAIT_ABORT = 'if (abort || !runtime.running) break;\n';
+
 javascriptGenerator['sound_sounds_menu'] = (block) => {
   return [block.getFieldValue('SOUND_MENU'), javascriptGenerator.ORDER_ATOMIC];
 };
@@ -22,7 +24,7 @@ javascriptGenerator['sound_playuntildone'] = (block) => {
   }
 
   const soundCode = javascriptGenerator.valueToCode(block, 'SOUND_MENU', javascriptGenerator.ORDER_NONE) || 'SILENT';
-  code += `await runtime.tone.play(runtime.Music.${soundCode})\n`;
+  code += `await runtime.tone.play(runtime.Music.${soundCode})\n${AWAIT_ABORT}`;
   return code;
 };
 
@@ -31,6 +33,6 @@ javascriptGenerator['sound_stopallsounds'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  code += `await runtime.tone.stop()\n`;
+  code += `await runtime.tone.stop()\n${AWAIT_ABORT}`;
   return code;
 };

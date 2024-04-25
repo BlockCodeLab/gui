@@ -1,7 +1,9 @@
 import { javascriptGenerator } from '@blockcode/blocks-player';
 
+const HAT_CALLBACK = `async (target, done) => {\ndo {\n${javascriptGenerator.HAT_CODE}} while (false);\n  done();\n}`;
+
 javascriptGenerator['control_start_as_clone'] = (block) => {
-  return `runtime.whenCloneStart(target, async (target, done) => {\n${javascriptGenerator.HAT_CODE}  done();\n});\n`;
+  return `runtime.whenCloneStart(target, ${HAT_CALLBACK});\n`;
 };
 
 javascriptGenerator['control_create_clone_of_menu'] = (block) => {

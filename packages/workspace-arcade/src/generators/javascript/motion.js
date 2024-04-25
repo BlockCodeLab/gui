@@ -1,5 +1,7 @@
 import { javascriptGenerator } from '@blockcode/blocks-player';
 
+const AWAIT_ABORT = 'if (abort || !runtime.running) break;\n';
+
 javascriptGenerator['motion_movesteps'] = (block) => {
   let code = '';
   if (javascriptGenerator.STATEMENT_PREFIX) {
@@ -99,7 +101,7 @@ javascriptGenerator['motion_glidesecstoxy'] = (block) => {
   const secsCode = javascriptGenerator.valueToCode(block, 'SECS', javascriptGenerator.ORDER_NONE) || 1;
   const xCode = javascriptGenerator.valueToCode(block, 'X', javascriptGenerator.ORDER_NONE) || 0;
   const yCode = javascriptGenerator.valueToCode(block, 'Y', javascriptGenerator.ORDER_NONE) || 0;
-  code += `await target.util.glide(runtime.number(${secsCode}), runtime.number(${xCode}), runtime.number(${yCode}));\n`;
+  code += `await target.util.glide(runtime.number(${secsCode}), runtime.number(${xCode}), runtime.number(${yCode}));\n${AWAIT_ABORT}`;
   return code;
 };
 
@@ -118,7 +120,7 @@ javascriptGenerator['motion_glideto'] = (block) => {
   } else {
     toCode = `runtime.getSpriteByIdOrName('${toPlace}').util`;
   }
-  code += `await target.util.glide(${secsCode}, ${toCode});\n`;
+  code += `await target.util.glide(${secsCode}, ${toCode});\n${AWAIT_ABORT}`;
   return code;
 };
 

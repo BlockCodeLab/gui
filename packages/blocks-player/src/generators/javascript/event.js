@@ -1,7 +1,8 @@
 import { ScratchBlocks } from '@blockcode/blocks-editor';
 import { javascriptGenerator } from './generator';
 
-const HAT_CALLBACK = `async (done) => {\n${javascriptGenerator.HAT_CODE}  done();\n}`;
+const AWAIT_ABORT = 'if (abort || !runtime.running) break;\n';
+const HAT_CALLBACK = `async (done) => {\ndo {\n${javascriptGenerator.HAT_CODE}} while (false);\n  done();\n}`;
 
 javascriptGenerator['event_whenflagclicked'] = (block) => {
   return `runtime.when('start', ${HAT_CALLBACK});\n`;
@@ -47,6 +48,6 @@ javascriptGenerator['event_broadcastandwait'] = (block) => {
   }
   const messageName =
     javascriptGenerator.valueToCode(block, 'BROADCAST_INPUT', javascriptGenerator.ORDER_NONE) || 'message1';
-  code += `await runtime.fire('message:${messageName}')\n`;
+  code += `await runtime.fire('message:${messageName}')\n${AWAIT_ABORT}`;
   return code;
 };
