@@ -26,9 +26,10 @@ export function uploadImage(file) {
 
           const ctx = canvas.getContext('2d');
           ctx.drawImage(image, 0, 0, w, h);
-          image.dataset.url = canvas.toDataURL(file.type);
-          resolve(image);
+          image.src = canvas.toDataURL(file.type);
         }
+        image.dataset.url = image.src;
+        resolve(image);
       });
     });
   });
