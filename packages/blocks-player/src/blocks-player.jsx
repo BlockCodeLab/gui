@@ -32,9 +32,8 @@ export function BlocksPlayer({ width, height, onSetup, ...props }) {
         onSetup(ref.current);
       }
 
-      let workspace;
       const checkWorkspace = () => {
-        workspace = ScratchBlocks.getMainWorkspace();
+        const workspace = ScratchBlocks.getMainWorkspace();
         if (workspace) {
           workspace.addChangeListener((e) => {
             if (workspace.isDragging()) return; // Don't update while changes are happening.

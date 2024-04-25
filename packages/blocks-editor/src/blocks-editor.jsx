@@ -155,7 +155,6 @@ export function BlocksEditor({ toolbox, globalVariables, messages, onWorkspaceCr
       if (ref.workspace) {
         ref.workspace.clearUndo();
         ref.workspace.dispose();
-        ref.workspace = null;
       }
     };
   }, [ref]);
