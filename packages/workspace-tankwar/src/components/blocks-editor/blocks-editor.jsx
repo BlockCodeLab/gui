@@ -1,16 +1,12 @@
-import { useLocale, useEditor, exportFile } from '@blockcode/core';
+import { useLocale } from '@blockcode/core';
 import { CodeTab } from '@blockcode/workspace-blocks';
 
 import makeToolboxXML from '../../lib/make-toolbox-xml';
 
 const Editor = CodeTab.Content;
 
-const DEFAULT_SOUND_NAME = 'DADADADUM';
-
 export default function BlocksEditor() {
   const { getText } = useLocale();
-  const { fileList } = useEditor();
-  const player = fileList[0];
 
   const messages = {
     MOTION_ATTACK: getText('tankwar.blocks.motion_attack', 'fire in direction %1 at %2 steps'),
@@ -31,7 +27,6 @@ export default function BlocksEditor() {
       disableExtension
       messages={messages}
       toolbox={toolbox}
-      xml={player.xml}
     />
   );
 }

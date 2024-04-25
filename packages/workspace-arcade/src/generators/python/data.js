@@ -1,45 +1,48 @@
 import { ScratchBlocks } from '@blockcode/blocks-editor';
-import { pythonGenerator } from './generator';
+import { pythonGenerator } from '@blockcode/workspace-blocks';
+
+const TARGET_VARIABLE = 'target.variable.';
 
 pythonGenerator['data_variable'] = (block) => {
-  const varName = pythonGenerator.variableDB_.getName(
-    block.getFieldValue('VARIABLE'),
-    ScratchBlocks.Variables.NAME_TYPE,
-  );
+  const varName =
+    TARGET_VARIABLE +
+    pythonGenerator.variableDB_.getName(block.getFieldValue('VARIABLE'), ScratchBlocks.Variables.NAME_TYPE);
   return [varName, pythonGenerator.ORDER_ATOMIC];
 };
 
 pythonGenerator['data_setvariableto'] = (block) => {
   let code = '';
-  if (javascriptGenerator.STATEMENT_PREFIX) {
-    code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
+  if (pythonGenerator.STATEMENT_PREFIX) {
+    code += pythonGenerator.injectId(pythonGenerator.STATEMENT_PREFIX, block);
   }
 
-  const varName = pythonGenerator.variableDB_.getName(
-    block.getFieldValue('VARIABLE'),
-    ScratchBlocks.Variables.NAME_TYPE,
-  );
+  const varName =
+    TARGET_VARIABLE +
+    pythonGenerator.variableDB_.getName(block.getFieldValue('VARIABLE'), ScratchBlocks.Variables.NAME_TYPE);
   const valueCode = pythonGenerator.valueToCode(block, 'VALUE', pythonGenerator.ORDER_NONE) || '""';
-  code += `${varName} = ${valueCode}\n`;
+  code += `${varName} = ${valueCode};\n`;
   return code;
 };
 
 pythonGenerator['data_changevariableby'] = (block) => {
   let code = '';
-  if (javascriptGenerator.STATEMENT_PREFIX) {
-    code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
+  if (pythonGenerator.STATEMENT_PREFIX) {
+    code += pythonGenerator.injectId(pythonGenerator.STATEMENT_PREFIX, block);
   }
 
-  const varName = pythonGenerator.variableDB_.getName(
-    block.getFieldValue('VARIABLE'),
-    ScratchBlocks.Variables.NAME_TYPE,
-  );
+  const varName =
+    TARGET_VARIABLE +
+    pythonGenerator.variableDB_.getName(block.getFieldValue('VARIABLE'), ScratchBlocks.Variables.NAME_TYPE);
   const valueCode = pythonGenerator.valueToCode(block, 'VALUE', pythonGenerator.ORDER_NONE) || 0;
-  code += `${varName} = num(${varName}) + num(${valueCode})\n`;
+  code += `${varName} = num(${varName}) + num(${valueCode});\n`;
   return code;
 };
 
 pythonGenerator['data_listcontents'] = (block) => {};
+
+// pythonGenerator['data_listindexall'] = (block) => {};
+
+// pythonGenerator['data_listindexrandom'] = (block) => {};
 
 pythonGenerator['data_addtolist'] = (block) => {};
 

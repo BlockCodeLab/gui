@@ -1,18 +1,29 @@
 import { ScratchBlocks } from '@blockcode/blocks-editor';
 import { pythonGenerator } from '@blockcode/workspace-blocks';
 
-import './python/colour';
 import './python/control';
+import './python/data';
 import './python/events';
 import './python/looks';
 import './python/motion';
 import './python/sensing';
 import './python/sound';
 
-const originalInit = pythonGenerator.init.original_ || pythonGenerator.init;
+pythonGenerator.init = (workspace) => {
+  pythonGenerator.PASS = pythonGenerator.INDENT + 'pass\n';
+  // Create a dictionary of definitions to be printed before the code.
+  pythonGenerator.definitions_ = Object.create(null);
+  // Create a dictionary mapping desired function names in definitions_
+  // to actual function names (to avoid collisions with user functions).
+  pythonGenerator.functionNames_ = Object.create(null);
 
-pythonGenerator.init = function (workspace) {
-  originalInit(workspace);
+  if (!pythonGenerator.variableDB_) {
+    pythonGenerator.variableDB_ = new ScratchBlocks.Names(pythonGenerator.RESERVED_WORDS_);
+  } else {
+    pythonGenerator.variableDB_.reset();
+  }
+
+  pythonGenerator.variableDB_.setVariableMap(workspace.getVariableMap());
 
   const defvars = [];
   const variables = workspace.getAllVariables();
@@ -20,25 +31,31 @@ pythonGenerator.init = function (workspace) {
     if (variables[i].type === ScratchBlocks.BROADCAST_MESSAGE_VARIABLE_TYPE) {
       continue;
     }
-    const variableName = pythonGenerator.variableDB_.getName(variables[i].getId(), ScratchBlocks.Variables.NAME_TYPE);
-    const variableValue = variables[i].type === ScratchBlocks.LIST_VARIABLE_TYPE ? '[]' : '0';
 
-    if (variables[i].isCloud) {
-      // TODO: cloud variable
-    } else if (variables[i].isLocal) {
-      defvars[i] = `${variableName}=Variable("${variableName}",${variableValue},sprite)`;
-    } else {
-      defvars[i] = `${variableName}=Variable("${variableName}",${variableValue},stage)`;
+    const varTarget = variables[i].isLocal ? 'sprite.data' : 'stage.data';
+    let varName = pythonGenerator.variableDB_.getName(variables[i].getId(), ScratchBlocks.Variables.NAME_TYPE);
+    let varValue = '0';
+    if (variables[i].type === ScratchBlocks.LIST_VARIABLE_TYPE) {
+      varName = `${varName}_${ScratchBlocks.LIST_VARIABLE_TYPE}`;
+      varValue = '[]';
     }
+    defvars.push(`${varTarget}['${varName}'] = ${varValue}`);
   }
 
   // Add developer variables (not created or named by the user).
   const devVarList = ScratchBlocks.Variables.allDeveloperVariables(workspace);
   for (let i = 0; i < devVarList.length; i++) {
-    defvars.push(
-      pythonGenerator.variableDB_.getName(devVarList[i], ScratchBlocks.Names.DEVELOPER_VARIABLE_TYPE) + ' = None'
-    );
+    let varName = pythonGenerator.variableDB_.getName(devVarList[i], ScratchBlocks.Names.DEVELOPER_VARIABLE_TYPE);
+    let varValue = '0';
+    if (variables[i].type === ScratchBlocks.LIST_VARIABLE_TYPE) {
+      varName = `${varName}_${ScratchBlocks.LIST_VARIABLE_TYPE}`;
+      varValue = '[]';
+    }
+    defvars.push(`stage.data['${varName}'] = ${varValue}`);
   }
+
+  // import scratch for micropython library
+  pythonGenerator.definitions_['import_scratch'] = 'from scratch import *';
 
   if (pythonGenerator.additionalDefinitions_) {
     pythonGenerator.additionalDefinitions_.forEach(([key, value]) => {
@@ -54,4 +71,3 @@ pythonGenerator.init = function (workspace) {
     pythonGenerator.definitions_['variables'] = defvars.join('\n');
   }
 };
-pythonGenerator.init.original_ = originalInit;

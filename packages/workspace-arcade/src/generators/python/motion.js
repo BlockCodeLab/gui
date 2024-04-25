@@ -5,8 +5,8 @@ pythonGenerator['motion_movesteps'] = (block) => {
   if (pythonGenerator.STATEMENT_PREFIX) {
     code += pythonGenerator.injectId(pythonGenerator.STATEMENT_PREFIX, block);
   }
-  const stepCode = pythonGenerator.valueToCode(block, 'STEPS', pythonGenerator.ORDER_NONE);
-  code += `sprite.move(${stepCode})\n`;
+  const stepsCode = pythonGenerator.valueToCode(block, 'STEPS', pythonGenerator.ORDER_NONE) || 10;
+  code += `target.move(num(${stepsCode}))\n`;
   return code;
 };
 
@@ -15,8 +15,8 @@ pythonGenerator['motion_turnright'] = (block) => {
   if (pythonGenerator.STATEMENT_PREFIX) {
     code += pythonGenerator.injectId(pythonGenerator.STATEMENT_PREFIX, block);
   }
-  const degreesCode = pythonGenerator.valueToCode(block, 'DEGREES', pythonGenerator.ORDER_NONE);
-  code += `sprite.direction += ${degreesCode}\n`;
+  const degreesCode = pythonGenerator.valueToCode(block, 'DEGREES', pythonGenerator.ORDER_NONE) || 15;
+  code += `target.direction += num(${degreesCode})\n`;
   return code;
 };
 
@@ -25,8 +25,8 @@ pythonGenerator['motion_turnleft'] = (block) => {
   if (pythonGenerator.STATEMENT_PREFIX) {
     code += pythonGenerator.injectId(pythonGenerator.STATEMENT_PREFIX, block);
   }
-  const degreesCode = pythonGenerator.valueToCode(block, 'DEGREES', pythonGenerator.ORDER_NONE);
-  code += `sprite.direction -= ${degreesCode}\n`;
+  const degreesCode = pythonGenerator.valueToCode(block, 'DEGREES', pythonGenerator.ORDER_NONE) || 15;
+  code += `target.direction -= num(${degreesCode})\n`;
   return code;
 };
 
@@ -35,23 +35,13 @@ pythonGenerator['motion_pointindirection'] = (block) => {
   if (pythonGenerator.STATEMENT_PREFIX) {
     code += pythonGenerator.injectId(pythonGenerator.STATEMENT_PREFIX, block);
   }
-  const directionCode = pythonGenerator.valueToCode(block, 'DIRECTION', pythonGenerator.ORDER_NONE);
-  code += `sprite.direction = ${directionCode}\n`;
+  const directionCode = pythonGenerator.valueToCode(block, 'DIRECTION', pythonGenerator.ORDER_NONE) || 90;
+  code += `target.direction = num(${directionCode})\n`;
   return code;
 };
 
 pythonGenerator['motion_pointtowards_menu'] = (block) => {
-  let code, order;
-  const towards = block.getFieldValue('TOWARDS');
-  if (towards === '_random_') {
-    pythonGenerator.definitions_['import_random'] = 'import random';
-    code = `random.randint(1,360)`;
-    order = pythonGenerator.ORDER_FUNCTION_CALL;
-  } else {
-    code = `stage.get_sprite_by_id('${towards}')`;
-    order = pythonGenerator.ORDER_FUNCTION_CALL;
-  }
-  return [code, order];
+  return [block.getFieldValue('TOWARDS'), pythonGenerator.ORDER_ATOMIC];
 };
 
 pythonGenerator['motion_pointtowards'] = (block) => {
@@ -59,8 +49,14 @@ pythonGenerator['motion_pointtowards'] = (block) => {
   if (pythonGenerator.STATEMENT_PREFIX) {
     code += pythonGenerator.injectId(pythonGenerator.STATEMENT_PREFIX, block);
   }
-  const towardsCode = pythonGenerator.valueToCode(block, 'TOWARDS', pythonGenerator.ORDER_NONE);
-  code += `sprite.towards(${towardsCode})\n`;
+
+  let towardsCode = pythonGenerator.valueToCode(block, 'TOWARDS', pythonGenerator.ORDER_NONE) || '_random_';
+  if (towardsCode === '_random_') {
+    towardsCode = '';
+  } else {
+    towardsCode = `stage.get_sprite_by_id('${towardsCode}')`;
+  }
+  code += `target.towards(${towardsCode})\n`;
   return code;
 };
 
@@ -69,24 +65,14 @@ pythonGenerator['motion_gotoxy'] = (block) => {
   if (pythonGenerator.STATEMENT_PREFIX) {
     code += pythonGenerator.injectId(pythonGenerator.STATEMENT_PREFIX, block);
   }
-  const xCode = pythonGenerator.valueToCode(block, 'X', pythonGenerator.ORDER_NONE);
-  const yCode = pythonGenerator.valueToCode(block, 'Y', pythonGenerator.ORDER_NONE);
-  code += `sprite.goto(${xCode}, ${yCode})\n`;
+  const xCode = pythonGenerator.valueToCode(block, 'X', pythonGenerator.ORDER_NONE) || 0;
+  const yCode = pythonGenerator.valueToCode(block, 'Y', pythonGenerator.ORDER_NONE) || 0;
+  code += `target.goto(num(${xCode}), num(${yCode}))\n`;
   return code;
 };
 
 pythonGenerator['motion_goto_menu'] = (block) => {
-  let code, order;
-  const toPlace = block.getFieldValue('TO');
-  if (toPlace === '_random_') {
-    pythonGenerator.definitions_['import_random'] = 'import random';
-    code = `(random.randint(-140, 140), random.randint(-120, 120))`;
-    order = pythonGenerator.ORDER_ATOMIC;
-  } else {
-    code = `stage.get_sprite_by_id('${towards}')`;
-    order = pythonGenerator.ORDER_FUNCTION_CALL;
-  }
-  return [code, order];
+  return [block.getFieldValue('TO'), pythonGenerator.ORDER_ATOMIC];
 };
 
 pythonGenerator['motion_goto'] = (block) => {
@@ -94,22 +80,27 @@ pythonGenerator['motion_goto'] = (block) => {
   if (pythonGenerator.STATEMENT_PREFIX) {
     code += pythonGenerator.injectId(pythonGenerator.STATEMENT_PREFIX, block);
   }
-  const toCode = pythonGenerator.valueToCode(block, 'TO', pythonGenerator.ORDER_NONE);
-  code += `sprite.goto(place=${toCode})\n`;
+
+  let toCode = pythonGenerator.valueToCode(block, 'TO', pythonGenerator.ORDER_NONE) || '_random_';
+  if (toCode === '_random_') {
+    toCode = '';
+  } else {
+    toCode = `place = stage.get_sprite_by_id('${toCode}')`;
+  }
+  code += `target.goto(${toCode})\n`;
   return code;
 };
 
 pythonGenerator['motion_glidesecstoxy'] = (block) => {
   let code = '';
-
   if (pythonGenerator.STATEMENT_PREFIX) {
     code += pythonGenerator.injectId(pythonGenerator.STATEMENT_PREFIX, block);
   }
 
-  const secsCode = pythonGenerator.valueToCode(block, 'SECS', pythonGenerator.ORDER_NONE);
-  const xCode = pythonGenerator.valueToCode(block, 'X', pythonGenerator.ORDER_NONE);
-  const yCode = pythonGenerator.valueToCode(block, 'Y', pythonGenerator.ORDER_NONE);
-  code += `sprite.glide(${secsCode}, ${xCode}, ${yCode})\n`;
+  const secsCode = pythonGenerator.valueToCode(block, 'SECS', pythonGenerator.ORDER_NONE) || 1;
+  const xCode = pythonGenerator.valueToCode(block, 'X', pythonGenerator.ORDER_NONE) || 0;
+  const yCode = pythonGenerator.valueToCode(block, 'Y', pythonGenerator.ORDER_NONE) || 0;
+  code += `target.glide(num(${secsCode}), num(${xCode}), num(${yCode}))\n`;
   return code;
 };
 
@@ -120,9 +111,15 @@ pythonGenerator['motion_glideto'] = (block) => {
   if (pythonGenerator.STATEMENT_PREFIX) {
     code += pythonGenerator.injectId(pythonGenerator.STATEMENT_PREFIX, block);
   }
-  const secsCode = pythonGenerator.valueToCode(block, 'SECS', pythonGenerator.ORDER_NONE);
-  const toCode = pythonGenerator.valueToCode(block, 'TO', pythonGenerator.ORDER_NONE);
-  code += `await sprite.glide(${secsCode}, place=${toCode})\n`;
+
+  const secsCode = pythonGenerator.valueToCode(block, 'SECS', pythonGenerator.ORDER_NONE) || 1;
+  let toCode = pythonGenerator.valueToCode(block, 'TO', pythonGenerator.ORDER_NONE) || '_random_';
+  if (toCode === '_random_') {
+    toCode = '';
+  } else {
+    toCode = `place = stage.get_sprite_by_id('${toCode}')`;
+  }
+  code += `await target.glide(num(${secsCode}), ${toCode})\n`;
   return code;
 };
 
@@ -131,8 +128,8 @@ pythonGenerator['motion_changexby'] = (block) => {
   if (pythonGenerator.STATEMENT_PREFIX) {
     code += pythonGenerator.injectId(pythonGenerator.STATEMENT_PREFIX, block);
   }
-  const dxCode = pythonGenerator.valueToCode(block, 'DX', pythonGenerator.ORDER_NONE);
-  code += `sprite.x += ${dxCode}\n`;
+  const dxCode = pythonGenerator.valueToCode(block, 'DX', pythonGenerator.ORDER_NONE) || 10;
+  code += `target.x += num(${dxCode})\n`;
   return code;
 };
 
@@ -141,8 +138,8 @@ pythonGenerator['motion_setx'] = (block) => {
   if (pythonGenerator.STATEMENT_PREFIX) {
     code += pythonGenerator.injectId(pythonGenerator.STATEMENT_PREFIX, block);
   }
-  const xCode = pythonGenerator.valueToCode(block, 'X', pythonGenerator.ORDER_NONE);
-  code += `sprite.x = ${xCode}\n`;
+  const xCode = pythonGenerator.valueToCode(block, 'X', pythonGenerator.ORDER_NONE) || 0;
+  code += `target.x = num(${xCode})\n`;
   return code;
 };
 
@@ -151,8 +148,8 @@ pythonGenerator['motion_changeyby'] = (block) => {
   if (pythonGenerator.STATEMENT_PREFIX) {
     code += pythonGenerator.injectId(pythonGenerator.STATEMENT_PREFIX, block);
   }
-  const dyCode = pythonGenerator.valueToCode(block, 'DY', pythonGenerator.ORDER_NONE);
-  code += `sprite.y += ${dyCode}\n`;
+  const dyCode = pythonGenerator.valueToCode(block, 'DY', pythonGenerator.ORDER_NONE) || 10;
+  code += `target.y += num(${dyCode})\n`;
   return code;
 };
 
@@ -161,8 +158,8 @@ pythonGenerator['motion_sety'] = (block) => {
   if (pythonGenerator.STATEMENT_PREFIX) {
     code += pythonGenerator.injectId(pythonGenerator.STATEMENT_PREFIX, block);
   }
-  const yCode = pythonGenerator.valueToCode(block, 'Y', pythonGenerator.ORDER_NONE);
-  code += `sprite.y = ${yCode}\n`;
+  const yCode = pythonGenerator.valueToCode(block, 'Y', pythonGenerator.ORDER_NONE) || 0;
+  code += `target.y = num(${yCode})\n`;
   return code;
 };
 
@@ -171,7 +168,7 @@ pythonGenerator['motion_ifonedgebounce'] = (block) => {
   if (pythonGenerator.STATEMENT_PREFIX) {
     code += pythonGenerator.injectId(pythonGenerator.STATEMENT_PREFIX, block);
   }
-  code += 'sprite.edge_bounce()\n';
+  code += 'target.edge_bounce()\n';
   return code;
 };
 
@@ -180,9 +177,10 @@ pythonGenerator['motion_setrotationstyle'] = (block) => {
   if (pythonGenerator.STATEMENT_PREFIX) {
     code += pythonGenerator.injectId(pythonGenerator.STATEMENT_PREFIX, block);
   }
+
   let styleCode;
-  const rotationStyle = block.getFieldValue('STYLE');
-  switch (rotationStyle) {
+  const styleValue = block.getFieldValue('STYLE');
+  switch (styleValue) {
     case 'left-right':
       styleCode = 'ROTATION_STYLE_HORIZONTAL_FLIP';
       break;
@@ -194,21 +192,18 @@ pythonGenerator['motion_setrotationstyle'] = (block) => {
     default:
       break;
   }
-  code += `sprite.rotation_style = ${styleCode}\n`;
+  code += `target.rotation_style = ${styleCode}\n`;
   return code;
 };
 
 pythonGenerator['motion_xposition'] = (block) => {
-  const code = 'sprite.x';
-  return [code, pythonGenerator.ORDER_NONE];
+  return ['target.x', pythonGenerator.ORDER_NONE];
 };
 
 pythonGenerator['motion_yposition'] = (block) => {
-  const code = 'sprite.y';
-  return [code, pythonGenerator.ORDER_NONE];
+  return ['target.y', pythonGenerator.ORDER_NONE];
 };
 
 pythonGenerator['motion_direction'] = (block) => {
-  const code = 'sprite.direction';
-  return [code, pythonGenerator.ORDER_NONE];
+  return ['target.direction', pythonGenerator.ORDER_NONE];
 };

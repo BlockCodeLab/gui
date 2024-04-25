@@ -134,23 +134,25 @@ pythonGenerator.init = (workspace) => {
     if (variables[i].type === ScratchBlocks.BROADCAST_MESSAGE_VARIABLE_TYPE) {
       continue;
     }
-    const varName = pythonGenerator.variableDB_.getName(variables[i].getId(), ScratchBlocks.Variables.NAME_TYPE);
+    let varName = pythonGenerator.variableDB_.getName(variables[i].getId(), ScratchBlocks.Variables.NAME_TYPE);
+    let varValue = '';
     if (variables[i].type === ScratchBlocks.LIST_VARIABLE_TYPE) {
-      defvars.push(`${varName}_${ScratchBlocks.LIST_VARIABLE_TYPE} = []`);
-    } else {
-      defvars.push(`${varName} = None`);
+      varName = `${varName}_${ScratchBlocks.LIST_VARIABLE_TYPE}`;
+      varValue = '[]';
     }
+    defvars.push(`${varName} = ${varValue}`);
   }
 
   // Add developer variables (not created or named by the user).
   const devVarList = ScratchBlocks.Variables.allDeveloperVariables(workspace);
   for (let i = 0; i < devVarList.length; i++) {
-    const varName = pythonGenerator.variableDB_.getName(devVarList[i], ScratchBlocks.Names.DEVELOPER_VARIABLE_TYPE);
+    let varName = pythonGenerator.variableDB_.getName(devVarList[i], ScratchBlocks.Names.DEVELOPER_VARIABLE_TYPE);
+    let varValue = '';
     if (variables[i].type === ScratchBlocks.LIST_VARIABLE_TYPE) {
-      defvars.push(`${varName}_${ScratchBlocks.LIST_VARIABLE_TYPE} = []`);
-    } else {
-      defvars.push(`${varName} = None`);
+      varName = `${varName}_${ScratchBlocks.LIST_VARIABLE_TYPE}`;
+      varValue = '[]';
     }
+    defvars.push(`${varName} = ${varValue}`);
   }
 
   if (defvars.length) {
@@ -158,7 +160,7 @@ pythonGenerator.init = (workspace) => {
   }
 
   // import blocks for micropython library
-  pythonGenerator.definitions_['import_popsicle_blocks'] = 'from popsicle.blocks import *';
+  pythonGenerator.definitions_['import_blocks'] = 'from blocks import *';
 };
 
 /**
@@ -207,12 +209,12 @@ pythonGenerator.quote_ = (string) => {
   string = string.replace(/\\/g, '\\\\').replace(/\n/g, '\\\n').replace(/\%/g, '\\%');
 
   // Follow the CPython behaviour of repr() for a non-byte string.
-  let quote = "'";
-  if (string.indexOf("'") !== -1) {
-    if (string.indexOf('"') === -1) {
-      quote = '"';
+  let quote = '"';
+  if (string.indexOf('"') !== -1) {
+    if (string.indexOf("'") === -1) {
+      quote = "'";
     } else {
-      string = string.replace(/'/g, "\\'");
+      string = string.replace(/"/g, '\\"');
     }
   }
   return quote + string + quote;
@@ -262,7 +264,7 @@ pythonGenerator.scrub_ = (block, code) => {
     let nextCode = pythonGenerator.blockToCode(nextBlock);
     if (nextCode) {
       nextCode = pythonGenerator.prefixLines(nextCode, pythonGenerator.INDENT);
-      code = code.replace(`:\n${pythonGenerator.PASS}`, `:\n${nextCode}`);
+      code = code.replace(`\n${pythonGenerator.PASS}`, `\n${nextCode}`);
     }
     return commentCode + code;
   }
@@ -321,5 +323,5 @@ pythonGenerator.hatToCode = (name = '', ...args) => {
   pythonGenerator.functionNames_[name] += 1;
   const functionName = `${name}_${pythonGenerator.functionNames_[name]}`;
   pythonGenerator.HAT_FUNCTION_PLACEHOLDER = functionName;
-  return `async def ${functionName}(${args.join(', ')}):\n${pythonGenerator.PASS}\n`;
+  return `async def ${functionName}(${args.join(', ')}):\n  this_func = ${functionName}\n${pythonGenerator.PASS}\n`;
 };

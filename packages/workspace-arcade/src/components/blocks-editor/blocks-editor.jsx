@@ -1,9 +1,9 @@
-import { useLocale, useEditor, exportFile } from '@blockcode/core';
+import { useLocale, useEditor } from '@blockcode/core';
 import { ScratchBlocks } from '@blockcode/blocks-editor';
 import { CodeTab, pythonGenerator } from '@blockcode/workspace-blocks';
 
 import makeToolboxXML from '../../lib/make-toolbox-xml';
-import buildBlocks from './blocks';
+import buildBlocks from '../../blocks';
 
 import styles from './blocks-editor.module.css';
 
@@ -13,7 +13,7 @@ const DEFAULT_SOUND_NAME = 'DADADADUM';
 
 export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert }) {
   const { getText } = useLocale();
-  const { assetList, fileList, selectedIndex } = useEditor();
+  const { assetList, fileList, selectedIndex, modifyFile } = useEditor();
   const isStage = selectedIndex === 0;
 
   const messages = {
@@ -50,13 +50,12 @@ export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert })
   const stage = fileList[0];
   const target = fileList[selectedIndex]; // stage or sprite
 
-  let thumb, xml;
+  let thumb;
   if (target) {
     const image = assetList.find((asset) => asset.id === target.assets[target.frame]);
     if (image) {
       thumb = `data:${image.type};base64,${image.data}`;
     }
-    xml = target.xml;
   }
 
   const backdropValue = stage.assets[stage.frame];
@@ -70,39 +69,20 @@ export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert })
     }
   };
   setTimeout(() => {
-    if (selectedIndex > 0 && workspace) {
-      ['glide', 'move', 'set'].forEach((prefix) => {
-        updateToolboxBlockValue(`${prefix}x`, Math.round(target.x).toString());
-        updateToolboxBlockValue(`${prefix}y`, Math.round(target.y).toString());
-      });
-    }
-  }, 1);
-
-  const listAssets = (assets) => {
-    const res = [];
-    for (const assetId of assets) {
-      const asset = assetList.find((asset) => asset.id === assetId);
-      if (asset) {
-        res.push({
-          name: asset.name,
-          image: [assetId, asset.width, asset.height, asset.centerX, asset.centerY],
-          transparent: 0,
+    if (workspace) {
+      if (selectedIndex > 0) {
+        ['glide', 'move', 'set'].forEach((prefix) => {
+          updateToolboxBlockValue(`${prefix}x`, Math.round(target.x).toString());
+          updateToolboxBlockValue(`${prefix}y`, Math.round(target.y).toString());
         });
       }
-    }
-    return JSON.stringify(res);
-  };
 
-  pythonGenerator.additionalDefinitions_ = isStage
-    ? [['create_stage', `stage = Stage(${listAssets(stage.assets)}, ${stage.frame})`]]
-    : [
-        ['import_stage', 'from stage import stage'],
-        [
-          'create_sprite',
-          `sprite = Sprite("${target.id}", ${listAssets(target.assets)}, ${target.frame}, ${Math.round(target.x)}, ${Math.round(target.y)}, ${Math.round(target.size)}, ${Math.round(target.direction)}, ${target.rotationStyle}, ${target.hidden ? 'True' : 'False'})`,
-        ],
-        ['add_sprite', `stage.add_sprite(sprite)`],
-      ];
+      const newCode = pythonGenerator.workspaceToCode(workspace);
+      if (target.content !== newCode) {
+        modifyFile({ content: newCode });
+      }
+    }
+  }, 1);
 
   const handleLoadExtension = ({ id: extensionId, blocks }) => {
     blocks.forEach(({ id: blockId, player }) => {
@@ -110,12 +90,47 @@ export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert })
     });
   };
 
+  const listAssets = (assets) => {
+    const res = [];
+    for (const assetId of assets) {
+      const asset = assetList.find((asset) => asset.id === assetId);
+      if (asset) {
+        res.push({
+          id: assetId,
+          name: asset.name,
+          image: [assetId, asset.width, asset.height, asset.centerX, asset.centerY],
+          key: 0x2000,
+        });
+      }
+    }
+    return JSON.stringify(res);
+  };
+
+  pythonGenerator.additionalDefinitions_ = isStage
+    ? [['create_stage', `stage = target = Stage(runtime, ${listAssets(stage.assets)}, ${stage.frame})`]]
+    : [
+        ['import_stage', 'from stage import stage'],
+        [
+          'create_sprite',
+          `target = Sprite(runtime, stage, "${target.id}", "${target.name}", ${[
+            listAssets(target.assets),
+            target.frame,
+            Math.round(target.x),
+            Math.round(target.y),
+            Math.round(target.size),
+            Math.round(target.direction),
+            target.rotationStyle,
+            target.hidden ? 'True' : 'False',
+          ].join(', ')})`,
+        ],
+      ];
+
   return (
     <>
       <Editor
+        disableThumb
         enableMultiTargets
         enableLocalVariable={!isStage}
-        xml={xml}
         toolbox={toolbox}
         messages={messages}
         onExtensionsFilter={() => ['blocks', ['arcade', 'popsicle']]}

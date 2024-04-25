@@ -2,7 +2,7 @@ export { pythonGenerator } from './python/generator';
 
 import './python/control';
 import './python/data';
-import './python/events';
+import './python/event';
 import './python/math';
 import './python/operators';
 import './python/procedures';

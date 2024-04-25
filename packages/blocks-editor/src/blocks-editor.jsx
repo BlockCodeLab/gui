@@ -51,18 +51,28 @@ const supportedEvents = new Set([
 
 const makeXml = (toolbox) => `<xml style="display: none">\n${toolbox}\n</xml>`;
 
-export function BlocksEditor({ toolbox, xml, variables, messages, onWorkspaceCreated, onChange }) {
+export function BlocksEditor({ toolbox, globalVariables, messages, onWorkspaceCreated, onChange }) {
   const ref = useRef(null);
   const { language } = useLocale();
-  const { selectedIndex } = useEditor();
+  const { fileList, selectedIndex } = useEditor();
 
   const loadXmlToWorkspace = () => {
+    const xml = fileList[selectedIndex].xml;
     const xmlDom = ScratchBlocks.Xml.textToDom(xml || '');
+
+    // remove global variables
+    if (globalVariables) {
+      const varDom = xmlDom.querySelector('variables');
+      if (varDom) {
+        varDom.querySelectorAll('[islocal=false]').forEach((child) => varDom.removeChild(child));
+      }
+    }
+
     ScratchBlocks.Xml.clearWorkspaceAndLoadFromXml(xmlDom, ref.workspace);
 
     // include global variables
-    if (variables) {
-      const varDom = ScratchBlocks.Xml.variablesToDom(variables);
+    if (globalVariables) {
+      const varDom = ScratchBlocks.Xml.variablesToDom(globalVariables);
       ScratchBlocks.Xml.domToVariables(varDom, ref.workspace);
     }
   };
@@ -93,10 +103,7 @@ export function BlocksEditor({ toolbox, xml, variables, messages, onWorkspaceCre
   };
 
   const handleChange = () => {
-    const newXml = getWorkspaceXml();
-    if (newXml !== xml && onChange) {
-      onChange(newXml, ref.workspace);
-    }
+    onChange(getWorkspaceXml(), ref.workspace);
   };
 
   useEffect(() => {
@@ -141,7 +148,7 @@ export function BlocksEditor({ toolbox, xml, variables, messages, onWorkspaceCre
       });
       ref.resizeObserver = new ResizeObserver(() => ScratchBlocks.svgResize(ref.workspace));
       ref.resizeObserver.observe(ref.current);
-      if (!xml) handleChange();
+      loadXmlToWorkspace();
     }
     return () => {
       if (ref.workspace) ref.workspace.dispose();

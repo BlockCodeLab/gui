@@ -1,8 +1,8 @@
 import { ScratchBlocks } from '@blockcode/blocks-editor';
 
-import '../../blocks/events';
-import '../../blocks/sensing';
-import '../../blocks/sound';
+import './event';
+import './sensing';
+import './sound';
 
 export default function (assetList, fileList, selectedIndex, workspace) {
   const stage = fileList[0];
@@ -168,7 +168,7 @@ export default function (assetList, fileList, selectedIndex, workspace) {
           {
             type: 'field_dropdown',
             name: 'TOUCHINGOBJECTMENU',
-            options: [[ScratchBlocks.Msg.SENSING_TOUCHINGOBJECT_EDGE, '_edge_'], ...otherSpritesMenu],
+            options: [[ScratchBlocks.Msg.SENSING_TOUCHINGOBJECT_EDGE, '_edge_']], // ...otherSpritesMenu],
           },
         ],
         extensions: ['colours_sensing', 'output_string'],
@@ -254,8 +254,7 @@ export default function (assetList, fileList, selectedIndex, workspace) {
       });
     },
     onchange(e) {
-      if (e.blockId !== 'sensing_of_object_menu') return;
-      if (e.name === 'OBJECT') {
+      if (this.type === 'sensing_of' && e.name === 'OBJECT') {
         const property = this.getField('PROPERTY');
         property.menuGenerator_ = e.newValue === '_stage_' ? stagePropertyMenu : spritePropertyMenu;
         property.setText(property.menuGenerator_[0][0]);

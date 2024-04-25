@@ -1,5 +1,4 @@
 import { useState } from 'preact/hooks';
-import { svgAsDataUri } from 'save-svg-as-png';
 import { useLocale, useEditor } from '@blockcode/core';
 import { classNames } from '@blockcode/ui';
 import { BlocksEditor as Editor, ScratchBlocks, makeToolboxXML } from '@blockcode/blocks-editor';
@@ -18,7 +17,6 @@ let selectedCategoryId;
 export default function BlocksEditor({
   toolbox: defaultToolbox,
   messages,
-  xml,
   enableMultiTargets,
   enableLocalVariable,
   disableGenerator,
@@ -31,7 +29,7 @@ export default function BlocksEditor({
   onHideAlert,
 }) {
   const { addLocaleData, getText } = useLocale();
-  const { fileList, selectedIndex, modifyFile, saveThumb } = useEditor();
+  const { fileList, selectedIndex, modifyFile } = useEditor();
   const [workspace, setWorkspace] = useState();
   const [prompt, setPrompt] = useState(false);
   const [extensionLibraryOpen, setExtensionLibrary] = useState(false);
@@ -55,15 +53,10 @@ export default function BlocksEditor({
     setPrompt(prompt);
   };
 
-  if (selectedIndex !== -1 && !xml) {
-    const file = fileList[selectedIndex];
-    xml = file && file.xml;
-  }
-
   // global variables
-  let variables;
+  let globalVariables;
   if (workspace) {
-    variables = workspace.getAllVariables().filter((variable) => {
+    globalVariables = workspace.getAllVariables().filter((variable) => {
       if (variable.isLocal) return false;
 
       if (variable.type === ScratchBlocks.BROADCAST_MESSAGE_VARIABLE_TYPE) {
@@ -94,10 +87,9 @@ export default function BlocksEditor({
       xml: newXml,
       content: newCode,
     });
-    if (onChange) onChange(newXml, workspace);
-
-    // save blocks thumb
-    svgAsDataUri(workspace.getCanvas(), {}).then(saveThumb);
+    if (onChange) {
+      onChange(newXml, workspace);
+    }
   };
 
   const handlePromptSubmit = (input, options) => {
@@ -130,8 +122,7 @@ export default function BlocksEditor({
       <Editor
         toolbox={toolboxXML}
         messages={messages}
-        xml={xml}
-        variables={variables}
+        globalVariables={globalVariables}
         onWorkspaceCreated={setWorkspace}
         onChange={selectedIndex !== -1 ? handleChange : null}
       />
