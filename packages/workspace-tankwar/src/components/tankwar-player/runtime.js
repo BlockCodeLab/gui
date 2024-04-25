@@ -26,10 +26,10 @@ export default class Runtime extends BaseRuntime {
   }
 
   stop() {
-    super.stop();
     this.player.util.running = false;
     this.redTank.util.running = false;
     this.yellowTank.util.running = false;
     this.greenTank.util.running = false;
+    return super.stop();
   }
 }

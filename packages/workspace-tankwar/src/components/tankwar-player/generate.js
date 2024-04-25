@@ -1,14 +1,9 @@
 export default (script = '', AIs = []) => `
-runtime.on('beforeStart', () => {
-  runtime.player.util.bringToFront();
-});
-
 ${AIs.join('\n')}
 
 ((tank) => {
-runtime.openEventsGroup('player');
-${script}
-runtime.closeEventsGroup();
+let abort = false;
+${script || ''}
 })(runtime.player);
 
 runtime.on('frame', () => {
@@ -17,5 +12,7 @@ runtime.on('frame', () => {
   runtime.yellowTank.util.drive();
   runtime.greenTank.util.drive();
 });
+
+runtime.player.util.bringToFront();
 runtime.start();
 `;

@@ -5,9 +5,10 @@ javascriptGenerator['looks_sayforsecs'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const textValue = javascriptGenerator.valueToCode(block, 'MESSAGE', javascriptGenerator.ORDER_NONE);
-  const timeValue = javascriptGenerator.valueToCode(block, 'SECS', javascriptGenerator.ORDER_NONE);
-  code += `await target.util.say(${textValue}, ${timeValue});\n`;
+
+  const msgCode = javascriptGenerator.valueToCode(block, 'MESSAGE', javascriptGenerator.ORDER_NONE) || '""';
+  const secCode = javascriptGenerator.valueToCode(block, 'SECS', javascriptGenerator.ORDER_NONE) || 2;
+  code += `await target.util.say(String(${msgCode}), runtime.number(${secCode}));\n`;
   return code;
 };
 
@@ -16,8 +17,9 @@ javascriptGenerator['looks_say'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const textValue = javascriptGenerator.valueToCode(block, 'MESSAGE', javascriptGenerator.ORDER_NONE);
-  code += `target.util.say(${textValue});\n`;
+
+  const msgCode = javascriptGenerator.valueToCode(block, 'MESSAGE', javascriptGenerator.ORDER_NONE) || '""';
+  code += `target.util.say(String(${msgCode}));\n`;
   return code;
 };
 
@@ -26,9 +28,10 @@ javascriptGenerator['looks_thinkforsecs'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const textValue = javascriptGenerator.valueToCode(block, 'MESSAGE', javascriptGenerator.ORDER_NONE);
-  const timeValue = javascriptGenerator.valueToCode(block, 'SECS', javascriptGenerator.ORDER_NONE);
-  code += `await target.util.think(${textValue}, ${timeValue});\n`;
+
+  const msgCode = javascriptGenerator.valueToCode(block, 'MESSAGE', javascriptGenerator.ORDER_NONE) || '""';
+  const secCode = javascriptGenerator.valueToCode(block, 'SECS', javascriptGenerator.ORDER_NONE) || 2;
+  code += `await target.util.think(String(${msgCode}), runtime.number(${secCode}));\n`;
   return code;
 };
 
@@ -37,8 +40,9 @@ javascriptGenerator['looks_think'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const textValue = javascriptGenerator.valueToCode(block, 'MESSAGE', javascriptGenerator.ORDER_NONE);
-  code += `target.util.think(${textValue});\n`;
+
+  const msgCode = javascriptGenerator.valueToCode(block, 'MESSAGE', javascriptGenerator.ORDER_NONE) || '""';
+  code += `target.util.think(String(${msgCode}));\n`;
   return code;
 };
 
@@ -65,8 +69,8 @@ javascriptGenerator['looks_changesizeby'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const changeValue = javascriptGenerator.valueToCode(block, 'CHANGE', javascriptGenerator.ORDER_NONE);
-  code += `target.util.size += ${changeValue};\n`;
+  const changeCode = javascriptGenerator.valueToCode(block, 'CHANGE', javascriptGenerator.ORDER_NONE) || 10;
+  code += `target.util.size += runtime.number(${changeCode});\n`;
   return code;
 };
 
@@ -75,17 +79,17 @@ javascriptGenerator['looks_setsizeto'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const sizeValue = javascriptGenerator.valueToCode(block, 'SIZE', javascriptGenerator.ORDER_NONE);
-  code += `target.util.size = ${sizeValue};\n`;
+  const sizeCode = javascriptGenerator.valueToCode(block, 'SIZE', javascriptGenerator.ORDER_NONE) || 100;
+  code += `target.util.size = ${sizeCode};\n`;
   return code;
 };
 
 javascriptGenerator['looks_size'] = (block) => {
-  return ['target.util.size', javascriptGenerator.ORDER_NONE];
+  return ['target.util.size', javascriptGenerator.ORDER_MEMBER];
 };
 
 javascriptGenerator['looks_costume'] = (block) => {
-  const code = `'${block.getFieldValue('COSTUME')}'`;
+  const code = javascriptGenerator.quote_(block.getFieldValue('COSTUME'));
   return [code, javascriptGenerator.ORDER_ATOMIC];
 };
 
@@ -94,8 +98,8 @@ javascriptGenerator['looks_switchcostumeto'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const costumeValue = javascriptGenerator.valueToCode(block, 'COSTUME', javascriptGenerator.ORDER_NONE);
-  code += `target.util.costume = ${costumeValue};\n`;
+  const costumeCode = javascriptGenerator.valueToCode(block, 'COSTUME', javascriptGenerator.ORDER_NONE) || '""';
+  code += `target.util.costume = ${costumeCode};\n`;
   return code;
 };
 
@@ -109,7 +113,7 @@ javascriptGenerator['looks_nextcostume'] = (block) => {
 };
 
 javascriptGenerator['looks_backdrops'] = (block) => {
-  const code = `'${block.getFieldValue('BACKDROP')}'`;
+  const code = javascriptGenerator.quote_(block.getFieldValue('BACKDROP'));
   return [code, javascriptGenerator.ORDER_ATOMIC];
 };
 
@@ -118,8 +122,8 @@ javascriptGenerator['looks_switchbackdropto'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const backdropValue = javascriptGenerator.valueToCode(block, 'BACKDROP', javascriptGenerator.ORDER_NONE);
-  code += `stage.util.backdrop = ${backdropValue};\n`;
+  const backdropCode = javascriptGenerator.valueToCode(block, 'BACKDROP', javascriptGenerator.ORDER_NONE) || '""';
+  code += `stage.util.backdrop = ${backdropCode};\n`;
   return code;
 };
 
@@ -137,8 +141,8 @@ javascriptGenerator['looks_gotofrontback'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const frontOrBack = block.getFieldValue('FRONT_BACK');
-  code += `target.util.zIndex = '${frontOrBack}';\n`;
+  const frontOrBackValue = pythonGenerator.quote_(block.getFieldValue('FRONT_BACK'));
+  code += `target.util.zIndex = ${frontOrBackValue};\n`;
   return code;
 };
 
@@ -147,22 +151,22 @@ javascriptGenerator['looks_goforwardbackwardlayers'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const forwardOrBackward = block.getFieldValue('FORWARD_BACKWARD');
-  const changeValue = javascriptGenerator.valueToCode(block, 'NUM', javascriptGenerator.ORDER_NONE);
-  code += `target.util.zIndex ${forwardOrBackward === 'backward' ? '-' : '+'}= ${changeValue};\n`;
+  const forwardOrBackwardValue = block.getFieldValue('FORWARD_BACKWARD');
+  const changeCode = javascriptGenerator.valueToCode(block, 'NUM', javascriptGenerator.ORDER_NONE);
+  code += `target.util.zIndex ${forwardOrBackwardValue === 'backward' ? '-' : '+'}= runtime.number(${changeCode});\n`;
   return code;
 };
 
 javascriptGenerator['looks_backdropnumbername'] = (block) => {
-  const numberOrName = block.getFieldValue('NUMBER_NAME');
-  const code = numberOrName === 'name' ? 'stage.util.backdropName' : 'stage.util.backdrop';
-  return [code, javascriptGenerator.ORDER_NONE];
+  const numberOrNameValue = block.getFieldValue('NUMBER_NAME');
+  const code = numberOrNameValue === 'name' ? 'stage.util.backdropName' : 'stage.util.backdrop';
+  return [code, javascriptGenerator.ORDER_MEMBER];
 };
 
 javascriptGenerator['looks_costumenumbername'] = (block) => {
-  const numberOrName = block.getFieldValue('NUMBER_NAME');
-  const code = numberOrName === 'name' ? 'target.util.costumeName' : 'target.util.costume';
-  return [code, javascriptGenerator.ORDER_NONE];
+  const numberOrNameValue = block.getFieldValue('NUMBER_NAME');
+  const code = numberOrNameValue === 'name' ? 'target.util.costumeName' : 'target.util.costume';
+  return [code, javascriptGenerator.ORDER_MEMBER];
 };
 
 javascriptGenerator['looks_switchbackdroptoandwait'] = (block) => {
@@ -170,7 +174,7 @@ javascriptGenerator['looks_switchbackdroptoandwait'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const backdropValue = javascriptGenerator.valueToCode(block, 'BACKDROP', javascriptGenerator.ORDER_NONE);
-  code += `await stage.util.setBackdrop(${backdropValue});\n`;
+  const backdropCode = javascriptGenerator.valueToCode(block, 'BACKDROP', javascriptGenerator.ORDER_NONE) || '""';
+  code += `stage.util.backdrop = ${backdropCode};\nawait runtime.fire('backdropswitchesto:' + ${backdropCode});\n`;
   return code;
 };

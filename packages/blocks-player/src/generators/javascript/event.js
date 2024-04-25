@@ -1,14 +1,16 @@
 import { ScratchBlocks } from '@blockcode/blocks-editor';
 import { javascriptGenerator } from './generator';
 
+const HAT_CALLBACK = `async (done) => {\n${javascriptGenerator.HAT_CODE}  done();\n}`;
+
 javascriptGenerator['event_whenflagclicked'] = (block) => {
-  return `runtime.when('start', async function anonymous(done) {/* nextCode */  done()\n});\n`;
+  return `runtime.when('start', ${HAT_CALLBACK});\n`;
 };
 
 javascriptGenerator['event_whengreaterthan'] = (block) => {
-  const name = block.getFieldValue('WHENGREATERTHANMENU');
-  const value = javascriptGenerator.valueToCode(block, 'VALUE', javascriptGenerator.ORDER_NONE) || 0;
-  return `runtime.whenGreaterThen('${name}', ${value}, async function anonymous(done) {/* nextCode */  done()\n});\n`;
+  const nameValue = block.getFieldValue('WHENGREATERTHANMENU');
+  const valueCode = javascriptGenerator.valueToCode(block, 'VALUE', javascriptGenerator.ORDER_NONE) || 10;
+  return `runtime.whenGreaterThen('${nameValue}', runtime.number(${valueCode}), ${HAT_CALLBACK});\n`;
 };
 
 javascriptGenerator['event_whenbroadcastreceived'] = (block) => {
@@ -16,7 +18,7 @@ javascriptGenerator['event_whenbroadcastreceived'] = (block) => {
     block.getFieldValue('BROADCAST_OPTION'),
     ScratchBlocks.Variables.NAME_TYPE,
   );
-  return `runtime.when('${messageName}', async function anonymous(done) {/* nextCode */  done()\n});\n`;
+  return `runtime.when('message:${messageName}', ${HAT_CALLBACK});\n`;
 };
 
 javascriptGenerator['event_broadcast_menu'] = (block) => {
@@ -33,8 +35,8 @@ javascriptGenerator['event_broadcast'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const messageName =
-    javascriptGenerator.valueToCode(block, 'BROADCAST_INPUT', javascriptGenerator.ORDER_NONE) || 'None';
-  code += `runtime.fire('${messageName}')\n`;
+    javascriptGenerator.valueToCode(block, 'BROADCAST_INPUT', javascriptGenerator.ORDER_NONE) || 'message1';
+  code += `runtime.fire('message:${messageName}')\n`;
   return code;
 };
 
@@ -44,7 +46,7 @@ javascriptGenerator['event_broadcastandwait'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const messageName =
-    javascriptGenerator.valueToCode(block, 'BROADCAST_INPUT', javascriptGenerator.ORDER_NONE) || 'None';
-  code += `await runtime.fire('${messageName}')\n`;
+    javascriptGenerator.valueToCode(block, 'BROADCAST_INPUT', javascriptGenerator.ORDER_NONE) || 'message1';
+  code += `await runtime.fire('message:${messageName}')\n`;
   return code;
 };

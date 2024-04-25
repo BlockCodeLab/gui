@@ -1,7 +1,50 @@
 import { javascriptGenerator } from '@blockcode/blocks-player';
 
-javascriptGenerator['control_start_as_clone'] = (block) => {};
+javascriptGenerator['control_start_as_clone'] = (block) => {
+  return `runtime.whenCloneStart(target, async (target, done) => {\n${javascriptGenerator.HAT_CODE}  done();\n});\n`;
+};
 
-javascriptGenerator['control_create_clone_of'] = (block) => {};
+javascriptGenerator['control_create_clone_of_menu'] = (block) => {
+  return [block.getFieldValue('CLONE_OPTION'), javascriptGenerator.ORDER_FUNCTION_CALL];
+};
 
-javascriptGenerator['control_delete_this_clone'] = (block) => {};
+javascriptGenerator['control_create_clone_of'] = (block) => {
+  let code = '';
+  if (javascriptGenerator.STATEMENT_PREFIX) {
+    code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
+  }
+
+  let cloneCode = javascriptGenerator.valueToCode(block, 'CLONE_OPTION', javascriptGenerator.ORDER_NONE) || '_myself_';
+  if (cloneCode === '_myself_') {
+    cloneCode = 'target';
+  } else {
+    cloneCode = `runtime.getSpriteByIdOrName('${cloneCode}')`;
+  }
+  code += `${cloneCode}.util.clone();\n`;
+  return code;
+};
+
+javascriptGenerator['control_delete_this_clone'] = (block) => {
+  return 'target.util.remove();\n';
+};
+
+javascriptGenerator['control_stop'] = (block) => {
+  let code = '';
+  if (javascriptGenerator.STATEMENT_PREFIX) {
+    code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
+  }
+
+  const stopValue = block.getFieldValue('STOP_OPTION');
+  switch (stopValue) {
+    case 'all':
+      code += 'runtime.stop();\n';
+      break;
+    case 'this script':
+      code += 'counter--;\nreturn done();\n';
+      break;
+    case 'other scripts in sprite':
+      code += 'abort = true;\n';
+      break;
+  }
+  return code;
+};

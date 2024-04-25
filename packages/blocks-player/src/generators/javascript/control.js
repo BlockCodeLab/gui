@@ -1,25 +1,24 @@
 import { javascriptGenerator } from './generator';
 
+const NEXT_LOOP = '  if (abort || !runtime.running) break;\n  await runtime.nextFrame();\n';
+
 javascriptGenerator['control_wait'] = (block) => {
   let code = '';
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const durationCode = javascriptGenerator.valueToCode(block, 'DURATION', javascriptGenerator.ORDER_NONE);
-  code += `await runtime.sleep(${durationCode});\n`;
+  const durationCode = javascriptGenerator.valueToCode(block, 'DURATION', javascriptGenerator.ORDER_NONE) || 0;
+  code += `await runtime.sleep(runtime.number(${durationCode}));\n`;
   return code;
 };
 
 javascriptGenerator['control_repeat'] = (block) => {
   let code = '';
-  let timesCode, branchCode;
-
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
 
-  timesCode = javascriptGenerator.valueToCode(block, 'TIMES', javascriptGenerator.ORDER_NONE) || 'false';
-  branchCode = javascriptGenerator.statementToCode(block, 'SUBSTACK') || '';
+  let branchCode = javascriptGenerator.statementToCode(block, 'SUBSTACK') || '';
   if (javascriptGenerator.STATEMENT_SUFFIX) {
     branchCode =
       javascriptGenerator.prefixLines(
@@ -27,19 +26,19 @@ javascriptGenerator['control_repeat'] = (block) => {
         javascriptGenerator.INDENT,
       ) + branchCode;
   }
-  code += `for (let _ = 0; _ < ${timesCode}; _++) {\n${branchCode}  if (anonymous.aborted) break;\n  await runtime.nextFrame();\n}\n`;
+
+  const timesCode = javascriptGenerator.valueToCode(block, 'TIMES', javascriptGenerator.ORDER_NONE) || 0;
+  code += `for (let _ = 0; _ < runtime.number(${timesCode}); _++) {\n${branchCode}${NEXT_LOOP}}\n`;
   return code;
 };
 
 javascriptGenerator['control_forever'] = (block) => {
   let code = '';
-  let branchCode;
-
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
 
-  branchCode = javascriptGenerator.statementToCode(block, 'SUBSTACK') || '';
+  let branchCode = javascriptGenerator.statementToCode(block, 'SUBSTACK') || '';
   if (javascriptGenerator.STATEMENT_SUFFIX) {
     branchCode =
       javascriptGenerator.prefixLines(
@@ -47,20 +46,18 @@ javascriptGenerator['control_forever'] = (block) => {
         javascriptGenerator.INDENT,
       ) + branchCode;
   }
-  code += `while (true) {\n${branchCode}  if (anonymous.aborted) break;\n  await runtime.nextFrame();\n}\n`;
+
+  code += `while (true) {\n${branchCode}${NEXT_LOOP}}\n`;
   return code;
 };
 
 javascriptGenerator['control_if'] = (block) => {
   let code = '';
-  let branchCode, conditionCode;
-
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
 
-  conditionCode = javascriptGenerator.valueToCode(block, 'CONDITION', javascriptGenerator.ORDER_NONE) || 'false';
-  branchCode = javascriptGenerator.statementToCode(block, 'SUBSTACK') || '';
+  let branchCode = javascriptGenerator.statementToCode(block, 'SUBSTACK') || '';
   if (javascriptGenerator.STATEMENT_SUFFIX) {
     branchCode =
       javascriptGenerator.prefixLines(
@@ -68,9 +65,11 @@ javascriptGenerator['control_if'] = (block) => {
         javascriptGenerator.INDENT,
       ) + branchCode;
   }
+
+  const conditionCode = javascriptGenerator.valueToCode(block, 'CONDITION', javascriptGenerator.ORDER_NONE) || 'false';
   code += `if (${conditionCode}) {\n${branchCode}}\n`;
 
-  // If has else branch.
+  // else branch.
   if (block.getInput('SUBSTACK2')) {
     branchCode = javascriptGenerator.statementToCode(block, 'SUBSTACK2') || '';
     if (javascriptGenerator.STATEMENT_SUFFIX) {
@@ -93,20 +92,17 @@ javascriptGenerator['control_wait_until'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const conditionCode = javascriptGenerator.valueToCode(block, 'CONDITION', javascriptGenerator.ORDER_NONE) || 'false';
-  code += `while (!(${conditionCode})) {\n  if (anonymous.aborted) break;\n  await runtime.nextFrame();\n}\n`;
+  code += `while (!(${conditionCode})) {\n${NEXT_LOOP}}\n`;
   return code;
 };
 
 javascriptGenerator['control_repeat_until'] = (block) => {
   let code = '';
-  let branchCode, conditionCode;
-
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
 
-  conditionCode = javascriptGenerator.valueToCode(block, 'CONDITION', javascriptGenerator.ORDER_NONE) || 'false';
-  branchCode = javascriptGenerator.statementToCode(block, 'SUBSTACK') || '';
+  let branchCode = javascriptGenerator.statementToCode(block, 'SUBSTACK') || '';
   if (javascriptGenerator.STATEMENT_SUFFIX) {
     branchCode =
       javascriptGenerator.prefixLines(
@@ -114,20 +110,19 @@ javascriptGenerator['control_repeat_until'] = (block) => {
         javascriptGenerator.INDENT,
       ) + branchCode;
   }
-  code += `while (!(${conditionCode})) {\n${branchCode}  if (anonymous.aborted) break;\n  await runtime.nextFrame();\n}\n`;
+
+  const conditionCode = javascriptGenerator.valueToCode(block, 'CONDITION', javascriptGenerator.ORDER_NONE) || 'false';
+  code += `while (!(${conditionCode})) {\n${branchCode}${NEXT_LOOP}}\n`;
   return code;
 };
 
 javascriptGenerator['control_while'] = (block) => {
   let code = '';
-  let branchCode, conditionCode;
-
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
 
-  conditionCode = javascriptGenerator.valueToCode(block, 'CONDITION', javascriptGenerator.ORDER_NONE) || 'false';
-  branchCode = javascriptGenerator.statementToCode(block, 'SUBSTACK') || '';
+  let branchCode = javascriptGenerator.statementToCode(block, 'SUBSTACK') || '';
   if (javascriptGenerator.STATEMENT_SUFFIX) {
     branchCode =
       javascriptGenerator.prefixLines(
@@ -135,7 +130,9 @@ javascriptGenerator['control_while'] = (block) => {
         javascriptGenerator.INDENT,
       ) + branchCode;
   }
-  code += `while (${conditionCode}) {\n${branchCode}  if (anonymous.aborted) break;\n  await runtime.nextFrame();\n}\n`;
+
+  const conditionCode = javascriptGenerator.valueToCode(block, 'CONDITION', javascriptGenerator.ORDER_NONE) || 'false';
+  code += `while (${conditionCode}) {\n${branchCode}${NEXT_LOOP}}\n`;
   return code;
 };
 
@@ -145,16 +142,16 @@ javascriptGenerator['control_stop'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
 
-  const stopOption = block.getFieldValue('STOP_OPTION');
-  switch (stopOption) {
+  const stopValue = block.getFieldValue('STOP_OPTION');
+  switch (stopValue) {
     case 'all':
       code += 'runtime.stop();\n';
       break;
     case 'this script':
-      code += 'return;\n';
+      code += 'return done();\n';
       break;
     case 'other scripts in sprite':
-      code += 'runtime.abort(anonymous.id);\n';
+      code += 'abort = true;\n';
       break;
   }
   return code;

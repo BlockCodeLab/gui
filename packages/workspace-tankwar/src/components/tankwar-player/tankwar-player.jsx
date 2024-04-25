@@ -46,8 +46,7 @@ export function TankwarPlayer({ playing, enemies, enemiesAI, onRequestStop, onCh
     } else {
       if (currentRuntime) {
         // stop
-        currentRuntime.stop();
-
+        currentRuntime.stop().then(() => {
         onChangeHealth({
           player: 100,
           red: 100,
@@ -55,6 +54,7 @@ export function TankwarPlayer({ playing, enemies, enemiesAI, onRequestStop, onCh
           green: 100,
         });
         setCurrentRuntime(false);
+        });
       } else {
         paperCore.project.activeLayer.children.forEach((item) => {
           if (item.name === 'background') return;

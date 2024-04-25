@@ -1,14 +1,16 @@
 import { ScratchBlocks } from '@blockcode/blocks-editor';
 import { javascriptGenerator } from '@blockcode/blocks-player';
 
+const HAT_CALLBACK = `async (target, done) => {\n${javascriptGenerator.HAT_CODE}  done();\n}`;
+
 javascriptGenerator['event_whenkeypressed'] = (block) => {
-  const keyCode = block.getFieldValue('KEY_OPTION');
-  return `runtime.when('keypressed_${keyCode}', async function anonymous(done) {/* nextCode */  done()\n});\n`;
+  const keyValue = block.getFieldValue('KEY_OPTION');
+  return `runtime.when('keypressed:${keyValue}', ${HAT_CALLBACK}, target);\ncounter++;\n`;
 };
 
 javascriptGenerator['event_whenbackdropswitchesto'] = (block) => {
-  const backdropCode = block.getFieldValue('BACKDROP');
-  return `runtime.when('backdropswitchesto_${backdropCode}', async function anonymous(done) {/* nextCode */  done()\n});\n`;
+  const backdropValue = block.getFieldValue('BACKDROP');
+  return `runtime.when('backdropswitchesto:${backdropValue}', ${HAT_CALLBACK}, target);\n`;
 };
 
 javascriptGenerator['event_whenbroadcastreceived'] = (block) => {
@@ -16,5 +18,5 @@ javascriptGenerator['event_whenbroadcastreceived'] = (block) => {
     block.getFieldValue('BROADCAST_OPTION'),
     ScratchBlocks.Variables.NAME_TYPE,
   );
-  return `runtime.when('${messageName}', async function anonymous(done) {/* nextCode */  done()\n});\n`;
+  return `runtime.when('message:${messageName}', ${HAT_CALLBACK}, target);\n`;
 };

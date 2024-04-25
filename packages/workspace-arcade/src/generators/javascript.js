@@ -31,29 +31,27 @@ javascriptGenerator.init = function (workspace) {
     if (variables[i].type === ScratchBlocks.BROADCAST_MESSAGE_VARIABLE_TYPE) {
       continue;
     }
-    const varName = javascriptGenerator.variableDB_.getName(variables[i].getId(), ScratchBlocks.Variables.NAME_TYPE);
-    const varTarget = variables[i].isLocal ? 'target.data' : 'stage.data';
 
-    if (variables[i].isCloud) {
-      // TODO: cloud variable
-    } else {
-      if (variables[i].type === ScratchBlocks.LIST_VARIABLE_TYPE) {
-        defvars[i] = `${varTarget}['$${varName}${ScratchBlocks.LIST_VARIABLE_TYPE}'] = []`;
-      } else {
-        defvars[i] = `${varTarget}['$${varName}'] = 0`;
-      }
+    const varTarget = variables[i].isLocal ? 'target.data' : 'stage.data';
+    let varName = javascriptGenerator.variableDB_.getName(variables[i].getId(), ScratchBlocks.Variables.NAME_TYPE);
+    let varValue = '0';
+    if (variables[i].type === ScratchBlocks.LIST_VARIABLE_TYPE) {
+      varName = `${varName}${ScratchBlocks.LIST_VARIABLE_TYPE}`;
+      varValue = '[]';
     }
+    defvars.push(`${varTarget}['$${varName}'] = ${varValue}`);
   }
 
   // Add developer variables (not created or named by the user).
   var devVarList = ScratchBlocks.Variables.allDeveloperVariables(workspace);
   for (var i = 0; i < devVarList.length; i++) {
-    const varName = javascriptGenerator.variableDB_.getName(devVarList[i], ScratchBlocks.Names.DEVELOPER_VARIABLE_TYPE);
-    if (devVarList[i].type === ScratchBlocks.LIST_VARIABLE_TYPE) {
-      defvars.push(`let ${varName}${ScratchBlocks.LIST_VARIABLE_TYPE} = []`);
-    } else {
-      defvars.push(`let ${varName} = 0`);
+    let varName = javascriptGenerator.variableDB_.getName(variables[i].getId(), ScratchBlocks.Variables.NAME_TYPE);
+    let varValue = '0';
+    if (variables[i].type === ScratchBlocks.LIST_VARIABLE_TYPE) {
+      varName = `${varName}${ScratchBlocks.LIST_VARIABLE_TYPE}`;
+      varValue = '[]';
     }
+    defvars.push(`stage.data['$${varName}'] = ${varValue}`);
   }
 
   // Declare all of the variables.
@@ -97,7 +95,7 @@ javascriptGenerator.scrub_ = function (block, code) {
     let nextCode = javascriptGenerator.blockToCode(nextBlock);
     if (nextCode) {
       nextCode = javascriptGenerator.prefixLines(`counter++;\n${nextCode}counter--;\n`, javascriptGenerator.INDENT);
-      code = code.replace(`/* nextCode */`, `\n${nextCode}`);
+      code = code.replace(javascriptGenerator.HAT_CODE, nextCode);
     }
     return commentCode + code;
   }

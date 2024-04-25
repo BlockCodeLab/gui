@@ -126,7 +126,10 @@ export default function ArcadePlayer({ stageSize, playing, onRequestStop }) {
             if (!raster) {
               raster = layer.addChild(new paperCore.Raster());
               raster.name = target.id;
-              raster.data = { assets };
+              raster.data = {
+                assets,
+                name: target.name,
+              };
               raster.util = createUtil(raster, isStage);
               raster.util.on('update', () => updateTargetFromRaster(raster, isStage));
             }
@@ -147,13 +150,20 @@ export default function ArcadePlayer({ stageSize, playing, onRequestStop }) {
           });
 
         // remove clones and deleted sprties
+        const removes = [];
         spriteLayer.children.forEach((child) => {
           if (fileList.find((file) => child.name === file.id)) return;
-          child.remove();
+          removes.push(child);
         });
         // and contours
         contourLayer.children.forEach((child) => {
           if (fileList.find((file) => child.name === file.id)) return;
+          removes.push(child);
+        });
+        removes.forEach((child) => {
+          if (child.util) {
+            child.util.remove();
+          }
           child.remove();
         });
       }

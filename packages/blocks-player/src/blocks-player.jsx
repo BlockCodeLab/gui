@@ -44,7 +44,7 @@ export function BlocksPlayer({ width, height, onSetup, ...props }) {
             // exclude broadcast messages variables
             const xml = ScratchBlocks.Xml.domToText(xmlDom).replace(
               /<variable type="broadcast_msg"[^>]+>[^<]+<\/variable>/gi,
-              ''
+              '',
             );
             if (xml !== currentXml || selectedIndex !== currentIndex) {
               modifyFile({
@@ -72,6 +72,7 @@ export function BlocksPlayer({ width, height, onSetup, ...props }) {
 
   return (
     <canvas
+      id="blockcode-blocks-player"
       ref={ref}
       style={{ width, height }}
       {...props}

@@ -1,6 +1,7 @@
 import { javascriptGenerator } from './generator';
 
 javascriptGenerator['text'] = (block) => {
-  const code = javascriptGenerator.quote_(block.getFieldValue('TEXT'));
+  const textValue = block.getFieldValue('TEXT');
+  const code = isNaN(textValue) ? javascriptGenerator.quote_(textValue) : +textValue;
   return [code, javascriptGenerator.ORDER_ATOMIC];
 };

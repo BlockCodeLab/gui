@@ -5,8 +5,8 @@ javascriptGenerator['motion_movesteps'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const stepCode = javascriptGenerator.valueToCode(block, 'STEPS', javascriptGenerator.ORDER_NONE);
-  code += `target.util.move(${stepCode});\n`;
+  const stepsCode = javascriptGenerator.valueToCode(block, 'STEPS', javascriptGenerator.ORDER_NONE) || 10;
+  code += `target.util.move(runtime.number(${stepsCode}));\n`;
   return code;
 };
 
@@ -15,8 +15,8 @@ javascriptGenerator['motion_turnright'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const degreesCode = javascriptGenerator.valueToCode(block, 'DEGREES', javascriptGenerator.ORDER_NONE);
-  code += `target.util.direction += ${degreesCode};\n`;
+  const degreesCode = javascriptGenerator.valueToCode(block, 'DEGREES', javascriptGenerator.ORDER_NONE) || 15;
+  code += `target.util.direction += runtime.number(${degreesCode});\n`;
   return code;
 };
 
@@ -25,8 +25,8 @@ javascriptGenerator['motion_turnleft'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const degreesCode = javascriptGenerator.valueToCode(block, 'DEGREES', javascriptGenerator.ORDER_NONE);
-  code += `target.util.direction -= ${degreesCode};\n`;
+  const degreesCode = javascriptGenerator.valueToCode(block, 'DEGREES', javascriptGenerator.ORDER_NONE) || 15;
+  code += `target.util.direction -= runtime.number(${degreesCode});\n`;
   return code;
 };
 
@@ -35,22 +35,13 @@ javascriptGenerator['motion_pointindirection'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const directionCode = javascriptGenerator.valueToCode(block, 'DIRECTION', javascriptGenerator.ORDER_NONE);
-  code += `target.util.direction = ${directionCode};\n`;
+  const directionCode = javascriptGenerator.valueToCode(block, 'DIRECTION', javascriptGenerator.ORDER_NONE) || 90;
+  code += `target.util.direction = runtime.number(${directionCode});\n`;
   return code;
 };
 
 javascriptGenerator['motion_pointtowards_menu'] = (block) => {
-  let code, order;
-  const towards = block.getFieldValue('TOWARDS');
-  if (towards === '_random_') {
-    code = `runtime.random(1, 360)`;
-    order = javascriptGenerator.ORDER_FUNCTION_CALL;
-  } else {
-    code = `runtime.getSpriteById('${towards}').data`;
-    order = javascriptGenerator.ORDER_MEMBER;
-  }
-  return [code, order];
+  return [block.getFieldValue('TOWARDS'), javascriptGenerator.ORDER_ATOMIC];
 };
 
 javascriptGenerator['motion_pointtowards'] = (block) => {
@@ -58,7 +49,13 @@ javascriptGenerator['motion_pointtowards'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const towardsCode = javascriptGenerator.valueToCode(block, 'TOWARDS', javascriptGenerator.ORDER_NONE);
+
+  let towardsCode = javascriptGenerator.valueToCode(block, 'TOWARDS', javascriptGenerator.ORDER_NONE);
+  if (towardsCode === '_random_') {
+    towardsCode = `runtime.random(1, 360)`;
+  } else {
+    towardsCode = `runtime.getSpriteByIdOrName('${towards}').util`;
+  }
   code += `target.util.towards(${towardsCode});\n`;
   return code;
 };
@@ -68,23 +65,14 @@ javascriptGenerator['motion_gotoxy'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const xCode = javascriptGenerator.valueToCode(block, 'X', javascriptGenerator.ORDER_NONE);
-  const yCode = javascriptGenerator.valueToCode(block, 'Y', javascriptGenerator.ORDER_NONE);
-  code += `target.util.goto(${xCode}, ${yCode});\n`;
+  const xCode = javascriptGenerator.valueToCode(block, 'X', javascriptGenerator.ORDER_NONE) || 0;
+  const yCode = javascriptGenerator.valueToCode(block, 'Y', javascriptGenerator.ORDER_NONE) || 0;
+  code += `target.util.goto(runtime.number(${xCode}), runtime.number(${yCode}));\n`;
   return code;
 };
 
 javascriptGenerator['motion_goto_menu'] = (block) => {
-  let code, order;
-  const toPlace = block.getFieldValue('TO');
-  if (toPlace === '_random_') {
-    code = `{ x: runtime.random('width'), y: runtime.random('height') }`;
-    order = javascriptGenerator.ORDER_ATOMIC;
-  } else {
-    code = `runtime.getSpriteById('${toPlace}').data`;
-    order = javascriptGenerator.ORDER_MEMBER;
-  }
-  return [code, order];
+  return [block.getFieldValue('TO'), javascriptGenerator.ORDER_ATOMIC];
 };
 
 javascriptGenerator['motion_goto'] = (block) => {
@@ -92,7 +80,13 @@ javascriptGenerator['motion_goto'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const toCode = javascriptGenerator.valueToCode(block, 'TO', javascriptGenerator.ORDER_NONE);
+
+  let toCode = javascriptGenerator.valueToCode(block, 'TO', javascriptGenerator.ORDER_NONE) || '_random_';
+  if (toCode === '_random_') {
+    toCode = `{ x: runtime.random('width'), y: runtime.random('height') }`;
+  } else {
+    toCode = `runtime.getSpriteByIdOrName('${toPlace}').util`;
+  }
   code += `target.util.goto(${toCode});\n`;
   return code;
 };
@@ -102,10 +96,10 @@ javascriptGenerator['motion_glidesecstoxy'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const secsCode = javascriptGenerator.valueToCode(block, 'SECS', javascriptGenerator.ORDER_NONE);
-  const xCode = javascriptGenerator.valueToCode(block, 'X', javascriptGenerator.ORDER_NONE);
-  const yCode = javascriptGenerator.valueToCode(block, 'Y', javascriptGenerator.ORDER_NONE);
-  code += `await target.util.glide(${secsCode}, ${xCode}, ${yCode});\n`;
+  const secsCode = javascriptGenerator.valueToCode(block, 'SECS', javascriptGenerator.ORDER_NONE) || 1;
+  const xCode = javascriptGenerator.valueToCode(block, 'X', javascriptGenerator.ORDER_NONE) || 0;
+  const yCode = javascriptGenerator.valueToCode(block, 'Y', javascriptGenerator.ORDER_NONE) || 0;
+  code += `await target.util.glide(runtime.number(${secsCode}), runtime.number(${xCode}), runtime.number(${yCode}));\n`;
   return code;
 };
 
@@ -116,8 +110,14 @@ javascriptGenerator['motion_glideto'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const secsCode = javascriptGenerator.valueToCode(block, 'SECS', javascriptGenerator.ORDER_NONE);
-  const toCode = javascriptGenerator.valueToCode(block, 'TO', javascriptGenerator.ORDER_NONE);
+
+  const secsCode = javascriptGenerator.valueToCode(block, 'SECS', javascriptGenerator.ORDER_NONE) || 1;
+  let toCode = javascriptGenerator.valueToCode(block, 'TO', javascriptGenerator.ORDER_NONE) || '_random_';
+  if (toCode === '_random_') {
+    toCode = `{ x: runtime.random('width'), y: runtime.random('height') }`;
+  } else {
+    toCode = `runtime.getSpriteByIdOrName('${toPlace}').util`;
+  }
   code += `await target.util.glide(${secsCode}, ${toCode});\n`;
   return code;
 };
@@ -127,8 +127,8 @@ javascriptGenerator['motion_changexby'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const dxCode = javascriptGenerator.valueToCode(block, 'DX', javascriptGenerator.ORDER_NONE);
-  code += `target.util.x += ${dxCode};\n`;
+  const dxCode = javascriptGenerator.valueToCode(block, 'DX', javascriptGenerator.ORDER_NONE) || 10;
+  code += `target.util.x += runtime.number(${dxCode});\n`;
   return code;
 };
 
@@ -137,8 +137,8 @@ javascriptGenerator['motion_setx'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const xCode = javascriptGenerator.valueToCode(block, 'X', javascriptGenerator.ORDER_NONE);
-  code += `target.util.x = ${xCode};\n`;
+  const xCode = javascriptGenerator.valueToCode(block, 'X', javascriptGenerator.ORDER_NONE) || 0;
+  code += `target.util.x = runtime.number(${xCode});\n`;
   return code;
 };
 
@@ -147,8 +147,8 @@ javascriptGenerator['motion_changeyby'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const dyCode = javascriptGenerator.valueToCode(block, 'DY', javascriptGenerator.ORDER_NONE);
-  code += `target.util.y += ${dyCode};\n`;
+  const dyCode = javascriptGenerator.valueToCode(block, 'DY', javascriptGenerator.ORDER_NONE) || 10;
+  code += `target.util.y += runtime.number(${dyCode});\n`;
   return code;
 };
 
@@ -157,8 +157,8 @@ javascriptGenerator['motion_sety'] = (block) => {
   if (javascriptGenerator.STATEMENT_PREFIX) {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
-  const yCode = javascriptGenerator.valueToCode(block, 'Y', javascriptGenerator.ORDER_NONE);
-  code += `target.util.y = ${yCode};\n`;
+  const yCode = javascriptGenerator.valueToCode(block, 'Y', javascriptGenerator.ORDER_NONE) || 0;
+  code += `target.util.y = runtime.number(${yCode});\n`;
   return code;
 };
 
@@ -178,8 +178,8 @@ javascriptGenerator['motion_setrotationstyle'] = (block) => {
   }
 
   let styleCode;
-  const rotationStyle = block.getFieldValue('STYLE');
-  switch (rotationStyle) {
+  const styleValue = block.getFieldValue('STYLE');
+  switch (styleValue) {
     case 'left-right':
       styleCode = 'HORIZONTAL_FLIP';
       break;
@@ -196,16 +196,13 @@ javascriptGenerator['motion_setrotationstyle'] = (block) => {
 };
 
 javascriptGenerator['motion_xposition'] = (block) => {
-  const code = 'target.util.x';
-  return [code, javascriptGenerator.ORDER_NONE];
+  return ['target.util.x', javascriptGenerator.ORDER_NONE];
 };
 
 javascriptGenerator['motion_yposition'] = (block) => {
-  const code = 'target.util.y';
-  return [code, javascriptGenerator.ORDER_NONE];
+  return ['target.util.y', javascriptGenerator.ORDER_NONE];
 };
 
 javascriptGenerator['motion_direction'] = (block) => {
-  const code = 'target.util.direction';
-  return [code, javascriptGenerator.ORDER_NONE];
+  return ['target.util.direction', javascriptGenerator.ORDER_NONE];
 };

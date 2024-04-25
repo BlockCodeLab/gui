@@ -7,13 +7,15 @@ import RotationStyle from '../../lib/rotation-style';
 import createContour from './create-contour';
 import Runtime from './runtime';
 
-const FONT_SIZE = 12;
-const LINE_MAX_CHARS = 18;
+const FONT_SIZE = 10;
+const LINE_MAX_CHARS = 21;
 const DIALOG_RADIUS = 10;
 const DIALOG_PADDING = 8;
 const DIALOG_HANDLE_HEIGHT = DIALOG_RADIUS * 0.8;
 const DIALOG_MIN_WIDTH = DIALOG_RADIUS * 3;
 const DIALOG_MIN_HEIGHT = DIALOG_RADIUS * 2 + DIALOG_HANDLE_HEIGHT;
+
+const CLONES_COUNT_LIMIT = 30;
 
 const degToRad = (deg) => (deg * Math.PI) / 180;
 const radToDeg = (rad) => (rad * 180) / Math.PI;
@@ -119,10 +121,6 @@ class StageUtil extends Util {
   }
 
   set backdrop(value) {
-    this.setBackdrop(value);
-  }
-
-  async setBackdrop(value) {
     if (typeof value === 'string') {
       let backdrop = +value;
       if (isNaN(backdrop)) {
@@ -147,20 +145,20 @@ class StageUtil extends Util {
       this.data.frame = frame;
       this.requestUpdate();
 
-      const image = await loadImageFromDataURL(asset);
-      this.raster.image = image;
-      this.raster.pivot = new paperCore.Point(asset.centerX - asset.width / 2, asset.centerY - asset.height / 2);
-      this.raster.position.x = paperCore.view.center.x;
-      this.raster.position.y = paperCore.view.center.y;
-
-      if (this.running) {
-        await this.runtime.fire(`backdropswitchesto_${asset.id}`);
-      }
+      loadImageFromDataURL(asset).then((image) => {
+        this.raster.image = image;
+        this.raster.pivot = new paperCore.Point(asset.centerX - asset.width / 2, asset.centerY - asset.height / 2);
+        this.raster.position.x = paperCore.view.center.x;
+        this.raster.position.y = paperCore.view.center.y;
+      });
     }
   }
 }
 
 class SpriteUtil extends Util {
+  static CLONES = [];
+  _clones = [];
+
   get costumeName() {
     return this.assets[this.data.frame].name;
   }
@@ -771,7 +769,7 @@ class SpriteUtil extends Util {
   }
 
   async say(text, wait = 0) {
-    this.createDialog(`${text}`);
+    this.createDialog(text);
     if (wait > 0) {
       await sleep(wait * 1000);
       this.removeDialog();
@@ -779,17 +777,55 @@ class SpriteUtil extends Util {
   }
 
   async think(text, wait = 0) {
-    this.createDialog(`${text}`, 'think');
+    this.createDialog(text, 'think');
     if (wait > 0) {
       await sleep(wait * 1000);
       this.removeDialog();
     }
   }
 
+  get clones() {
+    return this._clones;
+  }
+
+  clone() {
+    if (SpriteUtil.CLONES.length < CLONES_COUNT_LIMIT) {
+      const raster = this.raster.clone(false);
+      const origin = raster.data.origin ? raster.data.origin : this;
+      raster.data.origin = origin;
+      raster.util = new SpriteUtil(raster);
+      raster.util._runtime = origin.runtime;
+      raster.util.createContour();
+      raster.insertBelow(origin.raster);
+      origin.runtime.emit(`clonestart:${origin.name}`, raster);
+      origin.clones.push(raster);
+      SpriteUtil.CLONES.push(raster);
+    }
+  }
+
+  remove() {
+    if (this.data.origin) {
+      SpriteUtil.CLONES.splice(SpriteUtil.CLONES.indexOf(this.raster), 1);
+      this.data.origin.clones.splice(this.data.origin.clones.indexOf(this.raster), 1);
+      this.removeDialog();
+      this.removeContour();
+      this.raster.remove();
+    }
+  }
+
   isTouching(target) {
-    if (target === '_edge_') {
+    if (!target) {
       return !!this.findNearestEdge();
     }
+  }
+
+  distanceTo(target) {
+    if (!target) {
+      target = { x: 0, y: 0 };
+    }
+    const dx = target.x - this.x;
+    const dy = target.y - this.y;
+    return Math.sqrt(dx * dx + dy * dy);
   }
 }
 

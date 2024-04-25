@@ -192,6 +192,7 @@ javascriptGenerator.quote_ = function (string) {
  * @return {string} JavaScript code with comments and subsequent blocks added.
  * @private
  */
+javascriptGenerator.HAT_CODE = '/* HatCode */';
 javascriptGenerator.scrub_ = function (block, code) {
   var commentCode = '';
   // Only collect comments for blocks that aren't inline.
@@ -227,7 +228,7 @@ javascriptGenerator.scrub_ = function (block, code) {
     let nextCode = javascriptGenerator.blockToCode(nextBlock);
     if (nextCode) {
       nextCode = javascriptGenerator.prefixLines(nextCode, javascriptGenerator.INDENT);
-      code = code.replace(`/* nextCode */`, `\n${nextCode}`);
+      code = code.replace(javascriptGenerator.HAT_CODE, nextCode);
     }
     return commentCode + code;
   }

@@ -6,17 +6,13 @@ export default class Runtime extends EventEmitter {
   constructor(code, requestStop, fps = Runtime.DEFAULT_FPS) {
     super();
     this._fps = fps;
-    this._spf = 1 / fps;
+    this._frame_sec = 1 / fps;
     this._running = false;
     this._requestStop = requestStop;
     this._timer = 0;
     this._timers = [];
-
-    this._idCounter = 0;
-    this._eventsGroups = {};
+    this._greaterThen = {};
     this._eventsHappening = {};
-
-    this.openEventsGroup('global');
 
     const launcher = new Function('runtime', code);
     launcher(this);
@@ -30,44 +26,8 @@ export default class Runtime extends EventEmitter {
     return (Date.now() - this._timer) / 1000;
   }
 
-  openEventsGroup(groupName) {
-    this._currentGroupName = groupName;
-    this._eventsGroups[groupName] = this._eventsGroups[groupName] || [];
-  }
-
-  closeEventsGroup() {
-    this._currentGroupName = 'global';
-  }
-
-  abort(id) {
-    const groupName = id.split(':')[0];
-    const newGroup = [];
-    this._eventsGroups[groupName].forEach((listener) => {
-      if (listener.id === id) {
-        newGroup.push(listener);
-      } else {
-        listener._aborted = true;
-      }
-    });
-    this._eventsGroups[groupName] = newGroup;
-  }
-
-  on(eventName, listener) {
-    const groupName = this._currentGroupName;
-    Object.defineProperties(listener, {
-      id: {
-        get: () => listener._id,
-      },
-      aborted: {
-        get: () => listener._aborted || !this.running,
-      },
-    });
-    super.on(eventName, (...args) => {
-      listener._id = `${groupName}:${++this._idCounter}`;
-      listener._aborted = false;
-      this._eventsGroups[groupName].push(listener);
-      listener(...args);
-    });
+  resetTimer() {
+    this._timer = Date.now();
   }
 
   when(eventName, listener) {
@@ -78,16 +38,9 @@ export default class Runtime extends EventEmitter {
   }
 
   whenGreaterThen(name, value, listener) {
-    if (name === 'TIMER') {
-      listener._done = false;
-      this.when('frame', (done) => {
-        if (this.time > value && !listener._done) {
-          listener();
-        }
-        listener._done = this.time > value;
-        done();
-      });
-    }
+    const key = `${name}>${value}`;
+    this._greaterThen[key] = false;
+    this.when(`greaterthen:${key}`, listener);
   }
 
   emit(...args) {
@@ -109,23 +62,40 @@ export default class Runtime extends EventEmitter {
             await this.emit(`${eventName}_${i}`, ...args);
             this._eventsHappening[eventName][i] = false;
           }
-        }),
+        })
       );
     }
     return Promise.resolve();
   }
 
+  _handleFrameForGreaterThen(done) {
+    const keys = Object.keys(this._greaterThen);
+    for (const key of keys) {
+      const [name, value] = key.split('>');
+      if (name === 'TIMER') {
+        const isGreater = this.time > parseFloat(value);
+        if (isGreater && !this._greaterThen[key]) {
+          this.fire(`greaterthen:${key}`);
+        }
+        this._greaterThen[key] = isGreater;
+      }
+    }
+    done();
+  }
+
+  async _handleStart() {
+    while (this.running) {
+      await this.nextFrame();
+      this.fire('frame');
+    }
+  }
+
   start() {
     this._running = true;
-    this.emit('beforeStart');
-    this.on('start', async () => {
-      while (this.running) {
-        await this.nextFrame();
-        this.fire('frame');
-      }
-    });
-    this._timer = Date.now();
+    this.on('frame', this._handleFrameForGreaterThen.bind(this));
+    this.on('start', this._handleStart.bind(this));
     this.fire('start');
+    this.resetTimer();
   }
 
   async stop() {
@@ -141,16 +111,23 @@ export default class Runtime extends EventEmitter {
   }
 
   nextFrame() {
-    return this.sleep(this._spf);
+    return this.sleep(this._frame_sec);
   }
 
-  random(min = 1, max = 10) {
-    min = Math.ceil(Math.min(min, max));
-    max = Math.floor(Math.max(min, max));
+  random(num1 = 1, num2 = 10) {
+    min = Math.ceil(Math.min(num1, num2));
+    max = Math.floor(Math.max(num1, num2));
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  resetTimer() {
-    this._timer = Date.now();
+  number(value, defaultValue = 0) {
+    return isNaN(value) ? defaultValue : +value;
+  }
+
+  index(value, length) {
+    let index = this.number(value) - 1;
+    index %= length;
+    index += length;
+    return index % length;
   }
 }

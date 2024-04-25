@@ -10,6 +10,27 @@ export default class Runtime extends BaseRuntime {
   static VIEW_HEIGHT = VIEW_HEIGHT;
   static DEFAULT_DIRECTION = DEFAULT_DIRECTION;
 
+  when(eventName, listener, raster = null) {
+    if (raster) {
+      super.when(eventName, (done) => {
+        listener(raster, done);
+        raster.util.clones.forEach((clone) => listener(clone, done));
+      });
+    } else {
+      super.when(eventName, listener);
+    }
+  }
+
+  whenGreaterThen(name, value, listener, raster = null) {
+    const key = `${name}>${value}`;
+    this._greaterThen[key] = false;
+    this.when(`greaterthen:${key}`, listener, raster);
+  }
+
+  whenCloneStart(raster, listener) {
+    this.on(`clonestart:${raster.name}`, listener);
+  }
+
   get tone() {
     if (!this._tone) {
       this._tone = new Tone({ type: 'square' });
@@ -37,51 +58,67 @@ export default class Runtime extends BaseRuntime {
     return spriteLayer.children;
   }
 
-  getSpriteById(id) {
-    const raster = this.sprites[id];
-    raster.util._runtime = this;
-    return raster;
+  getSpriteByIdOrName(idOrName) {
+    const raster = this.sprites[idOrName] || this.sprites.find((sprite) => sprite.data.name === idOrName);
+    if (raster) {
+      raster.util._runtime = this;
+      return raster;
+    }
   }
 
   get fnKey() {
-    return this._fnKey;
+    return !!this._fnKey;
   }
 
   get upKey() {
-    return this._upKey;
+    return !!this._upKey;
   }
 
   get leftKey() {
-    return this._leftKey;
+    return !!this._leftKey;
+  }
+
+  get downKey() {
+    return !!this._downKey;
   }
 
   get rightKey() {
-    return this._rightKey;
-  }
-
-  get bottomKey() {
-    return this._bottomKey;
+    return !!this._rightKey;
   }
 
   get aKey() {
-    return this._aKey;
+    return !!this._aKey;
   }
 
   get bKey() {
-    return this._bKey;
+    return !!this._bKey;
   }
 
   get xKey() {
-    return this._xKey;
+    return !!this._xKey;
   }
 
   get yKey() {
-    return this._yKey;
+    return !!this._yKey;
+  }
+
+  get anyKey() {
+    return (
+      this.fnKey ||
+      this.upKey ||
+      this.leftKey ||
+      this.downKey ||
+      this.rightKey ||
+      this.aKey ||
+      this.bKey ||
+      this.xKey ||
+      this.yKey
+    );
   }
 
   _fireKey(key) {
     this[`_${key}Key`] = true;
-    this.fire(`keypressed_${key}`);
+    this.fire(`keypressed:${key}`);
   }
 
   _releaseKey(key) {
@@ -100,11 +137,11 @@ export default class Runtime extends BaseRuntime {
       case 'ArrowLeft':
         this._fireKey('left');
         return;
+      case 'ArrowDown':
+        this._fireKey('down');
+        return;
       case 'ArrowRight':
         this._fireKey('right');
-        return;
-      case 'ArrowBottom':
-        this._fireKey('bottom');
         return;
       case 'KeyA':
         this._fireKey('a');
@@ -122,7 +159,7 @@ export default class Runtime extends BaseRuntime {
   }
 
   handleKeyUp(e) {
-    if (!e.altKey) {
+    if (this.fnKey && !e.altKey) {
       this._releaseKey('fn');
       return;
     }
@@ -133,11 +170,11 @@ export default class Runtime extends BaseRuntime {
       case 'ArrowLeft':
         this._releaseKey('left');
         return;
+      case 'ArrowDown':
+        this._releaseKey('down');
+        return;
       case 'ArrowRight':
         this._releaseKey('right');
-        return;
-      case 'ArrowBottom':
-        this._releaseKey('bottom');
         return;
       case 'KeyA':
         this._releaseKey('a');
