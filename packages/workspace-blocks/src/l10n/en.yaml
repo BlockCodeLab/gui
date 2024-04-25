@@ -15,6 +15,7 @@ blocks.menu.device.turnOnAutoDownload: Turn on Auto Download
 blocks.menu.device.turnOffAutoDownload: Turn off Auto Download
 
 blocks.alert.downloading: Downloading...{progress}%
+blocks.alert.downloadCompleted: Download completed.
 
 blocks.codeTab: Code
 

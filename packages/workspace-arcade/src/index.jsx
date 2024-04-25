@@ -2,6 +2,7 @@ import { Text } from '@blockcode/ui';
 import { locales as blocksLocales, makeMenus, CodeTab, BackpackPane } from '@blockcode/workspace-blocks';
 import { PixelPaint, locales as paintLocales } from '@blockcode/pixel-paint';
 import generateMainFile from './lib/generate-main-file';
+import generateImageFiles from './lib/generate-images';
 
 /* components */
 import BlocksEditor from './components/blocks-editor/blocks-editor';
@@ -53,39 +54,50 @@ export default function ArcadeBlocksWorkspace({
     };
   };
 
+  const extendsMenu = [
+    {
+      id: 'device',
+      label: (
+        <>
+          <img src={deviceIcon} />
+          <Text
+            id="blocks.menu.device"
+            defaultMessage="Device"
+          />
+        </>
+      ),
+      menuItems: [
+        {
+          label: (
+            <Text
+              id="arcade.menus.device.updateFirmware"
+              defaultMessage="Update Arcade firmware..."
+            />
+          ),
+          disabled: true,
+          onClick: () => {},
+        },
+      ],
+    },
+  ];
+
+  const onSave = () => {
+    const canvas = document.querySelector('#blockcode-blocks-player');
+    return { thumb: canvas.toDataURL() };
+  };
+
+  const onDownload = async (fileList, assetList) => {
+    return [].concat(generateMainFile(fileList[0], fileList.slice(1)), await generateImageFiles(assetList));
+  };
+
   setLayout({
     menus: makeMenus({
       newProject,
       setAlert,
       removeAlert,
-      extendsMenu: [
-        {
-          id: 'device',
-          label: (
-            <>
-              <img src={deviceIcon} />
-              <Text
-                id="blocks.menu.device"
-                defaultMessage="Device"
-              />
-            </>
-          ),
-          menuItems: [
-            {
-              label: (
-                <Text
-                  id="arcade.menus.device.updateFirmware"
-                  defaultMessage="Update Arcade firmware..."
-                />
-              ),
-              disabled: true,
-              onClick: () => {},
-            },
-          ],
-        },
-      ],
-      deviceFilters: [{ usbVendorId: 0 }],
-      onDownload: (fileList, assetList) => [].concat(generateMainFile(fileList[0], fileList.slice(1)), assetList),
+      extendsMenu,
+      onSave,
+      onDownload,
     }),
 
     tabs: [

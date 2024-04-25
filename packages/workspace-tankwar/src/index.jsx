@@ -1,4 +1,4 @@
-import { locales as blocksLocales, makeMenus, CodeTab, BackpackPane } from '@blockcode/workspace-blocks';
+import { locales as blocksLocales, makeMenus, CodeTab } from '@blockcode/workspace-blocks';
 
 /* components */
 import BlocksEditor from './components/blocks-editor/blocks-editor';
@@ -32,7 +32,7 @@ export default function TankwarBlocksWorkspace({
     openProject(
       Object.assign(defaultProject, {
         selectedIndex: 0,
-      })
+      }),
     );
   };
   newProject();
@@ -44,6 +44,11 @@ export default function TankwarBlocksWorkspace({
     },
   ];
 
+  const onSave = () => {
+    const canvas = document.querySelector('#blockcode-blocks-player');
+    return { thumb: canvas.toDataURL() };
+  };
+
   setLayout({
     menus: makeMenus({
       openStoreLibrary,
@@ -53,6 +58,7 @@ export default function TankwarBlocksWorkspace({
       setAlert,
       removeAlert,
       extendsMenu,
+      onSave,
     }),
 
     tabs: [

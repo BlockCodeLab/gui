@@ -11,8 +11,8 @@ import * as AIs from './ai';
 export function TankwarPlayer({ playing, enemies, enemiesAI, onRequestStop, onChangeHealth }) {
   const [canvas, setCanvas] = useState(null);
   const [currentRuntime, setCurrentRuntime] = useState(false);
-  const { fileList, saveThumb } = useEditor();
-  const player = fileList[0];
+  const { fileList, selectedIndex } = useEditor();
+  const player = fileList[selectedIndex];
 
   if (canvas) {
     const tanks = paperCore.project.activeLayer.children;
@@ -47,13 +47,13 @@ export function TankwarPlayer({ playing, enemies, enemiesAI, onRequestStop, onCh
       if (currentRuntime) {
         // stop
         currentRuntime.stop().then(() => {
-        onChangeHealth({
-          player: 100,
-          red: 100,
-          yellow: 100,
-          green: 100,
-        });
-        setCurrentRuntime(false);
+          onChangeHealth({
+            player: 100,
+            red: 100,
+            yellow: 100,
+            green: 100,
+          });
+          setCurrentRuntime(false);
         });
       } else {
         paperCore.project.activeLayer.children.forEach((item) => {
@@ -74,7 +74,6 @@ export function TankwarPlayer({ playing, enemies, enemiesAI, onRequestStop, onCh
           tanks.yellow.util.hidden = true;
           tanks.green.util.hidden = true;
         }
-        saveThumb(canvas.toDataURL());
       }
     }
   }

@@ -1,5 +1,5 @@
 import MicroPythonBoard from './pyboard';
-import image16 from './image16';
+import imageBase64 from './image-base64';
 
 export const connectDevice = async (filters, setDevice) => {
   const board = new MicroPythonBoard();
@@ -36,14 +36,13 @@ export const downloadDevice = async (board, files, progress) => {
     progress(parseInt((finished + (1 / len) * (x / 100)) * 100));
   };
   for (const file of files) {
-    let { id: name, content } = file;
+    let { id: filePath, content } = file;
     if (file.type === 'text/x-python') {
-      name += '.py';
-    } else if (file.type.startsWith('image/')) {
-      content = await image16(file.type, file.data);
+      filePath += '.py';
+    } else if (file.type.startsWith('image/') && !content) {
+      content = await imageBase64(file.type, file.data);
     }
-    console.log(name);
-    await board.put(content, name, reporter);
+    await board.put(content || '', filePath, reporter);
     finished += 1 / len;
   }
   progress(100);

@@ -232,14 +232,10 @@ export function useEditor() {
       dispatch({ type: CONFIG_EDITOR, payload: config });
     },
 
-    async saveThumb(thumb) {
-      dispatch({ type: SAVE_DATA, payload: { thumb } });
-    },
-
-    async saveNow() {
+    async saveNow(extendData) {
       const modifiedDate = Date.now();
       const key = state.key || modifiedDate.toString(36);
-      const { name, editor, assetList, fileList, selectedIndex, thumb } = state;
+      const { name, editor, assetList, fileList, selectedIndex } = state;
       const result = await localForage.setItem(key, {
         key,
         name,
@@ -248,7 +244,7 @@ export function useEditor() {
         fileList,
         selectedIndex,
         modifiedDate,
-        thumb,
+        ...extendData,
       });
       dispatch({ type: SAVE_DATA, payload: { key, modified: false } });
       return result;

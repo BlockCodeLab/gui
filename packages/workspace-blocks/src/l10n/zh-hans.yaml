@@ -15,6 +15,7 @@ blocks.menu.device.turnOnAutoDownload: 打开自动下载
 blocks.menu.device.turnOffAutoDownload: 关闭自动下载
 
 blocks.alert.downloading: 正在下载…{progress}%
+blocks.alert.downloadCompleted: 下载完成。
 
 blocks.codeTab: 代码
 

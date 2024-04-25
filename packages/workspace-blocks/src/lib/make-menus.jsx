@@ -1,3 +1,4 @@
+import { svgAsDataUri } from 'save-svg-as-png';
 import { Keys } from '@blockcode/core';
 import { Text, Spinner } from '@blockcode/ui';
 import { ScratchBlocks } from '@blockcode/blocks-editor';
@@ -18,10 +19,12 @@ export default function ({
   removeAlert,
   extendsMenu,
   deviceFilters,
-  onDownload = (...args) => [].concat(...args),
+  onSave,
+  onDownload = async (...args) => Promise.all([].concat(...args).map((c) => Promise.resolve(c))),
 } = {}) {
   let setDisableUndo = () => {};
   let setDisableRedo = () => {};
+  let setDisableDownload = () => {};
 
   let workspace;
   const checkWorkspace = () => {
@@ -42,6 +45,7 @@ export default function ({
   const downloadAlert = (progress) => {
     if (!downloadAlert.id) {
       downloadAlert.id = `download.${Date.now()}`;
+      setDisableDownload(true);
     }
     if (progress < 100) {
       if (setAlert) {
@@ -58,10 +62,34 @@ export default function ({
         });
       }
     } else {
-      if (removeAlert) {
-        removeAlert(downloadAlert.id);
+      if (setAlert) {
+        setAlert({
+          id: downloadAlert.id,
+          icon: null,
+          message: (
+            <Text
+              id="blocks.alert.downloadCompleted"
+              defaultMessage="Download completed."
+            />
+          ),
+        });
       }
-      delete downloadAlert.id;
+      setTimeout(() => {
+        if (removeAlert) {
+          removeAlert(downloadAlert.id);
+        }
+        setDisableDownload(false);
+        delete downloadAlert.id;
+      }, 1000);
+    }
+  };
+
+  const downloadFiles = async (device, fileList, assetList) => {
+    const files = await onDownload(fileList, assetList);
+    try {
+      downloadDevice(device, files, downloadAlert);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -129,11 +157,18 @@ export default function ({
             />
           ),
           hotkey: [isMac ? Keys.COMMAND : Keys.CONTROL, Keys.S],
-          onClick({ context }) {
-            context.saveNow();
+          async onClick({ context }) {
+            const extendData = {};
+            if (workspace) {
+              extendData.thumb = await svgAsDataUri(workspace.getCanvas(), {});
+            }
+            context.saveNow({
+              ...extendData,
+              ...onSave(),
+            });
             if (downloadAlert.id) return;
             if (context.device && context.editor.autoDownload) {
-              downloadDevice(context.device, [].concat(context.fileList, context.assetList), downloadAlert);
+              await downloadFiles(context.device, context.fileList, context.assetList);
             }
           },
         },
@@ -251,6 +286,12 @@ export default function ({
           onClick({ context }) {
             if (context.device) {
               disconnectDevice(context.device, context.connectDevice);
+              if (downloadAlert.id) {
+                if (removeAlert) {
+                  removeAlert(downloadAlert.id);
+                }
+                delete downloadAlert.id;
+              }
             } else {
               connectDevice(deviceFilters || defaultFilters, context.connectDevice);
             }
@@ -263,14 +304,17 @@ export default function ({
               defaultMessage="Download program"
             />
           ),
+          onDisable({ setDisable }) {
+            setDisableDownload = setDisable;
+            setDisableDownload(!!downloadAlert.id);
+          },
           async onClick({ context }) {
             if (downloadAlert.id) return;
             let { device } = context;
             if (!device) {
               device = await connectDevice(deviceFilters || defaultFilters, context.connectDevice);
             }
-            const files = onDownload(context.fileList, context.assetList);
-            downloadDevice(device, files, downloadAlert);
+            await downloadFiles(device, context.fileList, context.assetList);
           },
         },
       ],
