@@ -176,7 +176,7 @@ export default function GUI() {
                     name={index}
                     key={index}
                   >
-                    <TabContent />
+                    {index === selectedTabIndex && <TabContent />}
                   </TabPanel>
                 </>
               ))}
