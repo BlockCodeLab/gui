@@ -1,5 +1,4 @@
 /* inspired by https://github.com/arduino/micropython.js/blob/main/micropython.js */
-
 import { Serial, sleep } from '@blockcode/core';
 
 const CTRL_A = '\x01'; // raw repl
@@ -206,7 +205,7 @@ export default class MicroPythonBoard {
     command += `except OSError:\n`;
     command += `  print(0)\n`;
     await this.enterRawRepl();
-    let output = await this.execRaw(command);
+    const output = await this.execRaw(command);
     await this.exitRawRepl();
     return output[2] == '1';
   }
@@ -264,7 +263,8 @@ export default class MicroPythonBoard {
       command += `  print(0)\n`;
       await this.enterRawRepl();
       const output = await this.execRaw(command);
-      return this.exitRawRepl();
+      this.exitRawRepl();
+      return output;
     }
     return Promise.reject(new Error(`Path to file was not specified`));
   }
@@ -273,7 +273,8 @@ export default class MicroPythonBoard {
     if (oldFilePath && newFilePath) {
       await this.enterRawRepl();
       const output = await this.execRaw(`import os\nos.rename('${oldFilePath}', '${newFilePath}')`);
-      return this.exitRawRepl();
+      this.exitRawRepl();
+      return output;
     }
     return Promise.reject(new Error(`Path to file was not specified`));
   }
@@ -282,7 +283,7 @@ export default class MicroPythonBoard {
     if (filePath) {
       await this.enterRawRepl();
       let output = await this.execRaw(
-        `with open('${filePath}','r') as f:\n while 1:\n  b=f.read(256)\n  if not b:break\n  print(b,end='')`
+        `with open('${filePath}','r') as f:\n while 1:\n  b=f.read(256)\n  if not b:break\n  print(b,end='')`,
       );
       await this.exitRawRepl();
       output = extract(output);
@@ -291,36 +292,75 @@ export default class MicroPythonBoard {
     return Promise.reject(new Error(`Path to file was not specified`));
   }
 
-  async put(content, dest, dataConsumer) {
-    dataConsumer = dataConsumer || function () {};
-    if (content && dest) {
-      let contentUint8;
-      if (typeof content === 'string') {
-        contentUint8 = this._encoder.encode(fixLineBreak(content));
-      } else if (content instanceof ArrayBuffer) {
-        contentUint8 = new Uint8Array(content);
-      } else if (content instanceof Uint8Array) {
-        contentUint8 = content;
-      } else {
-        Promise.reject(new Error(`${content} must string, Uint8Array or ArrayBuffer`));
-      }
-      const hexArray = Array.from(contentUint8).map((c) => c.toString(16).padStart(2, '0'));
-      let out = '';
-      out += await this.enterRawRepl();
-      out += await this.execRaw(`f=open('${dest}','w')\nw=f.write`);
-      const chunkSize = 48;
-      for (let i = 0; i < hexArray.length; i += chunkSize) {
-        let slice = hexArray.slice(i, i + chunkSize);
-        let bytes = slice.map((h) => `0x${h}`);
-        let line = `w(bytes([${bytes.join(',')}]))`;
-        out += await this.execRaw(line);
-        dataConsumer(parseInt((i / hexArray.length) * 100));
-      }
-      out += await this.execRaw(`f.close()`);
-      out += await this.exitRawRepl();
-      dataConsumer(100);
-      return out;
+  async checkHash(filePath, hash) {
+    if (filePath) {
+      let command = '';
+      command += 'import os\n';
+      command += 'import hashlib\n';
+      command += 'import binascii\n';
+      command += 'hash = hashlib.sha256()\n';
+      command += `with open('${filePath}', 'rb') as f:\n`;
+      command += '  while True:\n';
+      command += `    c = f.read(${CHUNK_SIZE})\n`;
+      command += '    if not c: break\n';
+      command += '    hash.update(c)\n';
+      command += 'print(binascii.hexlify(hash.digest()).decode())\n';
+      await this.enterRawRepl();
+      let output = await this.execRaw(command);
+      await this.exitRawRepl();
+      output = output.slice(2, output.indexOf('\n') - 1);
+      return hash === output;
     }
-    return Promise.reject(new Error(`Must specify content and destination path`));
+    return Promise.reject(new Error(`Path to file was not specified`));
+  }
+
+  async put(content, dest, dataConsumer) {
+    if (!dest) {
+      Promise.reject(new Error(`Must specify content and destination path`));
+      return;
+    }
+
+    let contentUint8;
+    if (typeof content === 'string') {
+      contentUint8 = this._encoder.encode(fixLineBreak(content));
+    } else if (content instanceof ArrayBuffer) {
+      contentUint8 = new Uint8Array(content);
+    } else if (content instanceof Uint8Array) {
+      contentUint8 = content;
+    } else {
+      Promise.reject(new Error(`${content} must string, Uint8Array or ArrayBuffer`));
+    }
+
+    dataConsumer = dataConsumer || function () {};
+
+    // skip same file
+    if (await this.exists(dest)) {
+      const hashBuffer = await crypto.subtle.digest('SHA-256', contentUint8);
+      const hash = Array.from(new Uint8Array(hashBuffer))
+        .map((b) => b.toString(16).padStart(2, '0'))
+        .join('');
+      if (await this.checkHash(dest, hash)) {
+        dataConsumer(100);
+        return;
+      }
+    }
+
+    const hexArray = Array.from(contentUint8).map((c) => c.toString(16).padStart(2, '0'));
+    let out = '';
+    out += await this.enterRawRepl();
+    out += await this.execRaw(`f=open('${dest}','w')\nw=f.write`);
+    const chunkSize = 48;
+    for (let i = 0; i < hexArray.length; i += chunkSize) {
+      let slice = hexArray.slice(i, i + chunkSize);
+      let bytes = slice.map((h) => `0x${h}`);
+      let line = `w(bytes([${bytes.join(',')}]))`;
+      out += await this.execRaw(line);
+      dataConsumer(parseInt((i / hexArray.length) * 100));
+    }
+    out += await this.execRaw(`f.close()`);
+    out += await this.exitRawRepl();
+
+    dataConsumer(100);
+    return out;
   }
 }
