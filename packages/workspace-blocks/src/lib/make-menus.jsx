@@ -182,9 +182,7 @@ export default function ({
             />
           ),
           disabled: true,
-          async onClick() {
-            console.log('upload');
-          },
+          // async onClick() {},
         },
         {
           label: (
@@ -194,9 +192,7 @@ export default function ({
             />
           ),
           disabled: true,
-          async onClick() {
-            console.log('download');
-          },
+          // async onClick() {},
         },
       ],
     ],
@@ -226,7 +222,6 @@ export default function ({
             setDisableUndo = setDisable;
             const workspace = ScratchBlocks.getMainWorkspace();
             if (workspace) {
-              console.log(workspace.undoStack_);
               setDisableUndo(workspace.undoStack_.length === 0);
             }
           },
