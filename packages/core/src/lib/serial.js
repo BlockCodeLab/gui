@@ -5,6 +5,7 @@ export class Serial extends EventEmitter {
     super();
     this.port = port;
     this.reader = null;
+    port._serial = this;
   }
 
   dispose() {

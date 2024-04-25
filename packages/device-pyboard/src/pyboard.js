@@ -34,6 +34,12 @@ export default class MicroPythonBoard {
 
   requestPort(filters = []) {
     return navigator.serial.requestPort({ filters }).then((port) => {
+      if (port._serial) {
+        this.serial = port._serial;
+        this.serial.on('connect', () => (this._connected = true));
+        this.serial.on('disconnect', () => (this._connected = false));
+        return;
+      }
       this.serial = new Serial(port);
       this.serial.on('connect', () => (this._connected = true));
       this.serial.on('disconnect', () => (this._connected = false));
@@ -48,8 +54,14 @@ export default class MicroPythonBoard {
             baudRate: 115200,
             ...options,
           })
-          .then(resolve)
-          .catch(reject);
+          .then(() => resolve())
+          .catch((err) => {
+            if (err.name === 'InvalidStateError') {
+              this._connected = true;
+              resolve();
+            }
+            reject(err);
+          });
       } else {
         reject(new Error('No device specified'));
       }
