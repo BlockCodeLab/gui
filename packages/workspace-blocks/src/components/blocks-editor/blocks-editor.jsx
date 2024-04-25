@@ -12,7 +12,6 @@ import styles from './blocks-editor.module.css';
 import extensionIcon from './icon-extension.svg';
 
 const loadedExtensions = new Map();
-let selectedCategoryId;
 
 export default function BlocksEditor({
   toolbox: defaultToolbox,
@@ -107,15 +106,10 @@ export default function BlocksEditor({
       onLoadExtension(extensionObject);
     }
     loadedExtensions.set(extensionObject.id, extensionObject);
-    selectedCategoryId = extensionObject.id;
-  };
-
-  if (selectedCategoryId) {
     setTimeout(() => {
-      workspace.toolbox_.setSelectedCategoryById(selectedCategoryId);
-      selectedCategoryId = null;
-    }, 1);
-  }
+      workspace.toolbox_.setSelectedCategoryById(extensionObject.id);
+    }, 10);
+  };
 
   return (
     <div className={styles.editorWrapper}>

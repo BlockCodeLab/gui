@@ -1,5 +1,6 @@
 import { useLocale, useEditor } from '@blockcode/core';
 import { ScratchBlocks } from '@blockcode/blocks-editor';
+import { javascriptGenerator } from '@blockcode/blocks-player';
 import { CodeTab, pythonGenerator } from '@blockcode/workspace-blocks';
 
 import makeToolboxXML from '../../lib/make-toolbox-xml';

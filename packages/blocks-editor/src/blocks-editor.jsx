@@ -149,9 +149,14 @@ export function BlocksEditor({ toolbox, globalVariables, messages, onWorkspaceCr
       ref.resizeObserver = new ResizeObserver(() => ScratchBlocks.svgResize(ref.workspace));
       ref.resizeObserver.observe(ref.current);
       loadXmlToWorkspace();
+      ref.workspace.clearUndo();
     }
     return () => {
-      if (ref.workspace) ref.workspace.dispose();
+      if (ref.workspace) {
+        ref.workspace.clearUndo();
+        ref.workspace.dispose();
+        ref.workspace = null;
+      }
     };
   }, [ref]);
 

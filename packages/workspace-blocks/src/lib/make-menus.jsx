@@ -26,9 +26,8 @@ export default function ({
   let setDisableRedo = () => {};
   let setDisableDownload = () => {};
 
-  let workspace;
   const checkWorkspace = () => {
-    workspace = ScratchBlocks.getMainWorkspace();
+    const workspace = ScratchBlocks.getMainWorkspace();
     if (workspace) {
       workspace.addChangeListener(() => {
         setDisableUndo(workspace.undoStack_.length === 0);
@@ -159,6 +158,7 @@ export default function ({
           hotkey: [isMac ? Keys.COMMAND : Keys.CONTROL, Keys.S],
           async onClick({ context }) {
             const extendData = {};
+            const workspace = ScratchBlocks.getMainWorkspace();
             if (workspace) {
               extendData.thumb = await svgAsDataUri(workspace.getCanvas(), {});
             }
@@ -224,11 +224,14 @@ export default function ({
           hotkey: [isMac ? Keys.COMMAND : Keys.CONTROL, Keys.Z],
           onDisable({ setDisable }) {
             setDisableUndo = setDisable;
+            const workspace = ScratchBlocks.getMainWorkspace();
             if (workspace) {
+              console.log(workspace.undoStack_);
               setDisableUndo(workspace.undoStack_.length === 0);
             }
           },
           async onClick(e) {
+            const workspace = ScratchBlocks.getMainWorkspace();
             if (e instanceof MouseEvent && workspace) {
               workspace.undo(false);
             }
@@ -244,11 +247,13 @@ export default function ({
           hotkey: isMac ? [Keys.SHIFT, Keys.COMMAND, Keys.Z] : [Keys.CONTROL, Keys.Y],
           onDisable({ setDisable }) {
             setDisableRedo = setDisable;
+            const workspace = ScratchBlocks.getMainWorkspace();
             if (workspace) {
               setDisableRedo(workspace.redoStack_.length === 0);
             }
           },
           async onClick(e) {
+            const workspace = ScratchBlocks.getMainWorkspace();
             if (e instanceof MouseEvent && workspace) {
               workspace.undo(true);
             }

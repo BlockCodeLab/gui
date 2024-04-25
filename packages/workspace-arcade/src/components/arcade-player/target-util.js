@@ -80,7 +80,7 @@ class Util extends EventEmitter {
   }
 
   get running() {
-    return this.runtime && this.runtime.running;
+    return !this.editing && this.runtime && this.runtime.running;
   }
 
   get editing() {
@@ -105,7 +105,7 @@ class Util extends EventEmitter {
   }
 
   requestUpdate() {
-    if (!this.editing) {
+    if (this.running) {
       this.emit('update');
     }
   }
@@ -190,6 +190,8 @@ class SpriteUtil extends Util {
       if (!asset) return;
 
       this.data.frame = frame;
+      this.requestUpdate();
+
       loadImageFromDataURL(asset).then((image) => {
         this.raster.image = image;
         this.raster.pivot = new paperCore.Point(asset.centerX - asset.width / 2, asset.centerY - asset.height / 2);
