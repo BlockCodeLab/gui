@@ -16,7 +16,6 @@
     "@blockcode/core": "workspace:*",
     "@blockcode/ui": "workspace:*",
     "@blockcode/blocks-editor": "workspace:*",
-    "@blockcode/popsicle-player": "workspace:*",
     "@blockcode/workspace-blocks": "workspace:*"
   }
 }
