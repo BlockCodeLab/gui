@@ -17,11 +17,5 @@ export default {
       defaultMessage="The equipment can play with the real world."
     />
   ),
-  collaborator: (
-    <Text
-      id="gui.workspace.popsicle.collaborator"
-      defaultMessage="BlockCode Lab"
-    />
-  ),
   blocksRequired: true,
 };

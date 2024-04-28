@@ -17,11 +17,5 @@ export default {
       defaultMessage="Write magical code that controls everything."
     />
   ),
-  collaborator: (
-    <Text
-      id="gui.workspace.micropython.collaborator"
-      defaultMessage="BlockCode Lab"
-    />
-  ),
   micropythonRequired: true,
 };

@@ -2,7 +2,7 @@ import { Text } from '@blockcode/ui';
 import picoedImage from './picoed.png';
 
 export default {
-  preview: true,
+  disabled: true,
   package: 'picoed',
   image: picoedImage,
   name: (

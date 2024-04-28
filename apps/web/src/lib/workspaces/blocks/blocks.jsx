@@ -17,11 +17,5 @@ export default {
       defaultMessage="A wonderful world of building blocks."
     />
   ),
-  collaborator: (
-    <Text
-      id="gui.workspace.blocks.collaborator"
-      defaultMessage="BlockCode Lab"
-    />
-  ),
   blocksRequired: true,
 };
