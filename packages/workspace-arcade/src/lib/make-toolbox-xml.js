@@ -455,10 +455,10 @@ export default function (isStage, spritesCount, backdropValue, costumeValue, sou
       id: 'looks',
       xml: looks(isStage, costumeValue, backdropValue),
     },
-    {
-      id: 'sound',
-      xml: sound(soundValue),
-    },
+    // {
+    //   id: 'sound',
+    //   xml: sound(soundValue),
+    // },
     {
       id: 'events',
       xml: events(),
