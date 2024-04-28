@@ -30,9 +30,6 @@ gui.prompt.close: 关闭
 gui.prompt.cancel: 取消
 gui.prompt.ok: 确认
 
-gui.coverpages.tankwar.title: 战争一触即发，赶紧来战吧！
-gui.coverpages.tankwar.button: 加入战斗
-
 gui.workspace.myprojects: 我的作品
 gui.workspace.allprojects: 查看全部（{counts}）
 gui.workspace.newproject: 开始新作品
@@ -52,6 +49,11 @@ gui.workspace.tankwar.collaborator: 龚业勤
 gui.workspace.picoed.name: 恩孚科技 Pico:ed V2
 gui.workspace.picoed.description: 小小教育开发板，创造无限大可能。
 gui.workspace.picoed.collaborator: 龚业勤
+
+gui.coverpages.tankwar.title: 战争一触即发，赶紧来战吧！
+gui.coverpages.tankwar.button: 加入战斗
+gui.coverpages.arcade.title: 玩的下一个游戏，一定是自己的！
+gui.coverpages.arcade.button: 开始游戏
 
 gui.terms: 使用条款
 gui.terms.content: >

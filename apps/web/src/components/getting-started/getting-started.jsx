@@ -3,14 +3,18 @@ import { classNames, Button } from '@blockcode/ui';
 import styles from './getting-started.module.css';
 
 export default function GettingStarted({ coverpages, className }) {
-  const [index, setIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  setTimeout(() => setCurrentIndex((currentIndex + 1) % coverpages.length), 7000);
 
   return (
     <div className={classNames(styles.coverWrapper, className)}>
       {coverpages.map((cover, index) => (
         <div
           key={index}
-          className={styles.cover}
+          className={classNames(styles.cover, {
+            [styles.hidden]: index !== currentIndex,
+          })}
           style={{ backgroundImage: `url(${cover.backgroundImage})` }}
         >
           <div>

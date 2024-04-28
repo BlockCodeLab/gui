@@ -4,7 +4,7 @@ import { classNames, Text, ContextMenu, LibraryItem } from '@blockcode/ui';
 import GettingStarted from '../getting-started/getting-started';
 import maybeTranslateMessage from '../../lib/maybe-translate-message';
 import workspaces from '../../lib/workspaces/workspaces';
-import makeCoverpages from './make-coverpages';
+import makeCoverpages from '../../lib/coverpages/coverpages';
 
 import styles from './workspace-library.module.css';
 import { version } from '../../../package.json';

@@ -30,9 +30,6 @@ gui.prompt.close: Close
 gui.prompt.cancel: Cancel
 gui.prompt.ok: OK
 
-gui.coverpages.tankwar.title: The Tank War is coming! Join us! NOW!
-gui.coverpages.tankwar.button: Join us
-
 gui.workspace.myprojects: My projects
 gui.workspace.allprojects: View all ({counts})
 gui.workspace.newproject: Create new project
@@ -52,6 +49,11 @@ gui.workspace.tankwar.collaborator: Yeqin Gong
 gui.workspace.picoed.name: ELECFREAKS Pico:ed V2
 gui.workspace.picoed.description: Small board, endless possibilities.
 gui.workspace.picoed.collaborator: Yeqin Gong
+
+gui.coverpages.tankwar.title: The Tank War is coming! Join us! NOW!
+gui.coverpages.tankwar.button: Join us
+gui.coverpages.arcade.title: The next game to play, must be your OWN!
+gui.coverpages.arcade.button: Play now
 
 gui.terms: Terms of Use
 gui.terms.content: >
