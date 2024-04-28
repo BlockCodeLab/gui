@@ -7,8 +7,8 @@ import RotationStyle from '../../lib/rotation-style';
 import createContour from './create-contour';
 import Runtime from './runtime';
 
-const FONT_SIZE = 10;
-const LINE_MAX_CHARS = 21;
+const FONT_SIZE = 12;
+const LINE_MAX_CHARS = 18;
 const DIALOG_RADIUS = 10;
 const DIALOG_PADDING = 8;
 const DIALOG_HANDLE_HEIGHT = DIALOG_RADIUS * 0.8;
