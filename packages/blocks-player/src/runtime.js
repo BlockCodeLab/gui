@@ -1,4 +1,5 @@
 import { EventEmitter } from 'node:events';
+import paperCore from 'paper/dist/paper-core';
 
 export default class Runtime extends EventEmitter {
   static DEFAULT_FPS = 24;
@@ -66,7 +67,7 @@ export default class Runtime extends EventEmitter {
             await this.emit(`${eventName}_${i}`, ...args);
             this._eventsHappening[eventName][i] = false;
           }
-        })
+        }),
       );
     }
     return Promise.resolve();
@@ -89,6 +90,10 @@ export default class Runtime extends EventEmitter {
 
   async _handleStart() {
     while (this.running) {
+      if (!paperCore.project) {
+        this.stop();
+        break;
+      }
       await this.nextFrame();
       this.fire('frame');
     }

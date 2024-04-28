@@ -26,7 +26,7 @@ const DEFAULT_COSTUME_1 = {
 
 const DEFAULT_COSTUME_2 = {
   id: '5c3d0f003b0c72204407b4beac704be8',
-  type: 'image/gif',
+  type: 'image/png',
   width: 61,
   height: 70,
   centerX: 31,

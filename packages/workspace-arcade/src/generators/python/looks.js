@@ -8,7 +8,7 @@ pythonGenerator['looks_sayforsecs'] = (block) => {
 
   const msgCode = pythonGenerator.valueToCode(block, 'MESSAGE', pythonGenerator.ORDER_NONE) || '""';
   const secCode = pythonGenerator.valueToCode(block, 'SECS', pythonGenerator.ORDER_NONE) || 2;
-  code += `await target.say(str(${msgCode}), num(${secCode}))\n`;
+  code += `await target.say_wait(str(${msgCode}), num(${secCode}))\n`;
   return code;
 };
 
@@ -31,7 +31,8 @@ pythonGenerator['looks_thinkforsecs'] = (block) => {
 
   const msgCode = pythonGenerator.valueToCode(block, 'MESSAGE', pythonGenerator.ORDER_NONE) || '""';
   const secCode = pythonGenerator.valueToCode(block, 'SECS', pythonGenerator.ORDER_NONE) || 2;
-  code += `await target.say(str(${msgCode}), num(${secCode}))\n`;
+  code += `await target.think_wait(str(${msgCode}), num(${secCode}))\n`;
+  return code;
 };
 
 pythonGenerator['looks_think'] = (block) => {
@@ -41,7 +42,7 @@ pythonGenerator['looks_think'] = (block) => {
   }
 
   const msgCode = pythonGenerator.valueToCode(block, 'MESSAGE', pythonGenerator.ORDER_NONE) || '""';
-  code += `target.say(str(${msgCode}))\n`;
+  code += `target.think(str(${msgCode}))\n`;
   return code;
 };
 

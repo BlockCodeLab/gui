@@ -457,16 +457,16 @@ class SpriteUtil extends Util {
 
   findNearestEdge() {
     let nearestEdge;
-    if (this.contour.bounds.top < this.stageBounds.top) {
+    if (this.contour.bounds.top <= this.stageBounds.top) {
       nearestEdge = 'top';
     }
-    if (this.contour.bounds.left < this.stageBounds.left) {
+    if (this.contour.bounds.left <= this.stageBounds.left) {
       nearestEdge = 'left';
     }
-    if (this.contour.bounds.right > this.stageBounds.right) {
+    if (this.contour.bounds.right >= this.stageBounds.right) {
       nearestEdge = 'right';
     }
-    if (this.contour.bounds.bottom > this.stageBounds.bottom) {
+    if (this.contour.bounds.bottom >= this.stageBounds.bottom) {
       nearestEdge = 'bottom';
     }
     return nearestEdge;
