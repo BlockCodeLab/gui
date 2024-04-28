@@ -51,6 +51,7 @@ export default function BlocksWorkspace({
   setPrompt,
   setAlert,
   removeAlert,
+  hideSplashScreen,
   openProject,
 }) {
   addLocaleData(locales);
@@ -61,8 +62,8 @@ export default function BlocksWorkspace({
         {
           selectedIndex: 0,
         },
-        defaultProject
-      )
+        defaultProject,
+      ),
     );
   };
   newProject();
@@ -85,6 +86,7 @@ export default function BlocksWorkspace({
             onShowPrompt={setPrompt}
             onShowAlert={setAlert}
             onHideAlert={removeAlert}
+            onReady={hideSplashScreen}
           />
         ),
       },

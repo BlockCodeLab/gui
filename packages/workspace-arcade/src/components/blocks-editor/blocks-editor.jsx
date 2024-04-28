@@ -12,7 +12,7 @@ const Editor = CodeTab.Content;
 
 const DEFAULT_SOUND_NAME = 'DADADADUM';
 
-export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert }) {
+export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert, onReady }) {
   const { getText } = useLocale();
   const { assetList, fileList, selectedIndex, modifyFile } = useEditor();
   const isStage = selectedIndex === 0;
@@ -139,6 +139,7 @@ export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert })
         onShowPrompt={onShowPrompt}
         onShowAlert={onShowAlert}
         onHideAlert={onHideAlert}
+        onReady={onReady}
       />
 
       {thumb && (

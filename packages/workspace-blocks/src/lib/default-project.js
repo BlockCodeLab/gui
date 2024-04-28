@@ -16,7 +16,6 @@ export default {
     {
       id: 'code1',
       type: 'text/x-python',
-      xml: '<xml xmlns="http://www.w3.org/1999/xhtml"><variables></variables></xml>',
     },
   ],
 };

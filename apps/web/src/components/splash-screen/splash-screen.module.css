@@ -1,0 +1,18 @@
+.splash-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  background: var(--motion-primary);
+  z-index: var(--z-index-modal);
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.label {
+  color: var(--ui-white);
+  margin: var(--space);
+}

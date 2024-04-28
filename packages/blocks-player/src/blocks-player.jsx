@@ -1,5 +1,5 @@
 import paperCore from 'paper/dist/paper-core';
-import { useRef, useEffect, useState } from 'preact/hooks';
+import { useRef, useEffect } from 'preact/hooks';
 import { useEditor } from '@blockcode/core';
 import { ScratchBlocks } from '@blockcode/blocks-editor';
 import javascriptGenerator from './generators/javascript';
@@ -20,17 +20,17 @@ const supportedEvents = new Set([
 
 export function BlocksPlayer({ width, height, onSetup, ...props }) {
   const ref = useRef(null);
-  const [currentXml, setCurrentXml] = useState(null);
-  const [currentIndex, setCurrentIndex] = useState(null);
-  const { selectedIndex, modifyFile } = useEditor();
+  const { fileList, selectedIndex, modifyFile } = useEditor();
+
+  const file = fileList[selectedIndex];
+  ref.script = file.script;
+  ref.xml = file.xml;
 
   useEffect(() => {
     if (ref.current) {
       paperCore.setup(ref.current);
 
-      if (onSetup) {
-        onSetup(ref.current);
-      }
+      if (onSetup) onSetup(ref.current);
 
       const checkWorkspace = () => {
         const workspace = ScratchBlocks.getMainWorkspace();
@@ -45,16 +45,9 @@ export function BlocksPlayer({ width, height, onSetup, ...props }) {
               /<variable type="broadcast_msg"[^>]+>[^<]+<\/variable>/gi,
               '',
             );
-            if (xml !== currentXml || selectedIndex !== currentIndex) {
-              modifyFile({
-                script: javascriptGenerator.workspaceToCode(workspace),
-              });
-              if (xml !== currentXml) {
-                setCurrentXml(xml);
-              }
-              if (selectedIndex !== currentIndex) {
-                setCurrentIndex(selectedIndex);
-              }
+            if (!ref.script || ref.xml !== xml) {
+              const script = javascriptGenerator.workspaceToCode(workspace);
+              if (ref.script !== script) modifyFile({ script });
             }
           });
           return;

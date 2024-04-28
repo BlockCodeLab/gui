@@ -5,7 +5,7 @@ import makeToolboxXML from '../../lib/make-toolbox-xml';
 
 const Editor = CodeTab.Content;
 
-export default function BlocksEditor() {
+export default function BlocksEditor({ onReady }) {
   const { getText } = useLocale();
 
   const messages = {
@@ -27,6 +27,7 @@ export default function BlocksEditor() {
       disableExtension
       messages={messages}
       toolbox={toolbox}
+      onReady={onReady}
     />
   );
 }

@@ -4,6 +4,8 @@ gui.modal.back: Back
 
 gui.alert.importing: importing...
 
+gui.splashScreen.loadingProject: Loading project...
+
 gui.library.comingSoon: Coming Soon
 gui.library.preview: Preview
 gui.library.requires: Requires
@@ -37,16 +39,13 @@ gui.workspace.newproject: Create new project
 
 gui.workspace.micropython.name: MicroPython
 gui.workspace.micropython.description: Write magical code that controls everything.
-gui.workspace.micropython.collaborator: BlockCode Lab
 gui.workspace.blocks.name: MicroPython Blocks
 gui.workspace.blocks.description: A wonderful world of building blocks.
-gui.workspace.blocks.collaborator: BlockCode Lab
 gui.workspace.arcade.name: Scratch Arcade
 gui.workspace.arcade.description: Arcade game edit and play.
-gui.workspace.arcade.collaborator: BlockCode Lab
 gui.workspace.popsicle.name: Popsicle
 gui.workspace.popsicle.description: The equipment can play with the real world.
-gui.workspace.popsicle.collaborator: BlockCode Lab
+
 gui.workspace.tankwar.name: Tank War
 gui.workspace.tankwar.description: Program your tank and go to battle!
 gui.workspace.tankwar.collaborator: Yeqin Gong

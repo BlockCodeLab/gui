@@ -19,6 +19,7 @@ export default function TankwarBlocksWorkspace({
   setPrompt,
   setAlert,
   removeAlert,
+  hideSplashScreen,
   openProject,
 }) {
   addLocaleData(blocksLocales);
@@ -64,7 +65,7 @@ export default function TankwarBlocksWorkspace({
     tabs: [
       {
         ...CodeTab,
-        Content: BlocksEditor,
+        Content: () => <BlocksEditor onReady={hideSplashScreen} />,
       },
     ],
 

@@ -157,14 +157,23 @@ export default function ({
           ),
           hotkey: [isMac ? Keys.COMMAND : Keys.CONTROL, Keys.S],
           async onClick({ context }) {
-            const extendData = {};
+            let thumb;
             const workspace = ScratchBlocks.getMainWorkspace();
             if (workspace) {
-              extendData.thumb = await svgAsDataUri(workspace.getCanvas(), {});
+              thumb = await svgAsDataUri(workspace.getCanvas(), {});
             }
-            context.saveNow({
-              ...extendData,
-              ...onSave(),
+            context.saveNow((data) => {
+              const newData = {
+                thumb,
+                ...data,
+                ...onSave(),
+              };
+              newData.fileList = newData.fileList.map((file) => ({
+                ...file,
+                script: undefined,
+                content: undefined,
+              }));
+              return newData;
             });
             if (downloadAlert.id) return;
             if (context.device && context.editor.autoDownload) {

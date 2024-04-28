@@ -29,6 +29,7 @@ export default function ArcadeBlocksWorkspace({
   setAlert,
   removeAlert,
   openProject,
+  hideSplashScreen,
 }) {
   addLocaleData(blocksLocales);
   addLocaleData(paintLocales);
@@ -108,6 +109,7 @@ export default function ArcadeBlocksWorkspace({
             onShowPrompt={setPrompt}
             onShowAlert={setAlert}
             onHideAlert={removeAlert}
+            onReady={hideSplashScreen}
           />
         ),
       },

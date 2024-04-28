@@ -12,12 +12,14 @@ import PaneView from '../pane-view/pane-view';
 import Prompt from '../prompt/prompt';
 import WorkspaceLibrary from '../workspace-library/workspace-library';
 import StoreLibrary from '../store-library/store-library';
+import SplashScreen from '../splash-screen/splash-screen';
 
 /* styles and assets */
 import styles from './gui.module.css';
 
 export default function GUI() {
   const [prompt, setPrompt] = useState(null);
+  const [splash, setSplash] = useState(false);
   const [workspaceLibraryOpened, setWorkspaceLibraryOpened] = useState(false);
   const [storeLibraryOpened, setStoreLibraryOpened] = useState(false);
   const {
@@ -74,9 +76,25 @@ export default function GUI() {
     setPrompt(null);
   };
 
-  const handleOpenWorkspace = (workspacePackage, open = openProject) => {
+  const showSplashScreen = () => setSplash(true);
+  const hideSplashScreen = () => {
+    setSplash(false);
+    setEditor({ splash: false });
+  };
+
+  const defaultOpenProject = (project) => {
+    showSplashScreen();
+    openProject({
+      ...project,
+      selectedIndex: 0,
+    });
+  };
+
+  const handleOpenWorkspace = (workspacePackage, open = defaultOpenProject) => {
     setAlert('importing', { id: workspacePackage });
     import(`@blockcode/workspace-${workspacePackage}`).then(({ default: createWorkspace }) => {
+      removeAlert(workspacePackage);
+      closeWorkspaceLibrary();
       createWorkspace({
         addLocaleData,
         getText,
@@ -87,21 +105,21 @@ export default function GUI() {
         setPrompt,
         setAlert,
         removeAlert,
+        hideSplashScreen,
         openProject: open,
       });
       selectTab(0);
       setEditor({
         package: workspacePackage,
+        splash: true,
       });
-      closeWorkspaceLibrary();
-      removeAlert(workspacePackage);
     });
   };
 
   const handleOpenProject = (project) => {
     const open = () => {
-      openProject(project);
       closeStoreLibrary();
+      defaultOpenProject(project);
     };
     if (!editor || !editor.package || editor.package !== project.editor.package) {
       closeProject();
@@ -233,6 +251,8 @@ export default function GUI() {
           onSubmit={prompt.onSubmit ? handlePromptSubmit : false}
         />
       )}
+
+      {splash && <SplashScreen />}
 
       {DEVELOPMENT && editor && (
         <div className={styles.debugBox}>

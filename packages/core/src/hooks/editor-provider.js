@@ -230,22 +230,30 @@ export function useEditor() {
 
     setEditor(config) {
       dispatch({ type: CONFIG_EDITOR, payload: config });
+      if (config.splash === false) {
+        dispatch({ type: SAVE_DATA, payload: { modified: false } });
+      }
     },
 
-    async saveNow(extendData) {
+    async saveNow(onFilter) {
       const modifiedDate = Date.now();
       const key = state.key || modifiedDate.toString(36);
-      const { name, editor, assetList, fileList, selectedIndex } = state;
-      const result = await localForage.setItem(key, {
+      const { name, editor, assetList, fileList } = state;
+      const result = await localForage.setItem(
         key,
-        name,
-        editor,
-        assetList,
-        fileList,
-        selectedIndex,
-        modifiedDate,
-        ...extendData,
-      });
+        onFilter({
+          key,
+          name,
+          assetList,
+          fileList,
+          modifiedDate,
+          editor: {
+            package: editor.package,
+            extensions: editor.extensions,
+            options: editor.options,
+          },
+        }),
+      );
       dispatch({ type: SAVE_DATA, payload: { key, modified: false } });
       return result;
     },

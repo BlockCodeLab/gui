@@ -26,12 +26,32 @@ export default function BlocksEditor({
   onShowPrompt,
   onShowAlert,
   onHideAlert,
+  onReady,
 }) {
   const { addLocaleData, getText } = useLocale();
-  const { fileList, selectedIndex, modifyFile } = useEditor();
+  const { editor, fileList, selectedIndex, openFile, modifyFile } = useEditor();
   const [workspace, setWorkspace] = useState();
   const [prompt, setPrompt] = useState(false);
-  const [extensionLibraryOpen, setExtensionLibrary] = useState(false);
+  const [extensionLibrary, setExtensionLibrary] = useState(false);
+
+  if (editor.splash) {
+    let projectBlocksReady = true;
+    if (fileList.length > 1) {
+      for (let i = 0; i > -fileList.length; i--) {
+        const file = fileList.at(i);
+        if (!file.content) {
+          projectBlocksReady = false;
+          setTimeout(() => {
+            openFile((i + fileList.length) % fileList.length);
+          }, 100);
+          break;
+        }
+      }
+    }
+    if (projectBlocksReady && typeof editor.splash === 'boolean') {
+      editor.splash = setTimeout(onReady, 100);
+    }
+  }
 
   messages = {
     EVENT_WHENPROGRAMSTART: getText('blocks.event.programStart', 'when program start'),
@@ -147,7 +167,7 @@ export default function BlocksEditor({
           onSubmit={handlePromptSubmit}
         />
       )}
-      {extensionLibraryOpen && (
+      {extensionLibrary && (
         <ExtensionLibrary
           onFilter={onExtensionsFilter}
           onSelect={handleSelectExtension}
