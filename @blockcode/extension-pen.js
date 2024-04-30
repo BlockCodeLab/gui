@@ -1,0 +1,1 @@
+var l="./assets/feature-5311f910860a6998.png";var x="./assets/icon-15bbfffad9b0533c.svg";var q={disabled:!0,name:"Pen",description:"Draw with your sprites.",image:l,icon:x,tags:["blocks","arcade","display"],translations:{en:{name:"Pen",description:"Draw with your sprites."},"zh-Hans":{name:"\u753B\u7B14",description:"\u7ED8\u5236\u89D2\u8272\u3002"}}};export{q as default};
