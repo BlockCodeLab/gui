@@ -124,8 +124,8 @@ export default class Runtime extends EventEmitter {
   }
 
   random(num1 = 1, num2 = 10) {
-    min = Math.ceil(Math.min(num1, num2));
-    max = Math.floor(Math.max(num1, num2));
+    const min = Math.ceil(Math.min(num1, num2));
+    const max = Math.floor(Math.max(num1, num2));
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 

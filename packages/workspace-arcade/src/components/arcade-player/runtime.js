@@ -200,9 +200,7 @@ export default class Runtime extends BaseRuntime {
       max = Runtime.VIEW_HEIGHT / 2;
       min = -max;
     }
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    return super.random(min, max);
   }
 
   stop() {
