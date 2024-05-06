@@ -82,7 +82,7 @@ javascriptGenerator['motion_yposition'] = (block) => {
 };
 
 javascriptGenerator['motion_speed'] = (block) => {
-  return ['tank.util.speed', javascriptGenerator.ORDER_ATOMIC];
+  return ['tank.util.currentSpeed', javascriptGenerator.ORDER_ATOMIC];
 };
 
 javascriptGenerator['motion_direction'] = (block) => {

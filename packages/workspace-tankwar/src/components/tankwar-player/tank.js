@@ -127,6 +127,7 @@ export default class Tank {
 
   reset() {
     this._speed = 0;
+    this._currentSpeed = 0;
     this._health = 100;
     this._scanWidth = DEFAULT_SCAN_WIDTH;
     this._turretReady = null;
@@ -243,7 +244,7 @@ export default class Tank {
       image: this._imageCache.buttet,
       position: new paperCore.Point(
         this.raster.position.x + BULLET_SKIP_DISTANCE * Math.cos(radian),
-        this.raster.position.y - BULLET_SKIP_DISTANCE * Math.sin(radian)
+        this.raster.position.y - BULLET_SKIP_DISTANCE * Math.sin(radian),
       ),
       rotation: this.raster.rotation,
       scaling: this.raster.scaling,
@@ -335,7 +336,7 @@ export default class Tank {
     if (this.speed === 0) return;
     if (this.hidden || this.death) return;
 
-    let speed = this.speed / SPEED_RATIO;
+    let speed = this.speed;
     const radian = degToRad(90 - this.direction);
 
     const height = this.raster.scaling.y * this.raster.height;
@@ -349,7 +350,9 @@ export default class Tank {
         speed = 0;
       }
     });
+    this._currentSpeed = speed;
 
+    speed /= SPEED_RATIO;
     this.raster.position.x += speed * Math.cos(radian);
     this.raster.position.y -= speed * Math.sin(radian);
     this.turretRaster.position = this.raster.position;
@@ -361,6 +364,10 @@ export default class Tank {
 
   get y() {
     return paperCore.view.center.y - this.raster.position.y;
+  }
+
+  get currentSpeed() {
+    return clamp(this._currentSpeed, -100, 100);
   }
 
   get speed() {
