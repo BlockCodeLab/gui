@@ -118,7 +118,7 @@ javascriptGenerator['data_replaceitemoflist'] = (block) => {
     ScratchBlocks.LIST_VARIABLE_TYPE;
   const indexCode = javascriptGenerator.valueToCode(block, 'INDEX', javascriptGenerator.ORDER_NONE) || 1;
   const itemValue = javascriptGenerator.valueToCode(block, 'ITEM', javascriptGenerator.ORDER_NONE) || '""';
-  code += `${listName}.splice(runtime.index(${indexCode}, ${listName}.length), 1, ${itemValue});\n`;
+  code += `${listName}[runtime.index(${indexCode}, ${listName}.length)] = ${itemValue};\n`;
   return code;
 };
 
@@ -128,7 +128,7 @@ javascriptGenerator['data_itemoflist'] = (block) => {
     javascriptGenerator.variableDB_.getName(block.getFieldValue('LIST'), ScratchBlocks.Variables.NAME_TYPE) +
     ScratchBlocks.LIST_VARIABLE_TYPE;
   const indexCode = javascriptGenerator.valueToCode(block, 'INDEX', javascriptGenerator.ORDER_NONE) || 1;
-  const code = `(${listName}[runtime.index(${indexCode}, ${listName}.length)] || '""')`;
+  const code = `${listName}[runtime.index(${indexCode}, ${listName}.length)]`;
   return [code, javascriptGenerator.ORDER_CONDITIONAL];
 };
 
