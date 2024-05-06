@@ -26,6 +26,7 @@
   font-weight: bold;
   background-color: var(--motion-primary);
   color: var(--ui-white);
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.25);
 }
 
 .menu-bar-item {
