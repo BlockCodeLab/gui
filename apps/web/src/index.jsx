@@ -1,5 +1,4 @@
 import { render } from 'preact';
-import { useEffect } from 'preact/hooks';
 import { LocalesProvider, EditorProvider, useLocale } from '@blockcode/core';
 import GUI from './components/gui/gui';
 
