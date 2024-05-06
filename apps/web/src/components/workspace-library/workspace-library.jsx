@@ -138,6 +138,7 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject, onReq
             featured
             id={index}
             key={index}
+            hidden={item.hidden}
             preview={item.preview}
             disabled={item.disabled}
             image={item.image}
@@ -146,7 +147,7 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject, onReq
             collaborator={item.collaborator}
             blocksRequired={item.blocksRequired}
             micropythonRequired={item.micropythonRequired}
-            onSelect={item.disabled ? null : () => onOpenWorkspace(item.package)}
+            onSelect={() => onOpenWorkspace(item.package)}
           />
         ))}
       </div>
