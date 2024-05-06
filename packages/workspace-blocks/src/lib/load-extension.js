@@ -149,8 +149,9 @@ export default function (extensionObject, getText) {
       },
     };
 
-    if (block.code) {
-      pythonGenerator[blockId] = block.code.bind(pythonGenerator);
+    // generate python
+    if (block.python) {
+      pythonGenerator[blockId] = block.python.bind(pythonGenerator);
     } else {
       pythonGenerator[blockId] = () => '';
     }

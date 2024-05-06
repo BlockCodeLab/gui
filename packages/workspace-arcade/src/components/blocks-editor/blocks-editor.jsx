@@ -86,8 +86,14 @@ export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert, o
   }, 1);
 
   const handleLoadExtension = ({ id: extensionId, blocks }) => {
-    blocks.forEach(({ id: blockId, player }) => {
-      javascriptGenerator[`${extensionId}_${blockId}`] = player ? player.bind(javascriptGenerator) : () => '';
+    // generate javascript for player
+    blocks.forEach((block) => {
+      const blockId = `${extensionId}_${block.id.toLowerCase()}`;
+      if (block.player) {
+        javascriptGenerator[blockId] = block.player.bind(javascriptGenerator);
+      } else {
+        javascriptGenerator[blockId] = () => '';
+      }
     });
   };
 
@@ -134,7 +140,7 @@ export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert, o
         enableLocalVariable={!isStage}
         toolbox={toolbox}
         messages={messages}
-        onExtensionsFilter={() => ['blocks', ['arcade', 'popsicle']]}
+        onExtensionsFilter={() => ['blocks', ['arcade', 'popsicle', 'data']]}
         onLoadExtension={handleLoadExtension}
         onShowPrompt={onShowPrompt}
         onShowAlert={onShowAlert}
