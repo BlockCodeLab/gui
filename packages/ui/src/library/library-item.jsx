@@ -15,7 +15,7 @@ export function LibraryItem(props) {
         [styles.hidden]: props.hidden,
         [styles.libraryItemFeatured]: props.featured,
       })}
-      onClick={props.onSelect}
+      onClick={!(props.disabled || props.hidden) && props.onSelect}
     >
       <div className={styles.featuredImageContainer}>
         {props.disabled ? (
