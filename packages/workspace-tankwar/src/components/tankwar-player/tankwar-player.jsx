@@ -53,14 +53,14 @@ export function TankwarPlayer({ playing, enemies, enemiesAI, onRequestStop, onCh
             yellow: 100,
             green: 100,
           });
+          paperCore.project.activeLayer.children.forEach((item) => {
+            if (item.name === 'background') return;
+            if (item.util instanceof Tank || item.owner instanceof Tank) return;
+            item.remove();
+          });
           setCurrentRuntime(false);
         });
       } else {
-        paperCore.project.activeLayer.children.forEach((item) => {
-          if (item.name === 'background') return;
-          if (item.util instanceof Tank || item.owner instanceof Tank) return;
-          item.remove();
-        });
         tanks.player.util.place = Tank.PLACE.LEFT_TOP;
         if (enemies > 0) {
           tanks.red.util.place = Tank.PLACE.RIGHT_BOTTOM;
@@ -74,6 +74,11 @@ export function TankwarPlayer({ playing, enemies, enemiesAI, onRequestStop, onCh
           tanks.yellow.util.hidden = true;
           tanks.green.util.hidden = true;
         }
+        paperCore.project.activeLayer.children.forEach((item) => {
+          if (item.name === 'background') return;
+          if (item.util instanceof Tank || item.owner instanceof Tank) return;
+          item.remove();
+        });
       }
     }
   }
