@@ -3,6 +3,7 @@ import { ScratchBlocks } from '@blockcode/blocks-editor';
 import './event';
 import './sensing';
 import './sound';
+import './wifi';
 
 export default function (assetList, fileList, selectedIndex, workspace) {
   const stage = fileList[0];

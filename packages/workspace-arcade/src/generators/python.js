@@ -8,6 +8,7 @@ import './python/looks';
 import './python/motion';
 import './python/sensing';
 import './python/sound';
+import './python/wifi';
 
 pythonGenerator.init = (workspace) => {
   pythonGenerator.PASS = pythonGenerator.INDENT + 'pass\n';

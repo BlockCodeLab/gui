@@ -8,6 +8,7 @@ import './javascript/looks';
 import './javascript/motion';
 import './javascript/sensing';
 import './javascript/sound';
+import './javascript/wifi';
 
 javascriptGenerator.init = function (workspace) {
   // Create a dictionary of definitions to be printed before the code.

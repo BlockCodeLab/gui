@@ -331,6 +331,21 @@ const events = () => `
       </value>
     </block>
     ${blockSeparator}
+    <block type="wifi_whenconnected" />
+    <block type="wifi_connectto">
+      <value name="SSID">
+        <shadow type="text">
+          <field name="TEXT">wifi</field>
+        </shadow>
+      </value>
+      <value name="PASSWORD">
+        <shadow type="text">
+          <field name="TEXT">abc123</field>
+        </shadow>
+      </value>
+    </block>
+    <block type="wifi_disconnect" />
+    ${blockSeparator}
     <block type="event_whenbroadcastreceived" />
     <block type="event_broadcast">
       <value name="BROADCAST_INPUT">
@@ -426,6 +441,8 @@ const sensing = (isStage, spritesCount) => `
     ${blockSeparator}
     <block type="sensing_timer"/>
     <block type="sensing_resettimer"/>
+    ${blockSeparator}
+    <block type="wifi_isconnected" />
     ${
       spritesCount > 0
         ? `
