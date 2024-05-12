@@ -43,6 +43,10 @@ gui.workspace.arcade.description: Arcade game edit and play.
 gui.workspace.popsicle.name: Popsicle
 gui.workspace.popsicle.description: The equipment can play with the real world.
 
+gui.workspace.microbit.name: micro:bit
+gui.workspace.microbit.description: Connect your projects with the world.
+gui.workspace.microbit.collaborator: micro:bit
+
 gui.workspace.tankwar.name: Tank War
 gui.workspace.tankwar.description: Program your tank and go to battle!
 gui.workspace.tankwar.collaborator: Yeqin Gong

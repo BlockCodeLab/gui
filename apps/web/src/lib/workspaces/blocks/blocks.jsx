@@ -2,7 +2,7 @@ import { Text } from '@blockcode/ui';
 import blocksImage from './blocks.png';
 
 export default {
-  disabled: true,
+  hidden: true,
   package: 'blocks',
   image: blocksImage,
   name: (

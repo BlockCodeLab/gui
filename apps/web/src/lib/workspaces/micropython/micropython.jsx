@@ -2,7 +2,7 @@ import { Text } from '@blockcode/ui';
 import micropythonImage from './micropython.png';
 
 export default {
-  disabled: true,
+  hidden: true,
   package: 'micropython',
   image: micropythonImage,
   name: (

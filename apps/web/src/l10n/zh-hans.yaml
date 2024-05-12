@@ -43,6 +43,10 @@ gui.workspace.arcade.description: 在游戏机上玩自制小游戏。
 gui.workspace.popsicle.name: Popsicle
 gui.workspace.popsicle.description: 手里的小设备，玩转真实的大世界。
 
+gui.workspace.microbit.name: micro:bit
+gui.workspace.microbit.description: 把作品连接到实体世界。
+gui.workspace.microbit.collaborator: micro:bit
+
 gui.workspace.tankwar.name: 坦克大战
 gui.workspace.tankwar.description: 带上你的坦克，加入我们的战斗！
 gui.workspace.tankwar.collaborator: 龚业勤
