@@ -1,7 +1,7 @@
 import { ScratchBlocks } from '@blockcode/blocks-editor';
 import { pythonGenerator } from './generator';
 
-pythonGenerator['event_whenflagclicked'] = (block) => {
+pythonGenerator['event_whenflagclicked'] = () => {
   const branchCode = pythonGenerator.hatToCode('start');
   return `${branchCode}runtime.when_start(${pythonGenerator.HAT_FUNCTION_PLACEHOLDER})\n`;
 };

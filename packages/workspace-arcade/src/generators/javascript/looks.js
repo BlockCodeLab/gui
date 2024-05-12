@@ -86,7 +86,7 @@ javascriptGenerator['looks_setsizeto'] = (block) => {
   return code;
 };
 
-javascriptGenerator['looks_size'] = (block) => {
+javascriptGenerator['looks_size'] = () => {
   return ['target.util.size', javascriptGenerator.ORDER_MEMBER];
 };
 

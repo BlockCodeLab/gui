@@ -196,14 +196,14 @@ pythonGenerator['motion_setrotationstyle'] = (block) => {
   return code;
 };
 
-pythonGenerator['motion_xposition'] = (block) => {
+pythonGenerator['motion_xposition'] = () => {
   return ['target.x', pythonGenerator.ORDER_NONE];
 };
 
-pythonGenerator['motion_yposition'] = (block) => {
+pythonGenerator['motion_yposition'] = () => {
   return ['target.y', pythonGenerator.ORDER_NONE];
 };
 
-pythonGenerator['motion_direction'] = (block) => {
+pythonGenerator['motion_direction'] = () => {
   return ['target.direction', pythonGenerator.ORDER_NONE];
 };

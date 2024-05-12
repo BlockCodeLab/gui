@@ -1,6 +1,6 @@
 import { pythonGenerator } from '@blockcode/workspace-blocks';
 
-pythonGenerator['control_start_as_clone'] = (block) => {
+pythonGenerator['control_start_as_clone'] = () => {
   const branchCode = pythonGenerator.hatToCode('startasclone', 'target');
   return `${branchCode}runtime.when_startasclone(target, ${pythonGenerator.HAT_FUNCTION_PLACEHOLDER})\n`;
 };
@@ -19,12 +19,12 @@ pythonGenerator['control_create_clone_of'] = (block) => {
   if (cloneCode === '_myself_') {
     cloneCode = 'target';
   } else {
-    cloneCode = `stage.get_child_by_id_or_name("${cloneCode}")`;
+    cloneCode = `stage.get_child("${cloneCode}")`;
   }
-  code += `${cloneCode}.clone();\n`;
+  code += `${cloneCode}.clone()\n`;
   return code;
 };
 
-pythonGenerator['control_delete_this_clone'] = (block) => {
+pythonGenerator['control_delete_this_clone'] = () => {
   return 'target.remove()\n';
 };

@@ -9,7 +9,7 @@ pythonGenerator['sensing_touchingobject'] = (block) => {
   if (touchingCode === '_edge_') {
     touchingCode = '';
   } else {
-    touchingCode = `stage.get_child_by_id_or_name('${touchingCode}')`;
+    touchingCode = `stage.get_child('${touchingCode}')`;
   }
   return [`target.is_touching(${touchingCode})`, pythonGenerator.ORDER_FUNCTION_CALL];
 };
@@ -23,7 +23,7 @@ pythonGenerator['sensing_distanceto'] = (block) => {
   if (distanceCode === '_center_') {
     distanceCode = '';
   } else {
-    distanceCode = `stage.get_child_by_id_or_name('${distanceCode}')`;
+    distanceCode = `stage.get_child('${distanceCode}')`;
   }
   return [`target.distance(${distanceCode})`, pythonGenerator.ORDER_FUNCTION_CALL];
 };
@@ -46,7 +46,7 @@ pythonGenerator['sensing_of'] = (block) => {
   if (object === '_stage_') {
     objectCode = `stage`;
   } else {
-    objectCode = `stage.get_child_by_id_or_name('${objectCode}')`;
+    objectCode = `stage.get_child('${objectCode}')`;
   }
   const prop = block.getFieldValue('PROPERTY');
   switch (prop) {

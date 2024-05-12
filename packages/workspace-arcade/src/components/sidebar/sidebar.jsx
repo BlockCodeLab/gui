@@ -6,7 +6,7 @@ import StageSelector from '../stage-selector/stage-selector';
 
 import styles from './sidebar.module.css';
 
-export default function Sidebar({ onSelectTab, onShowPrompt, onShowAlert, onHideAlert }) {
+export default function Sidebar({ onPaint, onShowPrompt, onShowAlert, onHideAlert }) {
   const [playing, setPlaying] = useState(false);
   const [stageSize, setStageSize] = useState(window.innerWidth < 1280 ? 'small' : 'large');
 
@@ -26,14 +26,14 @@ export default function Sidebar({ onSelectTab, onShowPrompt, onShowAlert, onHide
         <SpriteSelector
           playing={playing}
           stageSize={stageSize}
-          onSelectTab={onSelectTab}
+          onPaint={onPaint}
           onShowPrompt={onShowPrompt}
           onShowAlert={onShowAlert}
           onHideAlert={onHideAlert}
           onStop={handleStop}
         />
         <StageSelector
-          onSelectTab={onSelectTab}
+          onPaint={onPaint}
           onShowAlert={onShowAlert}
           onHideAlert={onHideAlert}
           onStop={handleStop}

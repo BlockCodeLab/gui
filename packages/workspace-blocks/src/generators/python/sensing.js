@@ -1,9 +1,9 @@
 import { pythonGenerator } from './generator';
 
-pythonGenerator['sensing_timer'] = (block) => {
+pythonGenerator['sensing_timer'] = () => {
   return ['runtime.time', pythonGenerator.ORDER_MEMBER];
 };
 
-pythonGenerator['sensing_resettimer'] = (block) => {
+pythonGenerator['sensing_resettimer'] = () => {
   return 'runtime.reset_timer()\n';
 };

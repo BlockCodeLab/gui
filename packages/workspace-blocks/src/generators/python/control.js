@@ -93,7 +93,7 @@ pythonGenerator['control_wait_until'] = (block) => {
   }
 
   const conditionCode = pythonGenerator.valueToCode(block, 'CONDITION', pythonGenerator.ORDER_NONE) || 'False';
-  code += `while not ${conditionCode}:${NEXT_LOOP}`;
+  code += `while not ${conditionCode}:\n${NEXT_LOOP}`;
   return code;
 };
 

@@ -1,4 +1,3 @@
-import { useState } from 'preact/hooks';
 import { useEditor } from '@blockcode/core';
 
 import Selector from './components/selector/selector';
@@ -7,7 +6,6 @@ import Painter from './components/painter/painter';
 import styles from './pixel-paint.module.css';
 
 export function PixelPaint({ onShowAlert, onHideAlert, onSetupLibrary }) {
-  const [imageIndex, setImageIndex] = useState();
   const { fileList, assetList, selectedIndex } = useEditor();
 
   let imageList = assetList.filter((asset) => /^image\//.test(asset.type));
@@ -17,9 +15,6 @@ export function PixelPaint({ onShowAlert, onHideAlert, onSetupLibrary }) {
   if (target && target.assets && target.frame != null) {
     imageList = imageList.filter((image) => target.assets.includes(image.id));
     mode = selectedIndex === 0 ? 'backdrop' : 'costume';
-    if (imageIndex !== target.frame) {
-      setImageIndex(target.frame);
-    }
   }
 
   return (
@@ -27,8 +22,7 @@ export function PixelPaint({ onShowAlert, onHideAlert, onSetupLibrary }) {
       <Selector
         mode={mode}
         imageList={imageList}
-        imageIndex={imageIndex}
-        onSelect={setImageIndex}
+        imageIndex={target.frame}
         onShowAlert={onShowAlert}
         onHideAlert={onHideAlert}
         onSetupLibrary={onSetupLibrary}
@@ -36,7 +30,7 @@ export function PixelPaint({ onShowAlert, onHideAlert, onSetupLibrary }) {
 
       <Painter
         mode={mode}
-        imageIndex={imageIndex}
+        imageIndex={target.frame}
         imageList={imageList}
       />
     </div>

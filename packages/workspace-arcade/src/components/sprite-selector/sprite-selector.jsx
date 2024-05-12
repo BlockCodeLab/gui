@@ -19,7 +19,7 @@ export default function SpriteSelector({
   playing,
   stageSize,
   onStop,
-  onSelectTab,
+  onPaint,
   onShowPrompt,
   onShowAlert,
   onHideAlert,
@@ -139,7 +139,7 @@ export default function SpriteSelector({
       direction: 90,
       rotationStyle: RotationStyle.ALL_AROUND,
     });
-    onSelectTab(1);
+    onPaint();
   };
 
   const handleSurprise = () => {

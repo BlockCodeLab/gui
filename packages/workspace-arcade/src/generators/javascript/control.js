@@ -2,7 +2,7 @@ import { javascriptGenerator } from '@blockcode/blocks-player';
 
 const HAT_CALLBACK = `async (target, done) => {\ndo {\n${javascriptGenerator.HAT_CODE}} while (false);\n  done();\n}`;
 
-javascriptGenerator['control_start_as_clone'] = (block) => {
+javascriptGenerator['control_start_as_clone'] = () => {
   return `runtime.whenCloneStart(target, ${HAT_CALLBACK});\n`;
 };
 
@@ -26,7 +26,7 @@ javascriptGenerator['control_create_clone_of'] = (block) => {
   return code;
 };
 
-javascriptGenerator['control_delete_this_clone'] = (block) => {
+javascriptGenerator['control_delete_this_clone'] = () => {
   return 'target.util.remove();\n';
 };
 

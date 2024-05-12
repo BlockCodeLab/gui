@@ -84,7 +84,7 @@ pythonGenerator['looks_setsizeto'] = (block) => {
   return code;
 };
 
-pythonGenerator['looks_size'] = (block) => {
+pythonGenerator['looks_size'] = () => {
   return ['target.size', pythonGenerator.ORDER_MEMBER];
 };
 

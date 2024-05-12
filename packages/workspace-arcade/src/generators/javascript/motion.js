@@ -197,14 +197,14 @@ javascriptGenerator['motion_setrotationstyle'] = (block) => {
   return code;
 };
 
-javascriptGenerator['motion_xposition'] = (block) => {
+javascriptGenerator['motion_xposition'] = () => {
   return ['target.util.x', javascriptGenerator.ORDER_NONE];
 };
 
-javascriptGenerator['motion_yposition'] = (block) => {
+javascriptGenerator['motion_yposition'] = () => {
   return ['target.util.y', javascriptGenerator.ORDER_NONE];
 };
 
-javascriptGenerator['motion_direction'] = (block) => {
+javascriptGenerator['motion_direction'] = () => {
   return ['target.util.direction', javascriptGenerator.ORDER_NONE];
 };
