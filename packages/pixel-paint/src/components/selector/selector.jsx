@@ -1,7 +1,7 @@
 import { useState } from 'preact/hooks';
 import { useLocale, useEditor } from '@blockcode/core';
 import { IconSelector, ActionButton } from '@blockcode/ui';
-import { uploadImage, loadImageWithDataURL } from '../../lib/load-image';
+import { uploadImage, loadImage } from '../../lib/load-image';
 import uid from '../../lib/uid';
 
 import styles from './selector.module.css';
@@ -12,7 +12,7 @@ import searchIcon from './icon-search.svg';
 import paintIcon from './icon-paint.svg';
 import fileUploadIcon from './icon-file-upload.svg';
 
-export default function Selector({ mode, imageList, imageIndex, onSelect, onShowAlert, onHideAlert, onSetupLibrary }) {
+export default function Selector({ mode, imageList, imageIndex, onShowAlert, onHideAlert, onSetupLibrary }) {
   const [imagesLibrary, setImagesLibrary] = useState(false);
   const [costumesLibrary, setCostumesLibrary] = useState(false);
   const [backdropsLibrary, setBackdropsLibrary] = useState(false);
@@ -52,7 +52,7 @@ export default function Selector({ mode, imageList, imageIndex, onSelect, onShow
     const assetId = uid();
     onShowAlert('importing', { id: assetId });
 
-    const image = await loadImageWithDataURL(`./assets/${asset.id}.png`);
+    const image = await loadImage(`./assets/${asset.id}.png`);
     addAsset({
       ...asset,
       id: assetId,
@@ -92,7 +92,6 @@ export default function Selector({ mode, imageList, imageIndex, onSelect, onShow
 
   const handleSelect = (index) => {
     modifyFile({ frame: index });
-    onSelect(imageIdList[index]);
   };
 
   const handleUploadFile = () => {

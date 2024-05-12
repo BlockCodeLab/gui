@@ -27,18 +27,19 @@ export function uploadImage(file) {
           const ctx = canvas.getContext('2d');
           ctx.drawImage(image, 0, 0, w, h);
           image.src = canvas.toDataURL(file.type);
+        } else {
+          image.dataset.url = image.src;
+          resolve(image);
         }
-        image.dataset.url = image.src;
-        resolve(image);
       });
     });
   });
 }
 
-export function loadImageFromDataURL(dataurl) {
+export function loadImageFromData(data) {
   return new Promise(async (resolve) => {
     const image = new Image();
-    image.src = typeof dataurl === 'string' ? dataurl : `data:${dataurl.type};base64,${dataurl.data}`;
+    image.src = `data:${data.type};base64,${data.data}`;
     image.addEventListener('load', () => {
       image.dataset.url = image.src;
       resolve(image);
@@ -46,7 +47,7 @@ export function loadImageFromDataURL(dataurl) {
   });
 }
 
-export function loadImageWithDataURL(src) {
+export function loadImage(src) {
   return new Promise(async (resolve) => {
     const image = new Image();
     image.src = src;

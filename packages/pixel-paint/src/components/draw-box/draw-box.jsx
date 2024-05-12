@@ -2,8 +2,7 @@ import { useRef, useEffect, useState } from 'preact/hooks';
 import { classNames } from '@blockcode/ui';
 import { Point } from '../../lib/point';
 import { Color } from '../../lib/color';
-import { loadImageFromDataURL } from '../../lib/load-image';
-import { getBoundingBox } from '../../lib/get-bounding-box';
+import { loadImageFromData } from '../../lib/load-image';
 
 import styles from './draw-box.module.css';
 import centerIcon from '../painter/icons/icon-center.svg';
@@ -348,7 +347,7 @@ export default function DrawBox({ image: defaultImage, selectedTool, zoom, undoL
 
   if (context && undoList.length === 0) {
     if (defaultImage) {
-      loadImageFromDataURL(defaultImage).then((image) => {
+      loadImageFromData(defaultImage).then((image) => {
         const dx = Point.DrawWidth / 2 - defaultImage.centerX;
         const dy = Point.DrawHeight / 2 - defaultImage.centerY;
         context.clearRect(0, 0, Point.DrawWidth, Point.DrawHeight);
