@@ -30,9 +30,9 @@ export function TankwarPlayer({ playing, enemies, enemiesAI, onRequestStop, onCh
         if (enemies > 2) {
           ai.push(AIs[enemiesAI.green]('green', Date.now().toString(36)));
         }
-        const code = generate(player.script, ai);
-        const runtime = new Runtime(code, onRequestStop);
 
+        const runtime = new Runtime(onRequestStop);
+        runtime.launch(generate(player.script, ai));
         runtime.on('frame', () => {
           onChangeHealth({
             player: tanks.player.util.health,

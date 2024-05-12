@@ -4,7 +4,7 @@ import paperCore from 'paper/dist/paper-core';
 export default class Runtime extends EventEmitter {
   static DEFAULT_FPS = 24;
 
-  constructor(code, requestStop, fps = Runtime.DEFAULT_FPS) {
+  constructor(requestStop, fps = Runtime.DEFAULT_FPS) {
     super();
     this._fps = fps;
     this._frame_sec = 1 / fps;
@@ -14,7 +14,9 @@ export default class Runtime extends EventEmitter {
     this._timers = [];
     this._greaterThen = {};
     this._eventsHappening = {};
+  }
 
+  launch(code) {
     if (DEVELOPMENT) {
       console.log(code);
     }

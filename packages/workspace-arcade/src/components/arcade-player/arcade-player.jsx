@@ -79,8 +79,11 @@ export default function ArcadePlayer({ stageSize, playing, onRequestStop }) {
       spriteLayer.onMouseDown = null;
       if (!currentRuntime) {
         // start
-        const code = generate(fileList);
-        const runtime = new Runtime(code, onRequestStop);
+        const runtime = new Runtime(
+          onRequestStop,
+          assetList.filter((asset) => asset.type === 'audio/wav'),
+        );
+        runtime.launch(generate(fileList));
         runtime.handleKeyDown = runtime.handleKeyDown.bind(runtime);
         runtime.handleKeyUp = runtime.handleKeyUp.bind(runtime);
         document.addEventListener('keydown', runtime.handleKeyDown);
