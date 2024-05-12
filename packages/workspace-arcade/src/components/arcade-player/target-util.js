@@ -5,6 +5,7 @@ import { loadImageFromDataURL } from '../../lib/load-image';
 import RotationStyle from '../../lib/rotation-style';
 
 import createContour from './create-contour';
+import touching from './touching';
 import Runtime from './runtime';
 
 const FONT_SIZE = 12;
@@ -819,6 +820,10 @@ class SpriteUtil extends Util {
     if (!target) {
       return !!this.findNearestEdge();
     }
+    if (this.hidden || target.hidden) {
+      return false;
+    }
+    return touching(this.contour, target.contour);
   }
 
   distanceTo(target) {
