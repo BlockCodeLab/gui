@@ -3,11 +3,13 @@ blocks.dataPrompt.forThisTarget: For this sprite only
 blocks.dataPrompt.availableToAllTargets: This variable will be available to all sprites.
 blocks.dataPrompt.listAvailableToAllTargets: This list will be available to all sprites.
 
-arcade.menus.device.updateFirmware: Update Arcade firmware...
-
 arcade.pixelPaint.default: Painter
 arcade.pixelPaint.costumes: Costumes
 arcade.pixelPaint.backdrops: Backdrops
+
+arcade.waveSurfer.sounds: Sounds
+
+arcade.menu.device.manual: Arcade manual
 
 arcade.deletePrompt.title: Delete {name}
 arcade.deletePrompt.label: Do you want to delete the sprite?
@@ -48,12 +50,17 @@ arcade.libraries.empty: No more!
 arcade.libraries.sprite: Choose a Sprite
 arcade.libraries.costume: Choose a Costume
 arcade.libraries.backdrop: Choose a Backdrop
+arcade.libraries.sound: Choose a Sound
 
 arcade.defaultProject.stageName: Stage
 arcade.defaultProject.spriteName: Sprite
 arcade.defaultProject.backdropName: backdrop
 arcade.defaultProject.costumeName: costume
 
+arcade.blocks.isConnected: Wi-Fi is connected?
+arcade.blocks.whenConnected: when Wi-Fi connected
+arcade.blocks.connectTo: 'connect Wi-Fi: %1 password: %2'
+arcade.blocks.disconnect: disconnect Wi-Fi
 arcade.blocks.fnButton: fn
 arcade.blocks.stopOther: other scripts in sprite
 arcade.blocks.sensingOfDistanceto.center: center

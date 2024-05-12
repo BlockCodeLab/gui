@@ -39,5 +39,6 @@ export default {
     '@blockcode/tone-player',
     '@blockcode/workspace-blocks',
     '@blockcode/pixel-paint',
+    '@blockcode/wave-surfer',
   ],
 };

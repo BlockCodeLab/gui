@@ -10,6 +10,13 @@ export default class Runtime extends BaseRuntime {
   static VIEW_HEIGHT = VIEW_HEIGHT;
   static DEFAULT_DIRECTION = DEFAULT_DIRECTION;
 
+  constructor(onRequestStop, soundsList) {
+    super(onRequestStop);
+    this._tone = new Tone({ type: 'square' });
+    this._soundsList = soundsList;
+    this._waveList = new Map();
+  }
+
   when(eventName, listener, raster = null) {
     if (raster) {
       super.when(eventName, (done) => {
@@ -32,13 +39,10 @@ export default class Runtime extends BaseRuntime {
   }
 
   get tone() {
-    if (!this._tone) {
-      this._tone = new Tone({ type: 'square' });
-    }
     return this._tone;
   }
 
-  get Music() {
+  get ToneMusic() {
     return Music;
   }
 
@@ -204,9 +208,34 @@ export default class Runtime extends BaseRuntime {
   }
 
   stop() {
-    if (this._tone) {
-      this._tone.stop();
-    }
+    this.tone.stop();
+    this.pauseAllWaves();
     return super.stop();
+  }
+
+  playWave(soundId) {
+    return new Promise((resolve) => {
+      let audio = this._waveList.get(soundId);
+      if (!audio) {
+        const data = this._soundsList.find((sound) => sound.id === soundId);
+        const dataUrl = `data:${data.type};base64,${data.data}`;
+        audio = new Audio(dataUrl);
+        this._waveList.set(soundId, audio);
+      }
+      const handleEnded = () => {
+        audio.removeEventListener('ended', handleEnded);
+        audio.removeEventListener('pause', handleEnded);
+        resolve();
+      };
+      audio.addEventListener('ended', handleEnded);
+      audio.addEventListener('pause', handleEnded);
+      audio.play();
+    });
+  }
+
+  pauseAllWaves() {
+    this._waveList.forEach((audio) => {
+      audio.pause();
+    });
   }
 }

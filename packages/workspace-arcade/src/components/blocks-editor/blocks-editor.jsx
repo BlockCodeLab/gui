@@ -2,6 +2,7 @@ import { useLocale, useEditor } from '@blockcode/core';
 import { ScratchBlocks } from '@blockcode/blocks-editor';
 import { javascriptGenerator } from '@blockcode/blocks-player';
 import { CodeTab, pythonGenerator } from '@blockcode/workspace-blocks';
+import uid from '../../lib/uid';
 
 import makeToolboxXML from '../../lib/make-toolbox-xml';
 import buildBlocks from '../../blocks';
@@ -10,14 +11,16 @@ import styles from './blocks-editor.module.css';
 
 const Editor = CodeTab.Content;
 
-const DEFAULT_SOUND_NAME = 'DADADADUM';
-
-export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert, onReady }) {
+export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert, onReady, onRecordWave }) {
   const { getText } = useLocale();
-  const { assetList, fileList, selectedIndex, modifyFile } = useEditor();
+  const { assetList, fileList, selectedIndex, modifyFile, addAsset } = useEditor();
   const isStage = selectedIndex === 0;
 
   const messages = {
+    WIFI_ISCONNECTED: getText('arcade.blocks.isConnected', 'Wi-Fi is connected?'),
+    WIFI_WHENCONNECTED: getText('arcade.blocks.whenConnected', 'when Wi-Fi connected'),
+    WIFI_CONNECTTO: getText('arcade.blocks.connectTo', 'connect Wi-Fi: {ssid} password: {password}'),
+    WIFI_DISCONNECT: getText('arcade.blocks.disconnect', 'disconnect Wi-Fi'),
     EVENT_WHENKEYPRESSED_FN: getText('arcade.blocks.fnButton', 'fn'),
     CONTROL_STOP_OTHER: getText('arcade.blocks.stopOther', 'other scripts in sprite'),
     SENSING_OF_DISTANCETO_CENTER: getText('arcade.blocks.sensingOfDistanceto.center', 'center'),
@@ -45,8 +48,18 @@ export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert, o
     SOUND_MENU_POWER_DOWN: getText('arcade.blocks.musicMenu.powerDown', 'power down'),
   };
 
-  const workspace = ScratchBlocks.getMainWorkspace();
-  buildBlocks(assetList, fileList, selectedIndex, workspace);
+  buildBlocks(assetList, fileList, selectedIndex, () => {
+    addAsset({
+      id: uid(),
+      type: 'audio/wav',
+      name: getText(`waveSurfer.surfer.sound`, 'Sound'),
+      data: 'UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAABErAAABAAgAZGF0YQAAAAA=',
+      rate: 11025,
+      sampleCount: 0,
+      record: true,
+    });
+    onRecordWave();
+  });
 
   const stage = fileList[0];
   const target = fileList[selectedIndex]; // stage or sprite
@@ -61,15 +74,24 @@ export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert, o
 
   const backdropValue = stage.assets[stage.frame];
   const costumeValue = target.assets[target.frame];
-  const toolbox = makeToolboxXML(isStage, fileList.length - 1, backdropValue, costumeValue, DEFAULT_SOUND_NAME);
+  const soundValue = assetList.find((asset) => asset.type === 'audio/wav');
+  const toolbox = makeToolboxXML(
+    isStage,
+    fileList.length - 1,
+    backdropValue,
+    costumeValue,
+    soundValue ? soundValue.id : '',
+  );
 
   const updateToolboxBlockValue = (id, value) => {
+    const workspace = ScratchBlocks.getMainWorkspace();
     const block = workspace.getBlockById(id);
     if (block) {
       block.inputList[0].fieldRow[0].setValue(value);
     }
   };
   setTimeout(() => {
+    const workspace = ScratchBlocks.getMainWorkspace();
     if (workspace) {
       if (selectedIndex > 0) {
         ['glide', 'move', 'set'].forEach((prefix) => {
@@ -106,7 +128,6 @@ export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert, o
           id: assetId,
           name: asset.name,
           image: [assetId, asset.width, asset.height, asset.centerX, asset.centerY],
-          key: 0x2000,
         });
       }
     }

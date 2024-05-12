@@ -21,6 +21,7 @@
     "@blockcode/blocks-player": "workspace:*",
     "@blockcode/tone-player": "workspace:*",
     "@blockcode/workspace-blocks": "workspace:*",
-    "@blockcode/pixel-paint": "workspace:*"
+    "@blockcode/pixel-paint": "workspace:*",
+    "@blockcode/wave-surfer": "workspace:*"
   }
 }

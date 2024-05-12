@@ -1,8 +1,9 @@
 import { Text } from '@blockcode/ui';
-import { locales as blocksLocales, makeMenus, CodeTab, BackpackPane } from '@blockcode/workspace-blocks';
+import { locales as blocksLocales, makeMenus, CodeTab } from '@blockcode/workspace-blocks';
 import { PixelPaint, locales as paintLocales } from '@blockcode/pixel-paint';
+import { WaveSurfer, locales as soundLocales } from '@blockcode/wave-surfer';
 import generateMainFile from './lib/generate-main-file';
-import generateImageFiles from './lib/generate-images';
+import generateAssets from './lib/generate-assets';
 
 /* components */
 import BlocksEditor from './components/blocks-editor/blocks-editor';
@@ -10,11 +11,13 @@ import Sidebar from './components/sidebar/sidebar';
 import PaintText from './components/paint-text/paint-text';
 import BackdropsLibrary from './components/libraries/backdrops-library';
 import CostumesLibrary from './components/libraries/costumes-library';
+import SoundsLibrary from './components/libraries/sounds-library';
 
 /* assets */
 import getDefaultProject from './lib/default-project';
 import deviceIcon from './icon-device.svg';
 import paintIcon from './icon-paint.svg';
+import soundIcon from './icon-sound.svg';
 
 /* languages */
 import en from './l10n/en.yaml';
@@ -33,6 +36,7 @@ export default function ArcadeBlocksWorkspace({
 }) {
   addLocaleData(blocksLocales);
   addLocaleData(paintLocales);
+  addLocaleData(soundLocales);
 
   addLocaleData({
     en,
@@ -48,12 +52,23 @@ export default function ArcadeBlocksWorkspace({
   };
   newProject();
 
+  const handlePaint = () => selectTab(1);
+
+  const handleRecordWave = () => selectTab(2);
+
   const handleSetupLibrary = () => {
     return {
       BackdropsLibrary,
       CostumesLibrary,
+      SoundsLibrary,
     };
   };
+
+  const deviceFilters = [
+    {
+      usbVendorId: 12346, // Espressif Vendor ID
+    },
+  ];
 
   const extendsMenu = [
     {
@@ -71,12 +86,13 @@ export default function ArcadeBlocksWorkspace({
         {
           label: (
             <Text
-              id="arcade.menus.device.updateFirmware"
-              defaultMessage="Update Arcade firmware..."
+              id="arcade.menu.device.manual"
+              defaultMessage="Device manual"
             />
           ),
-          disabled: true,
-          onClick: () => {},
+          onClick: () => {
+            window.open('https://lab.blockcode.fun/#/2024/0501/');
+          },
         },
       ],
     },
@@ -88,8 +104,10 @@ export default function ArcadeBlocksWorkspace({
   };
 
   const onDownload = async (fileList, assetList) => {
-    return [].concat(generateMainFile(fileList[0], fileList.slice(1)), await generateImageFiles(assetList));
+    return [].concat(generateMainFile(fileList[0], fileList.slice(1)), await generateAssets(assetList));
   };
+
+  const onLoadFirmware = () => {};
 
   setLayout({
     menus: makeMenus({
@@ -97,8 +115,10 @@ export default function ArcadeBlocksWorkspace({
       setAlert,
       removeAlert,
       extendsMenu,
+      deviceFilters,
       onSave,
       onDownload,
+      onLoadFirmware,
     }),
 
     tabs: [
@@ -106,6 +126,7 @@ export default function ArcadeBlocksWorkspace({
         ...CodeTab,
         Content: () => (
           <BlocksEditor
+            onRecordWave={handleRecordWave}
             onShowPrompt={setPrompt}
             onShowAlert={setAlert}
             onHideAlert={removeAlert}
@@ -124,6 +145,22 @@ export default function ArcadeBlocksWorkspace({
           />
         ),
       },
+      // {
+      //   icon: soundIcon,
+      //   label: (
+      //     <Text
+      //       id="arcade.waveSurfer.sounds"
+      //       defaultMessage="Sounds"
+      //     />
+      //   ),
+      //   Content: () => (
+      //     <WaveSurfer
+      //       onShowAlert={setAlert}
+      //       onHideAlert={removeAlert}
+      //       onSetupLibrary={handleSetupLibrary}
+      //     />
+      //   ),
+      // },
     ],
 
     sidebars: [
@@ -131,7 +168,7 @@ export default function ArcadeBlocksWorkspace({
         expand: 'right',
         Content: () => (
           <Sidebar
-            onSelectTab={selectTab}
+            onPaint={handlePaint}
             onShowPrompt={setPrompt}
             onShowAlert={setAlert}
             onHideAlert={removeAlert}

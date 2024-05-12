@@ -5,7 +5,7 @@ import './sensing';
 import './sound';
 import './wifi';
 
-export default function (assetList, fileList, selectedIndex, workspace) {
+export default function (assetList, fileList, selectedIndex, onRecordSound) {
   const stage = fileList[0];
   const sprite = fileList[selectedIndex];
   const otherSprites = fileList.filter((_, i) => i > 0 && i !== selectedIndex);
@@ -169,7 +169,7 @@ export default function (assetList, fileList, selectedIndex, workspace) {
           {
             type: 'field_dropdown',
             name: 'TOUCHINGOBJECTMENU',
-            options: [[ScratchBlocks.Msg.SENSING_TOUCHINGOBJECT_EDGE, '_edge_']], // ...otherSpritesMenu],
+            options: [[ScratchBlocks.Msg.SENSING_TOUCHINGOBJECT_EDGE, '_edge_'], ...otherSpritesMenu],
           },
         ],
         extensions: ['colours_sensing', 'output_string'],
@@ -261,6 +261,29 @@ export default function (assetList, fileList, selectedIndex, workspace) {
         property.setText(property.menuGenerator_[0][0]);
         property.setValue(property.menuGenerator_[0][1]);
       }
+    },
+  };
+
+  ScratchBlocks.Blocks['sound_sounds_menu'] = {
+    init() {
+      this.jsonInit({
+        message0: '%1',
+        args0: [
+          {
+            type: 'field_dropdown',
+            name: 'SOUND_MENU',
+            options: [
+              ...assetList.filter((asset) => asset.type === 'audio/wav').map((sound) => [sound.name, sound.id]),
+              [ScratchBlocks.Msg.SOUND_RECORD, onRecordSound],
+            ],
+          },
+        ],
+        colour: ScratchBlocks.Colours.sounds.secondary,
+        colourSecondary: ScratchBlocks.Colours.sounds.secondary,
+        colourTertiary: ScratchBlocks.Colours.sounds.tertiary,
+        colourQuaternary: ScratchBlocks.Colours.sounds.quaternary,
+        extensions: ['output_string'],
+      });
     },
   };
 }
