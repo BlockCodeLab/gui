@@ -26,35 +26,32 @@ export function BlocksPlayer({ width, height, onSetup, ...props }) {
   ref.script = file.script;
   ref.xml = file.xml;
 
+  if (ref.current) {
+    const workspace = ScratchBlocks.getMainWorkspace();
+    if (workspace && workspace !== ref.workspace) {
+      ref.workspace = workspace;
+      workspace.addChangeListener((e) => {
+        if (workspace.isDragging()) return; // Don't update while changes are happening.
+        if (!supportedEvents.has(e.type)) return;
+
+        const xmlDom = ScratchBlocks.Xml.workspaceToDom(workspace);
+        // exclude broadcast messages variables
+        const xml = ScratchBlocks.Xml.domToText(xmlDom).replace(
+          /<variable type="broadcast_msg"[^>]+>[^<]+<\/variable>/gi,
+          '',
+        );
+        if (!ref.script || ref.xml !== xml) {
+          const script = javascriptGenerator.workspaceToCode(workspace);
+          if (ref.script !== script) modifyFile({ script });
+        }
+      });
+    }
+  }
+
   useEffect(() => {
     if (ref.current) {
       paperCore.setup(ref.current);
-
       if (onSetup) onSetup(ref.current);
-
-      const checkWorkspace = () => {
-        const workspace = ScratchBlocks.getMainWorkspace();
-        if (workspace) {
-          workspace.addChangeListener((e) => {
-            if (workspace.isDragging()) return; // Don't update while changes are happening.
-            if (!supportedEvents.has(e.type)) return;
-
-            const xmlDom = ScratchBlocks.Xml.workspaceToDom(workspace);
-            // exclude broadcast messages variables
-            const xml = ScratchBlocks.Xml.domToText(xmlDom).replace(
-              /<variable type="broadcast_msg"[^>]+>[^<]+<\/variable>/gi,
-              '',
-            );
-            if (!ref.script || ref.xml !== xml) {
-              const script = javascriptGenerator.workspaceToCode(workspace);
-              if (ref.script !== script) modifyFile({ script });
-            }
-          });
-          return;
-        }
-        setTimeout(checkWorkspace);
-      };
-      checkWorkspace();
     }
     return () => {
       paperCore.project.clear();
