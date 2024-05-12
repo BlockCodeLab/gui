@@ -46,7 +46,7 @@ export default {
           default: 0,
         },
       },
-      code(block) {
+      python(block) {
         let code = '';
         if (this.STATEMENT_PREFIX) {
           code += this.injectId(this.STATEMENT_PREFIX, block);
@@ -76,7 +76,7 @@ export default {
           default: 0,
         },
       },
-      code(block) {
+      python(block) {
         let code = '';
         if (this.STATEMENT_PREFIX) {
           code += this.injectId(this.STATEMENT_PREFIX, block);
@@ -123,7 +123,7 @@ export default {
           ],
         },
       },
-      code(block) {
+      python(block) {
         let code = '';
         if (this.STATEMENT_PREFIX) {
           code += this.injectId(this.STATEMENT_PREFIX, block);

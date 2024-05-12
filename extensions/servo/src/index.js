@@ -4,7 +4,7 @@ import iconImage from './icon.png';
 export default {
   name: 'Servo',
   description: 'Servo module',
-  collaborator: 'BlockCode Lab',
+  collaborator: 'Yeqin Gong',
   image: featureImage,
   icon: iconImage,
   tags: ['blocks', 'dupont', 'output', '3v3', '5v', 'motor'],
@@ -14,10 +14,12 @@ export default {
     en: {
       name: 'Servo',
       description: 'Standard servo module.',
+      collaborator: 'Yeqin Gong',
     },
     'zh-Hans': {
       name: '舵机',
       description: '通用舵机模块。',
+      collaborator: '龚业勤',
     },
   },
 };
