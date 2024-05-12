@@ -29,7 +29,7 @@ javascriptGenerator['control_repeat'] = (block) => {
   }
 
   const timesCode = javascriptGenerator.valueToCode(block, 'TIMES', javascriptGenerator.ORDER_NONE) || 0;
-  code += `for (let _ = 0; _ < runtime.number(${timesCode}); _++) {\n${NEXT_LOOP}${branchCode}}\n`;
+  code += `for (let _ = 0; _ < runtime.number(${timesCode}); _++) {\n${branchCode}${NEXT_LOOP}}\n${AWAIT_ABORT}`;
   return code;
 };
 
@@ -48,7 +48,7 @@ javascriptGenerator['control_forever'] = (block) => {
       ) + branchCode;
   }
 
-  code += `while (true) {\n${NEXT_LOOP}${branchCode}}\n`;
+  code += `while (true) {\n${branchCode}${NEXT_LOOP}}\n${AWAIT_ABORT}`;
   return code;
 };
 
@@ -93,7 +93,7 @@ javascriptGenerator['control_wait_until'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const conditionCode = javascriptGenerator.valueToCode(block, 'CONDITION', javascriptGenerator.ORDER_NONE) || 'false';
-  code += `while (!(${conditionCode})) {\n${NEXT_LOOP}}\n`;
+  code += `while (!(${conditionCode})) {\n${NEXT_LOOP}}\n${AWAIT_ABORT}`;
   return code;
 };
 
@@ -113,7 +113,7 @@ javascriptGenerator['control_repeat_until'] = (block) => {
   }
 
   const conditionCode = javascriptGenerator.valueToCode(block, 'CONDITION', javascriptGenerator.ORDER_NONE) || 'false';
-  code += `while (!(${conditionCode})) {\n${NEXT_LOOP}${branchCode}}\n`;
+  code += `while (!(${conditionCode})) {\n${branchCode}${NEXT_LOOP}}\n${AWAIT_ABORT}`;
   return code;
 };
 
@@ -133,7 +133,7 @@ javascriptGenerator['control_while'] = (block) => {
   }
 
   const conditionCode = javascriptGenerator.valueToCode(block, 'CONDITION', javascriptGenerator.ORDER_NONE) || 'false';
-  code += `while (${conditionCode}) {\n${NEXT_LOOP}${branchCode}}\n`;
+  code += `while (${conditionCode}) {\n${branchCode}${NEXT_LOOP}}\n${AWAIT_ABORT}`;
   return code;
 };
 
