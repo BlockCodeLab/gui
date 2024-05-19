@@ -42,7 +42,26 @@ const xmlEscape = (unsafe) => {
   });
 };
 
-export default function (extensionObject, getText) {
+const ShadowTypes = {
+  number: 'math_number',
+  angle: 'math_angle',
+  text: 'text',
+  string: 'text',
+  color: 'colour_picker',
+  matrix: 'matrix',
+  note: 'note',
+};
+
+const FieldTypes = {
+  number: 'NUM',
+  angle: 'NUM',
+  text: 'TEXT',
+  string: 'TEXT',
+  matrix: 'MATRIX',
+  note: 'NOTE',
+};
+
+export default function (extensionObject, getText, isStage) {
   const { id: extensionId } = extensionObject;
 
   const extensionName = maybeTranslateMessage(extensionObject.name, getText);
@@ -53,13 +72,18 @@ export default function (extensionObject, getText) {
   if (extensionObject.iconURI) {
     categoryXML += ` iconURI="${xmlEscape(extensionObject.iconURI)}"`;
   }
-  categoryXML += `>\n`;
+  categoryXML += `>`;
 
   extensionObject.blocks.forEach((block) => {
     if (block === '---') {
-      categoryXML += `${blockSeparator}\n`;
+      categoryXML += `${blockSeparator}`;
       return categoryXML;
     }
+
+    // the block only for sprite
+    if (isStage && block.useStage === false) return;
+    // the block only for stage
+    if (!isStage && block.useSprite === false) return;
 
     const blockId = `${extensionId}_${block.id.toLowerCase()}`;
     const blockJson = {
@@ -99,14 +123,16 @@ export default function (extensionObject, getText) {
         blockJson.output = 'String'; // TODO: text or nubmer
         blockJson.outputShape = OUTPUT_SHAPE_ROUND;
       }
+      blockJson.checkboxInFlyout = block.monitoring !== false;
     } else {
       blockJson.previousStatement = null;
       blockJson.nextStatement = null;
     }
 
-    let blockXML = `<block type="${xmlEscape(blockId)}">\n`;
+    let blockXML = `<block type="${xmlEscape(blockId)}">`;
 
     if (block.inputs) {
+      blockJson.checkboxInFlyout = false;
       blockJson.args0 = [].concat(
         blockJson.args0 || [],
         Object.entries(block.inputs).map(([name, arg]) => {
@@ -121,19 +147,14 @@ export default function (extensionObject, getText) {
           } else if (arg.type === 'boolean') {
             argObject.check = 'Boolean';
           } else {
-            blockXML += `<value name="${xmlEscape(name)}">\n`;
-            if (arg.type === 'number') {
-              blockXML += '<shadow type="math_number">\n';
-              blockXML += `<field name="NUM">`;
-            } else if (arg.type === 'angle') {
-              blockXML += '<shadow type="math_angle">\n';
-              blockXML += `<field name="NUM">`;
-            } else {
-              blockXML += `<shadow type="${xmlEscape(arg.type)}">\n`;
-              blockXML += `<field name="${xmlEscape(arg.type.toUpperCase())}">`;
+            blockXML += `<value name="${xmlEscape(name)}">`;
+            if (ShadowTypes[arg.type]) {
+              blockXML += `<shadow type="${ShadowTypes[arg.type]}">`;
+              if (arg.default && FieldTypes[arg.type]) {
+                blockXML += `<field name="${FieldTypes[arg.type]}">${xmlEscape(arg.default)}</field>`;
+              }
+              blockXML += '</shadow>';
             }
-            blockXML += `${xmlEscape(arg.default)}</field>\n`;
-            blockXML += '</shadow>\n';
             blockXML += '</value>';
           }
 
@@ -156,10 +177,10 @@ export default function (extensionObject, getText) {
       pythonGenerator[blockId] = () => '';
     }
 
-    blockXML += '</block>\n';
+    blockXML += '</block>';
     categoryXML += blockXML;
   });
 
-  categoryXML += '</category>\n';
+  categoryXML += '</category>';
   return categoryXML;
 }

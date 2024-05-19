@@ -9,6 +9,7 @@ export default function ExtensionLibrary({ onSelect, onClose, onFilter, onShowPr
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const { language, getText } = useLocale();
+  const { addAsset } = useEditor();
 
   const handleFilter = (extensionInfo) => {
     if (onFilter) {
@@ -39,6 +40,17 @@ export default function ExtensionLibrary({ onSelect, onClose, onFilter, onShowPr
                 onShowAlert('importing', { id: extensionInfo.id });
                 const { default: extensionObject } = await import(`@blockcode/extension-${extensionInfo.id}/blocks`);
                 extensionObject.id = extensionInfo.id;
+                if (extensionObject.files) {
+                  extensionObject.files.forEach(async (file) => {
+                    try {
+                      addAsset({
+                        ...file,
+                        id: `extensions/${extensionInfo.id}/${file.name}`,
+                        content: await fetch(file.uri).then((res) => res.text()),
+                      });
+                    } catch (err) {}
+                  });
+                }
                 onSelect(extensionObject);
                 onHideAlert(extensionInfo.id);
                 onClose();

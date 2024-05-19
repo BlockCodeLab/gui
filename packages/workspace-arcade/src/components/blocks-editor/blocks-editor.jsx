@@ -111,8 +111,8 @@ export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert, o
     // generate javascript for player
     blocks.forEach((block) => {
       const blockId = `${extensionId}_${block.id.toLowerCase()}`;
-      if (block.player) {
-        javascriptGenerator[blockId] = block.player.bind(javascriptGenerator);
+      if (block.vm) {
+        javascriptGenerator[blockId] = block.vm.bind(javascriptGenerator);
       } else {
         javascriptGenerator[blockId] = () => '';
       }

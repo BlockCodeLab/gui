@@ -13,6 +13,36 @@ import extensionIcon from './icon-extension.svg';
 
 const loadedExtensions = new Map();
 
+const importExtensions = async (extensions, addAsset, addLocaleData, onLoadExtension) => {
+  if (extensions) {
+    for (const extensionId of extensions) {
+      if (!loadedExtensions.has(extensionId)) {
+        const { default: extensionObject } = await import(`@blockcode/extension-${extensionId}/blocks`);
+        extensionObject.id = extensionId;
+        if (extensionObject.files) {
+          extensionObject.files.forEach(async (file) => {
+            try {
+              addAsset({
+                ...file,
+                id: `extensions/${extensionId}/${file.name}`,
+                content: await fetch(file.uri).then((res) => res.text()),
+              });
+            } catch (err) {}
+          });
+        }
+        addLocaleData(extensionObject.translations);
+        if (onLoadExtension) {
+          onLoadExtension({
+            ...extensionObject,
+            blocks: extensionObject.blocks.filter((block) => typeof block !== 'string'),
+          });
+        }
+        loadedExtensions.set(extensionId, extensionObject);
+      }
+    }
+  }
+};
+
 export default function BlocksEditor({
   toolbox: defaultToolbox,
   messages,
@@ -29,27 +59,44 @@ export default function BlocksEditor({
   onReady,
 }) {
   const { addLocaleData, getText } = useLocale();
-  const { editor, fileList, selectedIndex, openFile, modifyFile } = useEditor();
+  const { editor, fileList, selectedIndex, openFile, modifyFile, addAsset } = useEditor();
   const [workspace, setWorkspace] = useState();
   const [prompt, setPrompt] = useState(false);
   const [extensionLibrary, setExtensionLibrary] = useState(false);
+  const [extensionsImported, setExtensionsImported] = useState(false);
 
   if (editor.splash) {
-    let projectBlocksReady = true;
-    if (fileList.length > 1) {
-      for (let i = 0; i > -fileList.length; i--) {
-        const file = fileList.at(i);
-        if (!file.content) {
-          projectBlocksReady = false;
-          setTimeout(() => {
-            openFile((i + fileList.length) % fileList.length);
-          }, 100);
-          break;
+    if (editor.splash === true && extensionsImported === false) {
+      loadedExtensions.clear();
+      // import extensions
+      setExtensionsImported(
+        setTimeout(() => {
+          setExtensionsImported(
+            importExtensions(editor.extensions, addAsset, addLocaleData, onLoadExtension).then(() =>
+              setExtensionsImported(true),
+            ),
+          );
+        }, 100),
+      );
+    }
+    // load files' blocks one by one
+    if (extensionsImported === true) {
+      let projectBlocksReady = true;
+      if (fileList.length > 1) {
+        for (let i = 0; i > -fileList.length; i--) {
+          const file = fileList.at(i);
+          if (!file.content) {
+            projectBlocksReady = false;
+            setTimeout(() => {
+              openFile((i + fileList.length) % fileList.length);
+            }, 100);
+            break;
+          }
         }
       }
-    }
-    if (projectBlocksReady && typeof editor.splash === 'boolean') {
-      editor.splash = setTimeout(onReady, 100);
+      if (projectBlocksReady) {
+        setTimeout(onReady, 100);
+      }
     }
   }
 
@@ -94,7 +141,7 @@ export default function BlocksEditor({
 
   let toolboxXML = defaultToolbox || makeToolboxXML();
   loadedExtensions.forEach((extensionObject) => {
-    toolboxXML += loadExtension(extensionObject, getText);
+    toolboxXML += loadExtension(extensionObject, getText, selectedIndex === 0);
   });
 
   const handleChange = (newXml, workspace) => {
@@ -121,14 +168,19 @@ export default function BlocksEditor({
   const handleExtensionLibraryClose = () => setExtensionLibrary(false);
 
   const handleSelectExtension = (extensionObject) => {
-    addLocaleData(extensionObject.translations);
-    if (onLoadExtension) {
-      onLoadExtension(extensionObject);
+    if (!loadedExtensions.has(extensionObject.id)) {
+      addLocaleData(extensionObject.translations);
+      if (onLoadExtension) {
+        onLoadExtension({
+          ...extensionObject,
+          blocks: extensionObject.blocks.filter((block) => typeof block !== 'string'),
+        });
+      }
+      loadedExtensions.set(extensionObject.id, extensionObject);
     }
-    loadedExtensions.set(extensionObject.id, extensionObject);
     setTimeout(() => {
       workspace.toolbox_.setSelectedCategoryById(extensionObject.id);
-    }, 10);
+    }, 100);
   };
 
   return (

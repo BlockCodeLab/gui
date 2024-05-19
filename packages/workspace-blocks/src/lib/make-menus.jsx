@@ -1,3 +1,4 @@
+import { getExtensions } from '../macros/extensions' with { type: 'macro' };
 import { svgAsDataUri } from 'save-svg-as-png';
 import { Keys } from '@blockcode/core';
 import { Text, Spinner } from '@blockcode/ui';
@@ -10,6 +11,8 @@ import editIcon from './menu-icons/icon-edit.svg';
 import deviceIcon from './menu-icons/icon-device.svg';
 
 const isMac = /Mac/i.test(navigator.platform || navigator.userAgent);
+
+const allExtensions = getExtensions();
 
 export default function ({
   newProject,
@@ -157,16 +160,28 @@ export default function ({
           ),
           hotkey: [isMac ? Keys.COMMAND : Keys.CONTROL, Keys.S],
           async onClick({ context }) {
-            let thumb;
+            let thumb, extensions;
             const workspace = ScratchBlocks.getMainWorkspace();
             if (workspace) {
               thumb = await svgAsDataUri(workspace.getCanvas(), {});
+              // save extensions
+              extensions = Array.from(
+                new Set(
+                  Object.values(workspace.blockDB_)
+                    .filter((block) => allExtensions.find((extension) => extension === block.category_))
+                    .map((block) => block.category_),
+                ),
+              );
             }
             context.saveNow((data) => {
               const newData = {
                 thumb,
                 ...data,
                 ...onSave(),
+                editor: {
+                  ...data.editor,
+                  extensions,
+                },
               };
               newData.fileList = newData.fileList.map((file) => ({
                 ...file,
@@ -326,8 +341,6 @@ export default function ({
             await downloadFiles(device, context.fileList, context.assetList);
           },
         },
-      ],
-      [
         {
           label: (
             <Text
