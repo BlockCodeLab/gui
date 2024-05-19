@@ -114,20 +114,28 @@ export function BlocksEditor({ toolbox, globalVariables, messages, onWorkspaceCr
     Object.entries(messages).forEach(([key, value]) => {
       ScratchBlocks.Msg[key] = value;
     });
+    if (ref.workspace) {
+      updateToolbox();
+      setTimeout(() => loadXmlToWorkspace(), 50);
+    }
+  }, [language]);
 
+  useEffect(() => {
     toolbox = toolbox || makeToolboxXML;
     if (typeof toolbox === 'function') {
       toolbox = toolbox();
     }
-    if (ref.workspace) updateToolbox();
-  }, [toolbox, language]);
+    if (ref.workspace) {
+      updateToolbox();
+    }
+  }, [toolbox]);
 
   useEffect(() => {
     if (ref.workspace) {
       loadXmlToWorkspace();
       ref.workspace.clearUndo();
     }
-  }, [selectedIndex, language]);
+  }, [selectedIndex]);
 
   useEffect(() => {
     if (ref.current) {
