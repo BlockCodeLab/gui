@@ -22,18 +22,7 @@ export default function GUI() {
   const [splash, setSplash] = useState(false);
   const [workspaceLibraryOpened, setWorkspaceLibraryOpened] = useState(false);
   const [storeLibraryOpened, setStoreLibraryOpened] = useState(false);
-  const {
-    menus,
-    tabs,
-    sidebars,
-    pane,
-    tutorials,
-    canEditProjectName,
-    selectedTabIndex,
-    selectTab,
-    setLayout,
-    clearLayout,
-  } = useLayout();
+  const { menus, tabs, sidebars, pane, tutorials, canEditProjectName, setLayout, clearLayout } = useLayout();
   const { alerts, setAlert, removeAlert } = useAlert();
   const { addLocaleData, getText } = useLocale();
   const { editor, setEditor, openProject, closeProject, modified } = useEditor();
@@ -88,6 +77,10 @@ export default function GUI() {
       ...project,
       selectedIndex: 0,
     });
+  };
+
+  const selectTab = (activedTabIndex) => {
+    setEditor({ activedTabIndex });
   };
 
   const handleOpenWorkspace = (workspacePackage, open = defaultOpenProject) => {
@@ -183,7 +176,7 @@ export default function GUI() {
               {tabs.map(({ Content: TabContent, ...tab }, index) => (
                 <>
                   <TabLabel
-                    checked={index === selectedTabIndex}
+                    checked={index === editor.activedTabIndex}
                     key={index}
                     name={index}
                     onSelect={() => selectTab(index)}
@@ -196,7 +189,7 @@ export default function GUI() {
                     name={index}
                     key={index}
                   >
-                    {index === selectedTabIndex && <TabContent />}
+                    {index === editor.activedTabIndex && <TabContent />}
                   </TabPanel>
                 </>
               ))}
