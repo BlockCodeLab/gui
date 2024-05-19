@@ -1,11 +1,11 @@
 import { ScratchBlocks } from '@blockcode/blocks-editor';
 import { javascriptGenerator } from '@blockcode/blocks-player';
 
-const HAT_CALLBACK = `async (target, done) => {\ndo {\n${javascriptGenerator.HAT_CODE}} while (false);\n  done();\n}`;
+const HAT_CALLBACK = `async (target, done) => {\ndo {\n${javascriptGenerator.HAT_CODE}} while (false);\ndone();\n}`;
 
 javascriptGenerator['event_whenkeypressed'] = (block) => {
   const keyValue = block.getFieldValue('KEY_OPTION');
-  return `runtime.when('keypressed:${keyValue}', ${HAT_CALLBACK}, target);\ncounter++;\n`;
+  return `runtime.when('keypressed:${keyValue}', ${HAT_CALLBACK}, target);\n`;
 };
 
 javascriptGenerator['event_whenbackdropswitchesto'] = (block) => {

@@ -87,7 +87,7 @@ javascriptGenerator['motion_goto'] = (block) => {
   if (toCode === '_random_') {
     toCode = `{ x: runtime.random('width'), y: runtime.random('height') }`;
   } else {
-    toCode = `runtime.getSpriteByIdOrName('${toPlace}').util`;
+    toCode = `runtime.getSpriteByIdOrName('${toCode}').util`;
   }
   code += `target.util.goto(${toCode});\n`;
   return code;
@@ -118,7 +118,7 @@ javascriptGenerator['motion_glideto'] = (block) => {
   if (toCode === '_random_') {
     toCode = `{ x: runtime.random('width'), y: runtime.random('height') }`;
   } else {
-    toCode = `runtime.getSpriteByIdOrName('${toPlace}').util`;
+    toCode = `runtime.getSpriteByIdOrName('${toCode}').util`;
   }
   code += `await target.util.glide(${secsCode}, ${toCode});\n${AWAIT_ABORT}`;
   return code;

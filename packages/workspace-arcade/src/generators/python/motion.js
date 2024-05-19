@@ -54,7 +54,7 @@ pythonGenerator['motion_pointtowards'] = (block) => {
   if (towardsCode === '_random_') {
     towardsCode = '';
   } else {
-    towardsCode = `stage.get_sprite_by_id('${towardsCode}')`;
+    towardsCode = `stage.get_child('${towardsCode}')`;
   }
   code += `target.towards(${towardsCode})\n`;
   return code;
@@ -85,7 +85,7 @@ pythonGenerator['motion_goto'] = (block) => {
   if (toCode === '_random_') {
     toCode = '';
   } else {
-    toCode = `place = stage.get_sprite_by_id('${toCode}')`;
+    toCode = `stage.get_child('${toCode}')`;
   }
   code += `target.goto(${toCode})\n`;
   return code;
@@ -117,7 +117,7 @@ pythonGenerator['motion_glideto'] = (block) => {
   if (toCode === '_random_') {
     toCode = '';
   } else {
-    toCode = `place = stage.get_sprite_by_id('${toCode}')`;
+    toCode = `stage.get_child('${toCode}')`;
   }
   code += `await target.glide(num(${secsCode}), ${toCode})\n`;
   return code;

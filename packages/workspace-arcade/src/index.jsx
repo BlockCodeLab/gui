@@ -83,17 +83,19 @@ export default function ArcadeBlocksWorkspace({
         </>
       ),
       menuItems: [
-        {
-          label: (
-            <Text
-              id="arcade.menu.device.manual"
-              defaultMessage="Device manual"
-            />
-          ),
-          onClick: () => {
-            window.open('https://lab.blockcode.fun/#/2024/0501/');
+        [
+          {
+            label: (
+              <Text
+                id="arcade.menu.device.manual"
+                defaultMessage="Device manual"
+              />
+            ),
+            onClick: () => {
+              window.open('https://lab.blockcode.fun/#/2024/0501/');
+            },
           },
-        },
+        ],
       ],
     },
   ];
@@ -107,8 +109,6 @@ export default function ArcadeBlocksWorkspace({
     return [].concat(generateMainFile(fileList[0], fileList.slice(1)), await generateAssets(assetList));
   };
 
-  const onLoadFirmware = () => {};
-
   setLayout({
     menus: makeMenus({
       newProject,
@@ -118,7 +118,6 @@ export default function ArcadeBlocksWorkspace({
       deviceFilters,
       onSave,
       onDownload,
-      onLoadFirmware,
     }),
 
     tabs: [

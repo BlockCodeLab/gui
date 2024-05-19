@@ -2,9 +2,9 @@ import { ScratchBlocks } from '@blockcode/blocks-editor';
 import { javascriptGenerator } from './generator';
 
 const AWAIT_ABORT = 'if (abort || !runtime.running) break;\n';
-const HAT_CALLBACK = `async (done) => {\ndo {\n${javascriptGenerator.HAT_CODE}} while (false);\n  done();\n}`;
+const HAT_CALLBACK = `async (done) => {\ndo {\n${javascriptGenerator.HAT_CODE}} while (false);\ndone();\n}`;
 
-javascriptGenerator['event_whenflagclicked'] = (block) => {
+javascriptGenerator['event_whenflagclicked'] = () => {
   return `runtime.when('start', ${HAT_CALLBACK});\n`;
 };
 

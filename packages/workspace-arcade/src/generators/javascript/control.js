@@ -1,6 +1,6 @@
 import { javascriptGenerator } from '@blockcode/blocks-player';
 
-const HAT_CALLBACK = `async (target, done) => {\ndo {\n${javascriptGenerator.HAT_CODE}} while (false);\n  done();\n}`;
+const HAT_CALLBACK = `async (target, done) => {\ndo {\n${javascriptGenerator.HAT_CODE}} while (false);\ndone();\n}`;
 
 javascriptGenerator['control_start_as_clone'] = () => {
   return `runtime.whenCloneStart(target, ${HAT_CALLBACK});\n`;

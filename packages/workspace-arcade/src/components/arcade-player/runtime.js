@@ -15,6 +15,7 @@ export default class Runtime extends BaseRuntime {
     this._tone = new Tone({ type: 'square' });
     this._soundsList = soundsList;
     this._waveList = new Map();
+    this._wifiConnected = false;
   }
 
   when(eventName, listener, raster = null) {
@@ -60,6 +61,14 @@ export default class Runtime extends BaseRuntime {
   get sprites() {
     const spriteLayer = paperCore.project.layers['sprite'];
     return spriteLayer.children;
+  }
+
+  get wifiConnected() {
+    return this._wifiConnected;
+  }
+
+  set wifiConnected(connected) {
+    this._wifiConnected = connected;
   }
 
   getSpriteByIdOrName(idOrName) {
@@ -123,6 +132,7 @@ export default class Runtime extends BaseRuntime {
   _fireKey(key) {
     this[`_${key}Key`] = true;
     this.fire(`keypressed:${key}`);
+    this.fire(`keypressed:any`);
   }
 
   _releaseKey(key) {
