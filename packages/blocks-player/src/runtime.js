@@ -12,6 +12,7 @@ export default class Runtime extends EventEmitter {
     this._requestStop = requestStop;
     this._timer = 0;
     this._timers = [];
+    this._data = {};
     this._greaterThen = {};
     this._eventsHappening = {};
   }
@@ -23,6 +24,14 @@ export default class Runtime extends EventEmitter {
 
     const launcher = new Function('runtime', code);
     launcher(this);
+  }
+
+  get core() {
+    return paperCore;
+  }
+
+  get data() {
+    return this._data;
   }
 
   get running() {
@@ -110,6 +119,7 @@ export default class Runtime extends EventEmitter {
   }
 
   async stop() {
+    this.emit('stop');
     this._running = false;
     await this.nextFrame();
     this._timers.forEach(clearTimeout);
@@ -140,5 +150,9 @@ export default class Runtime extends EventEmitter {
     index %= length;
     index += length;
     return index % length;
+  }
+
+  clamp(n, min, max) {
+    return Math.min(Math.max(n, min), max);
   }
 }

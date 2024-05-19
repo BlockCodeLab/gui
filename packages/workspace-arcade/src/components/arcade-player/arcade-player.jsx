@@ -1,5 +1,6 @@
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { useEditor } from '@blockcode/core';
+import { ScratchBlocks } from '@blockcode/blocks-editor';
 import { BlocksPlayer, paperCore } from '@blockcode/blocks-player';
 
 import Runtime from './runtime';
@@ -9,7 +10,7 @@ import createUtil from './target-util';
 export default function ArcadePlayer({ stageSize, playing, onRequestStop }) {
   const [canvas, setCanvas] = useState(null);
   const [currentRuntime, setCurrentRuntime] = useState(false);
-  const { fileList, assetList, selectedIndex, openFile, modifyFile } = useEditor();
+  const { editor, fileList, assetList, selectedIndex, openFile, modifyFile } = useEditor();
 
   const zoomRatio = stageSize === 'small' ? 1 : 1.5;
   const viewSize = new paperCore.Size(Runtime.VIEW_WIDTH * zoomRatio, Runtime.VIEW_HEIGHT * zoomRatio);
@@ -88,14 +89,24 @@ export default function ArcadePlayer({ stageSize, playing, onRequestStop }) {
         runtime.handleKeyUp = runtime.handleKeyUp.bind(runtime);
         document.addEventListener('keydown', runtime.handleKeyDown);
         document.addEventListener('keyup', runtime.handleKeyUp);
+
+        const workspace = ScratchBlocks.getMainWorkspace();
+        if (workspace) {
+          workspace.addChangeListener(onRequestStop);
+        }
         setCurrentRuntime(runtime);
       }
     } else {
       if (currentRuntime) {
         // stop
+        const workspace = ScratchBlocks.getMainWorkspace();
+        if (workspace) {
+          workspace.removeChangeListener(onRequestStop);
+        }
         document.removeEventListener('keydown', currentRuntime.handleKeyDown);
         document.removeEventListener('keyup', currentRuntime.handleKeyUp);
         currentRuntime.stop().then(() => {
+          stageLayer.removeChildren(1);
           dialogLayer.removeChildren();
           setCurrentRuntime(false);
         });
@@ -129,14 +140,13 @@ export default function ArcadePlayer({ stageSize, playing, onRequestStop }) {
             if (!raster) {
               raster = layer.addChild(new paperCore.Raster());
               raster.name = target.id;
-              raster.data = {
-                assets,
-                name: target.name,
-              };
               raster.util = createUtil(raster, isStage);
               raster.util.on('update', () => updateTargetFromRaster(raster, isStage));
             }
-            raster.data.assets = assets;
+            raster.data = {
+              assets,
+              name: target.name,
+            };
 
             if (isStage) {
               raster.util.backdrop = target.frame + 1;
@@ -148,7 +158,7 @@ export default function ArcadePlayer({ stageSize, playing, onRequestStop }) {
               raster.util.size = target.size;
               raster.util.hidden = target.hidden;
               raster.util.direction = target.direction;
-              raster.data.rotationStyle = target.rotationStyle;
+              raster.util.rotationStyle = target.rotationStyle;
             }
           });
 
@@ -181,6 +191,8 @@ export default function ArcadePlayer({ stageSize, playing, onRequestStop }) {
     new paperCore.Layer({ name: 'dialog' });
     paperCore.project.layers.sprite.activate();
   };
+
+  useEffect(() => onRequestStop(), [editor.activedTabIndex]);
 
   return (
     <BlocksPlayer

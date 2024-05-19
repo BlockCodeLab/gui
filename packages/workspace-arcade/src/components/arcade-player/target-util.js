@@ -144,13 +144,12 @@ class StageUtil extends Util {
       if (!asset) return;
 
       this.data.frame = frame;
-      this.requestUpdate();
-
       loadImageFromDataURL(asset).then((image) => {
         this.raster.image = image;
         this.raster.pivot = new paperCore.Point(asset.centerX - asset.width / 2, asset.centerY - asset.height / 2);
         this.raster.position.x = paperCore.view.center.x;
         this.raster.position.y = paperCore.view.center.y;
+        this.requestUpdate();
       });
     }
   }
@@ -228,8 +227,8 @@ class SpriteUtil extends Util {
   set x(x) {
     if (this.editing || x != this.data.x || isNaN(this.raster.position.x)) {
       this.data.x = x;
-      this.requestUpdate();
       this.raster.position.x = paperCore.view.center.x + this.data.x;
+      this.requestUpdate();
       if (this.contour) {
         this.contour.position.x = this.raster.position.x;
       }
@@ -242,8 +241,8 @@ class SpriteUtil extends Util {
   set y(y) {
     if (this.editing || y != this.data.y || isNaN(this.raster.position.y)) {
       this.data.y = y;
-      this.requestUpdate();
       this.raster.position.y = paperCore.view.center.y - this.data.y;
+      this.requestUpdate();
       if (this.contour) {
         this.contour.position.y = this.raster.position.y;
       }
@@ -269,9 +268,9 @@ class SpriteUtil extends Util {
     ) {
       this.data.x = x;
       this.data.y = y;
-      this.requestUpdate();
       this.raster.position.x = paperCore.view.center.x + this.data.x;
       this.raster.position.y = paperCore.view.center.y - this.data.y;
+      this.requestUpdate();
 
       if (this.contour) {
         this.contour.position = this.raster.position;
@@ -321,12 +320,11 @@ class SpriteUtil extends Util {
   set size(value) {
     const size = this._size(value);
     if (this.editing || size !== this.data.size) {
-      this.data.size = size;
-      this.requestUpdate();
-
       const scaling = size / 100;
+      this.data.size = size;
       this.raster.scaling.x = scaling;
       this.raster.scaling.y = scaling;
+      this.requestUpdate();
 
       if (this.contour) {
         this.contour.scaling = this.raster.scaling;
@@ -378,7 +376,6 @@ class SpriteUtil extends Util {
     if (this.editing || direction !== this.data.direction || style !== this.data.rotationStyle) {
       this.data.direction = direction;
       this.data.rotationStyle = style;
-      this.requestUpdate();
 
       if (this.data.rotationStyle === RotationStyle.ALL_AROUND) {
         this.raster.rotation = this.direction - Runtime.DEFAULT_DIRECTION;
@@ -396,6 +393,7 @@ class SpriteUtil extends Util {
       } else {
         this.raster.rotation = 0;
       }
+      this.requestUpdate();
 
       if (this.contour) {
         this.contour.rotation = this.raster.rotation;
@@ -410,8 +408,7 @@ class SpriteUtil extends Util {
     const radian = degToRad(this.direction - Runtime.DEFAULT_DIRECTION);
     const dx = steps * Math.cos(radian);
     const dy = steps * Math.sin(radian);
-    this.x += dx;
-    this.y -= dy;
+    this.goto(this.x + dx, this.y - dy);
   }
 
   towards(target) {
@@ -510,8 +507,7 @@ class SpriteUtil extends Util {
     if (this.contour.bounds.bottom > this.stageBounds.bottom) {
       dy += this.stageBounds.bottom - this.contour.bounds.bottom;
     }
-    this.x += dx;
-    this.y -= dy;
+    this.goto(this.x + dx, this.y - dy);
   }
 
   get dialog() {
