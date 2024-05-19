@@ -1,0 +1,29 @@
+en:
+  extension.pen.name: Pen
+  extension.pen.erase: erase all
+  extension.pen.stamp: stamp
+  extension.pen.down: pen down
+  extension.pen.up: pen up
+  extension.pen.penColor: set pen color to [COLOR]
+  extension.pen.color: color
+  extension.pen.saturation: saturation
+  extension.pen.brightness: brightness
+  extension.pen.changePen: change pen [OPTION] by [VALUE]
+  extension.pen.setPen: set pen [OPTION] to [VALUE]
+  extension.pen.changeSize: change pen size by [SIZE]
+  extension.pen.setSize: set pen size to [SIZE]
+
+zh-Hans:
+  extension.pen.name: 画笔
+  extension.pen.erase: 全部擦除
+  extension.pen.stamp: 图章
+  extension.pen.down: 落笔
+  extension.pen.up: 抬笔
+  extension.pen.penColor: 将笔的颜色设为 [COLOR]
+  extension.pen.color: 颜色
+  extension.pen.saturation: 饱和度
+  extension.pen.brightness: 亮度
+  extension.pen.changePen: 将笔的 [OPTION] 增加 [VALUE]
+  extension.pen.setPen: 将笔的 [OPTION] 设为 [VALUE]
+  extension.pen.changeSize: 将笔的粗细增加 [SIZE]
+  extension.pen.setSize: 将笔的粗细设为 [SIZE]
