@@ -249,8 +249,6 @@ export function useEditor() {
           modifiedDate,
           editor: {
             package: editor.package,
-            extensions: editor.extensions,
-            options: editor.options,
           },
         }),
       );
