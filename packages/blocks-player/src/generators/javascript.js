@@ -1,5 +1,6 @@
 export { javascriptGenerator as default } from './javascript/generator';
 
+import './javascript/color';
 import './javascript/control';
 import './javascript/data';
 import './javascript/event';

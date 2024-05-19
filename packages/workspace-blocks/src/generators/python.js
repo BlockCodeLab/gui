@@ -1,5 +1,6 @@
 export { pythonGenerator } from './python/generator';
 
+import './python/color';
 import './python/control';
 import './python/data';
 import './python/event';
