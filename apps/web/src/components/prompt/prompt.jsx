@@ -12,7 +12,6 @@ export default function Prompt({ title, label, content, inputMode, defaultValue,
   };
 
   const handleKeyDown = (e) => {
-    e.preventDefault();
     e.stopPropagation();
     if (e.key === 'Escape') onClose();
     if (e.key === 'Enter') {
