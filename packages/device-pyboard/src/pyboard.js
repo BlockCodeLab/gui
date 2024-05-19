@@ -348,6 +348,23 @@ export default class MicroPythonBoard {
     const hexArray = Array.from(contentUint8).map((c) => c.toString(16).padStart(2, '0'));
     let out = '';
     out += await this.enterRawRepl();
+    // mkdir
+    let destcomps = dest.split('/');
+    destcomps.pop(); // remove filename
+    if (destcomps.length > 0) {
+      out += await this.execRaw(`import os`);
+      const dirs = [];
+      destcomps.reduce((path, dir) => {
+        if (dir === '' || (path !== '' && path.at(-1) !== '/')) path += '/';
+        path += dir;
+        if (path !== '/') dirs.push(path);
+        return path;
+      }, '');
+      for (const dir of dirs) {
+        out += await this.execRaw(`os.mkdir('${dir}')`);
+      }
+    }
+    // write file
     out += await this.execRaw(`f=open('${dest}','w')\nw=f.write`);
     const chunkSize = 48;
     for (let i = 0; i < hexArray.length; i += chunkSize) {
@@ -359,7 +376,6 @@ export default class MicroPythonBoard {
     }
     out += await this.execRaw(`f.close()`);
     out += await this.exitRawRepl();
-
     dataConsumer(100);
     return out;
   }
