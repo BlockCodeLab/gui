@@ -162,13 +162,13 @@ export default function DrawBox({ image: defaultImage, selectedTool, zoom, undoL
 
   const fill = (point) => {
     if (point.invalid) return;
-    const repalceColor = new Color(Array.from(imageData.data.slice(point.index, point.index + 3)));
+    const repalceColor = new Color(Array.from(imageData.data.slice(point.index, point.index + 4)));
 
     const points = [];
     const checkPoint = (point) => {
       if (point.invalid) return;
       if (!points.includes(point.index)) {
-        const color = new Color(Array.from(imageData.data.slice(point.index, point.index + 3)));
+        const color = new Color(Array.from(imageData.data.slice(point.index, point.index + 4)));
         if (color.equals(repalceColor) && color.notEquals(fillColor)) {
           points.push(point.index);
         }
