@@ -5,6 +5,11 @@ import { Input } from './input';
 export function BufferedInput({ value, forceFocus, onSubmit, ...props }) {
   const [bufferedValue, setBufferedValue] = useState(null);
 
+  const handleFocus = (e) => {
+    e.target.setSelectionRange(0, 0);
+    e.target.select();
+  };
+
   const handleFlush = (e) => {
     const isNumeric = typeof value === 'number';
     const validatesNumeric = isNumeric ? !isNaN(bufferedValue) : true;
@@ -12,7 +17,9 @@ export function BufferedInput({ value, forceFocus, onSubmit, ...props }) {
       onSubmit(isNumeric ? Number(bufferedValue) : bufferedValue);
     }
     setBufferedValue(null);
-    if (e && forceFocus) e.target.focus();
+    if (e && forceFocus) {
+      e.target.focus();
+    }
   };
 
   const handleKeyPress = (e) => {
@@ -30,6 +37,7 @@ export function BufferedInput({ value, forceFocus, onSubmit, ...props }) {
     <Input
       {...props}
       value={bufferedValue === null ? value : bufferedValue}
+      onFocus={handleFocus}
       onBlur={handleFlush}
       onChange={handleChange}
       onInput={handleChange}
