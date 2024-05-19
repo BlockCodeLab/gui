@@ -1,0 +1,28 @@
+en:
+  extension.request.name: Request
+  extension.request.request: send [MOTHOD] request to [URL]
+  extension.request.getText: text content
+  extension.request.getContent: item [PATH] of content
+  extension.request.clearCache: clear request cache
+  extension.request.whenResponds: when a site responds
+  extension.request.whenFails: when a request fails
+  extension.request.statusCode: status code
+  extension.request.isResponds: site responds?
+  extension.request.setHeader: set headers [HEADER] to [VALUE]
+  extension.request.setContentType: set content type to [CONTENTTYPE]
+  extension.request.setBody: set body [KEY] to [VALUE]
+  extension.request.setForm: set request body to a form
+
+zh-Hans:
+  extension.request.name: 数据请求
+  extension.request.request: 用 [MOTHOD] 方法从 [URL] 请求数据
+  extension.request.getText: 数据文本内容
+  extension.request.getContent: 数据中路径 [PATH] 的项目
+  extension.request.clearCache: 清除数据请求缓存
+  extension.request.whenResponds: 当网站应答
+  extension.request.whenFails: 当请求失败
+  extension.request.statusCode: 应答状态码
+  extension.request.isResponds: 网站有应答？
+  extension.request.setHeader: 将标头信息 [HEADER] 设为 [VALUE]
+  extension.request.setContentType: 将内容类型设为 [CONTENTTYPE]
+  extension.request.setBody: 将请求参数 [KEY] 设为 [VALUE]
