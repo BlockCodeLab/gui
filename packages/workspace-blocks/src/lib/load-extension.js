@@ -8,16 +8,6 @@ const THEME_COLOR = '#0FBD8C';
 const INPUT_COLOR = '#0DA57A';
 const OTHER_COLOR = '#0B8E69';
 
-const maybeTranslateMessage = (options, getText) => {
-  if (typeof options === 'string') {
-    return options;
-  }
-  if (options.props.children) {
-    return options.props.children.map((child) => maybeTranslateMessage(child, getText)).join(' ');
-  }
-  return getText(options.props.id, options.props);
-};
-
 const xmlEscape = (unsafe) => {
   if (typeof unsafe !== 'string') {
     if (Array.isArray(unsafe)) {
@@ -61,10 +51,10 @@ const FieldTypes = {
   note: 'NOTE',
 };
 
-export default function (extensionObject, getText, isStage) {
+export default function (extensionObject, workspace, isStage, maybeLocaleText, buttonWrapper) {
   const { id: extensionId } = extensionObject;
 
-  const extensionName = maybeTranslateMessage(extensionObject.name, getText);
+  const extensionName = maybeLocaleText(extensionObject.name);
 
   let categoryXML = `<category name="${xmlEscape(extensionName)}" id="${xmlEscape(extensionId)}"`;
   categoryXML += ` colour="${xmlEscape(extensionObject.themeColor || THEME_COLOR)}"`;
@@ -77,7 +67,14 @@ export default function (extensionObject, getText, isStage) {
   extensionObject.blocks.forEach((block) => {
     if (block === '---') {
       categoryXML += `${blockSeparator}`;
-      return categoryXML;
+      return;
+    }
+
+    if (block.button) {
+      categoryXML += `<button text="${maybeLocaleText(block.text)}" callbackKey="${block.button}"></button>`;
+      const toolboxWorkspace = workspace.getFlyout().getWorkspace();
+      toolboxWorkspace.registerButtonCallback(block.button, buttonWrapper(block.onClick));
+      return;
     }
 
     // the block only for sprite
@@ -87,7 +84,7 @@ export default function (extensionObject, getText, isStage) {
 
     const blockId = `${extensionId}_${block.id.toLowerCase()}`;
     const blockJson = {
-      message0: maybeTranslateMessage(block.text, getText),
+      message0: maybeLocaleText(block.text),
       category: extensionId,
       outputShape: OUTPUT_SHAPE_SQUARE,
       colour: extensionObject.themeColor || THEME_COLOR,
@@ -143,7 +140,7 @@ export default function (extensionObject, getText, isStage) {
 
           if (arg.menu) {
             argObject.type = 'field_dropdown';
-            argObject.options = arg.menu.map(([text, value]) => [maybeTranslateMessage(text, getText), value]);
+            argObject.options = arg.menu.map(([text, value]) => [maybeLocaleText(text), value]);
           } else if (arg.type === 'boolean') {
             argObject.check = 'Boolean';
           } else {
@@ -151,7 +148,7 @@ export default function (extensionObject, getText, isStage) {
             if (ShadowTypes[arg.type]) {
               blockXML += `<shadow type="${ShadowTypes[arg.type]}">`;
               if (arg.default && FieldTypes[arg.type]) {
-                blockXML += `<field name="${FieldTypes[arg.type]}">${xmlEscape(arg.default)}</field>`;
+                blockXML += `<field name="${FieldTypes[arg.type]}">${xmlEscape(maybeLocaleText(arg.default))}</field>`;
               }
               blockXML += '</shadow>';
             }
