@@ -1,0 +1,31 @@
+en:
+  extension.broadcast.name: Broadcast
+  extension.broadcast.setGroup: set broadcast group [ID]
+  extension.broadcast.send: broadcast message [MESSAGE]
+  extension.broadcast.sendName: broadcast named [NAME] message [MESSAGE]
+  extension.broadcast.whenReceived: when I receive message [MESSAGE]
+  extension.broadcast.whenReceivedNamed: when I receive named [NAME] message [MESSAGE]
+  extension.broadcast.message: hello
+  extension.broadcast.messageName: say
+  extension.broadcast.received: received message
+  extension.broadcast.receivedNamed: received named [NAME] message
+  extension.broadcast.receivedIndex: received message [INDEX]
+  extension.broadcast.receivedNameIndex: received named [NAME] message [INDEX]
+  extension.broadcast.receivedTime: timestamp
+  extension.broadcast.receivedSerial: serial number
+
+zh-Hans:
+  extension.broadcast.name: 无线广播
+  extension.broadcast.setGroup: 将广播组号设为 [ID]
+  extension.broadcast.send: 广播消息 [MESSAGE]
+  extension.broadcast.sendName: 广播命名为 [NAME] 的消息 [MESSAGE]
+  extension.broadcast.whenReceived: 当接收到消息
+  extension.broadcast.whenReceivedNamed: 当接收到命名为 [NAME] 的消息
+  extension.broadcast.message: 你好
+  extension.broadcast.messageName: 问候
+  extension.broadcast.received: 消息
+  extension.broadcast.receivedNamed: 命名为 [NAME] 的消息
+  extension.broadcast.receivedIndex: 消息的 [INDEX]
+  extension.broadcast.receivedNameIndex: 命名为 [NAME] 消息的 [INDEX]
+  extension.broadcast.receivedTime: 时间戳
+  extension.broadcast.receivedSerial: 序列号
