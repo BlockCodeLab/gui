@@ -4,6 +4,7 @@ import { classNames } from '@blockcode/ui';
 import { BlocksEditor as Editor, ScratchBlocks, makeToolboxXML } from '@blockcode/blocks-editor';
 import { pythonGenerator } from '../../generators/python';
 import loadExtension from '../../lib/load-extension';
+import maybeLocaleText from '../../lib/maybe-locale-text';
 
 import DataPrompt from '../data-prompt/data-prompt';
 import ExtensionLibrary from '../extension-library/extension-library';
@@ -13,7 +14,9 @@ import extensionIcon from './icon-extension.svg';
 
 const loadedExtensions = new Map();
 
-const importExtensions = async (extensions, addAsset, addLocaleData, onLoadExtension) => {
+const blockFilter = (block) => typeof block !== 'string' && !block.button;
+
+const importExtensions = async (extensions, addAsset, modifyAsset, addLocaleData, onLoadExtension) => {
   if (extensions) {
     for (const extensionId of extensions) {
       if (!loadedExtensions.has(extensionId)) {
@@ -21,20 +24,24 @@ const importExtensions = async (extensions, addAsset, addLocaleData, onLoadExten
         extensionObject.id = extensionId;
         if (extensionObject.files) {
           extensionObject.files.forEach(async (file) => {
+            const id = `extensions/${extensionId}/${file.name}`;
+            const content = await fetch(file.uri).then((res) => res.text());
             try {
+              modifyAsset({ id, content });
+            } catch (err) {
               addAsset({
                 ...file,
-                id: `extensions/${extensionId}/${file.name}`,
-                content: await fetch(file.uri).then((res) => res.text()),
+                id,
+                content,
               });
-            } catch (err) {}
+            }
           });
         }
         addLocaleData(extensionObject.translations);
         if (onLoadExtension) {
           onLoadExtension({
             ...extensionObject,
-            blocks: extensionObject.blocks.filter((block) => typeof block !== 'string'),
+            blocks: extensionObject.blocks.filter(blockFilter),
           });
         }
         loadedExtensions.set(extensionId, extensionObject);
@@ -59,7 +66,8 @@ export default function BlocksEditor({
   onReady,
 }) {
   const { addLocaleData, getText } = useLocale();
-  const { editor, fileList, selectedIndex, openFile, modifyFile, addAsset } = useEditor();
+  const { editor, fileList, selectedIndex, openFile, modifyFile, addAsset, modifyAsset } = useEditor();
+
   const [workspace, setWorkspace] = useState();
   const [prompt, setPrompt] = useState(false);
   const [extensionLibrary, setExtensionLibrary] = useState(false);
@@ -72,7 +80,7 @@ export default function BlocksEditor({
       setExtensionsImported(
         setTimeout(() => {
           setExtensionsImported(
-            importExtensions(editor.extensions, addAsset, addLocaleData, onLoadExtension).then(() =>
+            importExtensions(editor.extensions, addAsset, modifyAsset, addLocaleData, onLoadExtension).then(() =>
               setExtensionsImported(true),
             ),
           );
@@ -140,8 +148,17 @@ export default function BlocksEditor({
   }
 
   let toolboxXML = defaultToolbox || makeToolboxXML();
+  const isStage = selectedIndex === 0;
+  const buttonWrapper = (onClick) =>
+    onClick.bind(null, {
+      context: useEditor(),
+      showPrompt: onShowPrompt,
+      showAlert: onShowAlert,
+      hideAlert: onHideAlert,
+    });
+  const warpMaybeLocaleText = maybeLocaleText.bind(null, getText);
   loadedExtensions.forEach((extensionObject) => {
-    toolboxXML += loadExtension(extensionObject, getText, selectedIndex === 0);
+    toolboxXML += loadExtension(extensionObject, workspace, isStage, warpMaybeLocaleText, buttonWrapper);
   });
 
   const handleChange = (newXml, workspace) => {
@@ -173,7 +190,7 @@ export default function BlocksEditor({
       if (onLoadExtension) {
         onLoadExtension({
           ...extensionObject,
-          blocks: extensionObject.blocks.filter((block) => typeof block !== 'string'),
+          blocks: extensionObject.blocks.filter(blockFilter),
         });
       }
       loadedExtensions.set(extensionObject.id, extensionObject);

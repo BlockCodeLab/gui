@@ -9,7 +9,7 @@ export default function ExtensionLibrary({ onSelect, onClose, onFilter, onShowPr
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const { language, getText } = useLocale();
-  const { addAsset } = useEditor();
+  const { addAsset, modifyAsset } = useEditor();
 
   const handleFilter = (extensionInfo) => {
     if (onFilter) {
@@ -42,13 +42,17 @@ export default function ExtensionLibrary({ onSelect, onClose, onFilter, onShowPr
                 extensionObject.id = extensionInfo.id;
                 if (extensionObject.files) {
                   extensionObject.files.forEach(async (file) => {
+                    const id = `extensions/${extensionInfo.id}/${file.name}`;
+                    const content = await fetch(file.uri).then((res) => res.text());
                     try {
+                      modifyAsset({ id, content });
+                    } catch (err) {
                       addAsset({
                         ...file,
-                        id: `extensions/${extensionInfo.id}/${file.name}`,
-                        content: await fetch(file.uri).then((res) => res.text()),
+                        id,
+                        content,
                       });
-                    } catch (err) {}
+                    }
                   });
                 }
                 onSelect(extensionObject);
