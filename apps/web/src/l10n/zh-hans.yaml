@@ -11,6 +11,8 @@ gui.library.preview: 体验版
 gui.library.requires: 系统需求
 gui.library.programming: 编程语言
 gui.library.collaboration: 合作者
+gui.library.search: 搜索
+gui.library.all: 所有
 
 gui.menuBar.tutorials: 教程
 gui.menuBar.projectTitlePlaceholder: 在此填写作品标题

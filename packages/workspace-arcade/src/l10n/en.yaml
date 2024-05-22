@@ -52,6 +52,27 @@ arcade.libraries.costume: Choose a Costume
 arcade.libraries.backdrop: Choose a Backdrop
 arcade.libraries.sound: Choose a Sound
 
+arcade.libraries.tags.fantasy: Fantasy
+arcade.libraries.tags.music: Music
+arcade.libraries.tags.sports: Sports
+arcade.libraries.tags.outdoors: Outdoors
+arcade.libraries.tags.indoors: Indoors
+arcade.libraries.tags.space: Space
+arcade.libraries.tags.underwater: Underwater
+arcade.libraries.tags.patterns: Patterns
+arcade.libraries.tags.animals: Animals
+arcade.libraries.tags.people: People
+arcade.libraries.tags.dance: Dance
+arcade.libraries.tags.food: Food
+arcade.libraries.tags.fashion: Fashion
+arcade.libraries.tags.letters: Letters
+arcade.libraries.tags.effects: Effects
+arcade.libraries.tags.loops: Loops
+arcade.libraries.tags.notes: Notes
+arcade.libraries.tags.percussion: Percussion
+arcade.libraries.tags.voice: Voice
+arcade.libraries.tags.wacky: Wacky
+
 arcade.defaultProject.stageName: Stage
 arcade.defaultProject.spriteName: Sprite
 arcade.defaultProject.backdropName: backdrop

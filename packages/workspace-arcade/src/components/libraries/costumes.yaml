@@ -78,13 +78,6 @@
     - alex eben meyer
   centerX: 47
   centerY: 38
-- id: 4e94508dabe2f390027e206342ff0fd5
-  name: Anina Pop R Arm
-  tags:
-    - people
-    - dance
-  centerX: 29
-  centerY: 91
 - id: f97338e009114e96aded855880623db2
   name: Apple
   tags:
@@ -1981,16 +1974,16 @@
   name: Drums Conga-a
   tags:
     - drums
-    - " music"
-    - " ericr"
+    - ' music'
+    - ' ericr'
   centerX: 43
   centerY: 44
 - id: 309ac2486895fe959050fbe7abd2efec
   name: Drums Conga-b
   tags:
     - drums
-    - " music"
-    - " ericr"
+    - ' music'
+    - ' ericr'
   centerX: 44
   centerY: 63
 - id: 7d4bfead3be5051561612d9e56cee3e9
@@ -5146,7 +5139,7 @@
   centerX: 50
   centerY: 50
 - id: 01a7480f0466a59fdc77c9543abe95f8
-  name: "Starfish-b "
+  name: 'Starfish-b '
   tags:
     - animals
     - echinodermata
@@ -5231,16 +5224,16 @@
   name: Tabla-a
   tags:
     - drums
-    - " music"
-    - " ericr"
+    - ' music'
+    - ' ericr'
   centerX: 53
   centerY: 45
 - id: e1f0c7668ab4cda86f34f15a134da3f2
   name: Tabla-b
   tags:
     - drums
-    - " music"
-    - " ericr"
+    - ' music'
+    - ' ericr'
   centerX: 57
   centerY: 49
 - id: f3bded4e3c474f263c8b3fbe67ff7085

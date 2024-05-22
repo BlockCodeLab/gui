@@ -52,6 +52,27 @@ arcade.libraries.costume: 选择一个造型
 arcade.libraries.backdrop: 选择一个背景
 arcade.libraries.sound: 选择一个声音
 
+arcade.libraries.tags.fantasy: 奇幻
+arcade.libraries.tags.music: 音乐
+arcade.libraries.tags.sports: 运动
+arcade.libraries.tags.outdoors: 室外
+arcade.libraries.tags.indoors: 室内
+arcade.libraries.tags.space: 太空
+arcade.libraries.tags.underwater: 水下
+arcade.libraries.tags.patterns: 图案
+arcade.libraries.tags.animals: 动物
+arcade.libraries.tags.people: 人物
+arcade.libraries.tags.dance: 舞蹈
+arcade.libraries.tags.food: 食物
+arcade.libraries.tags.fashion: 时尚
+arcade.libraries.tags.letters: 字母
+arcade.libraries.tags.effects: 效果
+arcade.libraries.tags.loops: 可循环
+arcade.libraries.tags.notes: 音符
+arcade.libraries.tags.percussion: 打击乐器
+arcade.libraries.tags.voice: 人声
+arcade.libraries.tags.wacky: 古怪
+
 arcade.defaultProject.stageName: 舞台
 arcade.defaultProject.spriteName: 角色
 arcade.defaultProject.backdropName: 背景

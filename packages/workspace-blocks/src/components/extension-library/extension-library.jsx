@@ -73,8 +73,10 @@ export default function ExtensionLibrary({ onSelect, onClose, onFilter, onShowPr
 
   return (
     <Library
+      filterable
       loading={loading}
       items={data}
+      filterPlaceholder={getText('gui.library.search', 'Search')}
       title={getText('blocks.extensions.addExtension', 'Add Extension')}
       emptyText={getText('blocks.extensions.empty', 'No extension!')}
       onClose={onClose}

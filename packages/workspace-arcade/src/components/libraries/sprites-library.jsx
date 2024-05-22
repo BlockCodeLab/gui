@@ -2,6 +2,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { useLocale } from '@blockcode/core';
 import { Library } from '@blockcode/ui';
 import allSprites from './sprites.yaml';
+import spriteTags from './sprite-tags';
 
 export default function SpritesLibrary({ onSelect, onClose }) {
   const [data, setData] = useState([]);
@@ -30,6 +31,7 @@ export default function SpritesLibrary({ onSelect, onClose }) {
     setData(
       allSprites.map((sprite) => ({
         name: sprite.name,
+        tags: sprite.tags,
         image: `./assets/${sprite.costumes[0].id}.png`,
         onSelect: setSelectHandler(sprite),
         onMouseEnter: setMouseEnterHandler(sprite),
@@ -40,7 +42,10 @@ export default function SpritesLibrary({ onSelect, onClose }) {
 
   return (
     <Library
+      filterable
+      tags={spriteTags}
       items={data}
+      filterPlaceholder={getText('gui.library.search', 'Search')}
       title={getText('arcade.libraries.sprite', 'Choose a Sprite')}
       emptyText={getText('arcade.libraries.empty', 'No more!')}
       onClose={onClose}

@@ -11,6 +11,8 @@ gui.library.preview: Preview
 gui.library.requires: Requires
 gui.library.programming: Programming
 gui.library.collaboration: Collaboration
+gui.library.search: Search
+gui.library.all: All
 
 gui.menuBar.tutorials: Tutorials
 gui.menuBar.projectTitlePlaceholder: Project title here
