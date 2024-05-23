@@ -19,7 +19,7 @@ import penIcon from '../tool-box/icons/icon-pen.svg';
 import eraserIcon from '../tool-box/icons/icon-eraser.svg';
 
 export default function Painter({ mode, imageList, imageIndex }) {
-  const { getText } = useLocale();
+  const { getText, maybeLocaleText } = useLocale();
   const { modifyAsset } = useEditor();
 
   const [zoom, setZoom] = useState(1);
@@ -130,7 +130,7 @@ export default function Painter({ mode, imageList, imageIndex }) {
               onSubmit={(value) => handleChange('name', value)}
               value={
                 imageAsset
-                  ? imageAsset.name
+                  ? maybeLocaleText(imageAsset.name)
                   : getTextByMode(
                       getText('pixelPaint.painter.image', 'Image'),
                       getText('pixelPaint.painter.costume', 'Costume'),

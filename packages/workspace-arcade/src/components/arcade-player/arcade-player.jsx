@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'preact/hooks';
-import { useEditor } from '@blockcode/core';
+import { useLocale, useEditor } from '@blockcode/core';
 import { ScratchBlocks } from '@blockcode/blocks-editor';
 import { BlocksPlayer, paperCore } from '@blockcode/blocks-player';
 
@@ -10,6 +10,7 @@ import createUtil from './target-util';
 export default function ArcadePlayer({ stageSize, playing, onRequestStop }) {
   const [canvas, setCanvas] = useState(null);
   const [currentRuntime, setCurrentRuntime] = useState(false);
+  const { maybeLocaleText } = useLocale();
   const { editor, fileList, assetList, selectedIndex, openFile, modifyFile } = useEditor();
 
   const zoomRatio = stageSize === 'small' ? 1 : 1.5;
@@ -131,34 +132,34 @@ export default function ArcadePlayer({ stageSize, playing, onRequestStop }) {
         // edit
         fileList
           .toSorted((a, b) => a.zIndex - b.zIndex)
-          .forEach(async (target, index) => {
+          .forEach(async (file, index) => {
             const isStage = index === 0;
             const layer = isStage ? stageLayer : spriteLayer;
-            const assets = assetList.filter((asset) => target.assets.includes(asset.id));
+            const assets = assetList.filter((asset) => file.assets.includes(asset.id));
 
-            let raster = layer.children[target.id];
+            let raster = layer.children[file.id];
             if (!raster) {
               raster = layer.addChild(new paperCore.Raster());
-              raster.name = target.id;
+              raster.name = file.id;
               raster.util = createUtil(raster, isStage);
               raster.util.on('update', () => updateTargetFromRaster(raster, isStage));
             }
             raster.data = {
               assets,
-              name: target.name,
+              name: maybeLocaleText(file.name),
             };
 
             if (isStage) {
-              raster.util.backdrop = target.frame + 1;
+              raster.util.backdrop = file.frame + 1;
             } else {
               raster.onMouseUp = setMouseUpHandler(raster, index);
-              raster.util.costume = target.frame + 1;
-              raster.util.x = target.x;
-              raster.util.y = target.y;
-              raster.util.size = target.size;
-              raster.util.hidden = target.hidden;
-              raster.util.direction = target.direction;
-              raster.util.rotationStyle = target.rotationStyle;
+              raster.util.costume = file.frame + 1;
+              raster.util.x = file.x;
+              raster.util.y = file.y;
+              raster.util.size = file.size;
+              raster.util.hidden = file.hidden;
+              raster.util.direction = file.direction;
+              raster.util.rotationStyle = file.rotationStyle;
             }
           });
 

@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import { useLocale, useEditor } from '@blockcode/core';
+import { useLocale, useLayout, useEditor } from '@blockcode/core';
 import { IconSelector, ActionButton } from '@blockcode/ui';
 import { uploadImage, loadImage } from '../../lib/load-image';
 import uid from '../../lib/uid';
@@ -12,12 +12,13 @@ import searchIcon from './icon-search.svg';
 import paintIcon from './icon-paint.svg';
 import fileUploadIcon from './icon-file-upload.svg';
 
-export default function Selector({ mode, imageList, imageIndex, onShowAlert, onHideAlert, onSetupLibrary }) {
+export default function Selector({ mode, imageList, imageIndex, onSetupLibrary }) {
   const [imagesLibrary, setImagesLibrary] = useState(false);
   const [costumesLibrary, setCostumesLibrary] = useState(false);
   const [backdropsLibrary, setBackdropsLibrary] = useState(false);
 
   const { getText } = useLocale();
+  const { createAlert, removeAlert } = useLayout();
   const { addAsset, deleteAsset, modifyFile } = useEditor();
 
   const imageIdList = imageList.map((image) => image.id);
@@ -50,7 +51,7 @@ export default function Selector({ mode, imageList, imageIndex, onShowAlert, onH
 
   const handleSelectAsset = async (asset) => {
     const assetId = uid();
-    onShowAlert('importing', { id: assetId });
+    createAlert('importing', { id: assetId });
 
     const image = await loadImage(`./assets/${asset.id}.png`);
     addAsset({
@@ -62,7 +63,7 @@ export default function Selector({ mode, imageList, imageIndex, onShowAlert, onH
       height: image.height,
     });
     imageIdList.push(assetId);
-    onHideAlert(assetId);
+    removeAlert(assetId);
 
     modifyFile({
       assets: imageIdList,
@@ -102,7 +103,7 @@ export default function Selector({ mode, imageList, imageIndex, onShowAlert, onH
     fileInput.click();
     fileInput.addEventListener('change', async (e) => {
       const alertId = uid();
-      onShowAlert('importing', { id: alertId });
+      createAlert('importing', { id: alertId });
 
       for (const file of e.target.files) {
         const imageId = uid();
@@ -120,7 +121,7 @@ export default function Selector({ mode, imageList, imageIndex, onShowAlert, onH
         });
         imageIdList.push(imageId);
       }
-      onHideAlert(alertId);
+      removeAlert(alertId);
 
       modifyFile({
         assets: imageIdList,

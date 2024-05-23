@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import { useLocale, useEditor } from '@blockcode/core';
+import { useLocale, useLayout, useEditor } from '@blockcode/core';
 import { IconSelector, ActionButton } from '@blockcode/ui';
 import { loadWave, uploadWave } from '../../lib/load-wave';
 import formatTime from '../../lib/format-time';
@@ -13,9 +13,10 @@ import recordIcon from './icon-record.svg';
 import surpriseIcon from './icon-surprise.svg';
 import fileUploadIcon from './icon-file-upload.svg';
 
-export default function Selector({ soundList, soundIndex, onSelect, onShowAlert, onHideAlert, onSetupLibrary }) {
+export default function Selector({ soundList, soundIndex, onSelect, onSetupLibrary }) {
   const [soundsLibrary, setSoundsLibrary] = useState(false);
   const { getText } = useLocale();
+  const { createAlert, removeAlert } = useLayout();
   const { addAsset, deleteAsset } = useEditor();
 
   const { SoundsLibrary } = onSetupLibrary();
@@ -25,7 +26,7 @@ export default function Selector({ soundList, soundIndex, onSelect, onShowAlert,
 
   const handleSelectAsset = async (asset) => {
     const assetId = uid();
-    onShowAlert('importing', { id: assetId });
+    createAlert('importing', { id: assetId });
 
     const wav = await loadWave(`./assets/${asset.id}.wav`);
     addAsset({
@@ -35,7 +36,7 @@ export default function Selector({ soundList, soundIndex, onSelect, onShowAlert,
       data: wav.toBase64(),
       sampleCount: wav.data.chunkSize,
     });
-    onHideAlert(assetId);
+    removeAlert(assetId);
 
     onSelect(soundList.length);
   };
@@ -50,7 +51,7 @@ export default function Selector({ soundList, soundIndex, onSelect, onShowAlert,
     fileInput.click();
     fileInput.addEventListener('change', async (e) => {
       const alertId = uid();
-      onShowAlert('importing', { id: alertId });
+      createAlert('importing', { id: alertId });
 
       try {
         for (const file of e.target.files) {
@@ -67,9 +68,9 @@ export default function Selector({ soundList, soundIndex, onSelect, onShowAlert,
             sampleCount: wav.data.chunkSize,
           });
         }
-        onHideAlert(alertId);
+        removeAlert(alertId);
       } catch (err) {
-        onShowAlert(
+        createAlert(
           {
             id: alertId,
             message: getText('waveSurfer.error.formatNotSupperted', 'This wav format is not supported.'),

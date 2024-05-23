@@ -11,4 +11,5 @@ export { sleep, nextTick } from './lib/sleep';
 export { supportLanguages } from './lib/locales';
 
 export { EditorProvider, useEditor } from './hooks/editor-provider';
+export { LayoutProvider, useLayout } from './hooks/layout-provider';
 export { LocalesProvider, useLocale } from './hooks/locales-provider';

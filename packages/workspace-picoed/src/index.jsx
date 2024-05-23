@@ -1,4 +1,4 @@
-import { locales as blocksLocales, makeMenus, CodeTab, BackpackPane } from '@blockcode/workspace-blocks';
+import { locales as blocksLocales, makeMainMenu, codeTab } from '@blockcode/workspace-blocks';
 
 /* components */
 import BlocksEditor from './components/blocks-editor/blocks-editor';
@@ -11,16 +11,7 @@ import defaultProject from './lib/default-project';
 import en from './l10n/en.yaml';
 import zhHans from './l10n/zh-hans.yaml';
 
-export default function PicoedBlocksWorkspace({
-  addLocaleData,
-  setLayout,
-  openStoreLibrary,
-  closeStoreLibrary,
-  setPrompt,
-  setAlert,
-  removeAlert,
-  openProject,
-}) {
+export default function PicoedBlocksWorkspace({ addLocaleData, createLayout, openProject, project }) {
   addLocaleData(blocksLocales);
 
   addLocaleData({
@@ -28,35 +19,25 @@ export default function PicoedBlocksWorkspace({
     'zh-Hans': zhHans,
   });
 
-  const newProject = () => {
+  const createDefaultProject = (project) => {
     openProject(
-      Object.assign(defaultProject, {
-        selectedIndex: 0,
-      })
+      Object.assign(
+        {
+          selectedIndex: 0,
+        },
+        project || defaultProject,
+      ),
     );
   };
-  newProject();
+  createDefaultProject(project);
 
-  setLayout({
-    menus: makeMenus({
-      openStoreLibrary,
-      closeStoreLibrary,
-      newProject,
-      setPrompt,
-      setAlert,
-      removeAlert,
-    }),
+  createLayout({
+    mainMenu: makeMainMenu({ createDefaultProject }),
 
     tabs: [
       {
-        ...CodeTab,
-        Content: () => (
-          <BlocksEditor
-            onShowPrompt={setPrompt}
-            onShowAlert={setAlert}
-            onHideAlert={removeAlert}
-          />
-        ),
+        ...codeTab,
+        Content: BlocksEditor,
       },
     ],
 
@@ -67,7 +48,7 @@ export default function PicoedBlocksWorkspace({
       },
     ],
 
-    pane: false, //BackpackPane,
+    pane: false,
 
     tutorials: true,
 

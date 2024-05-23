@@ -6,7 +6,7 @@ import StageSelector from '../stage-selector/stage-selector';
 
 import styles from './sidebar.module.css';
 
-export default function Sidebar({ onPaint, onShowPrompt, onShowAlert, onHideAlert }) {
+export default function Sidebar({ onPaint }) {
   const [playing, setPlaying] = useState(false);
   const [stageSize, setStageSize] = useState(window.innerWidth < 1280 ? 'small' : 'large');
 
@@ -27,15 +27,10 @@ export default function Sidebar({ onPaint, onShowPrompt, onShowAlert, onHideAler
           playing={playing}
           stageSize={stageSize}
           onPaint={onPaint}
-          onShowPrompt={onShowPrompt}
-          onShowAlert={onShowAlert}
-          onHideAlert={onHideAlert}
           onStop={handleStop}
         />
         <StageSelector
           onPaint={onPaint}
-          onShowAlert={onShowAlert}
-          onHideAlert={onHideAlert}
           onStop={handleStop}
         />
       </div>

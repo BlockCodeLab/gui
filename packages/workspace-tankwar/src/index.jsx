@@ -1,4 +1,4 @@
-import { locales as blocksLocales, makeMenus, CodeTab } from '@blockcode/workspace-blocks';
+import { locales as blocksLocales, makeMainMenu, codeTab } from '@blockcode/workspace-blocks';
 
 /* components */
 import BlocksEditor from './components/blocks-editor/blocks-editor';
@@ -11,17 +11,7 @@ import defaultProject from './lib/default-project';
 import en from './l10n/en.yaml';
 import zhHans from './l10n/zh-hans.yaml';
 
-export default function TankwarBlocksWorkspace({
-  addLocaleData,
-  setLayout,
-  openStoreLibrary,
-  closeStoreLibrary,
-  setPrompt,
-  setAlert,
-  removeAlert,
-  hideSplashScreen,
-  openProject,
-}) {
+export default function TankwarBlocksWorkspace({ addLocaleData, createLayout, openProject, project }) {
   addLocaleData(blocksLocales);
 
   addLocaleData({
@@ -29,43 +19,33 @@ export default function TankwarBlocksWorkspace({
     'zh-Hans': zhHans,
   });
 
-  const newProject = () => {
+  const createDefaultProject = (project) => {
     openProject(
-      Object.assign(defaultProject, {
-        selectedIndex: 0,
-      }),
+      Object.assign(
+        {
+          selectedIndex: 0,
+        },
+        project || defaultProject,
+      ),
     );
   };
-  newProject();
+  createDefaultProject(project);
 
-  const extendsMenu = [
-    {
-      id: 'device',
-      hidden: true,
-    },
-  ];
-
-  const onSave = () => {
+  const saveCurrentProject = () => {
     const canvas = document.querySelector('#blockcode-blocks-player');
     return { thumb: canvas.toDataURL() };
   };
 
-  setLayout({
-    menus: makeMenus({
-      openStoreLibrary,
-      closeStoreLibrary,
-      newProject,
-      setPrompt,
-      setAlert,
-      removeAlert,
-      extendsMenu,
-      onSave,
-    }),
+  createLayout({
+    mainMenu: makeMainMenu({
+      createDefaultProject,
+      saveCurrentProject,
+    }).slice(0, 2),
 
     tabs: [
       {
-        ...CodeTab,
-        Content: () => <BlocksEditor onReady={hideSplashScreen} />,
+        ...codeTab,
+        Content: BlocksEditor,
       },
     ],
 
@@ -76,7 +56,7 @@ export default function TankwarBlocksWorkspace({
       },
     ],
 
-    pane: false, //BackpackPane,
+    pane: false,
 
     tutorials: true,
 

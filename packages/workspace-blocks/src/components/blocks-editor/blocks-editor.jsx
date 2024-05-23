@@ -1,10 +1,9 @@
 import { useState } from 'preact/hooks';
-import { useLocale, useEditor } from '@blockcode/core';
+import { useLocale, useLayout, useEditor } from '@blockcode/core';
 import { classNames } from '@blockcode/ui';
 import { BlocksEditor as Editor, ScratchBlocks, makeToolboxXML } from '@blockcode/blocks-editor';
 import { pythonGenerator } from '../../generators/python';
 import loadExtension from '../../lib/load-extension';
-import maybeLocaleText from '../../lib/maybe-locale-text';
 
 import DataPrompt from '../data-prompt/data-prompt';
 import ExtensionLibrary from '../extension-library/extension-library';
@@ -16,7 +15,7 @@ const loadedExtensions = new Map();
 
 const blockFilter = (block) => typeof block !== 'string' && !block.button;
 
-const importExtensions = async (extensions, addAsset, modifyAsset, addLocaleData, onLoadExtension) => {
+const importExtensions = async (extensions, addLocaleData, modifyAsset, onLoadExtension) => {
   if (extensions) {
     for (const extensionId of extensions) {
       if (!loadedExtensions.has(extensionId)) {
@@ -26,15 +25,11 @@ const importExtensions = async (extensions, addAsset, modifyAsset, addLocaleData
           extensionObject.files.forEach(async (file) => {
             const id = `extensions/${extensionId}/${file.name}`;
             const content = await fetch(file.uri).then((res) => res.text());
-            try {
-              modifyAsset({ id, content });
-            } catch (err) {
-              addAsset({
-                ...file,
-                id,
-                content,
-              });
-            }
+            modifyAsset({
+              ...file,
+              id,
+              content,
+            });
           });
         }
         addLocaleData(extensionObject.translations);
@@ -60,27 +55,24 @@ export default function BlocksEditor({
   onChange,
   onExtensionsFilter,
   onLoadExtension,
-  onShowPrompt,
-  onShowAlert,
-  onHideAlert,
-  onReady,
 }) {
-  const { addLocaleData, getText } = useLocale();
-  const { editor, fileList, selectedIndex, openFile, modifyFile, addAsset, modifyAsset } = useEditor();
+  const { addLocaleData, getText, maybeLocaleText } = useLocale();
+  const { splash, createPrompt, createAlert, removeAlert, setSplash } = useLayout();
+  const { editor, fileList, selectedIndex, openFile, modifyFile, modifyAsset, setModified } = useEditor();
 
   const [workspace, setWorkspace] = useState();
-  const [prompt, setPrompt] = useState(false);
+  const [dataPrompt, setDataPrompt] = useState(false);
   const [extensionLibrary, setExtensionLibrary] = useState(false);
   const [extensionsImported, setExtensionsImported] = useState(false);
 
-  if (editor.splash) {
-    if (editor.splash === true && extensionsImported === false) {
+  if (splash) {
+    if (splash === true && extensionsImported === false) {
       loadedExtensions.clear();
       // import extensions
       setExtensionsImported(
         setTimeout(() => {
           setExtensionsImported(
-            importExtensions(editor.extensions, addAsset, modifyAsset, addLocaleData, onLoadExtension).then(() =>
+            importExtensions(editor.extensions, addLocaleData, modifyAsset, onLoadExtension).then(() =>
               setExtensionsImported(true),
             ),
           );
@@ -103,7 +95,10 @@ export default function BlocksEditor({
         }
       }
       if (projectBlocksReady) {
-        setTimeout(onReady, 100);
+        setTimeout(() => {
+          setSplash(false);
+          setModified(false);
+        }, 100);
       }
     }
   }
@@ -124,7 +119,7 @@ export default function BlocksEditor({
       prompt.title !== ScratchBlocks.Msg.RENAME_VARIABLE_MODAL_TITLE &&
       prompt.title !== ScratchBlocks.Msg.RENAME_LIST_MODAL_TITLE;
     prompt.showCloudOption = optVarType === ScratchBlocks.SCALAR_VARIABLE_TYPE && this.props.canUseCloud;
-    setPrompt(prompt);
+    setDataPrompt(prompt);
   };
 
   // global variables
@@ -152,13 +147,12 @@ export default function BlocksEditor({
   const buttonWrapper = (onClick) =>
     onClick.bind(null, {
       context: useEditor(),
-      showPrompt: onShowPrompt,
-      showAlert: onShowAlert,
-      hideAlert: onHideAlert,
+      createPrompt,
+      createAlert,
+      removeAlert,
     });
-  const warpMaybeLocaleText = maybeLocaleText.bind(null, getText);
   loadedExtensions.forEach((extensionObject) => {
-    toolboxXML += loadExtension(extensionObject, workspace, isStage, warpMaybeLocaleText, buttonWrapper);
+    toolboxXML += loadExtension(extensionObject, workspace, isStage, maybeLocaleText, buttonWrapper);
   });
 
   const handleChange = (newXml, workspace) => {
@@ -176,10 +170,10 @@ export default function BlocksEditor({
   };
 
   const handlePromptSubmit = (input, options) => {
-    prompt.callback(input, [], options);
-    setPrompt(false);
+    dataPrompt.callback(input, [], options);
+    setDataPrompt(false);
   };
-  const handlePromptClose = () => setPrompt(false);
+  const handlePromptClose = () => setDataPrompt(false);
 
   const handleExtensionLibraryOpen = () => setExtensionLibrary(true);
   const handleExtensionLibraryClose = () => setExtensionLibrary(false);
@@ -223,15 +217,15 @@ export default function BlocksEditor({
           </button>
         </div>
       )}
-      {prompt && (
+      {dataPrompt && (
         <DataPrompt
-          title={prompt.title}
-          label={prompt.message}
-          defaultValue={prompt.defaultValue}
+          title={dataPrompt.title}
+          label={dataPrompt.message}
+          defaultValue={dataPrompt.defaultValue}
           enableLocalVariable={enableLocalVariable}
-          showListMessage={prompt.varType === ScratchBlocks.LIST_VARIABLE_TYPE}
-          showVariableOptions={prompt.showVariableOptions}
-          showCloudOption={prompt.showCloudOption}
+          showListMessage={dataPrompt.varType === ScratchBlocks.LIST_VARIABLE_TYPE}
+          showVariableOptions={dataPrompt.showVariableOptions}
+          showCloudOption={dataPrompt.showCloudOption}
           onClose={handlePromptClose}
           onSubmit={handlePromptSubmit}
         />
@@ -241,9 +235,6 @@ export default function BlocksEditor({
           onFilter={onExtensionsFilter}
           onSelect={handleSelectExtension}
           onClose={handleExtensionLibraryClose}
-          onShowPrompt={onShowPrompt}
-          onShowAlert={onShowAlert}
-          onHideAlert={onHideAlert}
         />
       )}
     </div>

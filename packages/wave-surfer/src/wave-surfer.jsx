@@ -6,7 +6,7 @@ import Surfer from './components/surfer/surfer';
 
 import styles from './wave-surfer.module.css';
 
-export function WaveSurfer({ onShowAlert, onHideAlert, onSetupLibrary }) {
+export function WaveSurfer({ onSetupLibrary }) {
   const [soundIndex, setSoundIndex] = useState(0);
   const { assetList } = useEditor();
 
@@ -20,8 +20,6 @@ export function WaveSurfer({ onShowAlert, onHideAlert, onSetupLibrary }) {
         soundList={soundList}
         soundIndex={soundIndex}
         onSelect={setSoundIndex}
-        onShowAlert={onShowAlert}
-        onHideAlert={onHideAlert}
         onSetupLibrary={onSetupLibrary}
       />
 

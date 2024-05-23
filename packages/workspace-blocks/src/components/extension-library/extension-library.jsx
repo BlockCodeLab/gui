@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'preact/hooks';
-import { useLocale, useEditor } from '@blockcode/core';
+import { useLocale, useLayout, useEditor } from '@blockcode/core';
 import { Library } from '@blockcode/ui';
 import extensions from './extensions';
 
 const loadingExtensions = Promise.all(extensions);
 
-export default function ExtensionLibrary({ onSelect, onClose, onFilter, onShowPrompt, onShowAlert, onHideAlert }) {
+export default function ExtensionLibrary({ onSelect, onClose, onFilter }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const { language, getText } = useLocale();
-  const { addAsset, modifyAsset } = useEditor();
+  const { createAlert, removeAlert } = useLayout();
+  const { addAsset } = useEditor();
 
   const handleFilter = (extensionInfo) => {
     if (onFilter) {
@@ -37,26 +38,22 @@ export default function ExtensionLibrary({ onSelect, onClose, onFilter, onShowPr
               ...extensionInfo,
               featured: true,
               onSelect: async () => {
-                onShowAlert('importing', { id: extensionInfo.id });
+                createAlert('importing', { id: extensionInfo.id });
                 const { default: extensionObject } = await import(`@blockcode/extension-${extensionInfo.id}/blocks`);
                 extensionObject.id = extensionInfo.id;
                 if (extensionObject.files) {
                   extensionObject.files.forEach(async (file) => {
                     const id = `extensions/${extensionInfo.id}/${file.name}`;
                     const content = await fetch(file.uri).then((res) => res.text());
-                    try {
-                      modifyAsset({ id, content });
-                    } catch (err) {
-                      addAsset({
-                        ...file,
-                        id,
-                        content,
-                      });
-                    }
+                    addAsset({
+                      ...file,
+                      id,
+                      content,
+                    });
                   });
                 }
                 onSelect(extensionObject);
-                onHideAlert(extensionInfo.id);
+                removeAlert(extensionInfo.id);
                 onClose();
               },
             },

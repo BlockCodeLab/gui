@@ -1,8 +1,8 @@
-import { getExtensions } from '../../macros/extensions' with { type: 'macro' };
+import { readExtensions } from '../../macros/extensions' with { type: 'macro' };
 
-const allExtensions = getExtensions();
+const extensionList = readExtensions();
 
-export default allExtensions.map(async (extensionId) => {
+export default extensionList.map(async (extensionId) => {
   const { default: extensionInfo } = await import(`@blockcode/extension-${extensionId}`);
   extensionInfo.id = extensionId;
   return extensionInfo;

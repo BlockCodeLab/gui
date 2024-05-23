@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'preact/hooks';
-import { useLocale, useEditor } from '@blockcode/core';
+import { useLocale, useLayout, useEditor } from '@blockcode/core';
 import { Library } from '@blockcode/ui';
 import maybeTranslateMessage from '../../lib/maybe-translate-message';
 
 import styles from './store-library.module.css';
 
-export default function StoreLibrary({ onRequestPrompt, onOpenProject, onClose }) {
+export default function StoreLibrary({ onOpenProject }) {
   const [data, setData] = useState([]);
   const { getText } = useLocale();
+  const { createPrompt, setStoreLibrary } = useLayout();
   const { listProjects, getProject, renameProject, duplicateProject, deleteProject } = useEditor();
 
   const getData = async () => {
@@ -24,7 +25,7 @@ export default function StoreLibrary({ onRequestPrompt, onOpenProject, onClose }
               {
                 label: getText('gui.projects.contextMenu.rename', 'rename'),
                 onClick: () => {
-                  onRequestPrompt({
+                  createPrompt({
                     title: getText('gui.projects.contextMenu.rename', 'rename'),
                     label: getText('gui.menuBar.projectTitlePlaceholder', 'Project title here'),
                     inputMode: true,
@@ -66,7 +67,7 @@ export default function StoreLibrary({ onRequestPrompt, onOpenProject, onClose }
     <Library
       items={data}
       emptyText={getText('gui.projects.empty', 'No project!')}
-      onClose={onClose}
+      onClose={() => setStoreLibrary(false)}
     />
   );
 }

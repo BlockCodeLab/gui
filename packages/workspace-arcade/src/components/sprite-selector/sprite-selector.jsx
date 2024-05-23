@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import { useEditor, useLocale, exportFile } from '@blockcode/core';
+import { useLocale, useLayout, useEditor, exportFile } from '@blockcode/core';
 import { classNames, IconSelector, ActionButton } from '@blockcode/ui';
 import SpriteInfo from '../sprite-info/sprite-info';
 
@@ -15,17 +15,10 @@ import paintIcon from './icon-paint.svg';
 import fileUploadIcon from './icon-file-upload.svg';
 import SpritesLibrary from '../libraries/sprites-library';
 
-export default function SpriteSelector({
-  playing,
-  stageSize,
-  onStop,
-  onPaint,
-  onShowPrompt,
-  onShowAlert,
-  onHideAlert,
-}) {
+export default function SpriteSelector({ playing, stageSize, onStop, onPaint }) {
   const [spritesLibrary, setSpritesLibrary] = useState(false);
   const { getText } = useLocale();
+  const { createAlert, removeAlert, createPrompt } = useLayout();
   const { fileList, assetList, selectedIndex, addFile, openFile, deleteFile, addAsset, deleteAsset } = useEditor();
 
   const handleShowLibrary = () => {
@@ -36,7 +29,7 @@ export default function SpriteSelector({
 
   const handleSelectSprite = async (sprite) => {
     const spriteId = uid();
-    onShowAlert('importing', { id: spriteId });
+    createAlert('importing', { id: spriteId });
 
     const assetIdList = [];
     for (const costume of sprite.costumes) {
@@ -65,7 +58,7 @@ export default function SpriteSelector({
       direction: 90,
       rotationStyle: RotationStyle.ALL_AROUND,
     });
-    onHideAlert(spriteId);
+    removeAlert(spriteId);
   };
 
   const handleUploadFile = () => {
@@ -78,7 +71,7 @@ export default function SpriteSelector({
     fileInput.click();
     fileInput.addEventListener('change', async (e) => {
       const alertId = uid();
-      onShowAlert('importing', { id: alertId });
+      createAlert('importing', { id: alertId });
 
       for (const file of e.target.files) {
         const spriteId = uid();
@@ -108,7 +101,7 @@ export default function SpriteSelector({
           rotationStyle: RotationStyle.ALL_AROUND,
         });
       }
-      onHideAlert(alertId);
+      removeAlert(alertId);
     });
   };
 
@@ -172,7 +165,7 @@ export default function SpriteSelector({
 
   const handleDelete = (index) => {
     const { name, assets } = fileList[index];
-    onShowPrompt({
+    createPrompt({
       title: getText('arcade.deletePrompt.title', 'Delete {name}', { name }),
       label: getText('arcade.deletePrompt.label', 'Do you want to delete the sprite?'),
       onSubmit: () => {

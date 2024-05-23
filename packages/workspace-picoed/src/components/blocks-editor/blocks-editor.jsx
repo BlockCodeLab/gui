@@ -1,14 +1,14 @@
 import { useLocale, useEditor, exportFile } from '@blockcode/core';
-import { CodeTab } from '@blockcode/workspace-blocks';
+import { codeTab } from '@blockcode/workspace-blocks';
 import { javascriptGenerator } from '@blockcode/blocks-player';
 
 import makeToolboxXML from '../../lib/make-toolbox-xml';
 
-const Editor = CodeTab.Content;
+const Editor = codeTab.Content;
 
 const DEFAULT_SOUND_NAME = 'DADADADUM';
 
-export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert }) {
+export default function BlocksEditor() {
   const { getText } = useLocale();
   const { fileList } = useEditor();
   const picoed = fileList[0];
@@ -60,9 +60,6 @@ export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert })
       messages={messages}
       onExtensionsFilter={() => ['blocks', 'dupont']}
       onLoadExtension={handleLoadExtension}
-      onShowPrompt={onShowPrompt}
-      onShowAlert={onShowAlert}
-      onHideAlert={onHideAlert}
     />
   );
 }

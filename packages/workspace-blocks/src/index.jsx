@@ -1,6 +1,6 @@
 import { Text } from '@blockcode/ui';
+import makeMainMenu from './components/main-menu/make-main-menu';
 
-import makeMenus from './lib/make-menus';
 import defaultProject from './lib/default-project';
 
 /* generator */
@@ -8,7 +8,6 @@ export { pythonGenerator } from './generators/python';
 
 /* components */
 import BlocksEditor from './components/blocks-editor/blocks-editor';
-import Pane from './components/pane/pane';
 
 /* assets */
 import blocksIcon from './icon-blocks.svg';
@@ -22,7 +21,7 @@ const locales = {
   'zh-Hans': zhHans,
 };
 
-const CodeTab = {
+const codeTab = {
   icon: blocksIcon,
   label: (
     <Text
@@ -33,68 +32,44 @@ const CodeTab = {
   Content: BlocksEditor,
 };
 
-const BackpackPane = {
+const monitorPane = {
   label: (
     <Text
-      id="blocks.backpackPane.title"
-      defaultMessage="Backpack"
+      id="blocks.monitorPane.title"
+      defaultMessage="Monitor"
     />
   ),
-  Content: Pane,
+  Content: null,
 };
 
-export default function BlocksWorkspace({
-  addLocaleData,
-  setLayout,
-  openStoreLibrary,
-  closeStoreLibrary,
-  setPrompt,
-  setAlert,
-  removeAlert,
-  hideSplashScreen,
-  openProject,
-}) {
+export default function BlocksWorkspace({ addLocaleData, createLayout, openProject, project }) {
   addLocaleData(locales);
 
-  const newProject = () => {
+  const createDefaultProject = (project) => {
     openProject(
       Object.assign(
         {
           selectedIndex: 0,
         },
-        defaultProject,
+        project || defaultProject,
       ),
     );
   };
-  newProject();
+  createDefaultProject(project);
 
-  setLayout({
-    menus: makeMenus({
-      openStoreLibrary,
-      closeStoreLibrary,
-      newProject,
-      setPrompt,
-      setAlert,
-      removeAlert,
-    }),
+  createLayout({
+    mainMenu: makeMainMenu({ onNew: createDefaultProject }),
 
     tabs: [
       {
-        ...CodeTab,
-        Content: () => (
-          <BlocksEditor
-            onShowPrompt={setPrompt}
-            onShowAlert={setAlert}
-            onHideAlert={removeAlert}
-            onReady={hideSplashScreen}
-          />
-        ),
+        ...codeTab,
+        Content: BlocksEditor,
       },
     ],
 
     sidebars: [],
 
-    pane: false, //BackpackPane,
+    pane: false, // monitorPane,
 
     tutorials: true,
 
@@ -102,4 +77,4 @@ export default function BlocksWorkspace({
   });
 }
 
-export { locales, makeMenus, CodeTab, BackpackPane };
+export { locales, makeMainMenu, codeTab, monitorPane };

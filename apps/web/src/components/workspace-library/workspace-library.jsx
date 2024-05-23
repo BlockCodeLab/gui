@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'preact/hooks';
-import { useLocale, useEditor } from '@blockcode/core';
+import { useLocale, useLayout, useEditor } from '@blockcode/core';
 import { classNames, Text, ContextMenu, LibraryItem } from '@blockcode/ui';
 import GettingStarted from '../getting-started/getting-started';
 import maybeTranslateMessage from '../../lib/maybe-translate-message';
@@ -11,10 +11,11 @@ import { version } from '../../../package.json';
 
 const DISPLAY_PROJECTS_COUNTS = 7;
 
-export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject, onRequestStoreLibrary, onRequestPrompt }) {
+export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
   const [data, setData] = useState([]);
   const [counts, setCounts] = useState(0);
   const { getText } = useLocale();
+  const { createPrompt, setStoreLibrary } = useLayout();
   const { listProjects, getProject, renameProject, duplicateProject, deleteProject } = useEditor();
 
   const coverpages = makeCoverpages(onOpenWorkspace, onOpenProject);
@@ -62,7 +63,7 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject, onReq
             {counts > DISPLAY_PROJECTS_COUNTS && (
               <span
                 className={classNames(styles.viewAll, styles.link)}
-                onClick={onRequestStoreLibrary}
+                onClick={() => setStoreLibrary(true)}
               >
                 <Text
                   id="gui.workspace.allprojects"
@@ -80,7 +81,7 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject, onReq
                     {
                       label: getText('gui.projects.contextMenu.rename', 'rename'),
                       onClick: () => {
-                        onRequestPrompt({
+                        createPrompt({
                           title: getText('gui.projects.contextMenu.rename', 'rename'),
                           label: getText('gui.menuBar.projectTitlePlaceholder', 'Project title here'),
                           inputMode: true,
@@ -162,7 +163,7 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject, onReq
         <span
           className={classNames(styles.footerItem, styles.link)}
           onClick={() => {
-            onRequestPrompt({
+            createPrompt({
               title: getText('gui.terms', 'Terms of Use'),
               content: getText('gui.terms.content', 'Terms of Use'),
             });
@@ -176,7 +177,7 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject, onReq
         <span
           className={classNames(styles.footerItem, styles.link)}
           onClick={() => {
-            onRequestPrompt({
+            createPrompt({
               title: getText('gui.privacy', 'Privacy'),
               content: getText('gui.privacy.content', 'Privacy'),
             });

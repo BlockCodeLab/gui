@@ -1,5 +1,6 @@
 import { render } from 'preact';
-import { LocalesProvider, EditorProvider, useLocale } from '@blockcode/core';
+import { LocalesProvider, LayoutProvider, EditorProvider, useLocale } from '@blockcode/core';
+import { Text, Spinner } from '@blockcode/ui';
 import GUI from './components/gui/gui';
 
 import en from './l10n/en.yaml';
@@ -13,11 +14,25 @@ function App() {
   });
   document.querySelector('html').lang = language;
 
+  const alerts = {
+    importing: {
+      icon: <Spinner level="success" />,
+      message: (
+        <Text
+          id="gui.alert.importing"
+          defaultMessage="importing..."
+        />
+      ),
+    },
+  };
+
   return (
     <LocalesProvider>
-      <EditorProvider>
-        <GUI />
-      </EditorProvider>
+      <LayoutProvider alerts={alerts}>
+        <EditorProvider>
+          <GUI />
+        </EditorProvider>
+      </LayoutProvider>
     </LocalesProvider>
   );
 }

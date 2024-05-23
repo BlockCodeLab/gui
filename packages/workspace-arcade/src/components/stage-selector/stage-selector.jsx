@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import { useLocale, useEditor } from '@blockcode/core';
+import { useLocale, useLayout, useEditor } from '@blockcode/core';
 import { classNames, Text, ActionButton } from '@blockcode/ui';
 import BackdropsLibrary from '../libraries/backdrops-library';
 
@@ -16,9 +16,10 @@ import fileUploadIcon from '../sprite-selector/icon-file-upload.svg';
 const DEFAULT_BACKDROP_THUMB =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAAtJREFUGFdjYAACAAAFAAGq1chRAAAAAElFTkSuQmCC';
 
-export default function StageSelector({ onStop, onPaint, onShowAlert, onHideAlert }) {
+export default function StageSelector({ onStop, onPaint }) {
   const [backdropsLibrary, setBackdropsLibrary] = useState(false);
   const { getText } = useLocale();
+  const { createAlert, removeAlert } = useLayout();
   const { fileList, assetList, selectedIndex, openFile, addAsset, modifyFile } = useEditor();
 
   let backdropIdList, thumb, count;
@@ -41,7 +42,7 @@ export default function StageSelector({ onStop, onPaint, onShowAlert, onHideAler
 
   const handleSelectBackdrop = async (backdrop) => {
     const backdropId = uid();
-    onShowAlert('importing', { id: backdropId });
+    createAlert('importing', { id: backdropId });
 
     const image = await loadImageWithDataURL(`./assets/${backdrop.id}.png`);
     addAsset({
@@ -53,7 +54,7 @@ export default function StageSelector({ onStop, onPaint, onShowAlert, onHideAler
       height: image.height,
     });
     backdropIdList.push(backdropId);
-    onHideAlert(backdropId);
+    removeAlert(backdropId);
 
     modifyFile({
       id: stage.id,
@@ -73,7 +74,7 @@ export default function StageSelector({ onStop, onPaint, onShowAlert, onHideAler
     fileInput.click();
     fileInput.addEventListener('change', async (e) => {
       const alertId = uid();
-      onShowAlert('importing', { id: alertId });
+      createAlert('importing', { id: alertId });
 
       for (const file of e.target.files) {
         const imageId = uid();
@@ -91,7 +92,7 @@ export default function StageSelector({ onStop, onPaint, onShowAlert, onHideAler
         });
         backdropIdList.push(imageId);
       }
-      onHideAlert(alertId);
+      removeAlert(alertId);
 
       modifyFile({
         id: stage.id,

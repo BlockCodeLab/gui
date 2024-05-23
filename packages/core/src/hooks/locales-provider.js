@@ -41,7 +41,17 @@ const reducer = (state, action) => {
 
 export function useLocale() {
   const { state, dispatch } = useContext(LocalesContext);
-  const translator = useTranslator();
+  const { translate } = useTranslator();
+
+  const maybeTranslate = (text) => {
+    if (!text || !text.props) {
+      return text;
+    }
+    if (text.props.children) {
+      return text.props.children.map((child) => maybeTranslate(child)).join('');
+    }
+    return translate(text.props.id, text.props);
+  };
 
   return {
     ...state,
@@ -67,10 +77,14 @@ export function useLocale() {
         option = defaultMessage;
         defaultMessage = option.defaultMessage;
       }
-      return translator.translate(id, {
+      return translate(id, {
         ...option,
         defaultMessage,
       });
+    },
+
+    maybeLocaleText(text) {
+      return maybeTranslate(text);
     },
   };
 }

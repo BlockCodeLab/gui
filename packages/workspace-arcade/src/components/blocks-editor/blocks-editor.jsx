@@ -1,7 +1,7 @@
-import { useLocale, useEditor } from '@blockcode/core';
+import { useLocale, useLayout, useEditor } from '@blockcode/core';
 import { ScratchBlocks } from '@blockcode/blocks-editor';
 import { javascriptGenerator } from '@blockcode/blocks-player';
-import { CodeTab, pythonGenerator } from '@blockcode/workspace-blocks';
+import { codeTab, pythonGenerator } from '@blockcode/workspace-blocks';
 import uid from '../../lib/uid';
 
 import makeToolboxXML from '../../lib/make-toolbox-xml';
@@ -9,10 +9,11 @@ import buildBlocks from '../../blocks';
 
 import styles from './blocks-editor.module.css';
 
-const Editor = CodeTab.Content;
+const Editor = codeTab.Content;
 
-export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert, onReady, onRecordWave }) {
-  const { getText } = useLocale();
+export default function BlocksEditor() {
+  const { getText, maybeLocaleText } = useLocale();
+  const { selectTab } = useLayout();
   const { assetList, fileList, selectedIndex, modifyFile, addAsset } = useEditor();
   const isStage = selectedIndex === 0;
 
@@ -48,7 +49,7 @@ export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert, o
     SOUND_MENU_POWER_DOWN: getText('arcade.blocks.musicMenu.powerDown', 'power down'),
   };
 
-  buildBlocks(assetList, fileList, selectedIndex, () => {
+  buildBlocks(assetList, fileList, selectedIndex, maybeLocaleText, () => {
     addAsset({
       id: uid(),
       type: 'audio/wav',
@@ -58,7 +59,7 @@ export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert, o
       sampleCount: 0,
       record: true,
     });
-    onRecordWave();
+    selectTab(2);
   });
 
   const stage = fileList[0];
@@ -80,7 +81,7 @@ export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert, o
     fileList.length - 1,
     backdropValue,
     costumeValue,
-    soundValue ? soundValue.id : '',
+    soundValue ? soundValue.id : ''
   );
 
   const updateToolboxBlockValue = (id, value) => {
@@ -126,7 +127,7 @@ export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert, o
       if (asset) {
         res.push({
           id: assetId,
-          name: asset.name,
+          name: maybeLocaleText(asset.name),
           image: [assetId, asset.width, asset.height, asset.centerX, asset.centerY],
         });
       }
@@ -140,7 +141,7 @@ export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert, o
         ['import_stage', 'from stage import stage'],
         [
           'create_sprite',
-          `target = Sprite(runtime, stage, "${target.id}", "${target.name}", ${[
+          `target = Sprite(runtime, stage, "${target.id}", "${maybeLocaleText(target.name)}", ${[
             listAssets(target.assets),
             target.frame,
             Math.round(target.x),
@@ -163,10 +164,6 @@ export default function BlocksEditor({ onShowPrompt, onShowAlert, onHideAlert, o
         messages={messages}
         onExtensionsFilter={() => ['blocks', ['arcade', 'popsicle', 'data']]}
         onLoadExtension={handleLoadExtension}
-        onShowPrompt={onShowPrompt}
-        onShowAlert={onShowAlert}
-        onHideAlert={onHideAlert}
-        onReady={onReady}
       />
 
       {thumb && (

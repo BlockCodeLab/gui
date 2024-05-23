@@ -1,8 +1,6 @@
 import { useState } from 'preact/hooks';
-import { useLocale, useEditor } from '@blockcode/core';
+import { useLocale, useLayout, useEditor } from '@blockcode/core';
 import { classNames } from '@blockcode/ui';
-import { useLayout } from '../../hooks/use-layout';
-import { useAlert } from '../../hooks/use-alert';
 
 /* components */
 import Alerts from '../alerts/alerts';
@@ -18,25 +16,32 @@ import SplashScreen from '../splash-screen/splash-screen';
 import styles from './gui.module.css';
 
 export default function GUI() {
-  const [prompt, setPrompt] = useState(null);
-  const [splash, setSplash] = useState(false);
-  const [workspaceLibraryOpened, setWorkspaceLibraryOpened] = useState(false);
-  const [storeLibraryOpened, setStoreLibraryOpened] = useState(false);
-  const { menus, tabs, sidebars, pane, tutorials, canEditProjectName, setLayout, clearLayout } = useLayout();
-  const { alerts, setAlert, removeAlert } = useAlert();
+  const [workspaceLibrary, setWorkspaceLibrary] = useState(false);
+
   const { addLocaleData, getText } = useLocale();
-  const { editor, setEditor, openProject, closeProject, modified } = useEditor();
+  const {
+    splash,
+    prompt,
+    alerts,
+    tabs,
+    sidebars,
+    pane,
+    selectedTabIndex,
+    storeLibrary,
+    setSplash,
+    createPrompt,
+    createLayout,
+    clearLayout,
+    selectTab,
+    setStoreLibrary,
+  } = useLayout();
+  const { editor, setEditor, openProject: defaultOpenProject, closeProject, modified } = useEditor();
   // for debug
   const { fileList, selectedIndex } = useEditor();
 
-  const openWorkspaceLibrary = () => setWorkspaceLibraryOpened(true);
-  const closeWorkspaceLibrary = () => setWorkspaceLibraryOpened(false);
   if (!editor || !editor.package) {
-    openWorkspaceLibrary();
+    setWorkspaceLibrary(true);
   }
-
-  const openStoreLibrary = () => setStoreLibraryOpened(true);
-  const closeStoreLibrary = () => setStoreLibraryOpened(false);
 
   let LeftSidebarContent, RightSidebarContent;
   sidebars.forEach((sidebar) => {
@@ -57,87 +62,63 @@ export default function GUI() {
 
   const handlePromptSubmit = (...args) => {
     prompt.onSubmit && prompt.onSubmit(...args);
-    setPrompt(null);
+    createPrompt(null);
   };
 
   const handlePromptClose = () => {
     prompt.onClose && prompt.onClose();
-    setPrompt(null);
+    createPrompt(null);
   };
 
-  const showSplashScreen = () => setSplash(true);
-  const hideSplashScreen = () => {
-    setSplash(false);
-    setEditor({ splash: false });
-  };
-
-  const defaultOpenProject = (project) => {
-    showSplashScreen();
-    openProject({
+  const openProject = (project) => {
+    setSplash(true);
+    setStoreLibrary(false);
+    defaultOpenProject({
       ...project,
       selectedIndex: 0,
     });
   };
 
-  const selectTab = (activedTabIndex) => {
-    setEditor({ activedTabIndex });
-  };
-
-  const handleOpenWorkspace = (workspacePackage, open = defaultOpenProject) => {
-    setAlert('importing', { id: workspacePackage });
+  const handleOpenWorkspace = (workspacePackage, project) => {
+    setSplash(true);
     import(`@blockcode/workspace-${workspacePackage}`).then(({ default: createWorkspace }) => {
-      removeAlert(workspacePackage);
-      closeWorkspaceLibrary();
+      setWorkspaceLibrary(false);
       createWorkspace({
         addLocaleData,
-        getText,
-        setLayout,
-        selectTab,
-        openStoreLibrary,
-        closeStoreLibrary,
-        setPrompt,
-        setAlert,
-        removeAlert,
-        hideSplashScreen,
-        openProject: open,
+        createLayout,
+        openProject,
+        project,
       });
       selectTab(0);
-      setEditor({
-        package: workspacePackage,
-        splash: true,
-      });
+      setEditor({ package: workspacePackage });
     });
   };
 
   const handleOpenProject = (project) => {
-    const open = () => {
-      closeStoreLibrary();
-      defaultOpenProject(project);
-    };
     if (!editor || !editor.package || editor.package !== project.editor.package) {
       closeProject();
-      handleOpenWorkspace(project.editor.package, open);
+      handleOpenWorkspace(project.editor.package, project);
       return;
     }
     if (modified) {
-      setPrompt({
+      createPrompt({
         title: getText('gui.projects.notSaved', 'Not saved'),
         label: getText('gui.projects.replaceProject', 'Replace contents of the current project?'),
-        onSubmit: open,
+        onSubmit: () => openProject(project),
       });
     } else {
-      open();
+      openProject(project);
     }
   };
 
   const handleBackHome = () => {
     const close = () => {
-      clearLayout();
       closeProject();
-      openWorkspaceLibrary();
+      clearLayout();
+      setWorkspaceLibrary(true);
     };
     if (modified) {
-      setPrompt({
+      createPrompt({
         title: getText('gui.projects.notSaved', 'Not saved'),
         label: getText('gui.projects.closeProject', 'Close current project?'),
         onSubmit: close,
@@ -153,10 +134,7 @@ export default function GUI() {
 
       <MenuBar
         className={styles.menuBarPosition}
-        menus={menus}
-        tutorials={tutorials}
-        showHomeButton={!workspaceLibraryOpened}
-        canEditProjectName={canEditProjectName}
+        showHomeButton={!workspaceLibrary}
         onRequestHome={handleBackHome}
       />
 
@@ -176,7 +154,7 @@ export default function GUI() {
               {tabs.map(({ Content: TabContent, ...tab }, index) => (
                 <>
                   <TabLabel
-                    checked={index === editor.activedTabIndex}
+                    checked={index === selectedTabIndex}
                     key={index}
                     name={index}
                     onSelect={() => selectTab(index)}
@@ -189,7 +167,7 @@ export default function GUI() {
                     name={index}
                     key={index}
                   >
-                    {index === editor.activedTabIndex && <TabContent />}
+                    {index === selectedTabIndex && <TabContent />}
                   </TabPanel>
                 </>
               ))}
@@ -215,23 +193,15 @@ export default function GUI() {
           )}
         </div>
 
-        {workspaceLibraryOpened && (
+        {workspaceLibrary && (
           <WorkspaceLibrary
-            onRequestPrompt={setPrompt}
-            onRequestStoreLibrary={openStoreLibrary}
             onOpenWorkspace={handleOpenWorkspace}
             onOpenProject={handleOpenProject}
           />
         )}
       </div>
 
-      {storeLibraryOpened && (
-        <StoreLibrary
-          onRequestPrompt={setPrompt}
-          onOpenProject={handleOpenProject}
-          onClose={() => setStoreLibraryOpened(false)}
-        />
-      )}
+      {storeLibrary && <StoreLibrary onOpenProject={handleOpenProject} />}
 
       {prompt && (
         <Prompt

@@ -19,7 +19,7 @@ blocks.alert.downloadCompleted: 下载完成。
 
 blocks.codeTab: 代码
 
-blocks.backpackPane.title: 书包
+blocks.monitorPane.title: 监视器
 
 blocks.downloadToDevice: 下载
 blocks.extensions.addExtension: 添加扩展

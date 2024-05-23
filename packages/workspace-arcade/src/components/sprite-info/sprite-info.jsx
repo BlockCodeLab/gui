@@ -12,7 +12,7 @@ import xIcon from './icon-x.svg';
 import yIcon from './icon-y.svg';
 
 export default function SpriteInfo({ playing, stageSize }) {
-  const { getText } = useLocale();
+  const { getText, maybeLocaleText } = useLocale();
   const { fileList, selectedIndex, modifyFile } = useEditor();
 
   const disabled = playing || selectedIndex < 1;
@@ -35,11 +35,6 @@ export default function SpriteInfo({ playing, stageSize }) {
       if (value.length === 0) {
         value = getText('arcade.spriteInfo.sprite', 'Sprite');
       }
-      const re = new RegExp(`^${value}\\d*$`, 'i');
-      const sameNameSprites = fileList.filter((file) => file.id !== sprite.id && file.name && re.test(file.name));
-      if (sameNameSprites.length > 0) {
-        value = `${value}${sameNameSprites.length + 1}`;
-      }
     }
     if (key === 'size' && value < 5) {
       value = 5;
@@ -61,7 +56,7 @@ export default function SpriteInfo({ playing, stageSize }) {
       className={stageSize === 'small' ? styles.fullInput : styles.nameInput}
       placeholder={getText('arcade.spriteInfo.name', 'Name')}
       onSubmit={(value) => handleChangeInfo('name', value)}
-      value={sprite.name}
+      value={maybeLocaleText(sprite.name)}
     />
   );
 

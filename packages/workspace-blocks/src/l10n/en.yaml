@@ -19,7 +19,7 @@ blocks.alert.downloadCompleted: Download completed.
 
 blocks.codeTab: Code
 
-blocks.backpackPane.title: Backpack
+blocks.monitorPane.title: Monitor
 
 blocks.downloadToDevice: Download
 blocks.extensions.addExtension: Add Extension

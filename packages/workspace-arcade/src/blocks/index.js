@@ -5,13 +5,13 @@ import './sensing';
 import './sound';
 import './wifi';
 
-export default function (assetList, fileList, selectedIndex, onRecordSound) {
+export default function (assetList, fileList, selectedIndex, maybeLocaleText, recordSound) {
   const stage = fileList[0];
   const sprite = fileList[selectedIndex];
   const otherSprites = fileList.filter((_, i) => i > 0 && i !== selectedIndex);
   const isStage = selectedIndex === 0;
 
-  const otherSpritesMenu = otherSprites.map((spr) => [spr.name, spr.id]);
+  const otherSpritesMenu = otherSprites.map((sprite) => [maybeLocaleText(sprite.name), sprite.id]);
 
   ScratchBlocks.Blocks['motion_pointtowards_menu'] = {
     init() {
@@ -83,7 +83,7 @@ export default function (assetList, fileList, selectedIndex, onRecordSound) {
             name: 'COSTUME',
             options: sprite.assets.map((assetId) => {
               const asset = assetList.find(({ id }) => assetId === id);
-              return [asset.name, assetId];
+              return [maybeLocaleText(asset.name), assetId];
             }),
           },
         ],
@@ -98,7 +98,7 @@ export default function (assetList, fileList, selectedIndex, onRecordSound) {
 
   const stageMenu = stage.assets.map((assetId) => {
     const asset = assetList.find(({ id }) => assetId === id);
-    return [asset.name, assetId];
+    return [maybeLocaleText(asset.name), assetId];
   });
 
   ScratchBlocks.Blocks['looks_backdrops'] = {
@@ -273,8 +273,10 @@ export default function (assetList, fileList, selectedIndex, onRecordSound) {
             type: 'field_dropdown',
             name: 'SOUND_MENU',
             options: [
-              ...assetList.filter((asset) => asset.type === 'audio/wav').map((sound) => [sound.name, sound.id]),
-              [ScratchBlocks.Msg.SOUND_RECORD, onRecordSound],
+              ...assetList
+                .filter((asset) => asset.type === 'audio/wav')
+                .map((sound) => [maybeLocaleText(sound.name), sound.id]),
+              [ScratchBlocks.Msg.SOUND_RECORD, recordSound],
             ],
           },
         ],

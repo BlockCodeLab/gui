@@ -1,11 +1,11 @@
 import { useLocale } from '@blockcode/core';
-import { CodeTab } from '@blockcode/workspace-blocks';
+import { codeTab } from '@blockcode/workspace-blocks';
 
 import makeToolboxXML from '../../lib/make-toolbox-xml';
 
-const Editor = CodeTab.Content;
+const Editor = codeTab.Content;
 
-export default function BlocksEditor({ onReady }) {
+export default function BlocksEditor() {
   const { getText } = useLocale();
 
   const messages = {
@@ -27,7 +27,6 @@ export default function BlocksEditor({ onReady }) {
       disableExtension
       messages={messages}
       toolbox={toolbox}
-      onReady={onReady}
     />
   );
 }

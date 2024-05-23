@@ -1,7 +1,6 @@
 import classNames from 'classnames';
 import { cloneElement } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
-import { flatChildren, setHotkey, showHotkey, useLocale, useEditor } from '@blockcode/core';
+import { flatChildren, setHotkey, showHotkey } from '@blockcode/core';
 
 import styles from './menu.module.css';
 
@@ -20,42 +19,17 @@ export function Menu({ id, className, children, name }) {
 
 const notMobile = /Win|Mac|Linux/i.test(navigator.platform || navigator.userAgent);
 
-export function MenuItem({ children, className, disabled: isDisabled, href, hotkey, onLabel, onDisable, onClick }) {
-  const [disabled, setDisable] = useState();
-  const [label, setLabel] = useState();
-  const locale = useLocale();
-  const context = useEditor();
-
+export function MenuItem({ className, disabled, label, href, hotkey, onClick, children }) {
   const navigateToHref = () => href && window.open(href, '_blank');
   const handleClick = (e = {}) => {
     if (disabled) return;
     if (onClick) {
-      e.locale = locale;
-      e.context = context;
       onClick(e);
       return;
     }
     navigateToHref();
   };
   if (notMobile && hotkey) setHotkey(hotkey, handleClick);
-
-  if (onDisable) {
-    const result = onDisable({ locale, context, setDisable });
-    if (typeof result !== 'undefined' && result !== disabled) {
-      setDisable(result);
-    }
-  }
-  if (onLabel) {
-    const result = onLabel({ locale, context, setLabel });
-    if (typeof result !== 'undefined' && result !== label) {
-      setLabel(result);
-    }
-  }
-
-  useEffect(() => {
-    setDisable(isDisabled);
-    return () => {};
-  }, [isDisabled]);
 
   return (
     <li

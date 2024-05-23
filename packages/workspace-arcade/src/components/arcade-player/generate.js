@@ -1,13 +1,10 @@
-const targetCode = (target, index) => `/* ${target.name} */
-(() => {
+const generate = (file, index) => `(() => {
 let abort = false;
 const stage = runtime.stage;
-${index > 0 ? `const target = runtime.getSpriteByIdOrName('${target.id}');` : 'const target = stage;'}
-${target.script || ''}
+${index > 0 ? `const target = runtime.getSpriteByIdOrName('${file.id}');` : 'const target = stage;'}
+${file.script || ''}
 })();
 `;
 
-export default (targets) => `
-${targets.map(targetCode).join('\n')}
-runtime.start();
-`;
+export default (fileList) => `${fileList.map(generate).join('\n')}
+runtime.start();`;

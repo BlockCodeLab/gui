@@ -1,5 +1,5 @@
-import { useLocale, supportLanguages } from '@blockcode/core';
-import { classNames, Menu, MenuItem, MenuSection, ComingSoon } from '@blockcode/ui';
+import { supportLanguages, useLocale, useLayout } from '@blockcode/core';
+import { classNames, Menu, MenuItem, ComingSoon } from '@blockcode/ui';
 
 /* components */
 import MainMenu from './main-menu';
@@ -14,28 +14,9 @@ import languageIcon from './icons/icon-language.svg';
 import dropdownCaret from './icons/icon-dropdown-caret.svg';
 import homeIcon from './icons/icon-home.svg';
 
-const mapMenuItems = (menuItems) =>
-  menuItems &&
-  menuItems.map((menu, index) =>
-    Array.isArray(menu) ? (
-      <MenuSection key={index}>{mapMenuItems(menu)}</MenuSection>
-    ) : (
-      <MenuItem
-        key={index}
-        className={styles.menuItem}
-        hotkey={menu.hotkey}
-        disabled={menu.disabled}
-        onDisable={menu.onDisable}
-        onLabel={menu.onLabel}
-        onClick={menu.onClick}
-      >
-        {menu.label}
-      </MenuItem>
-    ),
-  );
-
-export default function MenuBar({ className, menus, tutorials, showHomeButton, canEditProjectName, onRequestHome }) {
+export default function MenuBar({ className, showHomeButton, onRequestHome }) {
   const { language: currentLanguage, setLanguage, getText } = useLocale();
+  const { mainMenu, tutorials, canEditProjectName } = useLayout();
 
   return (
     <div className={classNames(styles.menuBar, className)}>
@@ -72,25 +53,24 @@ export default function MenuBar({ className, menus, tutorials, showHomeButton, c
             ))}
           </Menu>
 
-          {menus &&
-            menus.map(({ label, menuItems }, index) => (
+          {mainMenu &&
+            mainMenu.map(({ icon, label, Menu: Submenu }, index) => (
               <>
                 <MenuLabel
                   className={styles.menuBarItem}
                   name={index}
                   key={index}
                 >
+                  {icon && <img src={icon} />}
                   {label}
                 </MenuLabel>
-                {menuItems && menuItems.length && (
-                  <Menu
-                    className={styles.menu}
-                    name={index}
-                    key={index}
-                  >
-                    {mapMenuItems(menuItems)}
-                  </Menu>
-                )}
+                <Menu
+                  className={styles.menu}
+                  name={index}
+                  key={index}
+                >
+                  {<Submenu itemClassName={styles.menuItem} />}
+                </Menu>
               </>
             ))}
         </MainMenu>

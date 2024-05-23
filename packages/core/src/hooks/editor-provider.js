@@ -8,7 +8,6 @@ const SET_PROJECT_NAME = 'SET_PROJECT_NAME';
 const ADD_FILE = 'ADD_FILE';
 const OPEN_FILE = 'OPEN_FILE';
 const DELETE_FILE = 'DELETE_FILE';
-const RENAME_FILE = 'RENAME_FILE';
 const MODIFY_FILE = 'MODIFY_FILE';
 const ADD_ASSET = 'ADD_ASSET';
 const DELETE_ASSET = 'DELETE_ASSET';
@@ -74,20 +73,6 @@ const reducer = (state, action) => {
             : state.selectedIndex - 1,
         modified: true,
       };
-    case RENAME_FILE:
-      return {
-        ...state,
-        fileList: state.fileList.map((file, i) => {
-          if (i === state.selectedIndex) {
-            return {
-              ...file,
-              name: action.payload,
-            };
-          }
-          return file;
-        }),
-        modified: true,
-      };
     case MODIFY_FILE:
       return {
         ...state,
@@ -117,7 +102,7 @@ const reducer = (state, action) => {
     case MODIFY_ASSET:
       return {
         ...state,
-        assetList: state.assetList.map((asset, i) => {
+        assetList: state.assetList.map((asset) => {
           if (asset.id === action.payload.id) {
             return {
               ...asset,
@@ -197,20 +182,25 @@ export function useEditor() {
 
     renameFile(name) {
       if (state.fileList.find((file) => file.name === name)) {
-        throw Error('File already exists');
+        // TODO: rename
       }
-      dispatch({ type: RENAME_FILE, payload: name });
+      dispatch({ type: MODIFY_FILE, payload: { name } });
     },
 
-    modifyFile(content) {
-      dispatch({ type: MODIFY_FILE, payload: content });
+    modifyFile(data) {
+      if (state.fileList.find((file, i) => (data.id ? file.id === data.id : i === state.selectedIndex))) {
+        dispatch({ type: MODIFY_FILE, payload: data });
+      } else {
+        throw Error('File does not exists');
+      }
     },
 
-    addAsset(newAsset) {
-      if (state.assetList.find((asset) => asset.id === newAsset.id)) {
-        throw Error('Asset already exists');
+    addAsset(data) {
+      if (state.assetList.find((asset) => asset.id === data.id)) {
+        dispatch({ type: MODIFY_ASSET, payload: data });
+      } else {
+        dispatch({ type: ADD_ASSET, payload: data });
       }
-      dispatch({ type: ADD_ASSET, payload: newAsset });
     },
 
     deleteAsset(...assetIds) {
@@ -220,19 +210,27 @@ export function useEditor() {
       dispatch({ type: DELETE_ASSET, payload: assetIds });
     },
 
-    modifyAsset(data) {
+    renameAsset(data) {
+      if (state.assetList.find((asset) => asset.name === data.name)) {
+        // TODO: rename
+      }
       dispatch({ type: MODIFY_ASSET, payload: data });
     },
 
-    connectDevice(device) {
+    modifyAsset(data) {
+      if (state.assetList.find((asset) => asset.id === data.id)) {
+        dispatch({ type: MODIFY_ASSET, payload: data });
+      } else {
+        dispatch({ type: ADD_ASSET, payload: data });
+      }
+    },
+
+    setDevice(device) {
       dispatch({ type: CONNECT_DEVICE, payload: device });
     },
 
     setEditor(config) {
       dispatch({ type: CONFIG_EDITOR, payload: config });
-      if (config.splash === false) {
-        dispatch({ type: SAVE_DATA, payload: { modified: false } });
-      }
     },
 
     async saveNow(onFilter) {
@@ -254,6 +252,10 @@ export function useEditor() {
       );
       dispatch({ type: SAVE_DATA, payload: { key, modified: false } });
       return result;
+    },
+
+    setModified(modified) {
+      dispatch({ type: SAVE_DATA, payload: { modified } });
     },
 
     async listProjects() {
