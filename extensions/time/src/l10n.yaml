@@ -1,0 +1,27 @@
+en:
+  extension.time.name: Time
+  extension.time.sync: sync world time
+  extension.time.setTimezone: set timezone to [TIMEZONE]
+  extension.time.getTime: current [OPTION]
+  extension.time.option.year: year
+  extension.time.option.month: month
+  extension.time.option.date: date
+  extension.time.option.weekday: day of week
+  extension.time.option.hour: hour
+  extension.time.option.minute: minute
+  extension.time.option.second: second
+  extension.time.days: days since 2000
+
+zh-Hans:
+  extension.time.name: 时间
+  extension.time.sync: 同步时间
+  extension.time.setTimezone: 将时区设为 [TIMEZONE]
+  extension.time.getTime: 当前时间的 [OPTION]
+  extension.time.option.year: 年
+  extension.time.option.month: 月
+  extension.time.option.date: 日
+  extension.time.option.weekday: 星期
+  extension.time.option.hour: 时
+  extension.time.option.minute: 分
+  extension.time.option.second: 秒
+  extension.time.days: 2000 年至今的天数
