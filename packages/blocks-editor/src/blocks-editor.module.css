@@ -71,3 +71,7 @@
 :global(.blocklyContextMenu .goog-menuitem:not(.goog-menuitem-disabled)) {
   cursor: pointer !important;
 }
+
+:global(.scratchCategoryMenuItemLabel) {
+  text-wrap: pretty;
+}
