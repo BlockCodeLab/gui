@@ -3,7 +3,7 @@ import iconImage from './icon.png';
 
 export default {
   name: 'Servo',
-  description: 'Servo module',
+  description: 'Standard servo module.',
   collaborator: 'Yeqin Gong',
   image: featureImage,
   icon: iconImage,

@@ -1,4 +1,4 @@
-# @blockcode/extension-blocks-servo
+# @blockcode/extension-servo
 
 To install dependencies:
 

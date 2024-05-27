@@ -1,32 +1,26 @@
 import { Text } from '@blockcode/ui';
 import translations from './l10n.yaml';
-import icon from './icon.png';
+import iconURI from './icon.png';
 
 function provideSetServoFunction() {
   this.definitions_['from_machine_import_pin'] = 'from machine import Pin';
   this.definitions_['from_machine_import_pwm'] = 'from machine import PWM';
-  this.definitions_['servo_pwm'] = '__servo_pwm = None';
   return this.provideFunction_('set_servo', [
-    [`def ${this.FUNCTION_NAME_PLACEHOLDER_}(pin, ms=0, angle=None, max_angle=180):`],
-    '  global __servo_pwm',
-    '  if not __servo_pwm:',
-    '    __servo_pwm = PWM(Pin(pin), freq=50, duty_u16=0)',
+    `def ${this.FUNCTION_NAME_PLACEHOLDER_}(pin, ms=0, angle=None, max_angle=180):`,
     '  if angle != None:',
     '    ms = 1.5 - angle / max_angle',
-    '  __servo_pwm.duty_u16(int(ms / 20 * 65535))',
+    '  PWM(Pin(pin), freq=50).duty_u16(int(ms / 20 * 65535))',
   ]);
 }
 
 export default {
+  iconURI,
   name: (
     <Text
       id="extension.servo.name"
       defaultMessage="Servo"
     />
   ),
-  // themeColor: '',
-  // inputColor: '',
-  iconURI: icon,
   blocks: [
     {
       id: 'set_90servo',
