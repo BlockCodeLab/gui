@@ -2,7 +2,6 @@ import { useState, useEffect } from 'preact/hooks';
 import { useLocale, useLayout, useEditor } from '@blockcode/core';
 import { classNames, Text, ContextMenu, LibraryItem } from '@blockcode/ui';
 import GettingStarted from '../getting-started/getting-started';
-import maybeTranslateMessage from '../../lib/maybe-translate-message';
 import workspaces from '../../lib/workspaces/workspaces';
 import makeCoverpages from '../../lib/coverpages/coverpages';
 
@@ -14,7 +13,7 @@ const DISPLAY_PROJECTS_COUNTS = 7;
 export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
   const [data, setData] = useState([]);
   const [counts, setCounts] = useState(0);
-  const { getText } = useLocale();
+  const { getText, maybeLocaleText } = useLocale();
   const { createPrompt, setStoreLibrary } = useLayout();
   const { listProjects, getProject, renameProject, duplicateProject, deleteProject } = useEditor();
 
@@ -85,7 +84,7 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
                           title: getText('gui.projects.contextMenu.rename', 'rename'),
                           label: getText('gui.menuBar.projectTitlePlaceholder', 'Project title here'),
                           inputMode: true,
-                          defaultValue: maybeTranslateMessage(item.name, getText),
+                          defaultValue: maybeLocaleText(item.name),
                           onSubmit: async (name) => {
                             if (name) {
                               await renameProject(item.key, name);
@@ -127,6 +126,7 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
           </div>
         </>
       )}
+
       <div className={styles.libraryLabel}>
         <Text
           id="gui.workspace.newproject"

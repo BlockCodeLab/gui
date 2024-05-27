@@ -18,7 +18,7 @@ import styles from './gui.module.css';
 export default function GUI() {
   const [workspaceLibrary, setWorkspaceLibrary] = useState(false);
 
-  const { addLocaleData, getText } = useLocale();
+  const { addLocaleData, getText, maybeLocaleText } = useLocale();
   const {
     splash,
     prompt,
@@ -39,7 +39,7 @@ export default function GUI() {
   // for debug
   const { fileList, selectedIndex } = useEditor();
 
-  if (!editor || !editor.package) {
+  if (!editor?.package) {
     setWorkspaceLibrary(true);
   }
 
@@ -75,6 +75,14 @@ export default function GUI() {
     setStoreLibrary(false);
     defaultOpenProject({
       ...project,
+      assetList: project.assetList?.map((asset) => ({
+        ...asset,
+        name: maybeLocaleText(asset.name),
+      })),
+      fileList: project.fileList?.map((file) => ({
+        ...file,
+        name: maybeLocaleText(file.name),
+      })),
       selectedIndex: 0,
     });
   };
@@ -95,7 +103,7 @@ export default function GUI() {
   };
 
   const handleOpenProject = (project) => {
-    if (!editor || !editor.package || editor.package !== project.editor.package) {
+    if (editor?.package !== project.editor.package) {
       closeProject();
       handleOpenWorkspace(project.editor.package, project);
       return;
