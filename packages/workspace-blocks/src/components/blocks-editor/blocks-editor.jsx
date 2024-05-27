@@ -152,7 +152,7 @@ export default function BlocksEditor({
       removeAlert,
     });
   loadedExtensions.forEach((extensionObject) => {
-    toolboxXML += loadExtension(extensionObject, workspace, isStage, maybeLocaleText, buttonWrapper);
+    toolboxXML += loadExtension(extensionObject, isStage, maybeLocaleText, buttonWrapper);
   });
 
   const handleChange = (newXml, workspace) => {

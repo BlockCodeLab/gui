@@ -51,7 +51,7 @@ const FieldTypes = {
   note: 'NOTE',
 };
 
-export default function (extensionObject, workspace, isStage, maybeLocaleText, buttonWrapper) {
+export default function (extensionObject, isStage, maybeLocaleText, buttonWrapper) {
   const { id: extensionId } = extensionObject;
 
   const extensionName = maybeLocaleText(extensionObject.name);
@@ -72,8 +72,16 @@ export default function (extensionObject, workspace, isStage, maybeLocaleText, b
 
     if (block.button) {
       categoryXML += `<button text="${maybeLocaleText(block.text)}" callbackKey="${block.button}"></button>`;
-      const toolboxWorkspace = workspace.getFlyout().getWorkspace();
-      toolboxWorkspace.registerButtonCallback(block.button, buttonWrapper(block.onClick));
+      const workspace = ScratchBlocks.getMainWorkspace();
+      if (workspace) {
+        const flyout = workspace.getFlyout();
+        if (flyout) {
+          const toolboxWorkspace = flyout.getWorkspace();
+          if (toolboxWorkspace) {
+            toolboxWorkspace.registerButtonCallback(block.button, buttonWrapper(block.onClick));
+          }
+        }
+      }
       return;
     }
 
