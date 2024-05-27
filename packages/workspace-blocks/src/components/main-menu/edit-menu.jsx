@@ -12,7 +12,7 @@ export default function EditMenu({ itemClassName, children }) {
 
   const mainWorkspace = ScratchBlocks.getMainWorkspace();
   if (mainWorkspace) {
-    if (!workspace || workspace.id !== mainWorkspace.id) {
+    if (workspace?.id !== mainWorkspace.id) {
       setWorkspace(mainWorkspace);
     }
   }

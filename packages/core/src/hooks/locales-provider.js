@@ -44,7 +44,7 @@ export function useLocale() {
   const { translate } = useTranslator();
 
   const maybeTranslate = (text) => {
-    if (!text || !text.props) {
+    if (!text?.props) {
       return text;
     }
     if (text.props.children) {

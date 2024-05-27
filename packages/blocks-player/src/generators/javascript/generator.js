@@ -196,7 +196,7 @@ javascriptGenerator.HAT_CODE = '/* HatCode */';
 javascriptGenerator.scrub_ = function (block, code) {
   var commentCode = '';
   // Only collect comments for blocks that aren't inline.
-  if (!block.outputConnection || !block.outputConnection.targetConnection) {
+  if (!block.outputConnection?.targetConnection) {
     // Collect comment for this block.
     var comment = block.getCommentText();
     comment = ScratchBlocks.utils.wrap(comment, javascriptGenerator.COMMENT_WRAP - 3);

@@ -232,7 +232,7 @@ pythonGenerator.quote_ = (string) => {
 pythonGenerator.scrub_ = (block, code) => {
   let commentCode = '';
   // Only collect comments for blocks that aren't inline.
-  if (!block.outputConnection || !block.outputConnection.targetConnection) {
+  if (!block.outputConnection?.targetConnection) {
     // Collect comment for this block.
     let comment = block.getCommentText();
     comment = ScratchBlocks.utils.wrap(comment, pythonGenerator.COMMENT_WRAP - 3);
