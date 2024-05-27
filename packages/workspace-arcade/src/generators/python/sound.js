@@ -10,7 +10,7 @@ pythonGenerator['sound_play'] = (block) => {
     code += pythonGenerator.injectId(pythonGenerator.STATEMENT_PREFIX, block);
   }
   const soundCode = pythonGenerator.valueToCode(block, 'SOUND_MENU', pythonGenerator.ORDER_NONE) || '';
-  code += `audio.play_sound("${soundCode}")\n`;
+  // code += `audio.play_sound("${soundCode}")\n`;
   return code;
 };
 
@@ -19,9 +19,8 @@ pythonGenerator['sound_playuntildone'] = (block) => {
   if (pythonGenerator.STATEMENT_PREFIX) {
     code += pythonGenerator.injectId(pythonGenerator.STATEMENT_PREFIX, block);
   }
-
   const soundCode = pythonGenerator.valueToCode(block, 'SOUND_MENU', pythonGenerator.ORDER_NONE) || '';
-  code += `await audio.play_sound_async("${soundCode}")\n`;
+  // code += `await audio.play_sound_async("${soundCode}")\n`;
   return code;
 };
 
@@ -30,6 +29,6 @@ pythonGenerator['sound_stopallsounds'] = (block) => {
   if (pythonGenerator.STATEMENT_PREFIX) {
     code += pythonGenerator.injectId(pythonGenerator.STATEMENT_PREFIX, block);
   }
-  code += `audio.stop_sound()\n`;
+  // code += `audio.stop_sound()\n`;
   return code;
 };

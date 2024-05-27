@@ -9,10 +9,12 @@ import editIcon from './icons/icon-edit.svg';
 import deviceIcon from './icons/icon-device.svg';
 
 export default function makeMainMenu({
+  deviceName,
   deviceFilters,
   createDefaultProject,
   saveCurrentProject,
   downloadProjectToDevice,
+  showDownloadScreen,
 }) {
   return [
     {
@@ -53,8 +55,10 @@ export default function makeMainMenu({
       ),
       Menu: ({ itemClassName, children }) => (
         <DeviceMenu
+          deviceName={deviceName}
           itemClassName={itemClassName}
           deviceFilters={deviceFilters}
+          downloadScreen={showDownloadScreen}
           onDownload={downloadProjectToDevice}
         >
           {children}

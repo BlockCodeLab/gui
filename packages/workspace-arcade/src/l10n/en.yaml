@@ -9,6 +9,7 @@ arcade.pixelPaint.backdrops: Backdrops
 
 arcade.waveSurfer.sounds: Sounds
 
+arcade.menu.device: Arcade
 arcade.menu.device.manual: Arcade manual
 
 arcade.deletePrompt.title: Delete {name}

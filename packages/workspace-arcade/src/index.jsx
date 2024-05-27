@@ -1,7 +1,7 @@
 import { Text, MenuSection, MenuItem } from '@blockcode/ui';
 import { locales as blocksLocales, makeMainMenu, codeTab } from '@blockcode/workspace-blocks';
 import { PixelPaint, locales as paintLocales } from '@blockcode/pixel-paint';
-// import { WaveSurfer, locales as soundLocales } from '@blockcode/wave-surfer';
+import { WaveSurfer, locales as soundLocales } from '@blockcode/wave-surfer';
 import generateMainFile from './lib/generate-main-file';
 import generateAssets from './lib/generate-assets';
 
@@ -11,13 +11,13 @@ import Sidebar from './components/sidebar/sidebar';
 import PaintText from './components/paint-text/paint-text';
 import BackdropsLibrary from './components/libraries/backdrops-library';
 import CostumesLibrary from './components/libraries/costumes-library';
-// import SoundsLibrary from './components/libraries/sounds-library';
+import SoundsLibrary from './components/libraries/sounds-library';
 
 /* assets */
 import defaultProject from './lib/default-project';
 import deviceIcon from './icon-device.svg';
 import paintIcon from './icon-paint.svg';
-// import soundIcon from './icon-sound.svg';
+import soundIcon from './icon-sound.svg';
 
 /* languages */
 import en from './l10n/en.yaml';
@@ -26,7 +26,7 @@ import zhHans from './l10n/zh-hans.yaml';
 export default function ArcadeBlocksWorkspace({ addLocaleData, createLayout, openProject, project }) {
   addLocaleData(blocksLocales);
   addLocaleData(paintLocales);
-  // addLocaleData(soundLocales);
+  addLocaleData(soundLocales);
 
   addLocaleData({
     en,
@@ -49,7 +49,7 @@ export default function ArcadeBlocksWorkspace({ addLocaleData, createLayout, ope
     return {
       BackdropsLibrary,
       CostumesLibrary,
-      // SoundsLibrary,
+      SoundsLibrary,
     };
   };
 
@@ -68,17 +68,27 @@ export default function ArcadeBlocksWorkspace({ addLocaleData, createLayout, ope
     return [].concat(generateMainFile(fileList[0], fileList.slice(1)), await generateAssets(assetList));
   };
 
+  const deviceName = (
+    <Text
+      id="arcade.menu.device"
+      defaultMessage="Arcade"
+    />
+  );
+
   const mainMenu = makeMainMenu({
+    deviceName,
     deviceFilters,
     createDefaultProject,
     saveCurrentProject,
     downloadProjectToDevice,
+    showDownloadScreen: 'arcade',
   });
 
   // extends device menu
-  const DeviceMenu = mainMenu[2].Menu;
-  mainMenu[2].icon = deviceIcon;
-  mainMenu[2].Menu = ({ itemClassName }) => {
+  const deviceMenu = mainMenu[2];
+  const DeviceMenu = deviceMenu.Menu;
+  deviceMenu.icon = deviceIcon;
+  deviceMenu.Menu = ({ itemClassName }) => {
     return (
       <DeviceMenu itemClassName={itemClassName}>
         <MenuSection>
@@ -87,7 +97,7 @@ export default function ArcadeBlocksWorkspace({ addLocaleData, createLayout, ope
             label={
               <Text
                 id="arcade.menu.device.manual"
-                defaultMessage="Device manual"
+                defaultMessage="Arcade manual"
               />
             }
             onClick={() => window.open('https://lab.blockcode.fun/#/2024/0501/')}
@@ -110,16 +120,16 @@ export default function ArcadeBlocksWorkspace({ addLocaleData, createLayout, ope
         label: <PaintText />,
         Content: () => <PixelPaint onSetupLibrary={handleSetupLibrary} />,
       },
-      // {
-      //   icon: soundIcon,
-      //   label: (
-      //     <Text
-      //       id="arcade.waveSurfer.sounds"
-      //       defaultMessage="Sounds"
-      //     />
-      //   ),
-      //   Content: () => <WaveSurfer onSetupLibrary={handleSetupLibrary} />,
-      // },
+      {
+        icon: soundIcon,
+        label: (
+          <Text
+            id="arcade.waveSurfer.sounds"
+            defaultMessage="Sounds"
+          />
+        ),
+        Content: () => <WaveSurfer onSetupLibrary={handleSetupLibrary} />,
+      },
     ],
 
     sidebars: [

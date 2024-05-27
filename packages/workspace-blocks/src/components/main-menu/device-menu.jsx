@@ -1,11 +1,12 @@
 import { useState } from 'preact/hooks';
-import { useLayout, useEditor } from '@blockcode/core';
+import { useLocale, useLayout, useEditor } from '@blockcode/core';
 import { Text, Spinner, MenuSection, MenuItem } from '@blockcode/ui';
-import { connectDevice, disconnectDevice, downloadDevice } from '@blockcode/device-pyboard';
+import { connectDevice, disconnectDevice, downloadDevice, showDownloadScreen } from '@blockcode/device-pyboard';
 import defaultDeviceFilters from '../../lib/device-filters.yaml';
 
-export default function DeviceMenu({ itemClassName, deviceFilters, onDownload, children }) {
+export default function DeviceMenu({ itemClassName, deviceName, deviceFilters, downloadScreen, onDownload, children }) {
   const [downloadDisabled, setDownloadDisabled] = useState(false);
+  const { maybeLocaleText } = useLocale();
   const { createAlert, removeAlert } = useLayout();
   const { fileList, assetList, device, setDevice } = useEditor();
 
@@ -57,19 +58,34 @@ export default function DeviceMenu({ itemClassName, deviceFilters, onDownload, c
             device ? (
               <Text
                 id="blocks.menu.device.disconnect"
-                defaultMessage="Disconnect this device"
+                defaultMessage="Disconnect this {name}"
+                name={maybeLocaleText(
+                  deviceName || (
+                    <Text
+                      id="blocks.menu.device.name"
+                      defaultMessage="device"
+                    />
+                  ),
+                )}
               />
             ) : (
               <Text
                 id="blocks.menu.device.connect"
-                defaultMessage="Connect your device"
+                defaultMessage="Connect your {name}"
+                name={maybeLocaleText(
+                  deviceName || (
+                    <Text
+                      id="blocks.menu.device.name"
+                      defaultMessage="device"
+                    />
+                  ),
+                )}
               />
             )
           }
           onClick={async () => {
             if (device) {
               await disconnectDevice(device, setDevice);
-              disableDownload();
               if (downloadingAlert.id) {
                 removeAlert(downloadingAlert.id);
                 delete downloadingAlert.id;
@@ -78,7 +94,6 @@ export default function DeviceMenu({ itemClassName, deviceFilters, onDownload, c
               try {
                 await connectDevice(deviceFilters || defaultDeviceFilters, setDevice);
               } catch (err) {}
-              enableDownload();
             }
           }}
         />
@@ -95,8 +110,12 @@ export default function DeviceMenu({ itemClassName, deviceFilters, onDownload, c
           onClick={async () => {
             if (downloadingAlert.id) return;
             try {
+              const currentDevice = device || (await connectDevice(deviceFilters || defaultDeviceFilters, setDevice));
+              if (downloadScreen) {
+                await showDownloadScreen(currentDevice, downloadScreen);
+              }
               downloadDevice(
-                device || (await connectDevice(deviceFilters || defaultDeviceFilters, setDevice)),
+                currentDevice,
                 onDownload ? await onDownload(fileList, assetList) : [].concat((fileList, assetList)),
                 downloadingAlert,
               );

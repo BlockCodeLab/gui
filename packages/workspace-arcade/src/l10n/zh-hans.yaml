@@ -9,6 +9,7 @@ arcade.pixelPaint.backdrops: 背景
 
 arcade.waveSurfer.sounds: 声音
 
+arcade.menu.device: 游戏机
 arcade.menu.device.manual: 游戏机使用说明
 
 arcade.deletePrompt.title: 删除 {name}

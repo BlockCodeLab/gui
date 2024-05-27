@@ -8,8 +8,9 @@ blocks.menu.edit: Edit
 blocks.menu.edit.undo: Undo
 blocks.menu.edit.redo: Redo
 blocks.menu.device: Device
-blocks.menu.device.connect: Connect to your device
-blocks.menu.device.disconnect: Disconnect this device
+blocks.menu.device.name: device
+blocks.menu.device.connect: Connect to your {name}
+blocks.menu.device.disconnect: Disconnect this {name}
 blocks.menu.device.download: Download program
 blocks.menu.device.turnOnAutoDownload: Turn on Auto Download
 blocks.menu.device.turnOffAutoDownload: Turn off Auto Download

@@ -8,8 +8,9 @@ blocks.menu.edit: 编辑
 blocks.menu.edit.undo: 撤销
 blocks.menu.edit.redo: 恢复
 blocks.menu.device: 设备
-blocks.menu.device.connect: 连接设备
-blocks.menu.device.disconnect: 断开设备连接
+blocks.menu.device.name: 设备
+blocks.menu.device.connect: 连接{name}
+blocks.menu.device.disconnect: 断开{name}连接
 blocks.menu.device.download: 下载程序
 blocks.menu.device.turnOnAutoDownload: 打开自动下载
 blocks.menu.device.turnOffAutoDownload: 关闭自动下载
