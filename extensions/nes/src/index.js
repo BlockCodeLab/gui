@@ -2,6 +2,7 @@ import featureImage from './feature.png';
 import iconImage from './icon.png';
 
 export default {
+  hidden: true,
   name: 'NES emulator',
   description: 'Emulates the NES game console.',
   collaborator: 'Yeqin Gong',
