@@ -27,6 +27,21 @@ export const disconnectDevice = async (board, setDevice) => {
   setDevice(null);
 };
 
+export const showDownloadScreen = async (board, displayPackage) => {
+  await board.stop();
+  await board.enterRawRepl();
+  await board.execRaw(`from ${displayPackage} import display`);
+  await board.execRaw('display.fill(0x0000)');
+  await board.execRaw('cx, cy = display.width // 2, display.height // 2');
+  await board.execRaw('display.ellipse(cx, cy, 60, 60, 0xffff, True)');
+  await board.execRaw('display.ellipse(cx, cy, 50, 50, 0x0000, True)');
+  await board.execRaw('display.linex(cx, cy - 30, cx, cy + 30, 10, 0xffff)');
+  await board.execRaw('display.linex(cx, cy + 30, cx + 15, cy + 15, 10, 0xffff)');
+  await board.execRaw('display.linex(cx, cy + 30, cx - 15, cy + 15, 10, 0xffff)');
+  await board.execRaw('display.render()');
+  await board.exitRawRepl();
+};
+
 export const downloadDevice = async (board, files, progress) => {
   await board.stop();
 
