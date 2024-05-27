@@ -1,0 +1,12 @@
+{
+  "name": "blockcode-extensions",
+  "scripts": {
+    "build": "bun run build:pen && bun run build:request && bun run build:servo && bun run build:text && bun run build:broadcast && bun run build:time",
+    "build:pen": "cd pen && BUN_ENV=production bun run build",
+    "build:request": "cd request && BUN_ENV=production bun run build",
+    "build:servo": "cd servo && BUN_ENV=production bun run build",
+    "build:text": "cd text && BUN_ENV=production bun run build",
+    "build:broadcast": "cd broadcast && BUN_ENV=production bun run build",
+    "build:time": "cd time && BUN_ENV=production bun run build"
+  }
+}
