@@ -36,25 +36,9 @@ gui.workspace.myprojects: 我的作品
 gui.workspace.allprojects: 查看全部（{counts}）
 gui.workspace.newproject: 开始新作品
 
-gui.workspace.micropython.name: MicroPython
-gui.workspace.micropython.description: 编写控制万物的神奇代码。
-gui.workspace.blocks.name: MicroPython 图形积木
-gui.workspace.blocks.description: 积木搭起的奇妙程序世界。
-gui.workspace.arcade.name: Scratch 游戏机
-gui.workspace.arcade.description: 在游戏机上玩自制小游戏。
-gui.workspace.popsicle.name: Popsicle
-gui.workspace.popsicle.description: 手里的小设备，玩转真实的大世界。
-
-gui.workspace.microbit.name: micro:bit
-gui.workspace.microbit.description: 把作品连接到实体世界。
-gui.workspace.microbit.collaborator: micro:bit
-
 gui.workspace.tankwar.name: 坦克大战
 gui.workspace.tankwar.description: 带上你的坦克，加入我们的战斗！
 gui.workspace.tankwar.collaborator: 龚业勤
-gui.workspace.picoed.name: 恩孚科技 Pico:ed V2
-gui.workspace.picoed.description: 小小教育开发板，创造无限大可能。
-gui.workspace.picoed.collaborator: 龚业勤
 
 gui.coverpages.tankwar.title: 战争一触即发，赶紧来战吧！
 gui.coverpages.tankwar.button: 加入战斗

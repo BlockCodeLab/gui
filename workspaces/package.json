@@ -1,0 +1,21 @@
+{
+  "name": "blockcode-workspaces",
+  "scripts": {
+    "build": "bun run build:blocks && bun run build:arcade && bun run build:popsicle && bun run build:tankwar && bun run build:picoed && bun run build:microbit && bun run build:micropython",
+    "dev": "bun run dev:blocks && bun run dev:arcade && bun run dev:popsicle && bun run dev:tankwar && bun run dev:picoed && bun run dev:microbit && bun run dev:micropython",
+    "build:blocks": "cd blocks && BUN_ENV=production bun run build",
+    "dev:blocks": "cd blocks && bun run build",
+    "build:arcade": "cd arcade && BUN_ENV=production bun run build",
+    "dev:arcade": "cd arcade && bun run build",
+    "build:popsicle": "cd popsicle && BUN_ENV=production bun run build",
+    "dev:popsicle": "cd popsicle && bun run build",
+    "build:tankwar": "cd tankwar && BUN_ENV=production bun run build",
+    "dev:tankwar": "cd tankwar && bun run build",
+    "build:picoed": "cd picoed && BUN_ENV=production bun run build",
+    "dev:picoed": "cd picoed && bun run build",
+    "build:microbit": "cd microbit && BUN_ENV=production bun run build",
+    "dev:microbit": "cd microbit && bun run build",
+    "build:micropython": "cd micropython && BUN_ENV=production bun run build",
+    "dev:micropython": "cd micropython && bun run build"
+  }
+}

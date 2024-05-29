@@ -36,8 +36,6 @@ export default function GUI() {
     setStoreLibrary,
   } = useLayout();
   const { editor, setEditor, openProject: defaultOpenProject, closeProject, modified } = useEditor();
-  // for debug
-  const { fileList, selectedIndex } = useEditor();
 
   if (!editor?.package) {
     setWorkspaceLibrary(true);
@@ -89,7 +87,7 @@ export default function GUI() {
 
   const handleOpenWorkspace = (workspacePackage, project) => {
     setSplash(true);
-    import(`@blockcode/workspace-${workspacePackage}`).then(({ default: createWorkspace }) => {
+    import(`@blockcode/workspace-${workspacePackage}/app`).then(({ default: createWorkspace }) => {
       setWorkspaceLibrary(false);
       createWorkspace({
         addLocaleData,
@@ -224,12 +222,6 @@ export default function GUI() {
       )}
 
       {splash && <SplashScreen />}
-
-      {DEVELOPMENT && editor && (
-        <div className={styles.debugBox}>
-          <pre>{fileList[selectedIndex].content}</pre>
-        </div>
-      )}
     </>
   );
 }

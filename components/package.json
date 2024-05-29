@@ -1,0 +1,25 @@
+{
+  "name": "blockcode-components",
+  "scripts": {
+    "build": "bun run build:core && bun run build:ui && bun run build:device-pyboard && bun run build:blocks-editor && bun run build:blocks-player && bun run build:code-editor && bun run build:pixel-paint && bun run build:wave-surfer && bun run build:tone-player",
+    "dev": "bun run dev:core && bun run dev:ui && bun run dev:device-pyboard && bun run dev:blocks-editor && bun run dev:blocks-player && bun run dev:code-editor && bun run dev:pixel-paint && bun run dev:wave-surfer && bun run dev:tone-player",
+    "build:core": "cd core && BUN_ENV=production bun run build",
+    "dev:core": "cd core && bun run build",
+    "build:ui": "cd ui && BUN_ENV=production bun run build",
+    "dev:ui": "cd ui && bun run build",
+    "build:device-pyboard": "cd device-pyboard && BUN_ENV=production bun run build",
+    "dev:device-pyboard": "cd device-pyboard && bun run build",
+    "build:blocks-editor": "cd blocks-editor && BUN_ENV=production bun run build",
+    "dev:blocks-editor": "cd blocks-editor && bun run build",
+    "build:blocks-player": "cd blocks-player && BUN_ENV=production bun run build",
+    "dev:blocks-player": "cd blocks-player && bun run build",
+    "build:code-editor": "cd code-editor && BUN_ENV=production bun run build",
+    "dev:code-editor": "cd code-editor && bun run build",
+    "build:pixel-paint": "cd pixel-paint && BUN_ENV=production bun run build",
+    "dev:pixel-paint": "cd pixel-paint && bun run build",
+    "build:wave-surfer": "cd wave-surfer && BUN_ENV=production bun run build",
+    "dev:wave-surfer": "cd wave-surfer && bun run build",
+    "build:tone-player": "cd tone-player && BUN_ENV=production bun run build",
+    "dev:tone-player": "cd tone-player && bun run build"
+  }
+}

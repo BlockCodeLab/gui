@@ -2,46 +2,73 @@ import { useState, useEffect } from 'preact/hooks';
 import { useLocale, useLayout, useEditor } from '@blockcode/core';
 import { classNames, Text, ContextMenu, LibraryItem } from '@blockcode/ui';
 import GettingStarted from '../getting-started/getting-started';
-import workspaces from '../../lib/workspaces/workspaces';
 import makeCoverpages from '../../lib/coverpages/coverpages';
+import workspaces from './workspaces';
+import { version } from '../../../package.json';
 
 import styles from './workspace-library.module.css';
-import { version } from '../../../package.json';
+
+const loadinWorkspaces = Promise.all(workspaces);
 
 const DISPLAY_PROJECTS_COUNTS = 7;
 
 export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
+  const [projects, setProjects] = useState([]);
   const [data, setData] = useState([]);
   const [counts, setCounts] = useState(0);
-  const { getText, maybeLocaleText } = useLocale();
+  const { language, getText, maybeLocaleText } = useLocale();
   const { createPrompt, setStoreLibrary } = useLayout();
   const { listProjects, getProject, renameProject, duplicateProject, deleteProject } = useEditor();
 
   const coverpages = makeCoverpages(onOpenWorkspace, onOpenProject);
 
-  const getData = async () => {
-    const projects = await listProjects();
-    setData(
-      projects
-        .sort((a, b) => b.modifiedDate - a.modifiedDate)
-        .filter((_, i) => i < DISPLAY_PROJECTS_COUNTS)
-        .map((item) => ({
-          key: item.key,
-          name: item.name || (
-            <>
-              <Text
-                id="gui.defaultProject.shortname"
-                defaultMessage="Project"
-              />
-              {` [${item.key.toUpperCase()}]`}
-            </>
-          ),
-          image: item.image,
-        })),
-    );
-    setCounts(projects.length);
+  const getProjects = () => {
+    listProjects().then((allProjects) => {
+      setProjects(
+        allProjects
+          .sort((a, b) => b.modifiedDate - a.modifiedDate)
+          .filter((_, i) => i < DISPLAY_PROJECTS_COUNTS)
+          .map((item) => ({
+            key: item.key,
+            name: item.name || (
+              <>
+                <Text
+                  id="gui.defaultProject.shortname"
+                  defaultMessage="Project"
+                />
+                {` [${item.key.toUpperCase()}]`}
+              </>
+            ),
+            image: item.image,
+          })),
+      );
+      setCounts(allProjects.length);
+    });
   };
-  useEffect(getData, []);
+  useEffect(getProjects, []);
+
+  useEffect(() => {
+    loadinWorkspaces.then((allWorkspaces) => {
+      setData(
+        allWorkspaces.map((workspaceInfo) =>
+          Object.assign(
+            {
+              ...workspaceInfo,
+              onSelect: () => onOpenWorkspace(item.package),
+            },
+            // translations
+            workspaceInfo.translations && workspaceInfo.translations[language]
+              ? {
+                  name: workspaceInfo.translations[language].name || workspaceInfo.name,
+                  description: workspaceInfo.translations[language].description || workspaceInfo.description,
+                  collaborator: workspaceInfo.translations[language].collaborator || workspaceInfo.collaborator,
+                }
+              : {},
+          ),
+        ),
+      );
+    });
+  }, []);
 
   return (
     <div className={styles.workspaceWrapper}>
@@ -50,7 +77,7 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
         coverpages={coverpages}
       />
 
-      {data.length > 0 && (
+      {projects.length > 0 && (
         <>
           <div className={styles.libraryLabel}>
             <span>
@@ -73,7 +100,7 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
             )}
           </div>
           <div className={styles.libraryScrollGrid}>
-            {data.map((item, index) => (
+            {projects.map((item, index) => (
               <ContextMenu
                 menuItems={[
                   [
@@ -88,7 +115,7 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
                           onSubmit: async (name) => {
                             if (name) {
                               await renameProject(item.key, name);
-                              getData();
+                              getProjects();
                             }
                           },
                         });
@@ -98,7 +125,7 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
                       label: getText('gui.projects.contextMenu.duplicate', 'duplicate'),
                       onClick: async () => {
                         await duplicateProject(item.key);
-                        getData();
+                        getProjects();
                       },
                     },
                   ],
@@ -108,7 +135,7 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
                       className: styles.deleteMenuItem,
                       onClick: async () => {
                         await deleteProject(item.key);
-                        getData();
+                        getProjects();
                       },
                     },
                   ],
@@ -134,12 +161,11 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
         />
       </div>
       <div className={styles.libraryScrollGrid}>
-        {workspaces.map((item, index) => (
+        {data.map((item, index) => (
           <LibraryItem
             featured
             id={index}
             key={index}
-            hidden={item.hidden}
             preview={item.preview}
             disabled={item.disabled}
             image={item.image}

@@ -1,0 +1,37 @@
+{
+  "name": "@blockcode/workspace-arcade",
+  "module": "dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./app": {
+      "import": "./dist/app.js",
+      "require": "./dist/app.js"
+    }
+  },
+  "type": "module",
+  "scripts": {
+    "build": "bun-build",
+    "dev": "bun-build --watch ./src"
+  },
+  "devDependencies": {
+    "bun-types": "latest",
+    "bun-loader-css": "link:bun-loader-css",
+    "bun-loader-yaml": "link:bun-loader-yaml",
+    "bun-plugin-copy": "link:bun-plugin-copy"
+  },
+  "dependencies": {
+    "preact": "^10.18.1",
+    "upng-js": "^2.1.0",
+    "@blockcode/core": "workspace:*",
+    "@blockcode/ui": "workspace:*",
+    "@blockcode/blocks-editor": "workspace:*",
+    "@blockcode/blocks-player": "workspace:*",
+    "@blockcode/tone-player": "workspace:*",
+    "@blockcode/workspace-blocks": "workspace:*",
+    "@blockcode/pixel-paint": "workspace:*",
+    "@blockcode/wave-surfer": "workspace:*"
+  }
+}
