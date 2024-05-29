@@ -1,0 +1,29 @@
+en:
+  extension.colorSensor.name: Color Sensor
+  extension.colorSensor.setPort: set port to [PORT]
+  extension.colorSensor.calibration: '[COLOR] color calibration'
+  extension.colorSensor.calibration.white: white
+  extension.colorSensor.calibration.black: black
+  extension.colorSensor.isCalibrated: white color calibrated?
+  extension.colorSensor.color: recognized [MODE]
+  extension.colorSensor.color.rgb: color
+  extension.colorSensor.color.red: red
+  extension.colorSensor.color.green: green
+  extension.colorSensor.color.blue: blue
+  extension.colorSensor.on: on LEDs
+  extension.colorSensor.off: off LEDs
+
+zh-Hans:
+  extension.colorSensor.name: 颜色识别
+  extension.colorSensor.setPort: 将端口设为 [PORT]
+  extension.colorSensor.calibration: '[COLOR] 色校准'
+  extension.colorSensor.calibration.white: 白
+  extension.colorSensor.calibration.black: 黑
+  extension.colorSensor.isCalibrated: 白色已校准？
+  extension.colorSensor.color: 识别到的 [MODE]
+  extension.colorSensor.color.rgb: 颜色
+  extension.colorSensor.color.red: 红色值
+  extension.colorSensor.color.green: 绿色值
+  extension.colorSensor.color.blue: 蓝色值
+  extension.colorSensor.on: 开启
+  extension.colorSensor.off: 关闭
