@@ -6,7 +6,7 @@ export default {
   description: 'Request network data via HTTP.',
   image: featureImage,
   icon: iconImage,
-  tags: ['blocks', 'data'],
+  tags: ['blocks', 'data', 'internet'],
   internetRequired: true,
 
   // l10n
