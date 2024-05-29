@@ -9,19 +9,17 @@
     "bun-types": "latest"
   },
   "scripts": {
+    "build": "bun run build:packages && bun run build:web",
     "build:web": "cd apps/web && BUN_ENV=production bun run build",
-    "build:core": "cd packages/core && BUN_ENV=production bun run build && cd ../ui && BUN_ENV=production bun run build",
-    "build:components": "cd packages/device-pyboard && BUN_ENV=production bun run build && cd ../pixel-paint && BUN_ENV=production bun run build && cd ../tone-player && BUN_ENV=production bun run build && cd ../wave-surfer && BUN_ENV=production bun run build",
+    "dev:web": "cd apps/web && bun run dev",
+    "build:packages": "bun run build:components && bun run build:extensions && bun run build:workspaces",
+    "dev:packages": "bun run dev:components && bun run dev:extensions && bun run dev:workspaces",
+    "build:components": "cd components && bun run build",
+    "dev:components": "cd components && bun run dev",
     "build:extensions": "cd extensions && bun run build",
-    "build:code": "cd packages/code-editor && BUN_ENV=production bun run build",
-    "build:blocks": "cd packages/blocks-editor && BUN_ENV=production bun run build && cd ../blocks-player && BUN_ENV=production bun run build",
-    "build:workspace-blocks": "bun run build:blocks && cd packages/workspace-blocks && BUN_ENV=production bun run build && cd ../.. && bun run build:workspace-popsicle && bun run build:workspace-arcade && bun run build:workspace-tankwar && bun run build:workspace-picoed",
-    "build:workspace-popsicle": "cd packages/workspace-popsicle && BUN_ENV=production bun run build",
-    "build:workspace-arcade": "cd packages/workspace-arcade && BUN_ENV=production bun run build",
-    "build:workspace-tankwar": "cd packages/workspace-tankwar && BUN_ENV=production bun run build",
-    "build:workspace-picoed": "cd packages/workspace-picoed && BUN_ENV=production bun run build",
-    "build:workspace-micropython": "bun run build:code && cd packages/workspace-micropython && BUN_ENV=production bun run build",
-    "build": "bun run build:core && bun run build:components && bun run build:extensions && bun run build:workspace-blocks && bun run build:workspace-micropython && bun run build:web"
+    "dev:extensions": "cd extensions && bun run dev",
+    "build:workspaces": "cd workspaces && bun run build",
+    "dev:workspaces": "cd workspaces && bun run dev"
   },
-  "workspaces": ["apps/*", "packages/*", "extensions/*"]
+  "workspaces": ["apps/*", "components/*", "extensions/*", "workspaces/*"]
 }
