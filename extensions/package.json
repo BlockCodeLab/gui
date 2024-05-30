@@ -1,8 +1,8 @@
 {
   "name": "blockcode-extensions",
   "scripts": {
-    "build": "bun run build:pen && bun run build:request && bun run build:servo && bun run build:text && bun run build:broadcast && bun run build:time",
-    "dev": "bun run dev:pen && bun run dev:request && bun run dev:servo && bun run dev:text && bun run dev:broadcast && bun run dev:time",
+    "build": "bun run build:pen && bun run build:request && bun run build:servo && bun run build:text && bun run build:broadcast && bun run build:time && bun run build:color-sensor && bun run build:nes",
+    "dev": "bun run dev:pen && bun run dev:request && bun run dev:servo && bun run dev:text && bun run dev:broadcast && bun run dev:time && bun run dev:color-sensor && bun run dev:nes",
     "build:pen": "cd pen && BUN_ENV=production bun run build",
     "dev:pen": "cd pen && bun run build",
     "build:request": "cd request && BUN_ENV=production bun run build",
@@ -16,6 +16,8 @@
     "build:time": "cd time && BUN_ENV=production bun run build",
     "dev:time": "cd time && bun run build",
     "build:color-sensor": "cd color-sensor && BUN_ENV=production bun run build",
-    "dev:color-sensor": "cd color-sensor && bun run build"
+    "dev:color-sensor": "cd color-sensor && bun run build",
+    "build:nes": "cd nes && BUN_ENV=production bun run build",
+    "dev:nes": "cd nes && bun run build"
   }
 }
