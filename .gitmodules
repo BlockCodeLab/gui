@@ -1,0 +1,72 @@
+[submodule "components/core"]
+	path = components/core
+	url = https://github.com/BlockCodeLab/component-core.git
+[submodule "components/ui"]
+	path = components/ui
+	url = https://github.com/BlockCodeLab/component-ui.git
+[submodule "components/device-pyboard"]
+	path = components/device-pyboard
+	url = https://github.com/BlockCodeLab/component-device-pyboard.git
+[submodule "components/code-editor"]
+	path = components/code-editor
+	url = https://github.com/BlockCodeLab/component-code-editor.git
+[submodule "components/blocks-editor"]
+	path = components/blocks-editor
+	url = https://github.com/BlockCodeLab/component-blocks-editor.git
+[submodule "components/blocks-player"]
+	path = components/blocks-player
+	url = https://github.com/BlockCodeLab/component-blocks-player.git
+[submodule "components/pixel-paint"]
+	path = components/pixel-paint
+	url = https://github.com/BlockCodeLab/component-pixel-paint.git
+[submodule "components/tone-player"]
+	path = components/tone-player
+	url = https://github.com/BlockCodeLab/component-tone-player.git
+[submodule "components/wave-surfer"]
+	path = components/wave-surfer
+	url = https://github.com/BlockCodeLab/component-wave-surfer.git
+[submodule "extensions/pen"]
+	path = extensions/pen
+	url = https://github.com/BlockCodeLab/extension-pen.git
+[submodule "extensions/time"]
+	path = extensions/time
+	url = https://github.com/BlockCodeLab/extension-time.git
+[submodule "extensions/broadcast"]
+	path = extensions/broadcast
+	url = https://github.com/BlockCodeLab/extension-broadcast.git
+[submodule "extensions/request"]
+	path = extensions/request
+	url = https://github.com/BlockCodeLab/extension-request.git
+[submodule "extensions/servo"]
+	path = extensions/servo
+	url = https://github.com/BlockCodeLab/extension-servo.git
+[submodule "extensions/text"]
+	path = extensions/text
+	url = https://github.com/BlockCodeLab/extension-text.git
+[submodule "extensions/color-sensor"]
+	path = extensions/color-sensor
+	url = https://github.com/BlockCodeLab/extension-color-sensor.git
+[submodule "extensions/nes"]
+	path = extensions/nes
+	url = https://github.com/BlockCodeLab/extension-nes.git
+[submodule "workspaces/blocks"]
+	path = workspaces/blocks
+	url = https://github.com/BlockCodeLab/workspace-blocks.git
+[submodule "workspaces/arcade"]
+	path = workspaces/arcade
+	url = https://github.com/BlockCodeLab/workspace-arcade.git
+[submodule "workspaces/micropython"]
+	path = workspaces/micropython
+	url = https://github.com/BlockCodeLab/workspace-micropython.git
+[submodule "workspaces/microbit"]
+	path = workspaces/microbit
+	url = https://github.com/BlockCodeLab/workspace-microbit.git
+[submodule "workspaces/picoed"]
+	path = workspaces/picoed
+	url = https://github.com/BlockCodeLab/workspace-picoed.git
+[submodule "workspaces/popsicle"]
+	path = workspaces/popsicle
+	url = https://github.com/BlockCodeLab/workspace-popsicle.git
+[submodule "workspaces/tankwar"]
+	path = workspaces/tankwar
+	url = https://github.com/BlockCodeLab/workspace-tankwar.git
