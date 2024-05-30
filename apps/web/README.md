@@ -1,4 +1,4 @@
-# @blockcode/web
+# blockcode-web
 
 To install dependencies:
 

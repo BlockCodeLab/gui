@@ -14,8 +14,18 @@ gui.library.collaboration: 合作者
 gui.library.search: 搜索
 gui.library.all: 所有
 
+gui.menuBar.courses: 课程
 gui.menuBar.tutorials: 教程
 gui.menuBar.projectTitlePlaceholder: 在此填写作品标题
+
+gui.tutorialLibrary.course: 选择一个课程
+gui.tutorialLibrary.tutorial: 选择一个教程
+
+gui.tutorials.shrink: 收起
+gui.tutorials.expand: 展开
+gui.tutorials.close: 关闭
+gui.tutorials.moreTry: 再试试这些！
+gui.tutorials.seeMore: 更多技巧
 
 gui.defaultProject.name: BlockCode 作品
 gui.defaultProject.shortname: 作品

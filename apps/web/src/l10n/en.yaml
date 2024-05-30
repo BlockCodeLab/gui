@@ -14,8 +14,18 @@ gui.library.collaboration: Collaboration
 gui.library.search: Search
 gui.library.all: All
 
+gui.menuBar.courses: Courses
 gui.menuBar.tutorials: Tutorials
 gui.menuBar.projectTitlePlaceholder: Project title here
+
+gui.tutorialLibrary.course: Choose a course
+gui.tutorialLibrary.tutorial: Choose a tutorial
+
+gui.tutorials.shrink: Shrink
+gui.tutorials.expand: Expand
+gui.tutorials.close: Close
+gui.tutorials.moreTry: More things to try!
+gui.tutorials.seeMore: See more
 
 gui.defaultProject.name: BlockCode Project
 gui.defaultProject.shortname: Project

@@ -31,7 +31,7 @@ const workspaces = [].concat(
 
 const packages = [].concat(components, extensions, workspaces).filter((moduleId) => {
   try {
-    return !!import.meta.resolveSync(moduleId);
+    return !!Bun.resolveSync(moduleId, PROJECT_ROOT);
   } catch (err) {
     return false;
   }
@@ -42,11 +42,9 @@ const imports = Object.fromEntries(
     .concat(packages)
     .map((moduleId) => [
       moduleId,
-      `./${moduleId.includes('/') ? '' : `${moduleId}/`}${moduleId}${extname(import.meta.resolveSync(moduleId))}`,
+      `./${moduleId.includes('/') ? '' : `${moduleId}/`}${moduleId}${extname(Bun.resolveSync(moduleId, PROJECT_ROOT))}`,
     ]),
 );
-
-const assets = [].concat(packages);
 
 export default {
   entrypoints: [resolve(SRC_DIR, 'index.jsx')],
@@ -73,25 +71,20 @@ export default {
       from: './public',
       watch: isHotServer,
     }),
-    CopyPlugin({
-      from: resolve(dirname(import.meta.resolveSync('@blockcode/code-editor')), 'workers'),
-      to: 'workers/',
-      watch: isHotServer,
-    }),
   ].concat(
     Object.entries(imports).map(([moduleId, importPath]) =>
       CopyPlugin({
-        from: import.meta.resolveSync(moduleId),
+        from: Bun.resolveSync(moduleId, PROJECT_ROOT),
         to: importPath,
         singleFile: true,
         watch: isHotServer,
       }),
     ),
-    assets
-      .filter((moduleId) => existsSync(resolve(dirname(import.meta.resolveSync(moduleId)), 'assets')))
+    packages
+      .filter((moduleId) => existsSync(resolve(dirname(Bun.resolveSync(moduleId, PROJECT_ROOT)), 'assets')))
       .map((moduleId) =>
         CopyPlugin({
-          from: resolve(dirname(import.meta.resolveSync(moduleId)), 'assets'),
+          from: resolve(dirname(Bun.resolveSync(moduleId, PROJECT_ROOT)), 'assets'),
           to: 'assets/',
           watch: isHotServer,
         }),

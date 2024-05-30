@@ -11,11 +11,15 @@ import Prompt from '../prompt/prompt';
 import WorkspaceLibrary from '../workspace-library/workspace-library';
 import StoreLibrary from '../store-library/store-library';
 import SplashScreen from '../splash-screen/splash-screen';
+import TutorialBox from '../tutorial-box/tutorial-box';
 
 /* styles and assets */
 import styles from './gui.module.css';
+import TutorialLibrary from '../tutorial-library/tutorial-library';
 
 export default function GUI() {
+  const [tutorialId, setTutorialId] = useState();
+  const [tutorialLibrary, setTutorialLibrary] = useState(false);
   const [workspaceLibrary, setWorkspaceLibrary] = useState(false);
 
   const { addLocaleData, getText, maybeLocaleText } = useLocale();
@@ -134,6 +138,20 @@ export default function GUI() {
     }
   };
 
+  const handleOpenTutorialLibrary = () => {
+    setTutorialId(null);
+    setTutorialLibrary(true);
+  };
+
+  const handleCloseTutorialLibrary = () => setTutorialLibrary(false);
+
+  const handleOpenTutorial = (id) => {
+    setTutorialLibrary(false);
+    setTutorialId(id);
+  };
+
+  const handleCloseTutorial = () => setTutorialId(null);
+
   return (
     <>
       <Alerts items={alerts} />
@@ -142,6 +160,7 @@ export default function GUI() {
         className={styles.menuBarPosition}
         showHomeButton={!workspaceLibrary}
         onRequestHome={handleBackHome}
+        onOpenTutorialLibrary={handleOpenTutorialLibrary}
       />
 
       <div className={styles.bodyWrapper}>
@@ -198,14 +217,29 @@ export default function GUI() {
             </div>
           )}
         </div>
-
-        {workspaceLibrary && (
-          <WorkspaceLibrary
-            onOpenWorkspace={handleOpenWorkspace}
-            onOpenProject={handleOpenProject}
-          />
-        )}
       </div>
+
+      {tutorialId && (
+        <TutorialBox
+          tutorialId={tutorialId}
+          onBack={handleOpenTutorialLibrary}
+          onClose={handleCloseTutorial}
+        />
+      )}
+
+      {tutorialLibrary && (
+        <TutorialLibrary
+          onOpenTutorial={handleOpenTutorial}
+          onClose={handleCloseTutorialLibrary}
+        />
+      )}
+
+      {workspaceLibrary && (
+        <WorkspaceLibrary
+          onOpenWorkspace={handleOpenWorkspace}
+          onOpenProject={handleOpenProject}
+        />
+      )}
 
       {storeLibrary && <StoreLibrary onOpenProject={handleOpenProject} />}
 

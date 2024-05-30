@@ -14,7 +14,7 @@ import languageIcon from './icons/icon-language.svg';
 import dropdownCaret from './icons/icon-dropdown-caret.svg';
 import homeIcon from './icons/icon-home.svg';
 
-export default function MenuBar({ className, showHomeButton, onRequestHome }) {
+export default function MenuBar({ className, showHomeButton, onRequestHome, onOpenTutorialLibrary }) {
   const { language: currentLanguage, setLanguage, getText } = useLocale();
   const { mainMenu, tutorials, canEditProjectName } = useLayout();
 
@@ -75,11 +75,7 @@ export default function MenuBar({ className, showHomeButton, onRequestHome }) {
             ))}
         </MainMenu>
 
-        {tutorials && (
-          <ComingSoon placement="bottom">
-            <TutorialsButton tutorials={tutorials} />
-          </ComingSoon>
-        )}
+        {tutorials && <TutorialsButton onClick={onOpenTutorialLibrary} />}
 
         {canEditProjectName && (
           <ProjectTitleInput
