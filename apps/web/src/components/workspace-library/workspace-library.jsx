@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'preact/hooks';
 import { useLocale, useLayout, useEditor } from '@blockcode/core';
 import { classNames, Text, ContextMenu, LibraryItem } from '@blockcode/ui';
-import GettingStarted from '../getting-started/getting-started';
-import makeCoverpages from '../../lib/coverpages/coverpages';
+import CoverPages from '../cover-pages/cover-pages';
+import makeCoverPages from '../../lib/cover-pages/make-cover-pages';
 import workspaces from './workspaces';
 import { version } from '../../../package.json';
 
@@ -19,8 +19,6 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
   const { language, getText, maybeLocaleText } = useLocale();
   const { createPrompt, setStoreLibrary } = useLayout();
   const { listProjects, getProject, renameProject, duplicateProject, deleteProject } = useEditor();
-
-  const coverpages = makeCoverpages(onOpenWorkspace, onOpenProject);
 
   const getProjects = () => {
     listProjects().then((allProjects) => {
@@ -72,9 +70,9 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
 
   return (
     <div className={styles.workspaceWrapper}>
-      <GettingStarted
+      <CoverPages
         className={styles.gettingStarted}
-        coverpages={coverpages}
+        pages={makeCoverPages(onOpenWorkspace, onOpenProject)}
       />
 
       {projects.length > 0 && (

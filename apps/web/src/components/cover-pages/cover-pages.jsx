@@ -1,15 +1,15 @@
 import { useState } from 'preact/hooks';
 import { classNames, Button } from '@blockcode/ui';
-import styles from './getting-started.module.css';
+import styles from './cover-pages.module.css';
 
-export default function GettingStarted({ coverpages, className }) {
+export default function CoverPages({ pages, className }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  setTimeout(() => setCurrentIndex((currentIndex + 1) % coverpages.length), 7000);
+  setTimeout(() => setCurrentIndex((currentIndex + 1) % pages.length), 7000);
 
   return (
     <div className={classNames(styles.coverWrapper, className)}>
-      {coverpages.map((cover, index) => (
+      {pages.map((cover, index) => (
         <div
           key={index}
           className={classNames(styles.cover, {
