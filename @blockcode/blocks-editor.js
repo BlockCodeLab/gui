@@ -1,4 +1,4 @@
-import{useRef as L,useEffect as W} from"preact/hooks";import{useLocale as y,useEditor as n} from"@blockcode/core";var D={};new Function("module",`module.exports =
+import{useRef as n,useEffect as K} from"preact/hooks";import{useLocale as u,useEditor as L} from"@blockcode/core";var D={};new Function("module",`module.exports =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -219,10 +219,10 @@ eval("module.exports = __webpack_require__(/*! imports-loader?Blockly=../shim/bl
 
 /***/ })
 
-/******/ });`)(D);var w=D.exports;w.DataCategory.addShowVariable=()=>{};w.DataCategory.addHideVariable=()=>{};w.DataCategory.addShowList=()=>{};w.DataCategory.addHideList=()=>{};w.Blocks.event_whenflagclicked={init(){this.jsonInit({id:"event_whenflagclicked",message0:w.Msg.EVENT_WHENPROGRAMSTART,category:w.Categories.event,extensions:["colours_event","shape_hat"]})}};w.Blocks.event_whengreaterthan={init(){this.jsonInit({message0:w.Msg.EVENT_WHENGREATERTHAN,args0:[{type:"field_dropdown",name:"WHENGREATERTHANMENU",options:[[w.Msg.EVENT_WHENGREATERTHAN_TIMER,"TIMER"]]},{type:"input_value",name:"VALUE"}],category:w.Categories.event,extensions:["colours_event","shape_hat"]})}};var z='<sep gap="36"/>',Z='<sep gap="36"/>',v=()=>`
+/******/ });`)(D);var w=D.exports;w.DataCategory.addShowVariable=()=>{};w.DataCategory.addHideVariable=()=>{};w.DataCategory.addShowList=()=>{};w.DataCategory.addHideList=()=>{};w.Blocks.event_whenflagclicked={init(){this.jsonInit({id:"event_whenflagclicked",message0:w.Msg.EVENT_WHENPROGRAMSTART,category:w.Categories.event,extensions:["colours_event","shape_hat"]})}};w.Blocks.event_whengreaterthan={init(){this.jsonInit({message0:w.Msg.EVENT_WHENGREATERTHAN,args0:[{type:"field_dropdown",name:"WHENGREATERTHANMENU",options:[[w.Msg.EVENT_WHENGREATERTHAN_TIMER,"TIMER"]]},{type:"input_value",name:"VALUE"}],category:w.Categories.event,extensions:["colours_event","shape_hat"]})}};var q='<sep gap="36"/>',$='<sep gap="36"/>',C=()=>`
   <category name="%{BKY_CATEGORY_EVENTS}" id="events" colour="#FFD500" secondaryColour="#CC9900">
   <block type="event_whenflagclicked"/>
-  ${z}
+  ${q}
   <block type="event_whengreaterthan">
     <value name="VALUE">
       <shadow type="math_number">
@@ -230,7 +230,7 @@ eval("module.exports = __webpack_require__(/*! imports-loader?Blockly=../shim/bl
       </shadow>
     </value>
   </block>
-  ${z}
+  ${q}
   <block type="event_whenbroadcastreceived" />
   <block type="event_broadcast">
     <value name="BROADCAST_INPUT">
@@ -242,9 +242,9 @@ eval("module.exports = __webpack_require__(/*! imports-loader?Blockly=../shim/bl
       <shadow type="event_broadcast_menu"></shadow>
     </value>
   </block>
-  ${Z}
+  ${$}
   </category>
-`,C=()=>`
+`,d=()=>`
   <category name="%{BKY_CATEGORY_CONTROL}" id="control" colour="#FFAB19" secondaryColour="#CF8B17">
     <block type="control_wait">
       <value name="DURATION">
@@ -253,7 +253,7 @@ eval("module.exports = __webpack_require__(/*! imports-loader?Blockly=../shim/bl
         </shadow>
       </value>
     </block>
-    ${z}
+    ${q}
     <block type="control_repeat">
       <value name="TIMES">
         <shadow type="math_whole_number">
@@ -262,23 +262,23 @@ eval("module.exports = __webpack_require__(/*! imports-loader?Blockly=../shim/bl
       </value>
     </block>
     <block id="forever" type="control_forever"/>
-    ${z}
+    ${q}
     <block type="control_if"/>
     <block type="control_if_else"/>
     <block id="wait_until" type="control_wait_until"/>
     <block id="repeat_until" type="control_repeat_until"/>
     <block type="control_while"/>
-    ${z}
+    ${q}
     <block type="control_stop"/>
-    ${Z}
+    ${$}
   </category>
-`,p=()=>`
+`,X=()=>`
   <category name="%{BKY_CATEGORY_SENSING}" id="sensing" colour="#4CBFE6" secondaryColour="#2E8EB8">
     <block id="timer" type="sensing_timer"/>
     <block type="sensing_resettimer"/>
-    ${Z}
+    ${$}
   </category>
-`,X=()=>`
+`,p=()=>`
   <category name="%{BKY_CATEGORY_OPERATORS}" id="operators" colour="#40BF4A" secondaryColour="#389438">
     <block type="operator_add">
       <value name="NUM1">
@@ -328,7 +328,7 @@ eval("module.exports = __webpack_require__(/*! imports-loader?Blockly=../shim/bl
         </shadow>
       </value>
     </block>
-    ${z}
+    ${q}
     <block type="operator_random">
       <value name="FROM">
         <shadow type="math_number">
@@ -341,7 +341,7 @@ eval("module.exports = __webpack_require__(/*! imports-loader?Blockly=../shim/bl
         </shadow>
       </value>
     </block>
-    ${z}
+    ${q}
     <block type="operator_gt">
       <value name="OPERAND1">
         <shadow type="text">
@@ -378,11 +378,11 @@ eval("module.exports = __webpack_require__(/*! imports-loader?Blockly=../shim/bl
         </shadow>
       </value>
     </block>
-    ${z}
+    ${q}
     <block type="operator_and"/>
     <block type="operator_or"/>
     <block type="operator_not"/>
-    ${z}
+    ${q}
     <block type="operator_join">
       <value name="STRING1">
         <shadow type="text">
@@ -426,7 +426,7 @@ eval("module.exports = __webpack_require__(/*! imports-loader?Blockly=../shim/bl
         </shadow>
       </value>
     </block>
-    ${z}
+    ${q}
     <block type="operator_mod">
       <value name="NUM1">
         <shadow type="math_number">
@@ -446,7 +446,7 @@ eval("module.exports = __webpack_require__(/*! imports-loader?Blockly=../shim/bl
         </shadow>
       </value>
     </block>
-    ${z}
+    ${q}
     <block type="operator_mathop">
       <value name="NUM">
         <shadow type="math_number">
@@ -454,9 +454,9 @@ eval("module.exports = __webpack_require__(/*! imports-loader?Blockly=../shim/bl
         </shadow>
       </value>
     </block>
-    ${Z}
+    ${$}
   </category>
-`,u=()=>`
+`,i=()=>`
   <category
     name="%{BKY_CATEGORY_VARIABLES}"
     id="variables"
@@ -464,4 +464,4 @@ eval("module.exports = __webpack_require__(/*! imports-loader?Blockly=../shim/bl
     secondaryColour="#DB6E00"
     custom="VARIABLE">
   </category>
-`;function j(G=[]){G=G.slice();const N=(Y)=>{const U=G.findIndex((q)=>q.id===Y);if(U>=0){const[q]=G.splice(U,1);return q.xml}},O=N("motion")||"",$=N("looks")||"",K=N("sound")||"",R=N("events")||v(),Q=N("control")||C(),E=N("sensing")||p(),A=N("operators")||X(),F=N("data")||u(),P=[O,$,K,R,Q,E,A,F];for(let Y of G)P.push(Y.xml);return P.join("\n")}var I={"zh-Hans":"zh-cn","zh-Hant":"zh-tw"};function _(G){if(I[G])return I[G];return G}function V(G){const N=globalThis.document,O=N.createElement("style");O.appendChild(N.createTextNode(G)),N.head.append(O)}V("._2QFHJa_editor-workspace{border-radius:inherit;position:absolute;inset:0}._2QFHJa_editor-workspace .injectionDiv{border-radius:inherit}._2QFHJa_editor-workspace .blocklyMainBackground{stroke-width:0!important}._2QFHJa_editor-workspace .blocklyFlyout{border-left:1px solid var(--ui-black-transparent)!important;border-right:1px solid var(--ui-black-transparent)!important}._2QFHJa_editor-workspace .blocklyFlyout .blocklyFlyoutBackground{clip-path:url(#blocklyBlockMenuClipPath)}._2QFHJa_editor-workspace .blocklyFlyout .blocklyWorkspace{clip-path:none}._2QFHJa_editor-workspace .blocklyFlyout:hover{overflow:unset}.blocklyContextMenu{border:1px solid var(--ui-black-transparent)!important;border-radius:calc(var(--space)/2)!important;background:var(--ui-white)!important;box-shadow:0 var(--space)var(--space)0 var(--ui-black-transparent)!important;min-width:130px!important;max-width:260px!important;margin:0!important;padding:0!important;position:absolute!important;overflow:hidden!important;box-shadow:0 0 .5rem #00000040!important}.blocklyContextMenu .goog-menuitem{white-space:nowrap!important;padding:0 calc(var(--space) + 2px)!important;line-height:34px!important;font-size:var(--standard-font-size)!important;color:var(--text-primary)!important;justify-content:space-between!important;margin:0!important;display:flex!important}.blocklyContextMenu .goog-menuitem-content{flex:1!important;display:flex!important}.blocklyContextMenu .goog-menuitem-highlight{background:var(--motion-primary)!important;color:var(--ui-white)!important;border:0!important}.blocklyContextMenu .goog-menuitem:not(.goog-menuitem-disabled){cursor:pointer!important}");var M={editorWorkspace:"_2QFHJa_editor-workspace"};function B({toolbox:G,globalVariables:N,messages:O,onWorkspaceCreated:$,onChange:K}){const R=L(null),{language:Q}=y(),{fileList:E,selectedIndex:A}=n(),F=()=>{const q=E[A].xml,J=w.Xml.textToDom(q||"");if(N){const H=J.querySelector("variables");if(H)H.querySelectorAll("[islocal=false]").forEach((T)=>H.removeChild(T))}if(w.Xml.clearWorkspaceAndLoadFromXml(J,R.workspace),N){const H=w.Xml.variablesToDom(N);w.Xml.domToVariables(H,R.workspace)}},P=()=>{const q=R.workspace.toolbox_.getSelectedCategoryId(),J=R.workspace.toolbox_.getCategoryScrollOffset();R.workspace.getFlyout().setRecyclingEnabled(!1),w.DropDownDiv.hideWithoutAnimation(),setTimeout(()=>{R.workspace.updateToolbox(d(G));const H=R.workspace.toolbox_.getCategoryPositionById(q),T=R.workspace.toolbox_.getCategoryLengthById(q);if(J<T)R.workspace.toolbox_.setFlyoutScrollPos(H+J);else R.workspace.toolbox_.setFlyoutScrollPos(H);R.workspace.getFlyout().setRecyclingEnabled(!0)})},Y=()=>{const q=w.Xml.workspaceToDom(R.workspace);return w.Xml.domToText(q)},U=()=>{K(Y(),R.workspace)};return W(()=>{const q=_(Q);if(w.ScratchMsgs.currentLocale_!==q)w.ScratchMsgs.setLocale(q);if(Object.entries(O).forEach(([J,H])=>{w.Msg[J]=H}),G=G||j,typeof G==="function")G=G();if(R.workspace)P()},[G,Q]),W(()=>{if(R.workspace)F(),R.workspace.clearUndo()},[A,Q]),W(()=>{if(R.current){if(R.workspace=w.inject(R.current,Object.assign({},m,{toolbox:d(G),media:"./assets/blocks-media/"})),$)$(R.workspace);R.workspace.addChangeListener((q)=>{if(R.workspace.isDragging())return;if(!x.has(q.type))return;U()}),R.resizeObserver=new ResizeObserver(()=>w.svgResize(R.workspace)),R.resizeObserver.observe(R.current),F(),R.workspace.clearUndo()}return()=>{if(R.workspace)R.workspace.clearUndo(),R.workspace.dispose()}},[R]),f("div",{ref:R,className:M.editorWorkspace})}import{jsx as f} from"preact/jsx-runtime";var i=0.7,m={zoom:{controls:!0,wheel:!0,startScale:i},grid:{spacing:40,length:2,colour:"#DDD"},colours:{workspace:"#F9F9F9",flyout:"#F9F9F9",toolbox:"#FFFFFF",toolboxSelected:"#E9EEF2",scrollbar:"#CECDCE",scrollbarHover:"#CECDCE",insertionMarker:"#000000",insertionMarkerOpacity:0.2,fieldShadow:"rgba(255, 255, 255, 0.3)",dragShadowOpacity:0.6},comments:!0,collapse:!1,sounds:!1},x=new Set([w.Events.BLOCK_CHANGE,w.Events.BLOCK_CREATE,w.Events.BLOCK_DELETE,w.Events.BLOCK_MOVE,w.Events.COMMENT_CHANGE,w.Events.COMMENT_CREATE,w.Events.COMMENT_DELETE,w.Events.COMMENT_MOVE,w.Events.VAR_CREATE,w.Events.VAR_DELETE,w.Events.VAR_RENAME]),d=(G)=>`<xml style="display: none">\n${G}\n</xml>`;export{j as makeToolboxXML,Z as categorySeparator,z as blockSeparator,w as ScratchBlocks,B as BlocksEditor};
+`;function j(R=[]){R=R.slice();const N=(Z)=>{const U=R.findIndex((G)=>G.id===Z);if(U>=0){const[G]=R.splice(U,1);return G.xml}},J=N("motion")||"",A=N("looks")||"",E=N("sound")||"",O=N("events")||C(),F=N("control")||d(),V=N("sensing")||X(),P=N("operators")||p(),Q=N("data")||i(),Y=[J,A,E,O,F,V,P,Q];for(let Z of R)Y.push(Z.xml);return Y.join("\n")}var I={"zh-Hans":"zh-cn","zh-Hant":"zh-tw"};function T(R){if(I[R])return I[R];return R}function W(R){const N=globalThis.document,J=N.createElement("style");J.appendChild(N.createTextNode(R)),N.head.append(J)}W(".gfBBeq_editor-workspace{border-radius:inherit;position:absolute;inset:0}.gfBBeq_editor-workspace .injectionDiv{border-radius:inherit}.gfBBeq_editor-workspace .blocklyMainBackground{stroke-width:0!important}.gfBBeq_editor-workspace .blocklyFlyout{border-left:1px solid var(--ui-black-transparent)!important;border-right:1px solid var(--ui-black-transparent)!important}.gfBBeq_editor-workspace .blocklyFlyout .blocklyFlyoutBackground{clip-path:url(#blocklyBlockMenuClipPath)}.gfBBeq_editor-workspace .blocklyFlyout .blocklyWorkspace{clip-path:none}.gfBBeq_editor-workspace .blocklyFlyout:hover{overflow:unset}.blocklyContextMenu{border:1px solid var(--ui-black-transparent)!important;border-radius:calc(var(--space)/2)!important;background:var(--ui-white)!important;box-shadow:0 var(--space)var(--space)0 var(--ui-black-transparent)!important;min-width:130px!important;max-width:260px!important;margin:0!important;padding:0!important;position:absolute!important;overflow:hidden!important;box-shadow:0 0 .5rem #00000040!important}.blocklyContextMenu .goog-menuitem{white-space:nowrap!important;padding:0 calc(var(--space) + 2px)!important;line-height:34px!important;font-size:var(--standard-font-size)!important;color:var(--text-primary)!important;justify-content:space-between!important;margin:0!important;display:flex!important}.blocklyContextMenu .goog-menuitem-content{flex:1!important;display:flex!important}.blocklyContextMenu .goog-menuitem-highlight{background:var(--motion-primary)!important;color:var(--ui-white)!important;border:0!important}.blocklyContextMenu .goog-menuitem:not(.goog-menuitem-disabled){cursor:pointer!important}.scratchCategoryMenuItemLabel{text-wrap:pretty}");var M={editorWorkspace:"gfBBeq_editor-workspace"};function B({toolbox:R,globalVariables:N,messages:J,onWorkspaceCreated:A,onChange:E}){const O=n(null),{language:F}=u(),{fileList:V,selectedIndex:P}=L(),Q=()=>{const G=V[P].xml,H=w.Xml.textToDom(G||"");if(N){const z=H.querySelector("variables");if(z)z.querySelectorAll("[islocal=false]").forEach((_)=>z.removeChild(_))}if(w.Xml.clearWorkspaceAndLoadFromXml(H,O.workspace),N){const z=w.Xml.variablesToDom(N);w.Xml.domToVariables(z,O.workspace)}},Y=()=>{const G=O.workspace.toolbox_.getSelectedCategoryId(),H=O.workspace.toolbox_.getCategoryScrollOffset();O.workspace.getFlyout().setRecyclingEnabled(!1),w.DropDownDiv.hideWithoutAnimation(),setTimeout(()=>{O.workspace.updateToolbox(v(R));const z=O.workspace.toolbox_.getCategoryPositionById(G),_=O.workspace.toolbox_.getCategoryLengthById(G);if(H<_)O.workspace.toolbox_.setFlyoutScrollPos(z+H);else O.workspace.toolbox_.setFlyoutScrollPos(z);O.workspace.getFlyout().setRecyclingEnabled(!0)})},Z=()=>{const G=w.Xml.workspaceToDom(O.workspace);return w.Xml.domToText(G)},U=()=>{E(Z(),O.workspace)};return K(()=>{const G=T(F);if(w.ScratchMsgs.currentLocale_!==G)w.ScratchMsgs.setLocale(G);if(O.workspace)Y(),setTimeout(()=>Q(),50)},[F]),K(()=>{if(R=R||j,typeof R==="function")R=R();if(O.workspace)Y()},[R]),K(()=>{if(O.workspace)Q(),O.workspace.clearUndo()},[P]),Object.entries(J).forEach(([G,H])=>{w.Msg[G]=H}),K(()=>{if(O.current){if(O.workspace=w.inject(O.current,Object.assign({},m,{toolbox:v(R),media:"./assets/blocks-media/"})),A)A(O.workspace);O.workspace.addChangeListener((G)=>{if(O.workspace.isDragging())return;if(!x.has(G.type))return;U()}),O.resizeObserver=new ResizeObserver(()=>w.svgResize(O.workspace)),O.resizeObserver.observe(O.current),Q(),O.workspace.clearUndo()}return()=>{if(O.workspace)O.workspace.clearUndo(),O.workspace.dispose()}},[O]),h("div",{ref:O,className:M.editorWorkspace})}import{jsx as h} from"preact/jsx-runtime";var y=0.7,m={zoom:{controls:!0,wheel:!0,startScale:y},grid:{spacing:40,length:2,colour:"#DDD"},colours:{workspace:"#F9F9F9",flyout:"#F9F9F9",toolbox:"#FFFFFF",toolboxSelected:"#E9EEF2",scrollbar:"#CECDCE",scrollbarHover:"#CECDCE",insertionMarker:"#000000",insertionMarkerOpacity:0.2,fieldShadow:"rgba(255, 255, 255, 0.3)",dragShadowOpacity:0.6},comments:!0,collapse:!1,sounds:!1},x=new Set([w.Events.BLOCK_CHANGE,w.Events.BLOCK_CREATE,w.Events.BLOCK_DELETE,w.Events.BLOCK_MOVE,w.Events.COMMENT_CHANGE,w.Events.COMMENT_CREATE,w.Events.COMMENT_DELETE,w.Events.COMMENT_MOVE,w.Events.VAR_CREATE,w.Events.VAR_DELETE,w.Events.VAR_RENAME]),v=(R)=>`<xml style="display: none">\n${R}\n</xml>`;export{j as makeToolboxXML,$ as categorySeparator,q as blockSeparator,w as ScratchBlocks,B as BlocksEditor};

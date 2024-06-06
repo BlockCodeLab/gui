@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Created with Vectornator (http://vectornator.io/) -->
+<svg height="80.0px" stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 80 80" width="80.0px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<defs>
+<path d="M5.2 40C5.2 20.67 20.7805 5 40 5C59.2195 5 74.8 20.67 74.8 40C74.8 59.33 59.2195 75 40 75C20.7805 75 5.2 59.33 5.2 40Z" id="Fill"/>
+</defs>
+<g id="图层-1">
+<g opacity="1">
+<path d="M64.9489 15.2511C58.6158 8.91806 49.8658 5 40.2 5L40.2 40L64.9489 15.2511Z" fill="#eb6060" fill-rule="nonzero" opacity="1" stroke="none"/>
+<path d="M74.8 40C74.8 31.0419 71.3836 22.0858 64.5489 15.2511L39.8 40L74.8 40Z" fill="#f08a48" fill-rule="nonzero" opacity="1" stroke="none"/>
+<path d="M64.3538 64.7489C70.6868 58.4158 74.6049 49.6658 74.6049 40L39.6049 40L64.3538 64.7489Z" fill="#ffdf59" fill-rule="nonzero" opacity="1" stroke="none"/>
+<path d="M40.2 75C49.1581 75 58.1142 71.5836 64.9489 64.7489L40.2 40L40.2 75Z" fill="#76d67d" fill-rule="nonzero" opacity="1" stroke="none"/>
+<path d="M15.4511 64.7489C21.7842 71.0819 30.5342 75 40.2 75L40.2 40L15.4511 64.7489Z" fill="#669fed" fill-rule="nonzero" opacity="1" stroke="none"/>
+<path d="M5.2 40C5.2 48.9581 8.61639 57.9142 15.4511 64.7489L40.2 40L5.2 40Z" fill="#6f85e8" fill-rule="nonzero" opacity="1" stroke="none"/>
+<path d="M15.4511 15.2511C9.11806 21.5842 5.2 30.3342 5.2 40L40.2 40L15.4511 15.2511Z" fill="#b05de3" fill-rule="nonzero" opacity="1" stroke="none"/>
+<path d="M40.2 5C31.2419 5 22.2858 8.41639 15.4511 15.2511L40.2 40L40.2 5Z" fill="#dc5de3" fill-rule="nonzero" opacity="1" stroke="none"/>
+<g opacity="1">
+<mask height="70" id="StrokeMask" maskUnits="userSpaceOnUse" width="69.6" x="5.2" y="5">
+<rect fill="#000000" height="70" stroke="none" width="69.6" x="5.2" y="5"/>
+<use fill="#ffffff" fill-rule="evenodd" stroke="none" xlink:href="#Fill"/>
+</mask>
+<use fill="none" mask="url(#StrokeMask)" stroke="#000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="0.3" stroke-width="8" xlink:href="#Fill"/>
+</g>
+</g>
+</g>
+</svg>
