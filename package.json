@@ -9,6 +9,7 @@
     "bun-types": "latest"
   },
   "scripts": {
+    "preview": "bunx serve apps/web/dist",
     "deploy": "bunx gh-pages -b playgrounds -d apps/web/dist",
     "build": "bun run build:packages && bun run build:web",
     "build:web": "cd apps/web && BUN_ENV=production bun run build",
@@ -22,10 +23,5 @@
     "build:workspaces": "cd workspaces && bun run build",
     "dev:workspaces": "cd workspaces && bun run dev"
   },
-  "workspaces": [
-    "apps/*",
-    "components/*",
-    "extensions/*",
-    "workspaces/*"
-  ]
+  "workspaces": ["apps/*", "components/*", "extensions/*", "workspaces/*"]
 }
