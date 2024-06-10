@@ -45,6 +45,7 @@ gui.prompt.ok: OK
 gui.workspace.myprojects: My projects
 gui.workspace.allprojects: View all ({counts})
 gui.workspace.newproject: Create new project
+gui.workspace.examples: Wonderful projects
 
 gui.coverpages.tankwar.title: The Tank War is coming! Join us! NOW!
 gui.coverpages.tankwar.button: Join us

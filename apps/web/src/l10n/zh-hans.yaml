@@ -45,6 +45,7 @@ gui.prompt.ok: 确认
 gui.workspace.myprojects: 我的作品
 gui.workspace.allprojects: 查看全部（{counts}）
 gui.workspace.newproject: 开始新作品
+gui.workspace.examples: 精彩作品
 
 gui.workspace.tankwar.name: 坦克大战
 gui.workspace.tankwar.description: 带上你的坦克，加入我们的战斗！

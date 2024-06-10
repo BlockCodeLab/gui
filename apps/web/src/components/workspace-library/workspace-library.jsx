@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'preact/hooks';
 import { useLocale, useLayout, useEditor } from '@blockcode/core';
 import { classNames, Text, ContextMenu, LibraryItem } from '@blockcode/ui';
+import { version } from '../../../package.json';
 import CoverPages from '../cover-pages/cover-pages';
 import makeCoverPages from '../../lib/cover-pages/make-cover-pages';
+
 import workspaces from './workspaces';
-import { version } from '../../../package.json';
+import allExamples from './examples';
 
 import styles from './workspace-library.module.css';
 
@@ -13,11 +15,13 @@ const loadinWorkspaces = Promise.all(workspaces);
 const DISPLAY_PROJECTS_COUNTS = 7;
 
 export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
+  const [examples, setExamples] = useState([]);
   const [projects, setProjects] = useState([]);
-  const [data, setData] = useState([]);
   const [counts, setCounts] = useState(0);
+  const [data, setData] = useState([]);
+
   const { language, getText, maybeLocaleText } = useLocale();
-  const { createPrompt, setStoreLibrary } = useLayout();
+  const { createAlert, removeAlert, createPrompt, setStoreLibrary } = useLayout();
   const { listProjects, getProject, renameProject, duplicateProject, deleteProject } = useEditor();
 
   const getProjects = () => {
@@ -48,25 +52,34 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
   useEffect(() => {
     loadinWorkspaces.then((allWorkspaces) => {
       setData(
-        allWorkspaces.map((workspaceInfo) =>
-          Object.assign(
-            {
-              ...workspaceInfo,
-              onSelect: () => onOpenWorkspace(item.package),
-            },
-            // translations
-            workspaceInfo.translations && workspaceInfo.translations[language]
-              ? {
-                  name: workspaceInfo.translations[language].name || workspaceInfo.name,
-                  description: workspaceInfo.translations[language].description || workspaceInfo.description,
-                  collaborator: workspaceInfo.translations[language].collaborator || workspaceInfo.collaborator,
-                }
-              : {},
+        allWorkspaces
+          .sort((a, b) => a.sortIndex - b.sortIndex)
+          .map((workspaceInfo) =>
+            Object.assign(
+              {
+                ...workspaceInfo,
+                disabled: workspaceInfo.disabled || (!DEVELOPMENT && workspaceInfo.preview),
+                onSelect: () => onOpenWorkspace(item.package),
+              },
+              // translations
+              workspaceInfo.translations && workspaceInfo.translations[language]
+                ? {
+                    name: workspaceInfo.translations[language].name || workspaceInfo.name,
+                    description: workspaceInfo.translations[language].description || workspaceInfo.description,
+                    collaborator: workspaceInfo.translations[language].collaborator || workspaceInfo.collaborator,
+                  }
+                : {},
+            ),
           ),
-        ),
       );
     });
-  }, []);
+
+    let examples = [];
+    if (language !== 'en') {
+      examples = examples.concat(allExamples.en);
+    }
+    setExamples(examples.concat(allExamples[language] || []));
+  }, [language]);
 
   return (
     <div className={styles.workspaceWrapper}>
@@ -177,6 +190,34 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
         ))}
       </div>
 
+      {examples.length > 0 && (
+        <>
+          <div className={styles.libraryLabel}>
+            <span>
+              <Text
+                id="gui.workspace.examples"
+                defaultMessage="Wonderful examples"
+              />
+            </span>
+          </div>
+          <div className={styles.libraryScrollGrid}>
+            {examples.map((item, index) => (
+              <LibraryItem
+                id={index}
+                name={item.name}
+                image={item.thumb}
+                onSelect={async () => {
+                  createAlert('importing', { id: item.name });
+                  const project = await fetch(item.uri).then((res) => res.json());
+                  removeAlert(item.name);
+                  onOpenProject(project);
+                }}
+              />
+            ))}
+          </div>
+        </>
+      )}
+
       <div className={styles.footer}>
         <span
           className={classNames(styles.footerItem, styles.link)}
@@ -188,8 +229,18 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
           className={classNames(styles.footerItem, styles.link)}
           onClick={() => {
             createPrompt({
-              title: getText('gui.terms', 'Terms of Use'),
-              content: getText('gui.terms.content', 'Terms of Use'),
+              title: (
+                <Text
+                  id="gui.terms"
+                  defaultMessage="Terms of Use"
+                />
+              ),
+              content: (
+                <Text
+                  id="gui.terms.content"
+                  defaultMessage="Terms of Use"
+                />
+              ),
             });
           }}
         >
@@ -202,8 +253,18 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
           className={classNames(styles.footerItem, styles.link)}
           onClick={() => {
             createPrompt({
-              title: getText('gui.privacy', 'Privacy'),
-              content: getText('gui.privacy.content', 'Privacy'),
+              title: (
+                <Text
+                  id="gui.privacy"
+                  defaultMessage="Privacy"
+                />
+              ),
+              content: (
+                <Text
+                  id="gui.privacy.content"
+                  defaultMessage="Privacy"
+                />
+              ),
             });
           }}
         >
