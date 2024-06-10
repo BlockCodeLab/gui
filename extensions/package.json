@@ -1,8 +1,8 @@
 {
   "name": "blockcode-extensions",
   "scripts": {
-    "build": "bun run build:pen && bun run build:request && bun run build:servo && bun run build:text && bun run build:broadcast && bun run build:time && bun run build:color-sensor && bun run build:nes && bun run build:translate",
-    "dev": "bun run dev:pen && bun run dev:request && bun run dev:servo && bun run dev:text && bun run dev:broadcast && bun run dev:time && bun run dev:color-sensor && bun run dev:nes && bun run dev:translate",
+    "build": "bun run build:pen && bun run build:request && bun run build:servo && bun run build:text && bun run build:broadcast && bun run build:time && bun run build:color-sensor && bun run build:nes && bun run build:translate && bun run build:brain",
+    "dev": "bun run dev:pen && bun run dev:request && bun run dev:servo && bun run dev:text && bun run dev:broadcast && bun run dev:time && bun run dev:color-sensor && bun run dev:nes && bun run dev:translate && bun run dev:brain",
     "build:pen": "cd pen && BUN_ENV=production bun run build",
     "dev:pen": "cd pen && bun run build",
     "build:request": "cd request && BUN_ENV=production bun run build",
@@ -20,6 +20,8 @@
     "build:nes": "cd nes && BUN_ENV=production bun run build",
     "dev:nes": "cd nes && bun run build",
     "build:translate": "cd translate && BUN_ENV=production bun run build",
-    "dev:translate": "cd translate && bun run build"
+    "dev:translate": "cd translate && bun run build",
+    "build:brain": "cd brain && BUN_ENV=production bun run build",
+    "dev:brain": "cd brain && bun run build"
   }
 }

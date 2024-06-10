@@ -73,3 +73,6 @@
 [submodule "extensions/translate"]
 	path = extensions/translate
 	url = https://github.com/BlockCodeLab/extension-translate.git
+[submodule "extensions/brain"]
+	path = extensions/brain
+	url = https://github.com/BlockCodeLab/extension-brain.git
