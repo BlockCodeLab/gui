@@ -1,27 +1,38 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
+import { useLocale } from '@blockcode/core';
 import { classNames, Text, BufferedInput, Button, Modal } from '@blockcode/ui';
 
 import styles from './prompt.module.css';
 
-export default function Prompt({ title, label, content, inputMode, defaultValue, onClose, onSubmit }) {
+export default function Prompt({ title, label, content, inputMode, placeholder, defaultValue, onClose, onSubmit }) {
   const ref = useRef();
+  const { maybeLocaleText } = useLocale();
   const [value, setValue] = useState(defaultValue);
-
-  const handleSubmit = () => {
-    onSubmit(value);
-  };
 
   const handleKeyDown = (e) => {
     e.stopPropagation();
-    if (e.key === 'Escape') onClose();
+    if (e.key === 'Escape' || e.key === 'Enter') onClose();
+  };
+
+  const handleSubmit = (val, e) => {
+    setValue(val);
     if (e.key === 'Enter') {
+      e.stopPropagation();
       if (onSubmit) {
-        onSubmit(ref.current && ref.current.base.value);
+        onSubmit(val);
       } else {
         onClose();
       }
     }
   };
+
+  useEffect(() => {
+    if (Array.isArray(inputMode)) {
+      setValue(Object.fromEntries(inputMode.map((item) => [item.name, item.defaultValue])));
+    } else {
+      setValue(defaultValue);
+    }
+  }, [inputMode, defaultValue]);
 
   useEffect(() => {
     if (ref.current) {
@@ -42,21 +53,37 @@ export default function Prompt({ title, label, content, inputMode, defaultValue,
       <div className={styles.promptContent}>
         {label && <div className={classNames(styles.label, { [styles.inputLabel]: inputMode })}>{label}</div>}
 
-        {inputMode && (
-          <BufferedInput
-            autoFocus
-            forceFocus
-            ref={ref}
-            className={styles.nameTextInput}
-            defaultValue={defaultValue}
-            onSubmit={setValue}
-          />
-        )}
+        {Array.isArray(inputMode)
+          ? inputMode.map((inputItem, index) => (
+              <BufferedInput
+                key={index}
+                ref={index === 0 && ref}
+                autoFocus={index === 0}
+                className={styles.nameTextInput}
+                placeholder={maybeLocaleText(inputItem.placeholder)}
+                defaultValue={inputItem.defaultValue}
+                onSubmit={(val) => {
+                  value[inputItem.name] = val;
+                  setValue(value);
+                }}
+              />
+            ))
+          : inputMode && (
+              <BufferedInput
+                autoFocus
+                forceFocus
+                ref={ref}
+                placeholder={maybeLocaleText(placeholder)}
+                className={styles.nameTextInput}
+                defaultValue={defaultValue}
+                onSubmit={handleSubmit}
+              />
+            )}
 
         {content && (
           <div
             className={styles.content}
-            dangerouslySetInnerHTML={{ __html: content }}
+            dangerouslySetInnerHTML={{ __html: maybeLocaleText(content) }}
           />
         )}
 
@@ -80,7 +107,7 @@ export default function Prompt({ title, label, content, inputMode, defaultValue,
           {onSubmit && (
             <Button
               className={classNames(styles.button, styles.okButton)}
-              onClick={handleSubmit}
+              onClick={() => onSubmit(value)}
             >
               <Text
                 id="gui.prompt.ok"

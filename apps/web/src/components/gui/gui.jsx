@@ -251,7 +251,7 @@ export default function GUI() {
           inputMode={prompt.inputMode}
           defaultValue={prompt.defaultValue}
           onClose={handlePromptClose}
-          onSubmit={prompt.onSubmit ? handlePromptSubmit : false}
+          onSubmit={handlePromptSubmit}
         />
       )}
 

@@ -29,6 +29,12 @@
   overflow-x: hidden;
 }
 
+.content a {
+  color: var(--motion-primary);
+  text-decoration-line: none;
+  border-bottom: 1px solid;
+}
+
 .name-text-input {
   margin-bottom: 1.5rem;
   width: 100%;
