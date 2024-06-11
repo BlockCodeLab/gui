@@ -14,9 +14,10 @@ SPARKAI_APP_ID = "db45f79e"
 SPARKAI_API_SECRET = "MWFiNjVmNDA4YjNhODFkZGE0MGQ1YWRj"
 SPARKAI_API_KEY = "6a3dfe79b9e9ec588ca65bf3b9d9c847"
 SPARKAI_DOMAIN = "general"
-SPARKAI_TEMPERATURE = const(0.1)  # 0.1 ~ 1
+SPARKAI_TEMPERATURE = const(0.4)  # 0.1 ~ 1
 SPARKAI_MAX_TOKENS = const(200)  # 1 token = 1.5 chinese or 0.8 english
-SPARKAI_TOP_K = const(1)  # 1 ~ 6
+SPARKAI_TOP_K = const(3)  # 1 ~ 6
+DIALOGS_LENGTH = const(3)
 
 # Weekday and month names for HTTP date/time formatting; always English!
 WEEKDAYNAME = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
