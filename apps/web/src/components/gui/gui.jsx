@@ -85,7 +85,7 @@ export default function GUI() {
         ...file,
         name: maybeLocaleText(file.name),
       })),
-      selectedIndex: 0,
+      selectedFileId: project.fileList ? project.fileList[0]?.id : null,
     });
   };
 
