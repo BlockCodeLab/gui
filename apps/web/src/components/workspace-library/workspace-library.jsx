@@ -203,6 +203,7 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
           <div className={styles.libraryScrollGrid}>
             {examples.map((item, index) => (
               <LibraryItem
+                large
                 id={index}
                 name={item.name}
                 image={item.thumb}

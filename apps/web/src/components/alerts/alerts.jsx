@@ -7,7 +7,7 @@ export default function Alerts({ items }) {
       <div>
         {items.map((item) => (
           <Alert
-            mode={item.mode}
+            mode={item.mode || 'success'}
             icon={item.icon}
             message={item.message}
           />
