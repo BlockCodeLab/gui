@@ -76,3 +76,6 @@
 [submodule "extensions/brain"]
 	path = extensions/brain
 	url = https://github.com/BlockCodeLab/extension-brain.git
+[submodule "components/aisdks"]
+	path = components/aisdks
+	url = https://github.com/BlockCodeLab/component-aisdks.git
