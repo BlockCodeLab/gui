@@ -1,4 +1,4 @@
-from device.display import color565
+from device.color import color565
 from stage import stage
 import colorsys
 
@@ -16,10 +16,9 @@ def stamp(target):
     image = memoryview(bytearray(target._image))
     x, y = target._x, target._y
     width, height = target._width, target._height
-    palette = memoryview(bytearray(target._frame_palette))
     stage.add_paint(
         PEN_PAINT,
-        lambda disp: disp.draw(image, x, y, width, height, key=True, palette=palette),
+        lambda disp: disp.blit(image, x, y, width, height, key=0x0000),
     )
 
 
@@ -32,7 +31,7 @@ def pen_goto(target, *args, **kwargs):
     color = target.data.get(PEN_COLOR, (0, 0, 0))
     size = target.data.get(PEN_SIZE, 1)
     stage.add_paint(
-        PEN_PAINT, lambda disp: disp.linex(x, y, nx, ny, size, color565(*color))
+        PEN_PAINT, lambda disp: disp.line(x, y, nx, ny, size, color565(*color))
     )
     target.data[PEN_LAST_POS] = nx, ny
 
