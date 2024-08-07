@@ -1,18 +1,18 @@
 {
   "name": "blockcode-web",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "scripts": {
     "build": "bun-build",
     "dev": "HOT_SERVER=enable bun-build --watch ./src"
   },
   "devDependencies": {
     "bun-types": "latest",
-    "bun-build": "link:bun-build",
-    "bun-loader-css": "link:bun-loader-css",
-    "bun-loader-yaml": "link:bun-loader-yaml",
-    "bun-plugin-copy": "link:bun-plugin-copy",
-    "bun-index-page": "link:bun-index-page",
-    "bun-hot-server": "link:bun-hot-server"
+    "bun-build": "github:kankungyip/bun-build",
+    "bun-loader-css": "github:kankungyip/bun-loader-css",
+    "bun-loader-yaml": "github:kankungyip/bun-loader-yaml",
+    "bun-plugin-copy": "github:kankungyip/bun-plugin-copy",
+    "bun-index-page": "github:kankungyip/bun-index-page",
+    "bun-hot-server": "github:kankungyip/bun-hot-server"
   },
   "dependencies": {
     "preact": "^10.18.1",
