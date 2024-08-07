@@ -1,8 +1,8 @@
 {
   "name": "blockcode-components",
   "scripts": {
-    "build": "bun run build:core && bun run build:ui && bun run build:device-pyboard && bun run build:blocks-editor && bun run build:blocks-player && bun run build:code-editor && bun run build:pixel-paint && bun run build:wave-surfer && bun run build:tone-player",
-    "dev": "bun run dev:core && bun run dev:ui && bun run dev:device-pyboard && bun run dev:blocks-editor && bun run dev:blocks-player && bun run dev:code-editor && bun run dev:pixel-paint && bun run dev:wave-surfer && bun run dev:tone-player",
+    "build": "bun run build:core && bun run build:ui && bun run build:device-pyboard && bun run build:blocks-editor && bun run build:blocks-player && bun run build:code-editor && bun run build:pixel-paint && bun run build:wave-surfer && bun run build:tone-player && bun run dev:aisdks",
+    "dev": "bun run dev:core && bun run dev:ui && bun run dev:device-pyboard && bun run dev:blocks-editor && bun run dev:blocks-player && bun run dev:code-editor && bun run dev:pixel-paint && bun run dev:wave-surfer && bun run dev:tone-player && bun run dev:aisdks",
     "build:core": "cd core && BUN_ENV=production bun run build",
     "dev:core": "cd core && bun run build",
     "build:ui": "cd ui && BUN_ENV=production bun run build",
@@ -20,6 +20,8 @@
     "build:wave-surfer": "cd wave-surfer && BUN_ENV=production bun run build",
     "dev:wave-surfer": "cd wave-surfer && bun run build",
     "build:tone-player": "cd tone-player && BUN_ENV=production bun run build",
-    "dev:tone-player": "cd tone-player && bun run build"
+    "dev:tone-player": "cd tone-player && bun run build",
+    "build:aisdks": "cd aisdks && BUN_ENV=production bun run build",
+    "dev:aisdks": "cd aisdks && bun run build"
   }
 }
