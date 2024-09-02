@@ -7,14 +7,20 @@ DIALOGS_LENGTH = const(3)
 brains = {}
 
 
-def set_prompt(id, prompt):
+def set_default(id):
     brains.setdefault(id, {})
     brains[id].setdefault("prompts", [])
+    brains[id].setdefault("dialogs", [])
+    brains[id].setdefault("result", [])
+
+
+def set_prompt(id, prompt):
+    set_default(id)
     brains[id]["prompts"].append(prompt)
 
 
 def clear_prompt(id):
-    brains.setdefault(id, {})
+    set_default(id)
     brains[id]["prompts"] = []
 
 
@@ -29,14 +35,13 @@ def get_language():
         return "英语"
 
 
-async def ask_brain(id, content):
+async def ask(id, content):
     if not runtime.wifi_connected or not content:
         return ""
 
-    brains.setdefault(id, {})
+    set_default(id)
     prompts = brains[id].get("prompts", [])
     dialogs = brains[id].get("dialogs", [])
-    result = brains[id].get("result", [])
 
     if len(dialogs) > DIALOGS_LENGTH:
         dialogs.pop(0)
@@ -54,9 +59,10 @@ async def ask_brain(id, content):
     if len(dialogs) > DIALOGS_LENGTH:
         dialogs.pop(0)
     dialogs.append({"role": "assistant", content: message})
+    brains[id]["dialogs"] = dialogs
     brains[id]["result"] = message
 
 
-def brain_answer(id):
-    brains.setdefault(id, {})
+def answer(id):
+    set_default(id)
     return brains[id]["result"] or ""
