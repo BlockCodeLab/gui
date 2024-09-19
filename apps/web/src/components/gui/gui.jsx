@@ -1,4 +1,4 @@
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { useLocale, useLayout, useEditor } from '@blockcode/core';
 import { classNames } from '@blockcode/ui';
 
@@ -17,12 +17,17 @@ import TutorialBox from '../tutorial-box/tutorial-box';
 import styles from './gui.module.css';
 import TutorialLibrary from '../tutorial-library/tutorial-library';
 
+import workspaces from '../workspace-library/workspaces';
+
+const loadingWorkspaces = Promise.all(workspaces);
+
 export default function GUI() {
   const [tutorialId, setTutorialId] = useState();
   const [tutorialLibrary, setTutorialLibrary] = useState(false);
   const [workspaceLibrary, setWorkspaceLibrary] = useState(false);
+  const [workspaceNames, setWorkspaceNames] = useState({});
 
-  const { addLocaleData, getText, maybeLocaleText } = useLocale();
+  const { language, addLocaleData, getText, maybeLocaleText } = useLocale();
   const {
     splash,
     prompt,
@@ -40,6 +45,16 @@ export default function GUI() {
     setStoreLibrary,
   } = useLayout();
   const { editor, setEditor, openProject: defaultOpenProject, closeProject, modified } = useEditor();
+
+  useEffect(() => {
+    loadingWorkspaces.then((allWorkspaces) => {
+      setWorkspaceNames(
+        Object.fromEntries(
+          allWorkspaces.map((info) => [info.package, info.translations?.[language]?.name || info.name]),
+        ),
+      );
+    });
+  }, [language]);
 
   if (!editor?.package) {
     setWorkspaceLibrary(true);
@@ -63,7 +78,7 @@ export default function GUI() {
   });
 
   const handlePromptSubmit = (...args) => {
-    prompt.onSubmit && prompt.onSubmit(...args);
+    prompt.onSubmit(...args);
     createPrompt(null);
   };
 
@@ -72,7 +87,7 @@ export default function GUI() {
     createPrompt(null);
   };
 
-  const openProject = (project) => {
+  const _openProject = (project) => {
     setSplash(true);
     setStoreLibrary(false);
     defaultOpenProject({
@@ -87,6 +102,28 @@ export default function GUI() {
       })),
       selectedFileId: project.fileList ? project.fileList[0]?.id : null,
     });
+  };
+
+  const openProject = (project, editorPackage) => {
+    if (project.editor && editorPackage !== project.editor.package) {
+      createPrompt({
+        label: getText(
+          'gui.projects.errorWorkspace',
+          'This project is not currently editor creation, please switch to "{workspace}" and open it.',
+          { workspace: workspaceNames[project.editor?.package] },
+        ),
+      });
+      return;
+    }
+    if (modified) {
+      createPrompt({
+        title: getText('gui.projects.notSaved', 'Not saved'),
+        label: getText('gui.projects.replaceProject', 'Replace contents of the current project?'),
+        onSubmit: () => _openProject(project),
+      });
+    } else {
+      _openProject(project);
+    }
   };
 
   const handleOpenWorkspace = (workspacePackage, project) => {
@@ -114,10 +151,10 @@ export default function GUI() {
       createPrompt({
         title: getText('gui.projects.notSaved', 'Not saved'),
         label: getText('gui.projects.replaceProject', 'Replace contents of the current project?'),
-        onSubmit: () => openProject(project),
+        onSubmit: () => openProject(project, editor?.package),
       });
     } else {
-      openProject(project);
+      openProject(project, editor?.package);
     }
   };
 
@@ -251,7 +288,7 @@ export default function GUI() {
           inputMode={prompt.inputMode}
           defaultValue={prompt.defaultValue}
           onClose={handlePromptClose}
-          onSubmit={handlePromptSubmit}
+          onSubmit={prompt.onSubmit && handlePromptSubmit}
         />
       )}
 

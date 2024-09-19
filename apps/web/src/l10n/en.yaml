@@ -17,6 +17,9 @@ gui.library.all: All
 gui.menuBar.courses: Courses
 gui.menuBar.tutorials: Tutorials
 gui.menuBar.projectTitlePlaceholder: Project title here
+gui.menuBar.projectModified: Save to local storage
+gui.menuBar.projectSaving: Saving project...
+gui.menuBar.projectSaved: Saved to local storage.
 
 gui.tutorialLibrary.course: Choose a course
 gui.tutorialLibrary.tutorial: Choose a tutorial
@@ -37,6 +40,7 @@ gui.projects.closeProject: Close current project?
 gui.projects.contextMenu.rename: rename
 gui.projects.contextMenu.duplicate: duplicate
 gui.projects.contextMenu.delete: delete
+gui.projects.errorWorkspace: This project is not currently editor creation, please switch to "{workspace}" and open it.
 
 gui.prompt.close: Close
 gui.prompt.cancel: Cancel

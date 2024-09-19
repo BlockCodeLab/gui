@@ -10,7 +10,7 @@ import allExamples from './examples';
 
 import styles from './workspace-library.module.css';
 
-const loadinWorkspaces = Promise.all(workspaces);
+const loadingWorkspaces = Promise.all(workspaces);
 
 const DISPLAY_PROJECTS_COUNTS = 7;
 
@@ -41,7 +41,7 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
                 {` [${item.key.toUpperCase()}]`}
               </>
             ),
-            image: item.image,
+            image: item.thumb,
           })),
       );
       setCounts(allProjects.length);
@@ -50,7 +50,7 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
   useEffect(getProjects, []);
 
   useEffect(() => {
-    loadinWorkspaces.then((allWorkspaces) => {
+    loadingWorkspaces.then((allWorkspaces) => {
       setData(
         allWorkspaces
           .sort((a, b) => a.sortIndex - b.sortIndex)

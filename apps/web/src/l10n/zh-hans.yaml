@@ -17,6 +17,9 @@ gui.library.all: 所有
 gui.menuBar.courses: 课程
 gui.menuBar.tutorials: 教程
 gui.menuBar.projectTitlePlaceholder: 在此填写作品标题
+gui.menuBar.projectModified: 保存到本地
+gui.menuBar.projectSaving: 正在保存作品…
+gui.menuBar.projectSaved: 已保存到本地。
 
 gui.tutorialLibrary.course: 选择一个课程
 gui.tutorialLibrary.tutorial: 选择一个教程
@@ -37,6 +40,7 @@ gui.projects.closeProject: 要关闭当前作品吗？
 gui.projects.contextMenu.rename: 重命名
 gui.projects.contextMenu.duplicate: 复制
 gui.projects.contextMenu.delete: 删除
+gui.projects.errorWorkspace: 这个作品不是当前编辑器创作，请切换至“{workspace}”编辑器然后打开。
 
 gui.prompt.close: 关闭
 gui.prompt.cancel: 取消

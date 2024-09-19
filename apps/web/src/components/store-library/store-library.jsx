@@ -8,16 +8,17 @@ export default function StoreLibrary({ onOpenProject }) {
   const [data, setData] = useState([]);
   const { getText, maybeLocaleText } = useLocale();
   const { createPrompt, setStoreLibrary } = useLayout();
-  const { listProjects, getProject, renameProject, duplicateProject, deleteProject } = useEditor();
+  const { editor, listProjects, getProject, renameProject, duplicateProject, deleteProject } = useEditor();
 
   const getData = async () => {
     const projects = await listProjects();
     setData(
       projects
+        .filter((item) => item.editor.package == editor.package)
         .sort((a, b) => b.modifiedDate - a.modifiedDate)
         .map((item) => ({
           name: item.name || `${getText('gui.defaultProject.shortname', 'Project')} [${item.key.toUpperCase()}]`,
-          image: item.image,
+          image: item.thumb,
           onSelect: async () => onOpenProject(await getProject(item.key)),
           contextMenu: [
             [
