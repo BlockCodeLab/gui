@@ -1,3 +1,4 @@
-import project1 from './project-1';
+import weather from './weather';
+import idioms from './idioms';
 
-export default [project1];
+export default [weather, idioms];

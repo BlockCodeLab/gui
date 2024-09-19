@@ -1,4 +1,4 @@
-import projectUri from './project-1.proj';
+import projectUri from './idioms.proj';
 
 export default {
   name: '智脑成语接龙',
