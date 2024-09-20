@@ -83,8 +83,10 @@ export default function Prompt({ title, label, content, inputMode, placeholder, 
         {content && (
           <div
             className={styles.content}
-            dangerouslySetInnerHTML={{ __html: maybeLocaleText(content) }}
-          />
+            // dangerouslySetInnerHTML={{ __html: maybeLocaleText(content) }}
+          >
+            {content}
+          </div>
         )}
 
         <div className={styles.buttonRow}>
