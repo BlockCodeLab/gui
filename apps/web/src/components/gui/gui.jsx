@@ -131,9 +131,9 @@ export default function GUI() {
     import(`@blockcode/workspace-${workspacePackage}/app`).then(({ default: createWorkspace }) => {
       setWorkspaceLibrary(false);
       createWorkspace({
+        openProject: (proj) => openProject(proj, workspacePackage),
         addLocaleData,
         createLayout,
-        openProject,
         project,
       });
       selectTab(0);
