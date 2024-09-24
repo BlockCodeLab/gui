@@ -22,7 +22,8 @@
     "build:extensions": "cd extensions && bun run build",
     "dev:extensions": "cd extensions && bun run dev",
     "build:workspaces": "cd workspaces && bun run build",
-    "dev:workspaces": "cd workspaces && bun run dev"
+    "dev:workspaces": "cd workspaces && bun run dev",
+    "doc:arcade": "cd workspaces/arcade && bun run doc"
   },
   "workspaces": [
     "apps/*",
