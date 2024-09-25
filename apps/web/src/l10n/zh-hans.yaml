@@ -60,6 +60,8 @@ gui.coverpages.tankwar.button: 加入战斗
 gui.coverpages.arcade.title: 玩的下一个游戏，一定是自己的！
 gui.coverpages.arcade.button: 开始游戏
 
+gui.about: 版本信息
+
 gui.terms: 使用条款
 gui.terms.content: >
   <b>使用条款</b>

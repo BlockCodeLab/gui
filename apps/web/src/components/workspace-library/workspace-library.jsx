@@ -5,20 +5,20 @@ import { version } from '../../../package.json';
 import CoverPages from '../cover-pages/cover-pages';
 import makeCoverPages from '../../lib/cover-pages/make-cover-pages';
 
-import workspaces from './workspaces';
+import allWorkspaces from './workspaces';
 import allExamples from './examples';
 
 import styles from './workspace-library.module.css';
 
-const loadingWorkspaces = Promise.all(workspaces);
+const loadingWorkspaces = Promise.all(allWorkspaces);
 
 const DISPLAY_PROJECTS_COUNTS = 7;
 
 export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
+  const [workspaces, setWorkspaces] = useState([]);
   const [examples, setExamples] = useState([]);
   const [projects, setProjects] = useState([]);
   const [counts, setCounts] = useState(0);
-  const [data, setData] = useState([]);
 
   const { language, getText, maybeLocaleText } = useLocale();
   const { createAlert, removeAlert, createPrompt, setStoreLibrary } = useLayout();
@@ -51,7 +51,7 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
 
   useEffect(() => {
     loadingWorkspaces.then((allWorkspaces) => {
-      setData(
+      setWorkspaces(
         allWorkspaces
           .sort((a, b) => a.sortIndex - b.sortIndex)
           .map((workspaceInfo) =>
@@ -172,7 +172,7 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
         />
       </div>
       <div className={styles.libraryScrollGrid}>
-        {data.map((item, index) => (
+        {workspaces.map((item, index) => (
           <LibraryItem
             featured
             id={index}
@@ -274,7 +274,35 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
             defaultMessage="Privacy"
           />
         </span>
-        <span className={styles.footerItem}>v{version}</span>
+        <span
+          className={classNames(styles.footerItem, styles.link)}
+          onClick={() => {
+            createPrompt({
+              title: (
+                <Text
+                  id="gui.about"
+                  defaultMessage="About..."
+                />
+              ),
+              body: (
+                <div className={styles.aboutVersionContent}>
+                  {workspaces
+                    .filter((item) => !item.preview && !item.disabled)
+                    .map((item) => (
+                      <div className={styles.aboutVersionRow}>
+                        <div>
+                          <b>{item.name}</b>
+                        </div>
+                        <div>v{item.version}</div>
+                      </div>
+                    ))}
+                </div>
+              ),
+            });
+          }}
+        >
+          v{version}
+        </span>
       </div>
     </div>
   );

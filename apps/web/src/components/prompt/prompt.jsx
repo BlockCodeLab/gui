@@ -4,7 +4,17 @@ import { classNames, Text, BufferedInput, Button, Modal } from '@blockcode/ui';
 
 import styles from './prompt.module.css';
 
-export default function Prompt({ title, label, content, inputMode, placeholder, defaultValue, onClose, onSubmit }) {
+export default function Prompt({
+  title,
+  label,
+  content,
+  inputMode,
+  placeholder,
+  defaultValue,
+  children,
+  onClose,
+  onSubmit,
+}) {
   const ref = useRef();
   const { maybeLocaleText } = useLocale();
   const [value, setValue] = useState(defaultValue);
@@ -47,7 +57,7 @@ export default function Prompt({ title, label, content, inputMode, placeholder, 
   return (
     <Modal
       title={title}
-      className={content ? styles.promptWideModal : styles.promptModal}
+      className={content || children ? styles.promptWideModal : styles.promptModal}
       onClose={onClose}
     >
       <div className={styles.promptContent}>
@@ -80,13 +90,13 @@ export default function Prompt({ title, label, content, inputMode, placeholder, 
               />
             )}
 
-        {content && (
+        {content ? (
           <div
             className={styles.content}
-            // dangerouslySetInnerHTML={{ __html: maybeLocaleText(content) }}
-          >
-            {content}
-          </div>
+            dangerouslySetInnerHTML={{ __html: maybeLocaleText(content) }}
+          />
+        ) : (
+          <div className={styles.content}>{children}</div>
         )}
 
         <div className={styles.buttonRow}>

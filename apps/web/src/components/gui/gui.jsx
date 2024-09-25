@@ -289,7 +289,9 @@ export default function GUI() {
           defaultValue={prompt.defaultValue}
           onClose={handlePromptClose}
           onSubmit={prompt.onSubmit && handlePromptSubmit}
-        />
+        >
+          {prompt.body}
+        </Prompt>
       )}
 
       {splash && <SplashScreen />}

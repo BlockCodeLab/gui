@@ -56,6 +56,8 @@ gui.coverpages.tankwar.button: Join us
 gui.coverpages.arcade.title: The next game to play, must be your OWN!
 gui.coverpages.arcade.button: Play now
 
+gui.about: About...
+
 gui.terms: Terms of Use
 gui.terms.content: >
   <b>Terms of Use</b>

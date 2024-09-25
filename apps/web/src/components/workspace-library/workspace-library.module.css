@@ -65,3 +65,13 @@
   font-weight: 500;
   padding: 1.5rem calc(0.5rem + var(--space)) 0.5rem;
 }
+
+.about-version-content {
+  width: 300px;
+}
+
+.about-version-row {
+  display: flex;
+  justify-content: space-between;
+  margin: var(--space) 0;
+}
