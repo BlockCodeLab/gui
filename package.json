@@ -10,8 +10,9 @@
   },
   "scripts": {
     "preview": "bunx serve apps/web/dist",
-    "deploy": "bun run build && bunx gh-pages -b playgrounds -d apps/web/dist",
-    "deploy:dev": "bun run build && bunx gh-pages -b preview -d apps/web/dist",
+    "deploy:clean": "bunx gh-pages-clean",
+    "deploy": "bun run build && bun run deploy:clean && bunx gh-pages -b playgrounds -d apps/web/dist",
+    "deploy:dev": "bun run build && bun run deploy:clean && bunx gh-pages -b preview -d apps/web/dist",
     "build": "bun run build:packages && bun run build:web",
     "build:web": "cd apps/web && BUN_ENV=production bun run build",
     "dev:web": "cd apps/web && bun run dev",
