@@ -1,8 +1,8 @@
 {
   "name": "blockcode-workspaces",
   "scripts": {
-    "build": "bun run build:blocks && bun run build:arcade && bun run build:popsicle && bun run build:tankwar && bun run build:picoed && bun run build:microbit && bun run build:micropython",
-    "dev": "bun run dev:blocks && bun run dev:arcade && bun run dev:popsicle && bun run dev:tankwar && bun run dev:picoed && bun run dev:microbit && bun run dev:micropython",
+    "build": "bun run build:blocks && bun run build:arcade && bun run build:popsicle && bun run build:tankwar && bun run build:picoed && bun run build:microbit && bun run build:micropython && bun run build:arduino",
+    "dev": "bun run dev:blocks && bun run dev:arcade && bun run dev:popsicle && bun run dev:tankwar && bun run dev:picoed && bun run dev:microbit && bun run dev:micropython && bun run dev:arduino",
     "build:blocks": "cd blocks && BUN_ENV=production bun run build",
     "dev:blocks": "cd blocks && bun run build",
     "build:arcade": "cd arcade && BUN_ENV=production bun run build",
@@ -16,6 +16,8 @@
     "build:microbit": "cd microbit && BUN_ENV=production bun run build",
     "dev:microbit": "cd microbit && bun run build",
     "build:micropython": "cd micropython && BUN_ENV=production bun run build",
-    "dev:micropython": "cd micropython && bun run build"
+    "dev:micropython": "cd micropython && bun run build",
+    "build:arduino": "cd arduino && BUN_ENV=production bun run build",
+    "dev:arduino": "cd arduino && bun run build"
   }
 }
