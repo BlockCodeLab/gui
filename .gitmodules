@@ -79,3 +79,6 @@
 [submodule "components/aisdks"]
 	path = components/aisdks
 	url = https://github.com/BlockCodeLab/component-aisdks.git
+[submodule "workspaces/arduino"]
+	path = workspaces/arduino
+	url = https://github.com/BlockCodeLab/workspace-arduino.git
