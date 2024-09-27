@@ -11,10 +11,12 @@ export default function StoreLibrary({ onOpenProject }) {
   const { editor, listProjects, getProject, renameProject, duplicateProject, deleteProject } = useEditor();
 
   const getData = async () => {
-    const projects = await listProjects();
+    let projects = await listProjects();
+    if (editor?.package) {
+      projects = projects.filter((item) => item.editor.package === editor.package);
+    }
     setData(
       projects
-        .filter((item) => item.editor.package == editor.package)
         .sort((a, b) => b.modifiedDate - a.modifiedDate)
         .map((item) => ({
           name: item.name || `${getText('gui.defaultProject.shortname', 'Project')} [${item.key.toUpperCase()}]`,
