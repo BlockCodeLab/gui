@@ -87,8 +87,7 @@ export default function GUI() {
     createPrompt(null);
   };
 
-  const _openProject = (project) => {
-    setSplash(true);
+  const openAnyProject = (project) => {
     setStoreLibrary(false);
     defaultOpenProject({
       ...project,
@@ -100,12 +99,13 @@ export default function GUI() {
         ...file,
         name: maybeLocaleText(file.name),
       })),
-      selectedFileId: project.fileList ? project.fileList[0]?.id : null,
+      selectedFileId: project.selectedFileId ?? project.fileList?.[0]?.id,
     });
+    setSplash(true);
   };
 
-  const openProject = (project, editorPackage) => {
-    if (project.editor && editorPackage !== project.editor.package) {
+  const openProjectWithEditor = (project, editorPackage) => {
+    if (editorPackage !== project.editor.package) {
       createPrompt({
         label: getText(
           'gui.projects.errorWorkspace',
@@ -119,25 +119,28 @@ export default function GUI() {
       createPrompt({
         title: getText('gui.projects.notSaved', 'Not saved'),
         label: getText('gui.projects.replaceProject', 'Replace contents of the current project?'),
-        onSubmit: () => _openProject(project),
+        onSubmit: () => openAnyProject(project),
       });
     } else {
-      _openProject(project);
+      openAnyProject(project);
     }
   };
 
-  const handleOpenWorkspace = (workspacePackage, project) => {
+  const handleOpenWorkspace = (workspacePackage, userProject) => {
     setSplash(true);
+    closeProject();
+    const openProject = (project) => {
+      if (!project) return;
+      project.editor = project.editor || {};
+      project.editor.package = project.editor.package || workspacePackage;
+      openProjectWithEditor(project, workspacePackage);
+    };
     import(`@blockcode/workspace-${workspacePackage}/app`).then(({ default: createWorkspace }) => {
       setWorkspaceLibrary(false);
-      createWorkspace({
-        openProject: (proj) => openProject(proj, workspacePackage),
-        addLocaleData,
-        createLayout,
-        project,
-      });
-      selectTab(0);
-      setEditor({ package: workspacePackage });
+      const layout = createWorkspace({ addLocaleData, openProject });
+      layout.selectedTabIndex = layout.selectedTabIndex ?? 0;
+      openProject(userProject);
+      createLayout(layout);
     });
   };
 
@@ -147,15 +150,8 @@ export default function GUI() {
       handleOpenWorkspace(project.editor.package, project);
       return;
     }
-    if (modified) {
-      createPrompt({
-        title: getText('gui.projects.notSaved', 'Not saved'),
-        label: getText('gui.projects.replaceProject', 'Replace contents of the current project?'),
-        onSubmit: () => openProject(project, editor?.package),
-      });
-    } else {
-      openProject(project, editor?.package);
-    }
+    openProjectWithEditor(project, editor.package);
+    selectTab(0);
   };
 
   const handleBackHome = () => {
