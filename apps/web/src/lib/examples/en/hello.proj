@@ -1,5 +1,6 @@
 {
   "name": "Hello!",
+  "selectedFileId": "sprite1",
   "assetList": [
     {
       "id": "394521f888b163c89f6509a3ab60722a",
