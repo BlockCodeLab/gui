@@ -1,6 +1,6 @@
 var __create = Object.create;
-var __defProp = Object.defineProperty;
 var __getProtoOf = Object.getPrototypeOf;
+var __defProp = Object.defineProperty;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
@@ -15,23 +15,19 @@ var __toESM = (mod, isNodeMode, target) => {
       });
   return to;
 };
+var __moduleCache = /* @__PURE__ */ new WeakMap;
 var __toCommonJS = (from) => {
-  const moduleCache = __toCommonJS.moduleCache ??= new WeakMap;
-  var cached = moduleCache.get(from);
-  if (cached)
-    return cached;
-  var to = __defProp({}, "__esModule", { value: true });
-  var desc = { enumerable: false };
-  if (from && typeof from === "object" || typeof from === "function") {
-    for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key))
-        __defProp(to, key, {
-          get: () => from[key],
-          enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
-        });
-  }
-  moduleCache.set(from, to);
-  return to;
+  var entry = __moduleCache.get(from), desc;
+  if (entry)
+    return entry;
+  entry = __defProp({}, "__esModule", { value: true });
+  if (from && typeof from === "object" || typeof from === "function")
+    __getOwnPropNames(from).map((key) => !__hasOwnProp.call(entry, key) && __defProp(entry, key, {
+      get: () => from[key],
+      enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
+    }));
+  __moduleCache.set(from, entry);
+  return entry;
 };
 var __commonJS = (cb, mod) => () => (mod || cb((mod = { exports: {} }).exports, mod), mod.exports);
 var __export = (target, all) => {
@@ -44,13 +40,6 @@ var __export = (target, all) => {
     });
 };
 var __esm = (fn, res) => () => (fn && (res = fn(fn = 0)), res);
-var __require = ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
-  get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
-}) : x)(function(x) {
-  if (typeof require !== "undefined")
-    return require.apply(this, arguments);
-  throw Error('Dynamic require of "' + x + '" is not supported');
-});
 
 // node:crypto
 var exports_crypto = {};
@@ -65,32 +54,25 @@ __export(exports_crypto, {
   default: () => Wq,
   DEFAULT_ENCODING: () => Ga
 });
-var dw, pw, Xa, vw, bw, mw, gw, R0, T, Ja, Ya, ot, rn, ur, Nd, Dd, Ut, Te, on, Ie, ki, W0, $f, pc, Z0, sn, V0, G0, J0, hn, co, Jf, po, Qf, vo, Pc, Oc, th, ph, Qc, np, ap, bh, Ao, Bo, pn, _p, Ep, gh, qp, yh, Op, ko, Tt, Gr, No, Jt, pa, Rh, pr, Y_, Oi, Fi, Ui, k1, yn, Vo, Go, Z1, Xo, Fh, ba, Jh, Dv, Qr, fu, ou, os, eb, cu, lb, bu, vf, S7, db, yi, bf, wb, mu, wu, Mu, Eb, _u, xu, Eu, Au, Ub, Iu, Tu, ar, vs, ku, Yb, Qb, em, im, nm, yf, om, um, dm, pm, bm, Pu, Ou, Fu, ws, Aa, Em, Wu, ju, Ba, Dm, Fm, Es, Hm, Vm, ji, Yu, Ym, Xm, As, tl, ol, rg, ag, hg, hl, pg, dl, kn, cl, bl, Ln, Ds, Lg, Dg, yl, Il, Yg, t2, i2, Ws, Ks, s2, ri, Nl, or, Oa, b2, y2, _2, Pl, Cr, Tf, Cl, N2, Fl, F2, Wl, Z2, V2, Q2, ty, e0, ny, t0, uy, dy, vy, yy, xy, Ey, Iy, o0, td, h0, u0, Kf, d0, c0, nd, Hy, od, hd, Jy, dd, r3, n3, o3, cd, d3, p3, v3, m3, Ha, bd, _3, A3, k3, N3, P3, _d, xd, w0, Ed, j3, Y3, X3, ow, qd, Xt, zq, Ga, uw, lw, Hq, x0, Id, Td, cw, Wq;
+function dw() {
+  return Hq;
+}
+var pw, Xa, vw, bw, mw, gw, R0 = (t, e) => () => (t && (e = t(t = 0)), e), T = (t, e) => () => (e || t((e = { exports: {} }).exports, e), e.exports), Ja = (t, e) => {
+  for (var r in e)
+    Xa(t, r, { get: e[r], enumerable: true });
+}, Ya = (t, e, r, o) => {
+  if (e && typeof e == "object" || typeof e == "function")
+    for (let f of bw(e))
+      !gw.call(t, f) && f !== r && Xa(t, f, { get: () => e[f], enumerable: !(o = vw(e, f)) || o.enumerable });
+  return t;
+}, ot = (t, e, r) => (Ya(t, e, "default"), r && Ya(r, e, "default")), rn = (t, e, r) => (r = t != null ? pw(mw(t)) : {}, Ya(e || !t || !t.__esModule ? Xa(r, "default", { value: t, enumerable: true }) : r, t)), ur = (t) => Ya(Xa({}, "__esModule", { value: true }), t), Nd, Dd, Ut, Te, on, Ie, ki, W0, $f, pc, Z0, sn, V0, G0, J0, hn, co, Jf, po, Qf, vo, Pc, Oc, th, ph, Qc, np, ap, bh, Ao, Bo, pn, _p, Ep, gh, qp, yh, Op, ko, Tt, Gr, No, Jt, pa, Rh, pr, Y_, Oi, Fi, Ui, k1, yn, Vo, Go, Z1, Xo, Fh, ba, Jh, Dv, Qr, fu, ou, os, eb, cu, lb, bu, vf, S7, db, yi, bf, wb, mu, wu, Mu, Eb, _u, xu, Eu, Au, Ub, Iu, Tu, ar, vs, ku, Yb, Qb, em, im, nm, yf, om, um, dm, pm, bm, Pu, Ou, Fu, ws, Aa, Em, Wu, ju, Ba, Dm, Fm, Es, Hm, Vm, ji, Yu, Ym, Xm, As, tl, ol, rg, ag, hg, hl, pg, dl, kn, cl, bl, Ln, Ds, Lg, Dg, yl, Il, Yg, t2, i2, Ws, Ks, s2, ri, Nl, or, Oa, b2, y2, _2, Pl, Cr, Tf, Cl, N2, Fl, F2, Wl, Z2, V2, Q2, ty, e0, ny, t0, uy, dy, vy, yy, xy, Ey, Iy, o0, td, h0, u0, Kf, d0, c0, nd, Hy, od, hd, Jy, dd, r3, n3, o3, cd, d3, p3, v3, m3, Ha, bd, _3, A3, k3, N3, P3, _d, xd, w0, Ed, j3, Y3, X3, ow, qd, Xt, zq, Ga = "buffer", uw = (t) => crypto.getRandomValues(t), lw = () => crypto.randomUUID(), Hq, x0, Id, Td, cw, Wq;
 var init_crypto = __esm(() => {
-  dw = function() {
-    return Hq;
-  };
   pw = Object.create;
   Xa = Object.defineProperty;
   vw = Object.getOwnPropertyDescriptor;
   bw = Object.getOwnPropertyNames;
   mw = Object.getPrototypeOf;
   gw = Object.prototype.hasOwnProperty;
-  R0 = (t, e) => () => (t && (e = t(t = 0)), e);
-  T = (t, e) => () => (e || t((e = { exports: {} }).exports, e), e.exports);
-  Ja = (t, e) => {
-    for (var r in e)
-      Xa(t, r, { get: e[r], enumerable: true });
-  };
-  Ya = (t, e, r, o) => {
-    if (e && typeof e == "object" || typeof e == "function")
-      for (let f of bw(e))
-        !gw.call(t, f) && f !== r && Xa(t, f, { get: () => e[f], enumerable: !(o = vw(e, f)) || o.enumerable });
-    return t;
-  };
-  ot = (t, e, r) => (Ya(t, e, "default"), r && Ya(r, e, "default"));
-  rn = (t, e, r) => (r = t != null ? pw(mw(t)) : {}, Ya(e || !t || !t.__esModule ? Xa(r, "default", { value: t, enumerable: true }) : r, t));
-  ur = (t) => Ya(Xa({}, "__esModule", { value: true }), t);
   Nd = T((Qa) => {
     Qa.byteLength = ww;
     Qa.toByteArray = _w;
@@ -18156,9 +18138,6 @@ use chrome, FireFox or Internet Explorer 11`);
   Ja(Xt, { DEFAULT_ENCODING: () => Ga, default: () => Wq, getCurves: () => dw, getRandomValues: () => uw, randomUUID: () => lw, scrypt: () => Td, scryptSync: () => Id, timingSafeEqual: () => x0, webcrypto: () => cw });
   ot(Xt, rn(qd()));
   zq = rn(qd());
-  Ga = "buffer";
-  uw = (t) => crypto.getRandomValues(t);
-  lw = () => crypto.randomUUID();
   Hq = ["p192", "p224", "p256", "p384", "p521", "curve25519", "ed25519", "secp256k1", "secp224r1", "prime256v1", "prime192v1", "ed25519", "secp384r1", "secp521r1"];
   x0 = "timingSafeEqual" in crypto ? (t, e) => {
     let { byteLength: r } = t, { byteLength: o } = e;
@@ -18225,7 +18204,7 @@ var require_core = __commonJS((exports, module) => {
       if (!crypto2 && typeof global !== "undefined" && global.crypto) {
         crypto2 = global.crypto;
       }
-      if (!crypto2 && typeof __require === "function") {
+      if (!crypto2 && true) {
         try {
           crypto2 = (init_crypto(), __toCommonJS(exports_crypto));
         } catch (err) {
@@ -18764,8 +18743,8 @@ var require_enc_base64 = __commonJS((exports, module) => {
 });
 
 // src/sparkai.js
-var hmac_sha256 = __toESM(require_hmac_sha256(), 1);
-var enc_base64 = __toESM(require_enc_base64(), 1);
+var import_hmac_sha256 = __toESM(require_hmac_sha256(), 1);
+var import_enc_base64 = __toESM(require_enc_base64(), 1);
 function askSpark(messages) {
   const appid = localStorage.getItem("sparkai.appid") || SPARKAI_APP_ID;
   return new Promise((resolve) => {
@@ -18860,7 +18839,7 @@ var getWebSocketUrl = () => {
   const apisecret = localStorage.getItem("sparkai.apisecret") || SPARKAI_API_SECRET;
   const apikey = localStorage.getItem("sparkai.apikey") || SPARKAI_API_KEY;
   const signatureRaw = `host: ${SPARKAI_HOST}\ndate: ${date}\nGET ${SPARKAI_PATHNAME} HTTP/1.1`;
-  const signature = enc_base64.default.stringify(hmac_sha256.default(signatureRaw, apisecret));
+  const signature = import_enc_base64.default.stringify(import_hmac_sha256.default(signatureRaw, apisecret));
   const authorizationRaw = `api_key="${apikey}", algorithm="hmac-sha256", headers="host date request-line", signature="${signature}"`;
   const authorization = btoa(authorizationRaw);
   return `wss://${SPARKAI_HOST}${SPARKAI_PATHNAME}?authorization=${authorization}&date=${date}&host=${SPARKAI_HOST}`;

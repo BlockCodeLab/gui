@@ -89,9 +89,12 @@ def set_group(value):
         group = bytes(f"{PING}:{value}", "utf-8")
 
 
-def when_received(name, func, target):
-    start()
-    runtime.when(f"{RECEIVE_MESSAGE}:{name}", func, target)
+def when_received(name, target):
+    def wrapper(handle):
+        start()
+        runtime.when(f"{RECEIVE_MESSAGE}:{name}", handle, target)
+
+    return wrapper
 
 
 def get_message(name="default"):

@@ -1,4 +1,4 @@
-import{useRef as Q,useEffect as q} from"preact/hooks";import{useLocale as Y,useEditor as Z} from"@blockcode/core";var z={};new Function("module",`module.exports =
+import{useRef as Q,useEffect as D}from"preact/hooks";import{useLocale as Y,useEditor as Z}from"@blockcode/core";var e={};new Function("module",`module.exports =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -219,10 +219,10 @@ eval("module.exports = __webpack_require__(/*! imports-loader?Blockly=../shim/bl
 
 /***/ })
 
-/******/ });`)(z);var i=z.exports;var u='<sep gap="36"/>',h='<sep gap="36"/>',v=()=>`
+/******/ });`)(e);var t=e.exports;var _='<sep gap="36"/>',R='<sep gap="36"/>',a=()=>`
   <category name="%{BKY_CATEGORY_EVENTS}" id="events" colour="#FFD500" secondaryColour="#CC9900">
   <block type="event_whenflagclicked"/>
-  ${u}
+  ${_}
   <block type="event_whengreaterthan">
     <value name="VALUE">
       <shadow type="math_number">
@@ -230,7 +230,7 @@ eval("module.exports = __webpack_require__(/*! imports-loader?Blockly=../shim/bl
       </shadow>
     </value>
   </block>
-  ${u}
+  ${_}
   <block type="event_whenbroadcastreceived" />
   <block type="event_broadcast">
     <value name="BROADCAST_INPUT">
@@ -242,9 +242,9 @@ eval("module.exports = __webpack_require__(/*! imports-loader?Blockly=../shim/bl
       <shadow type="event_broadcast_menu"></shadow>
     </value>
   </block>
-  ${h}
+  ${R}
   </category>
-`,W=()=>`
+`,v=()=>`
   <category name="%{BKY_CATEGORY_CONTROL}" id="control" colour="#FFAB19" secondaryColour="#CF8B17">
     <block type="control_wait">
       <value name="DURATION">
@@ -253,7 +253,7 @@ eval("module.exports = __webpack_require__(/*! imports-loader?Blockly=../shim/bl
         </shadow>
       </value>
     </block>
-    ${u}
+    ${_}
     <block type="control_repeat">
       <value name="TIMES">
         <shadow type="math_whole_number">
@@ -262,21 +262,21 @@ eval("module.exports = __webpack_require__(/*! imports-loader?Blockly=../shim/bl
       </value>
     </block>
     <block id="forever" type="control_forever"/>
-    ${u}
+    ${_}
     <block type="control_if"/>
     <block type="control_if_else"/>
     <block id="wait_until" type="control_wait_until"/>
     <block id="repeat_until" type="control_repeat_until"/>
     <block type="control_while"/>
-    ${u}
+    ${_}
     <block type="control_stop"/>
-    ${h}
+    ${R}
   </category>
 `,F=()=>`
   <category name="%{BKY_CATEGORY_SENSING}" id="sensing" colour="#4CBFE6" secondaryColour="#2E8EB8">
     <block id="timer" type="sensing_timer"/>
     <block type="sensing_resettimer"/>
-    ${h}
+    ${R}
   </category>
 `,O=()=>`
   <category name="%{BKY_CATEGORY_OPERATORS}" id="operators" colour="#40BF4A" secondaryColour="#389438">
@@ -328,7 +328,7 @@ eval("module.exports = __webpack_require__(/*! imports-loader?Blockly=../shim/bl
         </shadow>
       </value>
     </block>
-    ${u}
+    ${_}
     <block type="operator_random">
       <value name="FROM">
         <shadow type="math_number">
@@ -341,7 +341,7 @@ eval("module.exports = __webpack_require__(/*! imports-loader?Blockly=../shim/bl
         </shadow>
       </value>
     </block>
-    ${u}
+    ${_}
     <block type="operator_gt">
       <value name="OPERAND1">
         <shadow type="text">
@@ -378,20 +378,20 @@ eval("module.exports = __webpack_require__(/*! imports-loader?Blockly=../shim/bl
         </shadow>
       </value>
     </block>
-    ${u}
+    ${_}
     <block type="operator_and"/>
     <block type="operator_or"/>
     <block type="operator_not"/>
-    ${u}
+    ${_}
     <block type="operator_join">
       <value name="STRING1">
         <shadow type="text">
-          <field name="TEXT">${i.Msg.OPERATORS_JOIN_APPLE}</field>
+          <field name="TEXT">${t.Msg.OPERATORS_JOIN_APPLE}</field>
         </shadow>
       </value>
       <value name="STRING2">
         <shadow type="text">
-          <field name="TEXT">${i.Msg.OPERATORS_JOIN_BANANA}</field>
+          <field name="TEXT">${t.Msg.OPERATORS_JOIN_BANANA}</field>
         </shadow>
       </value>
     </block>
@@ -403,30 +403,30 @@ eval("module.exports = __webpack_require__(/*! imports-loader?Blockly=../shim/bl
       </value>
       <value name="STRING">
       <shadow type="text">
-          <field name="TEXT">${i.Msg.OPERATORS_JOIN_APPLE}</field>
+          <field name="TEXT">${t.Msg.OPERATORS_JOIN_APPLE}</field>
       </shadow>
       </value>
     </block>
     <block type="operator_length">
       <value name="STRING">
         <shadow type="text">
-          <field name="TEXT">${i.Msg.OPERATORS_JOIN_APPLE}</field>
+          <field name="TEXT">${t.Msg.OPERATORS_JOIN_APPLE}</field>
         </shadow>
       </value>
     </block>
     <block id="operator_contains" type="operator_contains">
       <value name="STRING1">
         <shadow type="text">
-          <field name="TEXT">${i.Msg.OPERATORS_JOIN_APPLE}</field>
+          <field name="TEXT">${t.Msg.OPERATORS_JOIN_APPLE}</field>
         </shadow>
       </value>
       <value name="STRING2">
         <shadow type="text">
-          <field name="TEXT">${i.Msg.OPERATORS_LETTEROF_APPLE}</field>
+          <field name="TEXT">${t.Msg.OPERATORS_LETTEROF_APPLE}</field>
         </shadow>
       </value>
     </block>
-    ${u}
+    ${_}
     <block type="operator_mod">
       <value name="NUM1">
         <shadow type="math_number">
@@ -446,7 +446,7 @@ eval("module.exports = __webpack_require__(/*! imports-loader?Blockly=../shim/bl
         </shadow>
       </value>
     </block>
-    ${u}
+    ${_}
     <block type="operator_mathop">
       <value name="NUM">
         <shadow type="math_number">
@@ -454,7 +454,7 @@ eval("module.exports = __webpack_require__(/*! imports-loader?Blockly=../shim/bl
         </shadow>
       </value>
     </block>
-    ${h}
+    ${R}
   </category>
 `,P=()=>`
   <category
@@ -472,4 +472,4 @@ eval("module.exports = __webpack_require__(/*! imports-loader?Blockly=../shim/bl
     secondaryColour="#FF4D6A"
     custom="PROCEDURE">
   </category>
-`;function H(n=[]){n=n.slice();const p=(w)=>{const d=n.findIndex((_)=>_.id===w);if(d>=0){const[_]=n.splice(d,1);return _.xml}},E=p("motion")||"",R=p("looks")||"",D=p("sound")||"",t=p("events")||v(),N=p("control")||W(),T=p("sensing")||F(),e=p("operators")||O(),s=p("data")||P(),x=p("procedures")||J(),A=[E,R,D,t,N,T,e,s,x];for(let w of n)A.push(w.xml);return A.join("\n")}var U={"zh-Hans":"zh-cn","zh-Hant":"zh-tw"};function a(n){if(U[n])return U[n];return n}function y(n){const p=globalThis.document,E=p.createElement("style");E.appendChild(p.createTextNode(n)),p.head.append(E)}y(".gfBBeq_editor-workspace{border-radius:inherit;position:absolute;inset:0}.gfBBeq_editor-workspace .injectionDiv{border-radius:inherit}.gfBBeq_editor-workspace .blocklyMainBackground{stroke-width:0!important}.gfBBeq_editor-workspace .blocklyFlyout{border-left:1px solid var(--ui-black-transparent)!important;border-right:1px solid var(--ui-black-transparent)!important}.gfBBeq_editor-workspace .blocklyFlyout .blocklyFlyoutBackground{clip-path:url(#blocklyBlockMenuClipPath)}.gfBBeq_editor-workspace .blocklyFlyout .blocklyWorkspace{clip-path:none}.gfBBeq_editor-workspace .blocklyFlyout:hover{overflow:unset}.blocklyContextMenu{border:1px solid var(--ui-black-transparent)!important;border-radius:calc(var(--space)/2)!important;background:var(--ui-white)!important;box-shadow:0 var(--space)var(--space)0 var(--ui-black-transparent)!important;min-width:130px!important;max-width:260px!important;margin:0!important;padding:0!important;position:absolute!important;overflow:hidden!important;box-shadow:0 0 .5rem #00000040!important}.blocklyContextMenu .goog-menuitem{white-space:nowrap!important;padding:0 calc(var(--space) + 2px)!important;line-height:34px!important;font-size:var(--standard-font-size)!important;color:var(--text-primary)!important;justify-content:space-between!important;margin:0!important;display:flex!important}.blocklyContextMenu .goog-menuitem-content{flex:1!important;display:flex!important}.blocklyContextMenu .goog-menuitem-highlight{background:var(--motion-primary)!important;color:var(--ui-white)!important;border:0!important}.blocklyContextMenu .goog-menuitem:not(.goog-menuitem-disabled){cursor:pointer!important}.scratchCategoryMenuItemLabel{text-wrap:pretty}");var G={editorWorkspace:"gfBBeq_editor-workspace"};i.DataCategory.addShowVariable=()=>{};i.DataCategory.addHideVariable=()=>{};i.DataCategory.addShowList=()=>{};i.DataCategory.addHideList=()=>{};i.Blocks.event_whenflagclicked={init(){this.jsonInit({id:"event_whenflagclicked",message0:i.Msg.EVENT_WHENPROGRAMSTART,category:i.Categories.event,extensions:["colours_event","shape_hat"]})}};i.Blocks.event_whengreaterthan={init(){this.jsonInit({message0:i.Msg.EVENT_WHENGREATERTHAN,args0:[{type:"field_dropdown",name:"WHENGREATERTHANMENU",options:[[i.Msg.EVENT_WHENGREATERTHAN_TIMER,"TIMER"]]},{type:"input_value",name:"VALUE"}],category:i.Categories.event,extensions:["colours_event","shape_hat"]})}};i.Blocks.procedures_declaration.addLabelExternal=function(){const n=i.Msg.PROCEDURES_ADD_LABEL??" label text";i.WidgetDiv.hide(!0),this.procCode_=this.procCode_+n,this.updateDisplay_(),this.focusLastEditor_()};i.Blocks.procedures_declaration.addBooleanExternal=function(){const n=i.Msg.PROCEDURES_ADD_BOOLEAN??"boolean";i.WidgetDiv.hide(!0),this.procCode_=this.procCode_+" %b",this.displayNames_.push(n),this.argumentIds_.push(i.utils.genUid()),this.argumentDefaults_.push("false"),this.updateDisplay_(),this.focusLastEditor_()};i.Blocks.procedures_declaration.addStringNumberExternal=function(){const n=i.Msg.PROCEDURES_ADD_STRING_NUMBER??"number or text";i.WidgetDiv.hide(!0),this.procCode_=this.procCode_+" %s",this.displayNames_.push(n),this.argumentIds_.push(i.utils.genUid()),this.argumentDefaults_.push(""),this.updateDisplay_(),this.focusLastEditor_()};function M({toolbox:n,globalVariables:p,messages:E,onWorkspaceCreated:R,onChange:D}){const t=Q(null),{language:N}=Y(),{fileList:T,selectedFileId:e}=Z(),s=()=>{const d=T.find((m)=>m.id===e).xml,_=i.Xml.textToDom(d||"");if(p){const m=_.querySelector("variables");if(m)m.querySelectorAll("[islocal=false]").forEach((r)=>m.removeChild(r))}if(i.Xml.clearWorkspaceAndLoadFromXml(_,t.workspace),p){const m=i.Xml.variablesToDom(p);i.Xml.domToVariables(m,t.workspace)}},x=()=>{const d=t.workspace.toolbox_.getSelectedCategoryId(),_=t.workspace.toolbox_.getCategoryScrollOffset();t.workspace.getFlyout().setRecyclingEnabled(!1),i.DropDownDiv.hideWithoutAnimation(),setTimeout(()=>{t.workspace.updateToolbox(j(n));const m=t.workspace.toolbox_.getCategoryPositionById(d),r=t.workspace.toolbox_.getCategoryLengthById(d);if(_<r)t.workspace.toolbox_.setFlyoutScrollPos(m+_);else t.workspace.toolbox_.setFlyoutScrollPos(m);t.workspace.getFlyout().setRecyclingEnabled(!0)})},A=()=>{const d=i.Xml.workspaceToDom(t.workspace);return i.Xml.domToText(d)},w=()=>{D(A(),t.workspace)};return q(()=>{const d=a(N);if(i.ScratchMsgs.currentLocale_!==d)i.ScratchMsgs.setLocale(d);if(t.workspace)x(),setTimeout(()=>s(),50)},[N]),q(()=>{if(n=n||H,typeof n==="function")n=n();if(t.workspace)x()},[n]),q(()=>{if(t.workspace)s(),t.workspace.clearUndo()},[e]),Object.entries(E).forEach(([d,_])=>{i.Msg[d]=_}),q(()=>{if(t.current){if(t.workspace=i.inject(t.current,Object.assign({},I,{toolbox:j(n),media:"./assets/blocks-media/"})),R)R(t.workspace);t.workspace.addChangeListener((d)=>{if(t.workspace.isDragging())return;if(!K.has(d.type))return;w()}),t.resizeObserver=new ResizeObserver(()=>i.svgResize(t.workspace)),t.resizeObserver.observe(t.current),s(),t.workspace.clearUndo()}return()=>{if(t.workspace)t.workspace.clearUndo(),t.workspace.dispose()}},[t]),V("div",{ref:t,className:G.editorWorkspace})}import{jsx as V} from"preact/jsx-runtime";var $=0.7,I={zoom:{controls:!0,wheel:!0,startScale:$},grid:{spacing:40,length:2,colour:"#DDD"},colours:{workspace:"#F9F9F9",flyout:"#F9F9F9",toolbox:"#FFFFFF",toolboxSelected:"#E9EEF2",scrollbar:"#CECDCE",scrollbarHover:"#CECDCE",insertionMarker:"#000000",insertionMarkerOpacity:0.2,fieldShadow:"rgba(255, 255, 255, 0.3)",dragShadowOpacity:0.6},comments:!0,collapse:!1,sounds:!1},K=new Set([i.Events.BLOCK_CHANGE,i.Events.BLOCK_CREATE,i.Events.BLOCK_DELETE,i.Events.BLOCK_MOVE,i.Events.COMMENT_CHANGE,i.Events.COMMENT_CREATE,i.Events.COMMENT_DELETE,i.Events.COMMENT_MOVE,i.Events.VAR_CREATE,i.Events.VAR_DELETE,i.Events.VAR_RENAME]),j=(n)=>`<xml style="display: none">\n${n}\n</xml>`;export{H as makeToolboxXML,h as categorySeparator,u as blockSeparator,i as ScratchBlocks,M as BlocksEditor};
+`;function r(n=[]){n=n.slice();const p=(h)=>{const d=n.findIndex((u)=>u.id===h);if(d>=0){const[u]=n.splice(d,1);return u.xml}},E=p("motion")||"",N=p("looks")||"",A=p("sound")||"",T=p("events")||a(),i=p("control")||v(),H=p("sensing")||F(),x=p("operators")||O(),q=p("data")||P(),w=p("procedures")||J(),s=[E,N,A,T,i,H,x,q,w];for(let h of n)s.push(h.xml);return s.join("\n")}var G={"zh-Hans":"zh-cn","zh-Hant":"zh-tw"};function z(n){if(G[n])return G[n];return n}function U(n){const p=globalThis.document,E=p.createElement("style");E.appendChild(p.createTextNode(n)),p.head.append(E)}U(".gfBBeq_editor-workspace{border-radius:inherit;position:absolute;inset:0}.gfBBeq_editor-workspace .injectionDiv{border-radius:inherit}.gfBBeq_editor-workspace .blocklyMainBackground{stroke-width:0!important}.gfBBeq_editor-workspace .blocklyFlyout{border-left:1px solid var(--ui-black-transparent)!important;border-right:1px solid var(--ui-black-transparent)!important}.gfBBeq_editor-workspace .blocklyFlyout .blocklyFlyoutBackground{clip-path:url(#blocklyBlockMenuClipPath)}.gfBBeq_editor-workspace .blocklyFlyout .blocklyWorkspace{clip-path:none}.gfBBeq_editor-workspace .blocklyFlyout:hover{overflow:unset}.blocklyContextMenu{border:1px solid var(--ui-black-transparent)!important;border-radius:calc(var(--space)/2)!important;background:var(--ui-white)!important;box-shadow:0 var(--space)var(--space)0 var(--ui-black-transparent)!important;min-width:130px!important;max-width:260px!important;margin:0!important;padding:0!important;position:absolute!important;overflow:hidden!important;box-shadow:0 0 .5rem #00000040!important}.blocklyContextMenu .goog-menuitem{white-space:nowrap!important;padding:0 calc(var(--space) + 2px)!important;line-height:34px!important;font-size:var(--standard-font-size)!important;color:var(--text-primary)!important;justify-content:space-between!important;margin:0!important;display:flex!important}.blocklyContextMenu .goog-menuitem-content{flex:1!important;display:flex!important}.blocklyContextMenu .goog-menuitem-highlight{background:var(--motion-primary)!important;color:var(--ui-white)!important;border:0!important}.blocklyContextMenu .goog-menuitem:not(.goog-menuitem-disabled){cursor:pointer!important}.scratchCategoryMenuItemLabel{text-wrap:pretty}");var j={editorWorkspace:"gfBBeq_editor-workspace"};t.DataCategory.addShowVariable=()=>{};t.DataCategory.addHideVariable=()=>{};t.DataCategory.addShowList=()=>{};t.DataCategory.addHideList=()=>{};t.Blocks.event_whenflagclicked={init(){this.jsonInit({id:"event_whenflagclicked",message0:t.Msg.EVENT_WHENPROGRAMSTART,category:t.Categories.event,extensions:["colours_event","shape_hat"]})}};t.Blocks.event_whengreaterthan={init(){this.jsonInit({message0:t.Msg.EVENT_WHENGREATERTHAN,args0:[{type:"field_dropdown",name:"WHENGREATERTHANMENU",options:[[t.Msg.EVENT_WHENGREATERTHAN_TIMER,"TIMER"]]},{type:"input_value",name:"VALUE"}],category:t.Categories.event,extensions:["colours_event","shape_hat"]})}};t.Blocks.procedures_declaration.addLabelExternal=function(){const n=t.Msg.PROCEDURES_ADD_LABEL??" label text";t.WidgetDiv.hide(!0),this.procCode_=this.procCode_+n,this.updateDisplay_(),this.focusLastEditor_()};t.Blocks.procedures_declaration.addBooleanExternal=function(){const n=t.Msg.PROCEDURES_ADD_BOOLEAN??"boolean";t.WidgetDiv.hide(!0),this.procCode_=this.procCode_+" %b",this.displayNames_.push(n),this.argumentIds_.push(t.utils.genUid()),this.argumentDefaults_.push("false"),this.updateDisplay_(),this.focusLastEditor_()};t.Blocks.procedures_declaration.addStringNumberExternal=function(){const n=t.Msg.PROCEDURES_ADD_STRING_NUMBER??"number or text";t.WidgetDiv.hide(!0),this.procCode_=this.procCode_+" %s",this.displayNames_.push(n),this.argumentIds_.push(t.utils.genUid()),this.argumentDefaults_.push(""),this.updateDisplay_(),this.focusLastEditor_()};function K({toolbox:n,globalVariables:p,messages:E,extensionsLoaded:N,onWorkspaceCreated:A,onChange:T}){const i=Q(null),{language:H}=Y(),{fileList:x,selectedFileId:q}=Z(),w=()=>{if(!N)return;const d=x.find((m)=>m.id===q).xml,u=t.Xml.textToDom(d||"");if(p){const m=u.querySelector("variables");if(m)m.querySelectorAll("[islocal=false]").forEach((y)=>m.removeChild(y))}if(t.Xml.clearWorkspaceAndLoadFromXml(u,i.workspace),p){const m=t.Xml.variablesToDom(p);t.Xml.domToVariables(m,i.workspace)}},s=()=>{const d=i.workspace.toolbox_.getSelectedCategoryId(),u=i.workspace.toolbox_.getCategoryScrollOffset();i.workspace.getFlyout().setRecyclingEnabled(!1),t.DropDownDiv.hideWithoutAnimation(),setTimeout(()=>{i.workspace.updateToolbox(W(n));const m=i.workspace.toolbox_.getCategoryPositionById(d),y=i.workspace.toolbox_.getCategoryLengthById(d);if(u<y)i.workspace.toolbox_.setFlyoutScrollPos(m+u);else i.workspace.toolbox_.setFlyoutScrollPos(m);i.workspace.getFlyout().setRecyclingEnabled(!0)})},h=()=>{const d=t.Xml.workspaceToDom(i.workspace),u=t.Xml.domToText(d);T(u,i.workspace)};return D(()=>{const d=z(H);if(t.ScratchMsgs.currentLocale_!==d)t.ScratchMsgs.setLocale(d);if(i.workspace)s(),setTimeout(w,50)},[H]),D(()=>{if(n=n||r,typeof n==="function")n=n();if(i.workspace)s()},[n]),D(()=>{if(i.workspace)w(),i.workspace.clearUndo()},[q,N]),Object.entries(E).forEach(([d,u])=>{t.Msg[d]=u}),D(()=>{if(i.current){if(i.workspace=t.inject(i.current,Object.assign({},g,{toolbox:W(n),media:"./assets/blocks-media/"})),A)A(i.workspace);i.workspace.addChangeListener((d)=>{if(i.workspace.isDragging())return;if(!I.has(d.type))return;h()}),i.resizeObserver=new ResizeObserver(()=>t.svgResize(i.workspace)),i.resizeObserver.observe(i.current),w(),i.workspace.clearUndo()}return()=>{if(i.workspace)i.workspace.clearUndo(),i.workspace.dispose()}},[i]),M("div",{ref:i,className:j.editorWorkspace})}import{jsx as M}from"preact/jsx-runtime";var $=0.7,g={zoom:{controls:!0,wheel:!0,startScale:$},grid:{spacing:40,length:2,colour:"#DDD"},colours:{workspace:"#F9F9F9",flyout:"#F9F9F9",toolbox:"#FFFFFF",toolboxSelected:"#E9EEF2",scrollbar:"#CECDCE",scrollbarHover:"#CECDCE",insertionMarker:"#000000",insertionMarkerOpacity:0.2,fieldShadow:"rgba(255, 255, 255, 0.3)",dragShadowOpacity:0.6},comments:!0,collapse:!1,sounds:!1},I=new Set([t.Events.BLOCK_CHANGE,t.Events.BLOCK_CREATE,t.Events.BLOCK_DELETE,t.Events.BLOCK_MOVE,t.Events.COMMENT_CHANGE,t.Events.COMMENT_CREATE,t.Events.COMMENT_DELETE,t.Events.COMMENT_MOVE,t.Events.VAR_CREATE,t.Events.VAR_DELETE,t.Events.VAR_RENAME]),W=(n)=>`<xml style="display: none">\n${n}\n</xml>`;export{r as makeToolboxXML,R as categorySeparator,_ as blockSeparator,t as ScratchBlocks,K as BlocksEditor};
