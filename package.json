@@ -6,7 +6,8 @@
     "url": "http://gon.gyeq.in/"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "bun-types": "latest",
+    "gh-pages": "^6.1.1"
   },
   "scripts": {
     "preview": "bunx serve apps/web/dist",
