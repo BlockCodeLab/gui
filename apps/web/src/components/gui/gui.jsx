@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useState, useErrorBoundary } from 'preact/hooks';
 import { useLocale, useLayout, useEditor } from '@blockcode/core';
 import { classNames } from '@blockcode/ui';
 
@@ -22,6 +22,7 @@ import workspaces from '../workspace-library/workspaces';
 const loadingWorkspaces = Promise.all(workspaces);
 
 export default function GUI() {
+  const [error] = useErrorBoundary();
   const [tutorialId, setTutorialId] = useState();
   const [tutorialLibrary, setTutorialLibrary] = useState(false);
   const [workspaceLibrary, setWorkspaceLibrary] = useState(false);
@@ -44,7 +45,7 @@ export default function GUI() {
     selectTab,
     setStoreLibrary,
   } = useLayout();
-  const { editor, setEditor, openProject: defaultOpenProject, closeProject, modified } = useEditor();
+  const { editor, openProject: defaultOpenProject, closeProject, modified } = useEditor();
 
   useEffect(() => {
     loadingWorkspaces.then((allWorkspaces) => {
@@ -88,7 +89,6 @@ export default function GUI() {
   };
 
   const openAnyProject = (project) => {
-    setStoreLibrary(false);
     defaultOpenProject({
       ...project,
       assetList: project.assetList?.map((asset) => ({
@@ -102,6 +102,9 @@ export default function GUI() {
       selectedFileId: project.selectedFileId ?? project.fileList?.[0]?.id,
     });
     setSplash(true);
+    if (storeLibrary) {
+      setStoreLibrary(false);
+    }
   };
 
   const openProjectWithEditor = (project, editorPackage) => {
@@ -187,6 +190,8 @@ export default function GUI() {
 
   return (
     <>
+      {(splash || error) && <SplashScreen error={error} />}
+
       <Alerts items={alerts} />
 
       <MenuBar
@@ -289,8 +294,6 @@ export default function GUI() {
           {prompt.body}
         </Prompt>
       )}
-
-      {splash && <SplashScreen />}
     </>
   );
 }

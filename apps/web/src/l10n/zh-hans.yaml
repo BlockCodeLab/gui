@@ -4,7 +4,9 @@ gui.modal.back: 返回
 
 gui.alert.importing: 载入中…
 
-gui.splashScreen.loadingProject: 加载作品中…
+gui.splashScreen.loadingTitle: 加载作品…
+gui.splashScreen.errorTitle: 发生错误
+gui.splashScreen.errorLabel: 请刷新页面重新打开。
 
 gui.library.comingSoon: 敬请期待
 gui.library.preview: 体验版

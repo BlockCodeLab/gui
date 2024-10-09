@@ -4,7 +4,9 @@ gui.modal.back: Back
 
 gui.alert.importing: importing...
 
-gui.splashScreen.loadingProject: Loading project...
+gui.splashScreen.loadingTitle: Loading project...
+gui.splashScreen.errorTitle: Error occurred
+gui.splashScreen.errorLabel: Please refresh the page and reopen it.
 
 gui.library.comingSoon: Coming Soon
 gui.library.preview: Preview

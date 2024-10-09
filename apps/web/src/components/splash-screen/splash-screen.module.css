@@ -12,6 +12,20 @@
   flex-direction: column;
 }
 
+.spinner {
+  margin-bottom: calc(4 * var(--space));
+}
+
+.error {
+  background: var(--red-primary);
+}
+
+.title {
+  color: var(--ui-white);
+  margin: var(--space);
+  font-size: 2rem;
+}
+
 .label {
   color: var(--ui-white);
   margin: var(--space);
