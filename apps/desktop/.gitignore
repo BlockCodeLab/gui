@@ -116,7 +116,6 @@ out
 
 .nuxt
 dist
-out
 
 # Gatsby files
 
@@ -174,3 +173,4 @@ out
 
 # Finder (MacOS) folder config
 .DS_Store
+

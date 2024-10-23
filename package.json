@@ -1,21 +1,26 @@
 {
   "name": "blockcode",
+  "version": "0.4.6",
+  "description": "blockcode",
+  "main": "./apps/desktop/dist/main.js",
   "author": {
     "name": "Yeqin Gong",
     "email": "gon@gyeq.in",
     "url": "http://gon.gyeq.in/"
   },
-  "devDependencies": {
-    "bun-types": "latest",
-    "gh-pages": "^6.1.1"
-  },
   "scripts": {
-    "preview": "bunx serve apps/web/dist",
-    "deploy:clean": "bunx gh-pages-clean",
-    "deploy": "bun run build && bun run deploy:clean && bunx gh-pages -b playgrounds -d apps/web/dist",
-    "deploy:dev": "bun run build && bun run deploy:clean && bunx gh-pages -b preview -d apps/web/dist",
+    "make": "bun x electron-forge make --skip-package",
+    "package": "bun run build && bun run build:desktop && bun x electron-forge package",
+    "start": "bun run dev:desktop && bun x electron-forge start",
+    "preview": "bun x serve apps/web/dist",
+    "deploy": "bun run build && bun run deploy:clean && bun x gh-pages -b playgrounds -d apps/web/dist",
+    "deploy:dev": "bun run build && bun run deploy:clean && bun x gh-pages -b preview -d apps/web/dist",
+    "deploy:clean": "bun x gh-pages-clean",
     "build": "bun run build:packages && bun run build:web",
-    "build:web": "cd apps/web && BUN_ENV=production bun run build",
+    "dev": "bun run dev:packages && bun run dev:web",
+    "build:desktop": "cd apps/desktop && bun run build",
+    "dev:desktop": "cd apps/desktop && bun run dev",
+    "build:web": "cd apps/web && bun run build",
     "dev:web": "cd apps/web && bun run dev",
     "build:packages": "bun run build:components && bun run build:extensions && bun run build:workspaces",
     "dev:packages": "bun run dev:components && bun run dev:extensions && bun run dev:workspaces",
@@ -26,6 +31,14 @@
     "build:workspaces": "cd workspaces && bun run build",
     "dev:workspaces": "cd workspaces && bun run dev",
     "doc:arcade": "cd workspaces/arcade && bun run doc"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^7.5.0",
+    "@electron-forge/maker-dmg": "^7.5.0",
+    "@electron-forge/maker-squirrel": "^7.5.0",
+    "bun-types": "latest",
+    "electron": "^33.0.2",
+    "gh-pages": "^6.1.1"
   },
   "workspaces": [
     "apps/*",
