@@ -7,16 +7,16 @@ import Alerts from '../alerts/alerts';
 import MenuBar from '../menu-bar/menu-bar';
 import Tabs, { TabLabel, TabPanel } from '../tabs/tabs';
 import PaneView from '../pane-view/pane-view';
-import Prompt from '../prompt/prompt';
+import ConnectionModal from '../connection-modal/connection-modal';
+import PromptModal from '../prompt-modal/prompt-modal';
 import WorkspaceLibrary from '../workspace-library/workspace-library';
 import StoreLibrary from '../store-library/store-library';
 import SplashScreen from '../splash-screen/splash-screen';
 import TutorialBox from '../tutorial-box/tutorial-box';
+import TutorialLibrary from '../tutorial-library/tutorial-library';
 
 /* styles and assets */
 import styles from './gui.module.css';
-import TutorialLibrary from '../tutorial-library/tutorial-library';
-
 import workspaces from '../workspace-library/workspaces';
 
 const loadingWorkspaces = Promise.all(workspaces);
@@ -24,6 +24,7 @@ const loadingWorkspaces = Promise.all(workspaces);
 export default function GUI() {
   const [error] = useErrorBoundary();
   const [tutorialId, setTutorialId] = useState();
+  const [foundDevices, setFoundDevices] = useState(false);
   const [tutorialLibrary, setTutorialLibrary] = useState(false);
   const [workspaceLibrary, setWorkspaceLibrary] = useState(false);
   const [workspaceNames, setWorkspaceNames] = useState({});
@@ -46,6 +47,11 @@ export default function GUI() {
     setStoreLibrary,
   } = useLayout();
   const { editor, openProject: defaultOpenProject, closeProject, modified } = useEditor();
+
+  // electron ipcs
+  useEffect(() => {
+    window.electron?.serial.onScan(setFoundDevices);
+  }, []);
 
   useEffect(() => {
     loadingWorkspaces.then((allWorkspaces) => {
@@ -153,7 +159,7 @@ export default function GUI() {
       handleOpenWorkspace(project.editor.package, project);
       return;
     }
-    openProjectWithEditor(project, editor.package);
+    openProjectWithEditor(project, editor?.package);
     selectTab(0);
   };
 
@@ -187,6 +193,17 @@ export default function GUI() {
   };
 
   const handleCloseTutorial = () => setTutorialId(null);
+
+  const handleConnectionClose = () => {
+    window.electron?.serial.cancel();
+    setFoundDevices(null);
+  };
+
+  const handleConnectionSearch = () => {};
+
+  const handleConnectionConnect = (portId) => {
+    window.electron?.serial.connect(portId);
+  };
 
   return (
     <>
@@ -265,6 +282,16 @@ export default function GUI() {
         />
       )}
 
+      {foundDevices && (
+        <ConnectionModal
+          title={editor?.deviceName}
+          icon={editor?.deviceIcon ?? editor?.icon}
+          devices={foundDevices}
+          onClose={handleConnectionClose}
+          onConnect={handleConnectionConnect}
+        />
+      )}
+
       {tutorialLibrary && (
         <TutorialLibrary
           onOpenTutorial={handleOpenTutorial}
@@ -282,7 +309,7 @@ export default function GUI() {
       {storeLibrary && <StoreLibrary onOpenProject={handleOpenProject} />}
 
       {prompt && (
-        <Prompt
+        <PromptModal
           title={prompt.title}
           label={prompt.label}
           content={prompt.content}
@@ -292,7 +319,7 @@ export default function GUI() {
           onSubmit={prompt.onSubmit && handlePromptSubmit}
         >
           {prompt.body}
-        </Prompt>
+        </PromptModal>
       )}
     </>
   );

@@ -48,6 +48,12 @@ gui.prompt.close: Close
 gui.prompt.cancel: Cancel
 gui.prompt.ok: OK
 
+gui.connection.device: Device Connection
+gui.connection.search: Start Searching
+gui.connection.searching: Searching...
+gui.connection.connect: Start Connecting
+gui.connection.deviceName: Device name
+
 gui.workspace.myprojects: My projects
 gui.workspace.allprojects: View all ({counts})
 gui.workspace.newproject: Create new project

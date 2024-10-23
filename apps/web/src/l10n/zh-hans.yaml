@@ -48,6 +48,12 @@ gui.prompt.close: 关闭
 gui.prompt.cancel: 取消
 gui.prompt.ok: 确认
 
+gui.connection.device: 硬件连接
+gui.connection.search: 开始搜索
+gui.connection.searching: 正在搜索…
+gui.connection.connect: 开始连接
+gui.connection.deviceName: 硬件名称
+
 gui.workspace.myprojects: 我的作品
 gui.workspace.allprojects: 查看全部（{counts}）
 gui.workspace.newproject: 开始新作品

@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import { useLocale } from '@blockcode/core';
 import { classNames, Text, BufferedInput, Button, Modal } from '@blockcode/ui';
 
-import styles from './prompt.module.css';
+import styles from './prompt-modal.module.css';
 
-export default function Prompt({
+export default function PromptModal({
   title,
   label,
   content,

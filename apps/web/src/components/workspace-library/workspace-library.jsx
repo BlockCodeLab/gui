@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'preact/hooks';
 import { useLocale, useLayout, useEditor } from '@blockcode/core';
 import { classNames, Text, ContextMenu, LibraryItem } from '@blockcode/ui';
-import { version } from '../../../package.json';
+import { version } from '../../../../../package.json';
 import CoverPages from '../cover-pages/cover-pages';
 import makeCoverPages from '../../lib/cover-pages/make-cover-pages';
 
