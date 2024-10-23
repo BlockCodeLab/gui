@@ -1,5 +1,11 @@
-const { app, Menu } = require('electron');
+const { Menu } = require('electron');
 
 const isMac = process.platform === 'darwin';
 
-Menu.setApplicationMenu(null);
+let menu = null;
+
+if (isMac) {
+  menu = Menu.buildFromTemplate([{ role: 'appMenu' }, { role: 'editMenu' }]);
+}
+
+Menu.setApplicationMenu(menu);
