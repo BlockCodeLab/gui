@@ -82,3 +82,6 @@
 [submodule "workspaces/arduino"]
 	path = workspaces/arduino
 	url = https://github.com/BlockCodeLab/workspace-arduino.git
+[submodule "extensions/wedo2"]
+	path = extensions/wedo2
+	url = https://github.com/BlockCodeLab/extension-wedo2.git
