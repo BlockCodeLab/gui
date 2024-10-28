@@ -212,6 +212,14 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
                   const project = await fetch(item.uri).then((res) => res.json());
                   removeAlert(item.name);
                   onOpenProject(project);
+                  if (item.alert) {
+                    setTimeout(() => {
+                      createPrompt({
+                        title: project.name,
+                        label: item.alert,
+                      });
+                    }, 500);
+                  }
                 }}
               />
             ))}

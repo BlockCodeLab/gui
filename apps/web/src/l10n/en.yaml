@@ -9,7 +9,7 @@ gui.splashScreen.errorTitle: Error occurred
 gui.splashScreen.errorLabel: Please refresh the page and reopen it.
 
 gui.library.comingSoon: Coming Soon
-gui.library.preview: Preview
+gui.library.preview: Beta
 gui.library.requires: Requires
 gui.library.programming: Programming
 gui.library.collaboration: Collaboration with
@@ -63,6 +63,8 @@ gui.coverpages.tankwar.title: The Tank War is coming! Join us! NOW!
 gui.coverpages.tankwar.button: Join us
 gui.coverpages.arcade.title: The next game to play, must be your OWN!
 gui.coverpages.arcade.button: Play now
+
+gui.examples.alerts.interconnect: The project requires two devices to work properly.
 
 gui.about: About...
 
