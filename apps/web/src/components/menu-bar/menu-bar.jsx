@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'preact/hooks';
 import { supportLanguages, useLocale, useLayout } from '@blockcode/core';
 import { classNames, Menu, MenuItem, ComingSoon } from '@blockcode/ui';
 
@@ -14,13 +15,24 @@ import languageIcon from './icons/icon-language.svg';
 import dropdownCaret from './icons/icon-dropdown-caret.svg';
 import homeIcon from './icons/icon-home.svg';
 
+const isMac = /Mac/i.test(navigator.platform || navigator.userAgent);
+
 export default function MenuBar({ className, showHomeButton, onRequestHome, onOpenTutorialLibrary }) {
   const { language: currentLanguage, setLanguage, getText } = useLocale();
-  const { mainMenu, tutorials, canEditProjectName } = useLayout();
+  const { mainMenu, macosMenubarStyle, tutorials, canEditProjectName, setMacosMenubarStyle } = useLayout();
+
+  // electron ipcs
+  useEffect(() => {
+    window.electron?.onChangeFullscreen((fullscreen) => setMacosMenubarStyle(isMac && !fullscreen));
+  });
 
   return (
     <div className={classNames(styles.menuBar, className)}>
-      <div className={styles.mainMenu}>
+      <div
+        className={classNames(styles.mainMenu, {
+          [styles.electron]: macosMenubarStyle,
+        })}
+      >
         <MainMenu id={styles.mainMenu}>
           <MenuLabel
             className={classNames(styles.menuBarItem, styles.languageLabel)}
