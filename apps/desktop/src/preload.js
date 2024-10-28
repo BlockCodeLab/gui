@@ -14,4 +14,7 @@ contextBridge.exposeInMainWorld('electron', {
       },
     };
   },
+  onChangeFullscreen(callback) {
+    ipcRenderer.on('window:fullscreen', (event, value) => callback(value));
+  },
 });

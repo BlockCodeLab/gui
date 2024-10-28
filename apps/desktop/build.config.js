@@ -20,11 +20,13 @@ export default {
   define: {
     DEVELOPMENT: JSON.stringify(Bun.env.BUN_ENV !== 'production'),
   },
-  plugins: [
-    CopyPlugin({
-      from: '../web/dist',
-      to: 'packaged',
-    }),
-  ],
+  plugins: isRelease
+    ? [
+        CopyPlugin({
+          from: '../web/dist',
+          to: 'packaged',
+        }),
+      ]
+    : [],
   external: ['electron'],
 };
