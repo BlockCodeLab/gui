@@ -53,7 +53,13 @@
   align-items: center;
 }
 
-.buttons {
-  display: flex;
-  flex-direction: row;
+.button {
+  color: var(--ui-white);
+  background: var(--motion-primary);
+  border: var(--motion-primary);
+}
+
+.button.error {
+  background: var(--red-primary);
+  border: var(--red-primary);
 }

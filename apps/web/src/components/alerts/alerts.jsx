@@ -10,6 +10,7 @@ export default function Alerts({ items }) {
             mode={item.mode || 'success'}
             icon={item.icon}
             message={item.message}
+            button={item.button}
           />
         ))}
       </div>
