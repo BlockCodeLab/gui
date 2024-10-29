@@ -24,7 +24,7 @@ export default function MenuBar({ className, showHomeButton, onRequestHome, onOp
   // electron ipcs
   useEffect(() => {
     window.electron?.onChangeFullscreen((fullscreen) => setMacosMenubarStyle(isMac && !fullscreen));
-  });
+  }, []);
 
   return (
     <div className={classNames(styles.menuBar, className)}>

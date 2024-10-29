@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 import { useLocale } from '@blockcode/core';
 import { classNames, Text, Button, Modal } from '@blockcode/ui';
 

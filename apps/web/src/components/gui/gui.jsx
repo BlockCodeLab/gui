@@ -53,7 +53,7 @@ export default function GUI() {
   // electron ipcs
   useEffect(() => {
     window.electron?.serial.onScan(setFoundDevices);
-  });
+  }, []);
 
   useEffect(() => {
     loadingWorkspaces.then((allWorkspaces) => {
@@ -150,8 +150,9 @@ export default function GUI() {
       setWorkspaceLibrary(false);
       const layout = createWorkspace({ addLocaleData, openProject });
       layout.selectedTabIndex = layout.selectedTabIndex ?? 0;
-      await sleep(100);
+      await sleep(50);
       openProject(userProject);
+      await sleep(50);
       createLayout(layout);
     });
   };
