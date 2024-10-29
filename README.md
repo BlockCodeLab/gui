@@ -1,4 +1,4 @@
-# blockcode
+![](docs/_media/logo.png)
 
 To install dependencies:
 
