@@ -21,6 +21,8 @@ import workspaces from '../workspace-library/workspaces';
 
 const loadingWorkspaces = Promise.all(workspaces);
 
+const sleep = (timeout) => new Promise((resolve) => setTimeout(resolve, timeout));
+
 export default function GUI() {
   const [error] = useErrorBoundary();
   const [tutorialId, setTutorialId] = useState();
@@ -51,7 +53,7 @@ export default function GUI() {
   // electron ipcs
   useEffect(() => {
     window.electron?.serial.onScan(setFoundDevices);
-  }, []);
+  });
 
   useEffect(() => {
     loadingWorkspaces.then((allWorkspaces) => {
@@ -144,10 +146,11 @@ export default function GUI() {
       project.editor.package = project.editor.package || workspacePackage;
       openProjectWithEditor(project, workspacePackage);
     };
-    import(`@blockcode/workspace-${workspacePackage}/app`).then(({ default: createWorkspace }) => {
+    import(`@blockcode/workspace-${workspacePackage}/app`).then(async ({ default: createWorkspace }) => {
       setWorkspaceLibrary(false);
       const layout = createWorkspace({ addLocaleData, openProject });
       layout.selectedTabIndex = layout.selectedTabIndex ?? 0;
+      await sleep(100);
       openProject(userProject);
       createLayout(layout);
     });
@@ -247,7 +250,7 @@ export default function GUI() {
                     name={index}
                     key={index}
                   >
-                    {index === selectedTabIndex && <TabContent />}
+                    {(index === 0 || index === selectedTabIndex) && <TabContent />}
                   </TabPanel>
                 </>
               ))}
