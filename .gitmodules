@@ -88,3 +88,6 @@
 [submodule "extensions/light"]
 	path = extensions/light
 	url = https://github.com/BlockCodeLab/extension-light.git
+[submodule "extensions/mqtt"]
+	path = extensions/mqtt
+	url = https://github.com/BlockCodeLab/extension-mqtt.git
