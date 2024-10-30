@@ -85,3 +85,6 @@
 [submodule "extensions/wedo2"]
 	path = extensions/wedo2
 	url = https://github.com/BlockCodeLab/extension-wedo2.git
+[submodule "extensions/light"]
+	path = extensions/light
+	url = https://github.com/BlockCodeLab/extension-light.git
