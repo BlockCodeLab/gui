@@ -50,9 +50,10 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
   useEffect(getProjects, []);
 
   useEffect(() => {
-    loadingWorkspaces.then((allWorkspaces) => {
+    loadingWorkspaces.then((workspaceInfos) => {
       setWorkspaces(
-        allWorkspaces
+        workspaceInfos
+          .filter((workspaceInfo) => !workspaceInfo.hidden)
           .sort((a, b) => a.sortIndex - b.sortIndex)
           .map((workspaceInfo) =>
             Object.assign(
@@ -78,7 +79,7 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
     if (language !== 'en') {
       examples = examples.concat(allExamples.en);
     }
-    setExamples(examples.concat(allExamples[language] || []));
+    setExamples(examples.concat(allExamples[language] || []).filter((example) => !example.hidden));
   }, [language]);
 
   return (
