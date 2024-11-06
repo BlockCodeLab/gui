@@ -1,6 +1,6 @@
 {
   "name": "blockcode",
-  "version": "0.4.6",
+  "version": "0.5.0",
   "description": "BlockCode Playgrounds",
   "main": "./apps/desktop/dist/main.js",
   "author": {
