@@ -1,5 +1,5 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import { serial } from './serial';
 import './menu';
 
@@ -8,12 +8,12 @@ const isMac = process.platform === 'darwin';
 // run this as early in the main process as possible
 if (require('electron-squirrel-startup')) app.quit();
 
-const appDirname = 'apps/desktop/dist';
+const __dirname = dirname(require.resolve('./main.js'));
 const winConfig = {
   width: 1360,
   height: 860,
   webPreferences: {
-    preload: resolve(appDirname, 'preload.js'),
+    preload: resolve(__dirname, 'preload.js'),
   },
 };
 
@@ -35,10 +35,10 @@ const createWindow = () => {
   });
 
   if (DEVELOPMENT) {
-    mainWindow.loadFile(resolve(appDirname, '../../web/dist/index.html'));
+    mainWindow.loadFile(resolve(__dirname, '../../web/dist/index.html'));
     mainWindow.webContents.openDevTools();
   } else {
-    mainWindow.loadFile(resolve(appDirname, 'packaged/index.html'));
+    mainWindow.loadFile(resolve(__dirname, 'packaged/index.html'));
   }
 };
 
