@@ -150,7 +150,6 @@ export default function GUI() {
       setWorkspaceLibrary(false);
       const layout = createWorkspace({ addLocaleData, openProject });
       layout.selectedTabIndex = layout.selectedTabIndex ?? 0;
-      await sleep(50);
       openProject(userProject);
       await sleep(50);
       createLayout(layout);

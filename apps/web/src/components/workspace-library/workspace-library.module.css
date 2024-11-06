@@ -62,7 +62,7 @@
 
 .library-label {
   color: var(--text-primary);
-  font-weight: 500;
+  font-weight: 800;
   padding: 1.5rem calc(0.5rem + var(--space)) 0.5rem;
 }
 

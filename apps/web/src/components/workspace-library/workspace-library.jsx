@@ -53,7 +53,15 @@ export default function WorkspaceLibrary({ onOpenWorkspace, onOpenProject }) {
     loadingWorkspaces.then((workspaceInfos) => {
       setWorkspaces(
         workspaceInfos
-          .filter((workspaceInfo) => !workspaceInfo.hidden)
+          .filter((workspaceInfo) => {
+            if (workspaceInfo.hidden) {
+              return false;
+            }
+            if (window.electron && (workspaceInfo.preview || workspaceInfo.disabled)) {
+              return false;
+            }
+            return true;
+          })
           .sort((a, b) => a.sortIndex - b.sortIndex)
           .map((workspaceInfo) =>
             Object.assign(
