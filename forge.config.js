@@ -4,7 +4,6 @@ module.exports = {
     icon: 'apps/desktop/res/icon',
     appCopyright: 'Copyright(c) BlockCode Lab, 2023-2024.',
     asar: true,
-    out: 'dist',
     ignore: [
       /^\/apps\/web\//g,
       /^\/components\//g,
