@@ -62,7 +62,8 @@
 }
 
 .tab-panel {
-  display: none;
+  display: flex;
+  transform: translateY(200%);
   position: absolute;
   top: var(--tool-bar-height);
   bottom: 0;

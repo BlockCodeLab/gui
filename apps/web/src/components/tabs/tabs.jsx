@@ -42,7 +42,7 @@ export default function Tabs({ id, className, children }) {
           const panelId = `${id}-panel-${child.props.name}`;
           injectStyle({
             [`#${tabId}:checked~#${panelId}`]: {
-              display: 'flex',
+              transform: 'none',
             },
           });
           return child;
