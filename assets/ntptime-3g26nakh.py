@@ -1,16 +1,15 @@
 from micropython import const
 from scratch import runtime
+from worker import Worker
 from machine import RTC
 import ntptime
-import socket
-import struct
 import time
 
 HOUR_SECONDS = const(60 * 60)
 DAY_SECONDS = const(24 * 60 * 60)
 
 timezone = 8
-time_worker = runtime.create_worker(ntptime.settime)
+time_worker = Worker(ntptime.settime)
 
 
 async def async_world_time():

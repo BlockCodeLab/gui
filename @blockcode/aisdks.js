@@ -18765,7 +18765,7 @@ function askSpark(messages) {
         },
         payload: {
           message: {
-            text: JSON.stringify(messages)
+            text: messages
           }
         }
       }));
@@ -18773,8 +18773,6 @@ function askSpark(messages) {
     let message = "";
     ws2.onerror = (e) => resolve(message);
     ws2.onmessage = async (e) => {
-      if (!runtime.running)
-        return;
       const data = JSON.parse(e.data);
       if (data.header.code !== 0)
         return resolve(message);
@@ -18785,45 +18783,6 @@ function askSpark(messages) {
       }
     };
   });
-}
-function provideAskSparkFunctionJs() {
-  const appid = localStorage.getItem(`sparkai.appid`) || SPARKAI_APP_ID;
-  return this.provideFunction_("sparkai_ask", [
-    `const ${this.FUNCTION_NAME_PLACEHOLDER_} = (messages) => new Promise((resolve) => {`,
-    `  const ws = new WebSocket("${getWebSocketUrl()}"); `,
-    "  ws.onopen = () => {",
-    "    ws.send(JSON.stringify({",
-    "      header: {",
-    `          app_id: '${appid}', `,
-    `          uid: '${appid}', `,
-    "        },",
-    "        parameter: {",
-    "          chat: {",
-    `            domain: '${SPARKAI_DOMAIN}', `,
-    `            temperature: ${SPARKAI_TEMPERATURE},`,
-    `            max_tokens: ${SPARKAI_MAX_TOKENS},`,
-    `            top_k: ${SPARKAI_TOP_K},`,
-    "          },",
-    "        },",
-    "        payload: {",
-    "          message: { text: messages },",
-    "        },",
-    "    }));",
-    "  };",
-    `  let message = '';`,
-    `  ws.onerror = (e) => resolve(message); `,
-    "  ws.onmessage = async (e) => {",
-    "    if (!runtime.running) return;",
-    "    const data = JSON.parse(e.data);",
-    `    if (data.header.code !== 0) return resolve(message);`,
-    `    message += data.payload.choices.text.map((text) => text.content).join(''); `,
-    "    if (data.header.status === 2) {",
-    "      ws.close();",
-    "      resolve(message.trim());",
-    "    }",
-    "  };",
-    "});"
-  ]);
 }
 var SPARKAI_HOST = "spark-api.xf-yun.com";
 var SPARKAI_PATHNAME = "/v1.1/chat";
@@ -18844,7 +18803,11 @@ var getWebSocketUrl = () => {
   const authorization = btoa(authorizationRaw);
   return `wss://${SPARKAI_HOST}${SPARKAI_PATHNAME}?authorization=${authorization}&date=${date}&host=${SPARKAI_HOST}`;
 };
+
+// src/index.js
+window.ai = {
+  askSpark
+};
 export {
-  provideAskSparkFunctionJs,
   askSpark
 };

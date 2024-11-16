@@ -1,4 +1,4 @@
-from device.color import color565
+from popui.color import rgb565
 from stage import stage
 import colorsys
 
@@ -31,7 +31,7 @@ def pen_goto(target, *args, **kwargs):
     color = target.data.get(PEN_COLOR, (0, 0, 0))
     size = target.data.get(PEN_SIZE, 1)
     stage.add_paint(
-        PEN_PAINT, lambda disp: disp.line(x, y, nx, ny, size, color565(*color))
+        PEN_PAINT, lambda disp: disp.line(x, y, nx, ny, size, rgb565(*color))
     )
     target.data[PEN_LAST_POS] = nx, ny
 
