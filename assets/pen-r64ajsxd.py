@@ -14,8 +14,8 @@ def clear():
 
 def stamp(target):
     image = memoryview(bytearray(target._image))
-    x, y = target._x, target._y
-    width, height = target._width, target._height
+    x, y = round(target._x), round(target._y)
+    width, height = round(target._width), round(target._height)
     stage.add_paint(
         PEN_PAINT,
         lambda disp: disp.blit(image, x, y, width, height, key=0x0000),
