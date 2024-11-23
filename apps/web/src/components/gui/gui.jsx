@@ -21,8 +21,6 @@ import workspaces from '../workspace-library/workspaces';
 
 const loadingWorkspaces = Promise.all(workspaces);
 
-const sleep = (timeout) => new Promise((resolve) => setTimeout(resolve, timeout));
-
 export default function GUI() {
   const [error] = useErrorBoundary();
   const [tutorialId, setTutorialId] = useState();
@@ -146,13 +144,12 @@ export default function GUI() {
       project.editor.package = project.editor.package || workspacePackage;
       openProjectWithEditor(project, workspacePackage);
     };
-    import(`@blockcode/workspace-${workspacePackage}/app`).then(async ({ default: createWorkspace }) => {
+    import(`@blockcode/workspace-${workspacePackage}/app`).then(({ default: createWorkspace }) => {
       setWorkspaceLibrary(false);
-      const layout = createWorkspace({ addLocaleData, openProject });
+      const layout = createWorkspace({ addLocaleData, openProject, useDefaultProject: !userProject });
       layout.selectedTabIndex = layout.selectedTabIndex ?? 0;
       openProject(userProject);
-      await sleep(50);
-      createLayout(layout);
+      setTimeout(() => createLayout(layout), 50);
     });
   };
 
