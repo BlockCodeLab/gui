@@ -41,7 +41,7 @@ var __export = (target, all) => {
 };
 var __esm = (fn, res) => () => (fn && (res = fn(fn = 0)), res);
 
-// node:crypto
+// ../../../../../../bun-vfs$$/node_modules/crypto/index.js
 var exports_crypto = {};
 __export(exports_crypto, {
   webcrypto: () => cw,
@@ -81,8 +81,8 @@ var init_crypto = __esm(() => {
     for (nn = 0, kd = B0.length;nn < kd; ++nn)
       jr[nn] = B0[nn], lr[B0.charCodeAt(nn)] = nn;
     var nn, kd;
-    lr["-".charCodeAt(0)] = 62;
-    lr["_".charCodeAt(0)] = 63;
+    lr[45] = 62;
+    lr[95] = 63;
     function Ld(t) {
       var e = t.length;
       if (e % 4 > 0)
@@ -1968,12 +1968,12 @@ Use Chrome, Firefox or Internet Explorer 11`);
     }
     function fM(t, e, r) {
       if ((e[0] & 192) !== 128)
-        return t.lastNeed = 0, "\uFFFD";
+        return t.lastNeed = 0, "�";
       if (t.lastNeed > 1 && e.length > 1) {
         if ((e[1] & 192) !== 128)
-          return t.lastNeed = 1, "\uFFFD";
+          return t.lastNeed = 1, "�";
         if (t.lastNeed > 2 && e.length > 2 && (e[2] & 192) !== 128)
-          return t.lastNeed = 2, "\uFFFD";
+          return t.lastNeed = 2, "�";
       }
     }
     function aM(t) {
@@ -1994,7 +1994,7 @@ Use Chrome, Firefox or Internet Explorer 11`);
     }
     function sM(t) {
       var e = t && t.length ? this.write(t) : "";
-      return this.lastNeed ? e + "\uFFFD" : e;
+      return this.lastNeed ? e + "�" : e;
     }
     function hM(t, e) {
       if ((t.length - e) % 2 === 0) {
@@ -18745,6 +18745,27 @@ var require_enc_base64 = __commonJS((exports, module) => {
 // src/sparkai.js
 var import_hmac_sha256 = __toESM(require_hmac_sha256(), 1);
 var import_enc_base64 = __toESM(require_enc_base64(), 1);
+var SPARKAI_HOST = "spark-api.xf-yun.com";
+var SPARKAI_PATHNAME = "/v1.1/chat";
+var SPARKAI_APP_ID = "db45f79e";
+var SPARKAI_API_SECRET = "MWFiNjVmNDA4YjNhODFkZGE0MGQ1YWRj";
+var SPARKAI_API_KEY = "6a3dfe79b9e9ec588ca65bf3b9d9c847";
+var SPARKAI_DOMAIN = "general";
+var SPARKAI_TEMPERATURE = 0.4;
+var SPARKAI_MAX_TOKENS = 200;
+var SPARKAI_TOP_K = 3;
+var getWebSocketUrl = () => {
+  const date = new Date().toGMTString();
+  const apisecret = localStorage.getItem("sparkai.apisecret") || SPARKAI_API_SECRET;
+  const apikey = localStorage.getItem("sparkai.apikey") || SPARKAI_API_KEY;
+  const signatureRaw = `host: ${SPARKAI_HOST}
+date: ${date}
+GET ${SPARKAI_PATHNAME} HTTP/1.1`;
+  const signature = import_enc_base64.default.stringify(import_hmac_sha256.default(signatureRaw, apisecret));
+  const authorizationRaw = `api_key="${apikey}", algorithm="hmac-sha256", headers="host date request-line", signature="${signature}"`;
+  const authorization = btoa(authorizationRaw);
+  return `wss://${SPARKAI_HOST}${SPARKAI_PATHNAME}?authorization=${authorization}&date=${date}&host=${SPARKAI_HOST}`;
+};
 function askSpark(messages) {
   const appid = localStorage.getItem("sparkai.appid") || SPARKAI_APP_ID;
   return new Promise((resolve) => {
@@ -18784,25 +18805,6 @@ function askSpark(messages) {
     };
   });
 }
-var SPARKAI_HOST = "spark-api.xf-yun.com";
-var SPARKAI_PATHNAME = "/v1.1/chat";
-var SPARKAI_APP_ID = "db45f79e";
-var SPARKAI_API_SECRET = "MWFiNjVmNDA4YjNhODFkZGE0MGQ1YWRj";
-var SPARKAI_API_KEY = "6a3dfe79b9e9ec588ca65bf3b9d9c847";
-var SPARKAI_DOMAIN = "general";
-var SPARKAI_TEMPERATURE = 0.4;
-var SPARKAI_MAX_TOKENS = 200;
-var SPARKAI_TOP_K = 3;
-var getWebSocketUrl = () => {
-  const date = new Date().toGMTString();
-  const apisecret = localStorage.getItem("sparkai.apisecret") || SPARKAI_API_SECRET;
-  const apikey = localStorage.getItem("sparkai.apikey") || SPARKAI_API_KEY;
-  const signatureRaw = `host: ${SPARKAI_HOST}\ndate: ${date}\nGET ${SPARKAI_PATHNAME} HTTP/1.1`;
-  const signature = import_enc_base64.default.stringify(import_hmac_sha256.default(signatureRaw, apisecret));
-  const authorizationRaw = `api_key="${apikey}", algorithm="hmac-sha256", headers="host date request-line", signature="${signature}"`;
-  const authorization = btoa(authorizationRaw);
-  return `wss://${SPARKAI_HOST}${SPARKAI_PATHNAME}?authorization=${authorization}&date=${date}&host=${SPARKAI_HOST}`;
-};
 
 // src/index.js
 window.ai = {
