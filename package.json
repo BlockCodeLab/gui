@@ -1,48 +1,14 @@
 {
-  "name": "blockcode",
-  "version": "0.5.0",
-  "description": "BlockCode Playgrounds",
-  "main": "./apps/desktop/dist/main.js",
-  "author": {
-    "name": "Yeqin Gong",
-    "email": "gon@gyeq.in",
-    "url": "http://gon.gyeq.in/"
-  },
-  "scripts": {
-    "make": "bun run build && bun run build:desktop && bun x electron-forge make",
-    "package": "bun run build && bun run build:desktop && bun x electron-forge package",
-    "start": "bun run dev:desktop && bun x electron-forge start",
-    "preview": "bun x serve apps/web/dist",
-    "deploy": "bun run build && bun x gh-pages -b playgrounds -d apps/web/dist && bun run deploy:clean",
-    "deploy:dev": "bun run build && bun x gh-pages -b preview -d apps/web/dist && bun run deploy:clean",
-    "deploy:clean": "bun x gh-pages-clean",
-    "build": "bun run build:packages && bun run build:web",
-    "dev": "bun run dev:packages && bun run dev:web",
-    "build:desktop": "cd apps/desktop && bun run build",
-    "dev:desktop": "cd apps/desktop && bun run dev",
-    "build:web": "cd apps/web && bun run build",
-    "dev:web": "cd apps/web && bun run dev",
-    "build:packages": "bun run build:components && bun run build:extensions && bun run build:workspaces",
-    "dev:packages": "bun run dev:components && bun run dev:extensions && bun run dev:workspaces",
-    "build:components": "cd components && bun run build",
-    "dev:components": "cd components && bun run dev",
-    "build:extensions": "cd extensions && bun run build",
-    "dev:extensions": "cd extensions && bun run dev",
-    "build:workspaces": "cd workspaces && bun run build",
-    "dev:workspaces": "cd workspaces && bun run dev"
+  "name": "@blockcode/gui",
+  "private": "true",
+  "version": "1.0.0",
+  "type": "module",
+  "module": "./dist/index.js",
+  "dependencies": {
+    "@preact/signals": "^1.3.0",
+    "preact": "^10.25.0"
   },
   "devDependencies": {
-    "@electron-forge/cli": "^7.5.0",
-    "@electron-forge/maker-dmg": "^7.5.0",
-    "@electron-forge/maker-squirrel": "^7.5.0",
-    "bun-types": "latest",
-    "electron": "^33.0.2",
-    "gh-pages": "^6.1.1"
-  },
-  "workspaces": [
-    "apps/*",
-    "components/*",
-    "extensions/*",
-    "workspaces/*"
-  ]
+    "@types/bun": "latest"
+  }
 }
