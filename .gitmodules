@@ -1,3 +1,6 @@
 [submodule "editors/mpyblocks"]
 	path = editors/mpyblocks
 	url = https://github.com/BlockCodeLab/gui-mpyblocks.git
+[submodule "editors/tankwar"]
+	path = editors/tankwar
+	url = https://github.com/BlockCodeLab/gui-tankwar.git
