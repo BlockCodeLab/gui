@@ -4,3 +4,6 @@
 [submodule "editors/tankwar"]
 	path = editors/tankwar
 	url = https://github.com/BlockCodeLab/gui-tankwar.git
+[submodule "editors/arcade"]
+	path = editors/arcade
+	url = https://github.com/BlockCodeLab/gui-arcade.git
