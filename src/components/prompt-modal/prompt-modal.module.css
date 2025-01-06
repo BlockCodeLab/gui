@@ -1,9 +1,14 @@
 .prompt-modal {
   width: 360px;
+  align-self: flex-start;
 }
 
-.prompt-wide-modal {
+.prompt-modal.wide {
   width: 600px;
+}
+
+.prompt-modal.auto {
+  width: auto;
 }
 
 .prompt-content {

@@ -12,7 +12,10 @@ export function PromptModal({ title, label, content, children, onClose, onSubmit
   return (
     <Modal
       title={title}
-      className={content || children ? styles.promptWideModal : styles.promptModal}
+      className={classNames(styles.promptModal, {
+        [styles.wide]: content,
+        [styles.auto]: children,
+      })}
       onClose={onClose}
     >
       <div className={styles.promptContent}>

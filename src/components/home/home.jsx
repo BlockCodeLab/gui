@@ -386,6 +386,18 @@ export function Home({ onOpenEditor, onOpenProject }) {
               ),
               body: (
                 <div className={styles.aboutVersionContent}>
+                  <div className={styles.aboutVersionRow}>
+                    <div>
+                      <b>
+                        <Text
+                          id="gui.about.main"
+                          defaultMessage="Main program"
+                        />
+                      </b>
+                    </div>
+                    <div>v{version}</div>
+                  </div>
+                  <div className={styles.aboutVersionRow}></div>
                   {editors.value
                     .filter((item) => !item.preview && !item.disabled)
                     .map((item) => (

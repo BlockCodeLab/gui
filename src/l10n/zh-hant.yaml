@@ -71,6 +71,7 @@ gui.prompt.connection.connect: 開始連接
 gui.prompt.connection.deviceName: 硬件名稱
 
 gui.about.title: 版本信息
+gui.about.main: 主程式
 
 gui.terms.title: 使用條款
 gui.terms.content: >

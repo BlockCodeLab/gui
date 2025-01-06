@@ -71,6 +71,7 @@ gui.prompt.connection.connect: Start Connecting
 gui.prompt.connection.deviceName: Device name
 
 gui.about.title: About...
+gui.about.main: Main program
 
 gui.terms.title: Terms of Use
 gui.terms.content: >

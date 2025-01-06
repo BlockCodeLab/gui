@@ -4,7 +4,7 @@ import { classNames } from '@blockcode/utils';
 import { maybeLocaleMessage, Text, BufferedInput, Button, Modal } from '@blockcode/core';
 import styles from './prompt-modal.module.css';
 
-export function InputsPrompt({ title, inputItems, onClose, onSubmit }) {
+export function InputsPromptModal({ title, inputItems, onClose, onSubmit }) {
   const data = useSignal(Object.fromEntries(inputItems.map(({ key, defaultValue }) => [key, defaultValue])));
 
   const handleKeyDown = useCallback((e) => {

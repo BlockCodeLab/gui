@@ -24,6 +24,7 @@ import { Home } from '../home/home';
 import { MenuBar } from '../menu-bar/menu-bar';
 import { PaneBox } from '../panes-view/pane-box';
 import { PromptModal } from '../prompt-modal/prompt-modal';
+// import { InputsPromptModal } from '../prompt-modal/inputs-prompt-modal';
 import { Splash } from '../splash/splash';
 import { Tabs, TabLabel, TabPanel } from '../tabs/tabs';
 import { TutorialBox } from '../tutorial-box/tutorial-box';
@@ -379,7 +380,7 @@ export function Layout() {
             onClose={closePromptModal}
             onSubmit={app.prompt.value.onSubmit}
           >
-            {app.prompt.body}
+            {app.prompt.value.body}
           </PromptModal>
         ))}
     </>
