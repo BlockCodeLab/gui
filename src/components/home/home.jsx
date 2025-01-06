@@ -253,8 +253,8 @@ export function Home({ onOpenEditor, onOpenProject }) {
                 featured
                 id={index}
                 key={index}
-                preview={item.preview}
                 disabled={item.disabled}
+                beta={item.beta}
                 image={item.image}
                 name={item.name}
                 description={item.description}
