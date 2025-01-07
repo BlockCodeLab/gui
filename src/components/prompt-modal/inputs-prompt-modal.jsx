@@ -1,10 +1,10 @@
 import { useCallback, useEffect } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 import { classNames } from '@blockcode/utils';
-import { maybeLocaleMessage, Text, BufferedInput, Button, Modal } from '@blockcode/core';
+import { maybeTranslate, Text, BufferedInput, Button, Modal } from '@blockcode/core';
 import styles from './prompt-modal.module.css';
 
-export function InputsPromptModal({ title, inputItems, onClose, onSubmit }) {
+export function InputsPromptModal({ title, inputItems, children, onClose, onSubmit }) {
   const data = useSignal(Object.fromEntries(inputItems.map(({ key, defaultValue }) => [key, defaultValue])));
 
   const handleKeyDown = useCallback((e) => {
@@ -37,7 +37,9 @@ export function InputsPromptModal({ title, inputItems, onClose, onSubmit }) {
   return (
     <Modal
       title={title}
-      className={content || children ? styles.promptWideModal : styles.promptModal}
+      className={classNames(styles.promptModal, {
+        [styles.auto]: children,
+      })}
       onClose={onClose}
     >
       <div className={styles.promptContent}>
@@ -46,10 +48,9 @@ export function InputsPromptModal({ title, inputItems, onClose, onSubmit }) {
             {label && <div className={classNames(styles.label, styles.inputLabel)}>{label}</div>}
             <BufferedInput
               key={key}
-              ref={index === 0 && ref}
               autoFocus={index === 0}
               className={styles.textInput}
-              placeholder={maybeLocaleMessage(placeholder)}
+              placeholder={maybeTranslate(placeholder)}
               defaultValue={defaultValue}
               onSubmit={wrapInputSubmit(key)}
             />

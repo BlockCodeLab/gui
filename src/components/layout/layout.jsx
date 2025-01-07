@@ -24,7 +24,7 @@ import { Home } from '../home/home';
 import { MenuBar } from '../menu-bar/menu-bar';
 import { PaneBox } from '../panes-view/pane-box';
 import { PromptModal } from '../prompt-modal/prompt-modal';
-// import { InputsPromptModal } from '../prompt-modal/inputs-prompt-modal';
+import { InputsPromptModal } from '../prompt-modal/inputs-prompt-modal';
 import { Splash } from '../splash/splash';
 import { Tabs, TabLabel, TabPanel } from '../tabs/tabs';
 import { TutorialBox } from '../tutorial-box/tutorial-box';
@@ -372,7 +372,14 @@ export function Layout() {
       {app.userStorageVisible.value && <UserStorage onOpenProject={handleOpenProject} />}
 
       {app.prompt.value &&
-        (app.prompt.value.inputItems ? null : (
+        (app.prompt.value.inputItems ? (
+          <InputsPromptModal
+            title={app.prompt.value.title}
+            inputItems={app.prompt.value.inputItems}
+            onClose={closePromptModal}
+            onSubmit={app.prompt.value.onSubmit}
+          />
+        ) : (
           <PromptModal
             title={app.prompt.value.title}
             label={app.prompt.value.label}

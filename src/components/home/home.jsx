@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from 'preact/hooks';
-import { useSignal, useSignalEffect } from '@preact/signals';
+import { batch, useSignal, useSignalEffect } from '@preact/signals';
 import { classNames, getProjectsThumbs, getProject, cloneProject, renameProject, delProject } from '@blockcode/utils';
 import {
   useLocalesContext,
@@ -29,6 +29,7 @@ export function Home({ onOpenEditor, onOpenProject }) {
 
   // 用户保存的项目
   const userProjects = useSignal(null);
+  const projectsCount = useSignal(0);
 
   // 可用的编辑器
   const editors = useSignal(null);
@@ -38,7 +39,10 @@ export function Home({ onOpenEditor, onOpenProject }) {
 
   const getUserProjects = useCallback(async () => {
     const result = await getProjectsThumbs();
-    userProjects.value = result.filter((_, i) => i < DISPLAY_PROJECTS_COUNTS);
+    batch(() => {
+      projectsCount.value = result.length;
+      userProjects.value = result.filter((_, i) => i < DISPLAY_PROJECTS_COUNTS);
+    });
   }, []);
 
   useEffect(getUserProjects, []);
@@ -81,7 +85,7 @@ export function Home({ onOpenEditor, onOpenProject }) {
   }, []);
 
   const duplicate = useCallback(async (key) => {
-    await cloneProject(item.key);
+    await cloneProject(key);
     getUserProjects();
   }, []);
 
@@ -220,7 +224,7 @@ export function Home({ onOpenEditor, onOpenProject }) {
                 defaultMessage="My projects"
               />
             </span>
-            {userProjects.value.length > DISPLAY_PROJECTS_COUNTS && (
+            {projectsCount.value > DISPLAY_PROJECTS_COUNTS && (
               <span
                 className={classNames(styles.viewAll, styles.link)}
                 onClick={openUserStorage}
@@ -228,7 +232,7 @@ export function Home({ onOpenEditor, onOpenProject }) {
                 <Text
                   id="gui.home.all"
                   defaultMessage="View all ({counts})"
-                  counts={userProjects.value.length}
+                  counts={projectsCount.value}
                 />
               </span>
             )}
