@@ -5,7 +5,7 @@ import { maybeTranslate, Text, BufferedInput, Button, Modal } from '@blockcode/c
 import styles from './prompt-modal.module.css';
 
 export function InputsPromptModal({ title, inputItems, children, onClose, onSubmit }) {
-  const data = useSignal(Object.fromEntries(inputItems.map(({ key, defaultValue }) => [key, defaultValue])));
+  const data = useSignal(Object.fromEntries(inputItems.map(({ name, defaultValue }) => [name, defaultValue])));
 
   const handleKeyDown = useCallback((e) => {
     e.stopPropagation();
@@ -18,10 +18,10 @@ export function InputsPromptModal({ title, inputItems, children, onClose, onSubm
   }, []);
 
   const wrapInputSubmit = useCallback(
-    (key) => (value) => {
+    (name) => (value) => {
       data.value = {
         ...data.value,
-        [key]: value,
+        [name]: value,
       };
     },
     [],
@@ -43,16 +43,16 @@ export function InputsPromptModal({ title, inputItems, children, onClose, onSubm
       onClose={onClose}
     >
       <div className={styles.promptContent}>
-        {inputItems.map(({ key, label, placeholder, defaultValue }, index) => (
+        {inputItems.map(({ name, label, placeholder, defaultValue }, index) => (
           <>
             {label && <div className={classNames(styles.label, styles.inputLabel)}>{label}</div>}
             <BufferedInput
-              key={key}
+              key={index}
               autoFocus={index === 0}
               className={styles.textInput}
               placeholder={maybeTranslate(placeholder)}
               defaultValue={defaultValue}
-              onSubmit={wrapInputSubmit(key)}
+              onSubmit={wrapInputSubmit(name)}
             />
           </>
         ))}
