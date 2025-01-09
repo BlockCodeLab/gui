@@ -1,4 +1,4 @@
-import { useProjectContext, BufferedInput } from '@blockcode/core';
+import { useProjectContext, BufferedInput, renameProject } from '@blockcode/core';
 import styles from './menu-bar.module.css';
 
 export function ProjectTitleInput({ placeholder, defaultValue }) {
@@ -11,7 +11,7 @@ export function ProjectTitleInput({ placeholder, defaultValue }) {
           className={styles.titleField}
           placeholder={placeholder}
           value={name.value || defaultValue}
-          onSubmit={(val) => (name.value = val)}
+          onSubmit={renameProject}
         />
       </div>
     </>
