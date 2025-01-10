@@ -26,6 +26,7 @@ gui.menubar.titlePlaceholder: 在此填写作品标题
 gui.menubar.modified: 保存到本地
 gui.menubar.saving: 正在保存作品…
 gui.menubar.saved: 已保存到本地。
+gui.menubar.savedComputer: 已保存到电脑。
 
 gui.menubar.file: 文件
 gui.menubar.file.newProject: 新作品

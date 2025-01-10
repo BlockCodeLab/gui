@@ -6,10 +6,15 @@ import { useProjectContext, setAlert, openUserStorage, setFile, setModified, Mod
 import { Text, MenuSection, MenuItem } from '@blockcode/core';
 import styles from './menu-bar.module.css';
 
-const savedAlert = () =>
+const savedAlert = (isComputer = false) => {
   setAlert(
     {
-      message: (
+      message: isComputer ? (
+        <Text
+          id="gui.menubar.savedComputer"
+          defaultMessage="Saved to your computer."
+        />
+      ) : (
         <Text
           id="gui.menubar.saved"
           defaultMessage="Saved to local storage."
@@ -18,6 +23,7 @@ const savedAlert = () =>
     },
     2000,
   );
+};
 
 export function FileMenu({ onNew, onOpen, onSave, onThumb, children }) {
   const { meta, key, name, files, assets } = useProjectContext();
@@ -59,7 +65,7 @@ export function FileMenu({ onNew, onOpen, onSave, onThumb, children }) {
     // Electron 上不需要提示已保存
     if (window.electron) return;
 
-    savedAlert();
+    savedAlert(true);
   }, []);
 
   // 从计算机打开项目

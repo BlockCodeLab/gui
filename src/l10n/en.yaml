@@ -26,6 +26,7 @@ gui.menubar.titlePlaceholder: Project title here
 gui.menubar.mdified: Save to local storage
 gui.menubar.saving: Saving project...
 gui.menubar.saved: Saved to local storage.
+gui.menubar.savedComputer: Saved to your computer.
 
 gui.menubar.file: File
 gui.menubar.file.newProject: New
