@@ -61,6 +61,7 @@ export function Layout() {
   const [error] = useErrorBoundary();
 
   // 多语言翻译
+  //
   const { language, translator } = useLocalesContext();
 
   // 应用布局
@@ -70,6 +71,9 @@ export function Layout() {
   // 设置应用标题
   useEffect(() => {
     document.title = translate('gui.name', 'BlockCode Playgrounds', translator);
+    if (BETA) {
+      document.title += ' [BETA]';
+    }
   }, [language.value]);
 
   // 侧边栏
