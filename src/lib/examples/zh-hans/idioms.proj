@@ -1,7 +1,7 @@
 {
   "name": "智脑成语接龙",
-  "selectedFileId": "sprite1",
-  "assetList": [
+  "fileId": "sprite1",
+  "assets": [
     {
       "id": "394521f888b163c89f6509a3ab60722a",
       "type": "image/png",
@@ -68,9 +68,9 @@
       "height": 240
     }
   ],
-  "fileList": [
+  "files": [
     {
-      "id": "stage",
+      "id": "_stage_",
       "type": "text/x-python",
       "name": "舞台",
       "assets": [
@@ -118,8 +118,8 @@
       "xml": "<xml xmlns=\"http://www.w3.org/1999/xhtml\"><variables><variable type=\"broadcast_msg\" id=\"8d[0]CNCth#gMZlu0n6W\" islocal=\"false\" iscloud=\"false\">B</variable><variable type=\"broadcast_msg\" id=\")MnjLq?1+zL}4s=O__nh\" islocal=\"false\" iscloud=\"false\">A</variable><variable type=\"\" id=\"Osq+yGKi2LihYwrtY):J\" islocal=\"false\" iscloud=\"false\">最后的词语</variable></variables><block type=\"event_whenflagclicked\" id=\"!MFX6k#JA6mjS5KN9sce\" x=\"19\" y=\"-10\"><next><block type=\"brain_addPrompt\" id=\"txNFyF:LR7$EBSmhXs(R\"><value name=\"PROMPT\"><shadow type=\"text\" id=\"WfDkc~o61t{+_9D]9/W-\"><field name=\"TEXT\">成语接龙游戏，你要接我说的成语，用最后一个字作为成语的第一个字</field></shadow></value></block></next></block><block type=\"event_whenbroadcastreceived\" id=\"gwr;YRTW:SYLR@}`mdl%\" x=\"335\" y=\"136\"><field name=\"BROADCAST_OPTION\" id=\"8d[0]CNCth#gMZlu0n6W\" variabletype=\"broadcast_msg\">B</field><next><block type=\"looks_think\" id=\"?09m(c0yV%CNZZWQP?3e\"><value name=\"MESSAGE\"><shadow type=\"text\" id=\"r{.[$m*}6KlLIF|hjKo/\"><field name=\"TEXT\">嗯……</field></shadow></value><next><block type=\"brain_askQuestion\" id=\"u0yBCaeo.t95irz-sN5:\"><value name=\"QUESTION\"><shadow type=\"text\" id=\"uDkCR[q=9uOz[.=[HAAr\"><field name=\"TEXT\">好事成双</field></shadow><block type=\"data_variable\" id=\"U|s0:tm^b=]Q(y)wf#]H\"><field name=\"VARIABLE\" id=\"Osq+yGKi2LihYwrtY):J\" variabletype=\"\">最后的词语</field></block></value><next><block type=\"data_setvariableto\" id=\";=!(Y5ij[G4rsvtH=@Wv\"><field name=\"VARIABLE\" id=\"Osq+yGKi2LihYwrtY):J\" variabletype=\"\">最后的词语</field><value name=\"VALUE\"><shadow type=\"text\" id=\"#gJ-Gd11:41)v@~!0PI#\"><field name=\"TEXT\">0</field></shadow><block type=\"brain_answer\" id=\":)L7q;?C)^d+9jW0m%A-\"></block></value><next><block type=\"looks_say\" id=\",;}n/2Xo7HAi3eglUL!J\"><value name=\"MESSAGE\"><shadow type=\"text\" id=\"IDZs+jRj-9Jm/JN+DZ]k\"><field name=\"TEXT\">你好！</field></shadow><block type=\"data_variable\" id=\"5@)caJ]^Cd_vNQv[=sl)\"><field name=\"VARIABLE\" id=\"Osq+yGKi2LihYwrtY):J\" variabletype=\"\">最后的词语</field></block></value><next><block type=\"control_wait\" id=\"7Arg@=Slug9m$^V:|ei|\"><value name=\"DURATION\"><shadow type=\"math_positive_number\" id=\"RVb29%$2zw|$YO2Iaknd\"><field name=\"NUM\">1</field></shadow></value><next><block type=\"event_broadcast\" id=\"fY4b=a5CU.$`)qGOOC@N\"><value name=\"BROADCAST_INPUT\"><shadow type=\"event_broadcast_menu\" id=\"-KdrGkId)@{E_UFTv/fS\"><field name=\"BROADCAST_OPTION\" id=\")MnjLq?1+zL}4s=O__nh\" variabletype=\"broadcast_msg\">A</field></shadow></value></block></next></block></next></block></next></block></next></block></next></block></next></block></xml>"
     }
   ],
-  "editor": {
-    "package": "arcade",
+  "meta": {
+    "editor": "arcade",
     "extensions": [
       "brain"
     ]

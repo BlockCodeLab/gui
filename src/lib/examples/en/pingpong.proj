@@ -1,7 +1,7 @@
 {
   "name": "Ping-pong",
-  "selectedFileId": "3jz7w6e608uj2zl4k0lvxpurhv70ste0",
-  "assetList": [
+  "fileId": "3jz7w6e608uj2zl4k0lvxpurhv70ste0",
+  "assets": [
     {
       "id": "1mb5uzzedzfebg2y4hbab787eq87pi3d",
       "name": "basketball",
@@ -61,9 +61,9 @@
       "height": 240
     }
   ],
-  "fileList": [
+  "files": [
     {
-      "id": "stage",
+      "id": "_stage_",
       "type": "text/x-python",
       "name": "Stage",
       "assets": [
@@ -143,8 +143,8 @@
       "xml": "<xml xmlns=\"http://www.w3.org/1999/xhtml\"><variables><variable type=\"\" id=\"KcQcENkAfu[x.4~7XZZx\" islocal=\"false\" iscloud=\"false\">status</variable><variable type=\"\" id=\"QzM?!dr`%3q6I4v{-PSE\" islocal=\"false\" iscloud=\"false\">x</variable><variable type=\"\" id=\"gJqRvqG}e3wIaP[h(gOR\" islocal=\"false\" iscloud=\"false\">dir</variable><variable type=\"\" id=\"ejO1CH6CPY)!NzYA/GO%\" islocal=\"false\" iscloud=\"false\">y</variable></variables></xml>"
     }
   ],
-  "editor": {
-    "package": "arcade",
+  "meta": {
+    "editor": "arcade",
     "extensions": [
       "broadcast"
     ]

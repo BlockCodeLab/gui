@@ -1,7 +1,7 @@
 {
   "name": "Ladybug",
-  "selectedFileId": "0u8bnfa2mmq865mm3x1bq9lfxr6ut14j",
-  "assetList": [
+  "fileId": "0u8bnfa2mmq865mm3x1bq9lfxr6ut14j",
+  "assets": [
     {
       "id": "394521f888b163c89f6509a3ab60722a",
       "type": "image/png",
@@ -77,9 +77,9 @@
       "height": 54
     }
   ],
-  "fileList": [
+  "files": [
     {
-      "id": "stage",
+      "id": "_stage_",
       "type": "text/x-python",
       "name": "舞台",
       "assets": [
@@ -106,7 +106,7 @@
       "rotationStyle": 2,
       "hidden": false,
       "zIndex": 1,
-      "xml": "<xml xmlns=\"http://www.w3.org/1999/xhtml\"><variables></variables><block type=\"control_start_as_clone\" id=\"U@oXDNdDp($TsbAh1tqz\" x=\"45\" y=\"45\"><next><block type=\"looks_gotofrontback\" id=\"XAMYA,.DFWUm+U:#0-sO\"><field name=\"FRONT_BACK\">front</field><next><block type=\"motion_goto\" id=\"R{EHf%`*V!(tOSZXX8q2\"><value name=\"TO\"><shadow type=\"motion_goto_menu\" id=\"htJwh#7X)bSca90U08P-\"><field name=\"TO\">6jl2o6agtytib95ptonf2os4fjbg3bwi</field></shadow></value><next><block type=\"looks_show\" id=\"6~Mp/),0)lN3EHu$}sDX\"><next><block type=\"control_while\" id=\"~f_NLJ#^S;WpOdxJU/iW\"><value name=\"CONDITION\"><block type=\"operator_lt\" id=\"NJfFZV%beqKzjz%yyigE\"><value name=\"OPERAND1\"><shadow type=\"text\" id=\"G?HK?l`MvQSZYe1bzN[e\"><field name=\"TEXT\"></field></shadow><block type=\"motion_yposition\" id=\"N2^XO8c]+2C!d1t?+~hq\"></block></value><value name=\"OPERAND2\"><shadow type=\"text\" id=\"hKwAz9~Bs^u(~av.Z4pp\"><field name=\"TEXT\">150</field></shadow></value></block></value><statement name=\"SUBSTACK\"><block type=\"motion_changeyby\" id=\"7a-YeMeMdj;bL#ql$*6j\"><value name=\"DY\"><shadow type=\"math_number\" id=\"-vIv7dk)dhcfLSB**C,f\"><field name=\"NUM\">5</field></shadow></value></block></statement><next><block type=\"control_delete_this_clone\" id=\"(Y^Q3h=B.LbeM4B1;k!{\"></block></next></block></next></block></next></block></next></block></next></block><block type=\"event_whenflagclicked\" id=\"guMW:ZAuCIC5*,{SG)=%\" x=\"451\" y=\"54\"><next><block type=\"looks_hide\" id=\"2Dl#*a,1IXjbd{xSq}Kp\"></block></next></block></xml>"
+      "xml": "<xml xmlns=\"http://www.w3.org/1999/xhtml\"><variables></variables><block type=\"control_start_as_clone\" id=\"U@oXDNdDp($TsbAh1tqz\" x=\"45\" y=\"45\"><next><block type=\"looks_gotofrontback\" id=\"XAMYA,.DFWUm+U:#0-sO\"><field name=\"FRONT_BACK\">front</field><next><block type=\"motion_goto\" id=\"R{EHf%`*V!(tOSZXX8q2\"><value name=\"TO\"><shadow type=\"motion_goto_menu\" id=\"htJwh#7X)bSca90U08P-\"><field name=\"TO\">6jl2o6agtytib95ptonf2os4fjbg3bwi</field></shadow></value><next><block type=\"looks_show\" id=\"6~Mp/),0)lN3EHu$}sDX\"><next><block type=\"control_while\" id=\"~f_NLJ#^S;WpOdxJU/iW\"><value name=\"CONDITION\"><block type=\"operator_lt\" id=\"NJfFZV%beqKzjz%yyigE\"><value name=\"OPERAND1\"><shadow type=\"text\" id=\"G?HK?l`MvQSZYe1bzN[e\"><field name=\"TEXT\"></field></shadow><block type=\"motion_yposition\" id=\"N2^XO8c]+2C!d1t?+~hq\"></block></value><value name=\"OPERAND2\"><shadow type=\"text\" id=\"hKwAz9~Bs^u(~av.Z4pp\"><field name=\"TEXT\">130</field></shadow></value></block></value><statement name=\"SUBSTACK\"><block type=\"motion_changeyby\" id=\"7a-YeMeMdj;bL#ql$*6j\"><value name=\"DY\"><shadow type=\"math_number\" id=\"-vIv7dk)dhcfLSB**C,f\"><field name=\"NUM\">5</field></shadow></value></block></statement><next><block type=\"control_delete_this_clone\" id=\"(Y^Q3h=B.LbeM4B1;k!{\"></block></next></block></next></block></next></block></next></block></next></block><block type=\"event_whenflagclicked\" id=\"guMW:ZAuCIC5*,{SG)=%\" x=\"451\" y=\"54\"><next><block type=\"looks_hide\" id=\"2Dl#*a,1IXjbd{xSq}Kp\"></block></next></block></xml>"
     },
     {
       "id": "6jl2o6agtytib95ptonf2os4fjbg3bwi",
@@ -145,8 +145,8 @@
       "zIndex": 8
     }
   ],
-  "editor": {
-    "package": "arcade",
+  "meta": {
+    "editor": "arcade",
     "extensions": []
   }
 }
