@@ -1,7 +1,7 @@
 import { useCallback } from 'preact/hooks';
 import { batch } from '@preact/signals';
 import { isMac, putProject, openProjectFromComputer, saveProjectToComputer } from '@blockcode/utils';
-import { useProjectContext, setAlert, openPromptModal, openUserStorage, setFile, Keys } from '@blockcode/core';
+import { useProjectContext, setAlert, openUserStorage, setFile, setModified, ModifyTypes, Keys } from '@blockcode/core';
 
 import { Text, MenuSection, MenuItem } from '@blockcode/core';
 import styles from './menu-bar.module.css';
@@ -20,7 +20,7 @@ const savedAlert = () =>
   );
 
 export function FileMenu({ onNew, onOpen, onSave, onThumb, children }) {
-  const { meta, key, name, files, assets, modified } = useProjectContext();
+  const { meta, key, name, files, assets } = useProjectContext();
 
   const getProjectData = useCallback(async () => {
     const data = await onSave(files.value, assets.value);
@@ -45,7 +45,7 @@ export function FileMenu({ onNew, onOpen, onSave, onThumb, children }) {
         setFile({ key: newKey });
       }
 
-      modified.value = 0;
+      setModified(ModifyTypes.Saved);
     });
 
     savedAlert();
@@ -54,13 +54,11 @@ export function FileMenu({ onNew, onOpen, onSave, onThumb, children }) {
   // 保存项目到计算机本地文件夹
   const handleSaveToComputer = useCallback(async () => {
     const data = await getProjectData();
-    console.log(data);
     await saveProjectToComputer(data);
-
-    modified.value = 0;
 
     // Electron 上不需要提示已保存
     if (window.electron) return;
+
     savedAlert();
   }, []);
 
