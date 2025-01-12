@@ -75,15 +75,15 @@ export function TutorialBox({ tutorialId, onBack, onClose }) {
       };
 
       const endDrag = () => {
-        document.removeEventListener('mouseup', endDrag);
-        document.removeEventListener('mousemove', drag);
+        document.removeEventListener('pointerup', endDrag);
+        document.removeEventListener('pointermove', drag);
       };
 
-      ref.current.addEventListener('mousedown', (e) => {
+      ref.current.addEventListener('pointerdown', (e) => {
         posX = e.clientX;
         posY = e.clientY;
-        document.addEventListener('mouseup', endDrag);
-        document.addEventListener('mousemove', drag);
+        document.addEventListener('pointerup', endDrag);
+        document.addEventListener('pointermove', drag);
       });
     }
   }, [ref]);
