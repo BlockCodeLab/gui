@@ -312,7 +312,7 @@ export function Home({ onOpenEditor, onOpenProject }) {
                     setTimeout(() => {
                       openPromptModal({
                         title: example.name,
-                        label: item.alert,
+                        label: maybeTranslate(item.alert, translator),
                       });
                     }, 500);
                   }

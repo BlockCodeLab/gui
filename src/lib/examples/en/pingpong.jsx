@@ -6,7 +6,7 @@ export default {
   uri: projectUri,
   alert: (
     <Text
-      id="gui.examples.alerts.interconnect"
+      id="gui.library.examples.interconnect"
       defaultMessage="The project requires two devices to work properly."
     />
   ),
