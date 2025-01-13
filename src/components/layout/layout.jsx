@@ -226,8 +226,8 @@ export function Layout() {
   // 打开编辑器事件
   const handleOpenEditor = useCallback(async (editorId, projData) => {
     batch(() => {
-      showSplash();
       closeProjectAndLayout();
+      showSplash();
     });
 
     const { default: editor } = await import(`@blockcode/gui-${editorId}`);
